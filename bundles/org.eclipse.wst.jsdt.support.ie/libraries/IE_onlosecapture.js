@@ -1,1 +1,0 @@
-/**  * Object onlosecapture()  * @type onlosecapture  * @super Object  * @class onlosecapture  * @since JScript 5.6  * @link http://msdn2.microsoft.com/en-us/library/ms536943.aspx*/function onlosecapture(){};onlosecapture.prototype= new Object();
