@@ -1,1 +1,0 @@
-/**  * Object onresizestart()  * @type onresizestart  * @super Object  * @class onresizestart  * @since JScript 5.6  * @link http://msdn2.microsoft.com/en-us/library/ms536961.aspx*/function onresizestart(){};onresizestart.prototype= new Object();

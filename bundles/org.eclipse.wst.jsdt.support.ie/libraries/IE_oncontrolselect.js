@@ -1,1 +1,0 @@
-/**  * Object oncontrolselect()  * @type oncontrolselect  * @super Object  * @class oncontrolselect  * @since JScript 5.6  * @link http://msdn2.microsoft.com/en-us/library/ms537844.aspx*/function oncontrolselect(){};oncontrolselect.prototype= new Object();
