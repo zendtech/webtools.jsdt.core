@@ -1,1 +1,0 @@
-/**  * Object ondrag()  * @type ondrag  * @super Object  * @class ondrag  * @since JScript 5.6  * @link http://msdn2.microsoft.com/en-us/library/ms536923.aspx*/function ondrag(){};ondrag.prototype= new Object();

@@ -1,1 +1,0 @@
-/**  * Object ondrop()  * @type ondrop  * @super Object  * @class ondrop  * @since JScript 5.6  * @link http://msdn2.microsoft.com/en-us/library/ms536929.aspx*/function ondrop(){};ondrop.prototype= new Object();

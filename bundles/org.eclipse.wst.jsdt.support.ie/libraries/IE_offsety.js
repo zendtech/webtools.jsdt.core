@@ -1,1 +1,0 @@
-/**  * Object offsetY()  * @type offsetY  * @super Object  * @class offsetY  * @since JScript 5.6  * @link http://msdn2.microsoft.com/en-us/library/ms534306.aspx*/function offsetY(){};offsetY.prototype= new Object();
