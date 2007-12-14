@@ -1,1 +1,0 @@
-/**  * Object altKey()  * @type altKey  * @super Object  * @class altKey  * @since JScript 5.6  * @link http://msdn2.microsoft.com/en-us/library/ms533075.aspx*/function altKey(){};altKey.prototype= new Object();
