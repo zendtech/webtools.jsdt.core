@@ -1,1 +1,0 @@
-/**  * Object clientX()  * @type clientX  * @super Object  * @class clientX  * @since JScript 5.6  * @link http://msdn2.microsoft.com/en-us/library/ms533567.aspx*/function clientX(){};clientX.prototype= new Object();

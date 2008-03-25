@@ -1,1 +1,0 @@
-/**  * Object type()  * @type type  * @super Object  * @class type  * @since JScript 5.6  * @link http://msdn2.microsoft.com/en-us/library/ms534697.aspx*/function type(){};type.prototype= new Object();

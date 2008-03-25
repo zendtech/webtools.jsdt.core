@@ -1,1 +1,0 @@
-/**  * Object onrowsdelete()  * @type onrowsdelete  * @super Object  * @class onrowsdelete  * @since JScript 5.6  * @link http://msdn2.microsoft.com/en-us/library/ms536964.aspx*/function onrowsdelete(){};onrowsdelete.prototype= new Object();

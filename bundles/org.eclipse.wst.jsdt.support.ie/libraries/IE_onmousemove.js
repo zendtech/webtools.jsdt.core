@@ -1,1 +1,0 @@
-/**  * Object onmousemove()  * @type onmousemove  * @super Object  * @class onmousemove  * @since JScript 5.6  * @link http://msdn2.microsoft.com/en-us/library/ms536947.aspx*/function onmousemove(){};onmousemove.prototype= new Object();
