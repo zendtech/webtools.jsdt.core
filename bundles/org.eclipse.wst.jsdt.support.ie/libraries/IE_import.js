@@ -1,1 +1,0 @@
-/**  * @link http://msdn2.microsoft.com/en-us/library/ms535171.aspx*/function IMPORT(){};IMPORT.prototype= new Object();
