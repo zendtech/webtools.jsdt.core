@@ -1,1 +1,0 @@
-/**  * Object onlayoutcomplete()  * @type onlayoutcomplete  * @super Object  * @class onlayoutcomplete  * @since JScript 5.6  * @link http://msdn2.microsoft.com/en-us/library/ms536941.aspx*/function onlayoutcomplete(){};onlayoutcomplete.prototype= new Object();
