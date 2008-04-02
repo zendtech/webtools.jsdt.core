@@ -1,1 +1,0 @@
-/**  * Object ondragover()  * @type ondragover  * @super Object  * @class ondragover  * @since JScript 5.6  * @link http://msdn2.microsoft.com/en-us/library/ms536927.aspx*/function ondragover(){};ondragover.prototype= new Object();

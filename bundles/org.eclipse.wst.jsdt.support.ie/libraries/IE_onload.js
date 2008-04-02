@@ -1,1 +1,0 @@
-/**  * Object onload()  * @type onload  * @super Object  * @class onload  * @since JScript 5.6  * @link http://msdn2.microsoft.com/en-us/library/ms536942.aspx*/function onload(){};onload.prototype= new Object();
