@@ -1,1 +1,0 @@
-/**  * Object onmouseenter()  * @type onmouseenter  * @super Object  * @class onmouseenter  * @since JScript 5.6  * @link http://msdn2.microsoft.com/en-us/library/ms536945.aspx*/function onmouseenter(){};onmouseenter.prototype= new Object();
