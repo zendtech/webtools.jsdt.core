@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
@@ -26,7 +26,7 @@ public class MoveCompilationUnitChange extends CompilationUnitReorgChange {
 	private boolean fUndoable;
 	private long fStampToRestore;
 	
-	public MoveCompilationUnitChange(ICompilationUnit cu, IPackageFragment newPackage){
+	public MoveCompilationUnitChange(IJavaScriptUnit cu, IPackageFragment newPackage){
 		super(cu, newPackage);
 		fStampToRestore= IResource.NULL_STAMP;
 	}
@@ -65,7 +65,7 @@ public class MoveCompilationUnitChange extends CompilationUnitReorgChange {
 		// perform the move and restore modification stamp
 		getCu().move(getDestinationPackage(), null, newName, true, pm);
 		if (fStampToRestore != IResource.NULL_STAMP) {
-			ICompilationUnit moved= getDestinationPackage().getCompilationUnit(name);
+			IJavaScriptUnit moved= getDestinationPackage().getCompilationUnit(name);
 			IResource movedResource= moved.getResource();
 			if (movedResource != null) {
 				movedResource.revertModificationStamp(fStampToRestore);

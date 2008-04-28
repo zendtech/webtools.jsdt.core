@@ -37,8 +37,8 @@ import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.JavaModelException;
-import org.eclipse.wst.jsdt.core.dom.IMethodBinding;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
+import org.eclipse.wst.jsdt.core.dom.IFunctionBinding;
 import org.eclipse.wst.jsdt.core.dom.Modifier;
 import org.eclipse.wst.jsdt.internal.corext.template.java.CodeTemplateContextType;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
@@ -83,7 +83,7 @@ public class GenerateConstructorUsingFieldsSelectionDialog extends SourceActionD
 
 	Button fOmitSuperButton;
 
-	IMethodBinding[] fSuperConstructors;
+	IFunctionBinding[] fSuperConstructors;
 
 	int fSuperIndex;
 
@@ -99,7 +99,7 @@ public class GenerateConstructorUsingFieldsSelectionDialog extends SourceActionD
 
 	private static final int UP_INDEX= 0;
 
-	public GenerateConstructorUsingFieldsSelectionDialog(Shell parent, ILabelProvider labelProvider, GenerateConstructorUsingFieldsContentProvider contentProvider, CompilationUnitEditor editor, IType type, IMethodBinding[] superConstructors) throws JavaModelException {
+	public GenerateConstructorUsingFieldsSelectionDialog(Shell parent, ILabelProvider labelProvider, GenerateConstructorUsingFieldsContentProvider contentProvider, CompilationUnitEditor editor, IType type, IFunctionBinding[] superConstructors) throws JavaScriptModelException {
 		super(parent, labelProvider, contentProvider, editor, type, true);
 		fTreeViewerAdapter= new GenerateConstructorUsingFieldsTreeViewerAdapter();
 
@@ -287,7 +287,7 @@ public class GenerateConstructorUsingFieldsSelectionDialog extends SourceActionD
 			// Disable omit super checkbox unless default constructor and enum
 			final boolean hasContructor= getSuperConstructorChoice().getParameterTypes().length == 0;
 			fOmitSuperButton.setEnabled(hasContructor && !getType().isEnum());
-		} catch (JavaModelException exception) {
+		} catch (JavaScriptModelException exception) {
 			JavaPlugin.log(exception);
 		}
 		GridData gd= new GridData(GridData.HORIZONTAL_ALIGN_FILL);
@@ -330,7 +330,7 @@ public class GenerateConstructorUsingFieldsSelectionDialog extends SourceActionD
 		try {
 			if (getType().isEnum())
 				visibilities= new int[] { };
-		} catch (JavaModelException exception) {
+		} catch (JavaScriptModelException exception) {
 			JavaPlugin.log(exception);
 		}
 		return createVisibilityControl(parent, visibilityChangeListener, visibilities, correctVisibility);
@@ -347,7 +347,7 @@ public class GenerateConstructorUsingFieldsSelectionDialog extends SourceActionD
 		return elementList;
 	}
 
-	public IMethodBinding getSuperConstructorChoice() {
+	public IFunctionBinding getSuperConstructorChoice() {
 		return fSuperConstructors[fSuperIndex];
 	}
 

@@ -28,8 +28,8 @@ import org.eclipse.jface.text.templates.GlobalTemplateVariables;
 import org.eclipse.jface.text.templates.Template;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.dom.Statement;
 import org.eclipse.wst.jsdt.internal.corext.template.java.CompilationUnitContext;
 import org.eclipse.wst.jsdt.internal.corext.template.java.CompilationUnitContextType;
@@ -63,7 +63,7 @@ public class QuickTemplateProcessor implements IQuickAssistProcessor {
 	 * @see org.eclipse.wst.jsdt.internal.ui.text.correction.IAssistProcessor#hasAssists(org.eclipse.wst.jsdt.internal.ui.text.correction.IAssistContext)
 	 */
 	public boolean hasAssists(IInvocationContext context) throws CoreException {
-		ICompilationUnit cu= context.getCompilationUnit();
+		IJavaScriptUnit cu= context.getCompilationUnit();
 		IDocument document= getDocument(cu);
 
 		int offset= context.getSelectionOffset();
@@ -97,7 +97,7 @@ public class QuickTemplateProcessor implements IQuickAssistProcessor {
 				return null;
 			}
 
-			ICompilationUnit cu= context.getCompilationUnit();
+			IJavaScriptUnit cu= context.getCompilationUnit();
 			IDocument document= getDocument(cu);
 
 			// test if selection is either a full line or spans over multiple lines
@@ -141,7 +141,7 @@ public class QuickTemplateProcessor implements IQuickAssistProcessor {
 		});
 	}
 
-	private IDocument getDocument(ICompilationUnit cu) throws JavaModelException {
+	private IDocument getDocument(IJavaScriptUnit cu) throws JavaScriptModelException {
 		IFile file= (IFile) cu.getResource();
 		IDocument document= JavaUI.getDocumentProvider().getDocument(new FileEditorInput(file));
 		if (document == null) {
@@ -150,7 +150,7 @@ public class QuickTemplateProcessor implements IQuickAssistProcessor {
 		return document;
 	}
 
-	private void collectSurroundTemplates(IDocument document, ICompilationUnit cu, int offset, int length, Collection result) throws BadLocationException, CoreException {
+	private void collectSurroundTemplates(IDocument document, IJavaScriptUnit cu, int offset, int length, Collection result) throws BadLocationException, CoreException {
 		CompilationUnitContextType contextType= (CompilationUnitContextType) JavaPlugin.getDefault().getTemplateContextRegistry().getContextType(JavaContextType.NAME);
 		CompilationUnitContext context= contextType.createContext(document, offset, length, cu);
 		context.setVariable("selection", document.get(offset, length)); //$NON-NLS-1$

@@ -25,10 +25,10 @@ import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.part.Page;
 import org.eclipse.ui.texteditor.IEditorStatusLine;
 import org.eclipse.wst.jsdt.core.IClassFile;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.core.ISourceRange;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionUtil;
@@ -132,7 +132,7 @@ public class FindOccurrencesInFileAction extends SelectionDispatchAction {
 			try {
 				if (member.getNameRange() == null)
 					return null;
-			} catch (JavaModelException ex) {
+			} catch (JavaScriptModelException ex) {
 				return null;
 			}
 			
@@ -141,7 +141,7 @@ public class FindOccurrencesInFileAction extends SelectionDispatchAction {
 				try {
 					if (file.getSourceRange() != null)
 						return member;
-				} catch (JavaModelException e) {
+				} catch (JavaScriptModelException e) {
 					return null;
 				}
 			}
@@ -160,7 +160,7 @@ public class FindOccurrencesInFileAction extends SelectionDispatchAction {
 			String result= engine.run(range.getOffset(), range.getLength());
 			if (result != null)
 				showMessage(getShell(), fActionBars, result);
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			JavaPlugin.log(e);
 		}
 	}
@@ -186,7 +186,7 @@ public class FindOccurrencesInFileAction extends SelectionDispatchAction {
 	 * Method declared in SelectionDispatchAction.
 	 */
 	public final void run(ITextSelection ts) {
-		IJavaElement input= getEditorInput(fEditor);
+		IJavaScriptElement input= getEditorInput(fEditor);
 		if (!ActionUtil.isProcessable(getShell(), input))
 			return;
 		FindOccurrencesEngine engine= FindOccurrencesEngine.create(input, new OccurrencesFinder());
@@ -194,12 +194,12 @@ public class FindOccurrencesInFileAction extends SelectionDispatchAction {
 			String result= engine.run(ts.getOffset(), ts.getLength());
 			if (result != null)
 				showMessage(getShell(), fEditor, result);
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			JavaPlugin.log(e);
 		}
 	}
 
-	private static IJavaElement getEditorInput(JavaEditor editor) {
+	private static IJavaScriptElement getEditorInput(JavaEditor editor) {
 		IEditorInput input= editor.getEditorInput();
 		if (input instanceof IClassFileEditorInput)
 			return ((IClassFileEditorInput)input).getClassFile();

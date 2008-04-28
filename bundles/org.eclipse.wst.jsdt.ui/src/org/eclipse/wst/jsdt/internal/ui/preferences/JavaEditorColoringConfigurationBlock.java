@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.Scrollable;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaSourceViewer;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.SemanticHighlighting;
@@ -283,7 +283,7 @@ class JavaEditorColoringConfigurationBlock extends AbstractConfigurationBlock {
 	 */
 	private static final String UNDERLINE= PreferenceConstants.EDITOR_UNDERLINE_SUFFIX;
 	
-	private static final String COMPILER_TASK_TAGS= JavaCore.COMPILER_TASK_TAGS;
+	private static final String COMPILER_TASK_TAGS= JavaScriptCore.COMPILER_TASK_TAGS;
 	/**
 	 * The keys of the overlay store. 
 	 */
@@ -776,7 +776,7 @@ class JavaEditorColoringConfigurationBlock extends AbstractConfigurationBlock {
 		SimpleJavaSourceViewerConfiguration configuration= new SimpleJavaSourceViewerConfiguration(fColorManager, store, null, IJavaPartitions.JAVA_PARTITIONING, false);
 		fPreviewViewer.configure(configuration);
 		// fake 1.5 source to get 1.5 features right.
-		configuration.handlePropertyChangeEvent(new PropertyChangeEvent(this, JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_4, JavaCore.VERSION_1_5));
+		configuration.handlePropertyChangeEvent(new PropertyChangeEvent(this, JavaScriptCore.COMPILER_SOURCE, JavaScriptCore.VERSION_1_4, JavaScriptCore.VERSION_1_5));
 		Font font= JFaceResources.getFont(PreferenceConstants.EDITOR_TEXT_FONT);
 		fPreviewViewer.getTextWidget().setFont(font);
 		new JavaSourcePreviewerUpdater(fPreviewViewer, configuration, store);

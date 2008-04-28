@@ -12,9 +12,9 @@ package org.eclipse.wst.jsdt.ui.actions;
 
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.JavaModelException;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchScope;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaEditor;
@@ -61,11 +61,11 @@ public class FindReadReferencesInProjectAction extends FindReadReferencesAction 
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IJavaHelpContextIds.FIND_READ_REFERENCES_IN_PROJECT_ACTION);
 	}
 	
-	QuerySpecification createQuery(IJavaElement element) throws JavaModelException {
+	QuerySpecification createQuery(IJavaScriptElement element) throws JavaScriptModelException {
 		JavaSearchScopeFactory factory= JavaSearchScopeFactory.getInstance();
 		JavaEditor editor= getEditor();
 		
-		IJavaSearchScope scope;
+		IJavaScriptSearchScope scope;
 		String description;
 		boolean isInsideJRE= factory.isInsideJRE(element);
 		if (editor != null) {

@@ -42,29 +42,29 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.progress.IProgressService;
-import org.eclipse.wst.jsdt.core.IClasspathEntry;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IIncludePathEntry;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IPackageDeclaration;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.JavaConventions;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptConventions;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.core.dom.ASTNode;
 import org.eclipse.wst.jsdt.core.dom.AbstractTypeDeclaration;
-import org.eclipse.wst.jsdt.core.dom.CompilationUnit;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
 import org.eclipse.wst.jsdt.core.dom.IBinding;
 import org.eclipse.wst.jsdt.core.dom.ImportDeclaration;
 import org.eclipse.wst.jsdt.core.dom.Modifier;
 import org.eclipse.wst.jsdt.core.dom.Name;
 import org.eclipse.wst.jsdt.core.dom.SimpleName;
 import org.eclipse.wst.jsdt.core.dom.Type;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchConstants;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchScope;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchConstants;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.core.search.SearchEngine;
 import org.eclipse.wst.jsdt.core.search.SearchPattern;
 import org.eclipse.wst.jsdt.core.search.TypeNameMatch;
@@ -99,14 +99,14 @@ import org.eclipse.wst.jsdt.ui.text.java.IProblemLocation;
 public class ReorgCorrectionsSubProcessor {
 
 	public static void getWrongTypeNameProposals(IInvocationContext context, IProblemLocation problem, Collection proposals) throws CoreException {
-		ICompilationUnit cu= context.getCompilationUnit();
+		IJavaScriptUnit cu= context.getCompilationUnit();
 		boolean isLinked= cu.getResource().isLinked();
 
-		IJavaProject javaProject= cu.getJavaProject();
-		String sourceLevel= javaProject.getOption(JavaCore.COMPILER_SOURCE, true);
-		String compliance= javaProject.getOption(JavaCore.COMPILER_COMPLIANCE, true);
+		IJavaScriptProject javaProject= cu.getJavaProject();
+		String sourceLevel= javaProject.getOption(JavaScriptCore.COMPILER_SOURCE, true);
+		String compliance= javaProject.getOption(JavaScriptCore.COMPILER_COMPLIANCE, true);
 		
-		CompilationUnit root= context.getASTRoot();
+		JavaScriptUnit root= context.getASTRoot();
 		
 		ASTNode coveredNode= problem.getCoveredNode(root);
 		if (!(coveredNode instanceof SimpleName))
@@ -117,7 +117,7 @@ public class ReorgCorrectionsSubProcessor {
 			return;
 		
 		String currTypeName= ((SimpleName) coveredNode).getIdentifier();
-		String newTypeName= JavaCore.removeJavaLikeExtension(cu.getElementName());
+		String newTypeName= JavaScriptCore.removeJavaLikeExtension(cu.getElementName());
 				
 		boolean hasOtherPublicTypeBefore= false;
 		
@@ -136,14 +136,14 @@ public class ReorgCorrectionsSubProcessor {
 				 found= true;
 			 }
 		 }
-		if (!JavaConventions.validateJavaTypeName(newTypeName, sourceLevel, compliance).matches(IStatus.ERROR)) {
+		if (!JavaScriptConventions.validateJavaTypeName(newTypeName, sourceLevel, compliance).matches(IStatus.ERROR)) {
 			proposals.add(new CorrectMainTypeNameProposal(cu, context, currTypeName, newTypeName, 5));
 		}
 		
 		if (!hasOtherPublicTypeBefore) {
 			String newCUName= JavaModelUtil.getRenamedCUName(cu, currTypeName);
-			ICompilationUnit newCU= ((IPackageFragment) (cu.getParent())).getCompilationUnit(newCUName);
-			if (!newCU.exists() && !isLinked && !JavaConventions.validateCompilationUnitName(newCUName, sourceLevel, compliance).matches(IStatus.ERROR)) {
+			IJavaScriptUnit newCU= ((IPackageFragment) (cu.getParent())).getCompilationUnit(newCUName);
+			if (!newCU.exists() && !isLinked && !JavaScriptConventions.validateCompilationUnitName(newCUName, sourceLevel, compliance).matches(IStatus.ERROR)) {
 				RenameCompilationUnitChange change= new RenameCompilationUnitChange(cu, newCUName);
 	
 				// rename CU
@@ -154,7 +154,7 @@ public class ReorgCorrectionsSubProcessor {
 	}
 
 	public static void getWrongPackageDeclNameProposals(IInvocationContext context, IProblemLocation problem, Collection proposals) throws CoreException {
-		ICompilationUnit cu= context.getCompilationUnit();
+		IJavaScriptUnit cu= context.getCompilationUnit();
 		boolean isLinked= cu.getResource().isLinked();
 
 		// correct package declaration
@@ -168,7 +168,7 @@ public class ReorgCorrectionsSubProcessor {
 		IPackageFragmentRoot root= JavaModelUtil.getPackageFragmentRoot(cu);
 		IPackageFragment newPack= root.getPackageFragment(newPackName);
 
-		ICompilationUnit newCU= newPack.getCompilationUnit(cu.getElementName());
+		IJavaScriptUnit newCU= newPack.getCompilationUnit(cu.getElementName());
 		if (!newCU.exists() && !isLinked) {
 			String label;
 			if (newPack.isDefaultPackage()) {
@@ -194,7 +194,7 @@ public class ReorgCorrectionsSubProcessor {
 			proposals.add(proposal);
 		}
 		
-		final ICompilationUnit cu= context.getCompilationUnit();
+		final IJavaScriptUnit cu= context.getCompilationUnit();
 		String name= CorrectionMessages.ReorgCorrectionsSubProcessor_organizeimports_description;
 		ChangeCorrectionProposal proposal= new ChangeCorrectionProposal(name, null, 5, JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE)) {
 			public void apply(IDocument document) {
@@ -214,8 +214,8 @@ public class ReorgCorrectionsSubProcessor {
 	}
 
 	public static void importNotFoundProposals(IInvocationContext context, IProblemLocation problem, Collection proposals) throws CoreException {
-		ICompilationUnit cu= context.getCompilationUnit();
-		IJavaProject project= cu.getJavaProject();
+		IJavaScriptUnit cu= context.getCompilationUnit();
+		IJavaScriptProject project= cu.getJavaProject();
 
 		ASTNode selectedNode= problem.getCoveringNode(context.getASTRoot());
 		if (selectedNode != null) {
@@ -238,13 +238,13 @@ public class ReorgCorrectionsSubProcessor {
 				packageName= Signature.getQualifier(name).toCharArray();
 				typeName= Signature.getSimpleName(name).toCharArray();
 			}
-			IJavaSearchScope scope= SearchEngine.createWorkspaceScope();
+			IJavaScriptSearchScope scope= SearchEngine.createWorkspaceScope();
 			ArrayList res= new ArrayList();
 			TypeNameMatchCollector requestor= new TypeNameMatchCollector(res);
 			int matchMode= SearchPattern.R_EXACT_MATCH | SearchPattern.R_CASE_SENSITIVE;
 			new SearchEngine().searchAllTypeNames(packageName, matchMode, typeName,
-					matchMode, IJavaSearchConstants.TYPE, scope, requestor,
-					IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
+					matchMode, IJavaScriptSearchConstants.TYPE, scope, requestor,
+					IJavaScriptSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
 
 			if (res.isEmpty()) {
 				return;
@@ -254,24 +254,24 @@ public class ReorgCorrectionsSubProcessor {
 				TypeNameMatch curr= (TypeNameMatch) res.get(i);
 				IType type= curr.getType();
 				if (type != null) {
-					IPackageFragmentRoot root= (IPackageFragmentRoot) type.getAncestor(IJavaElement.PACKAGE_FRAGMENT_ROOT);
-					IClasspathEntry entry= root.getRawClasspathEntry();
+					IPackageFragmentRoot root= (IPackageFragmentRoot) type.getAncestor(IJavaScriptElement.PACKAGE_FRAGMENT_ROOT);
+					IIncludePathEntry entry= root.getRawClasspathEntry();
 					if (entry == null) {
 						continue;
 					}
-					IJavaProject other= root.getJavaProject();
+					IJavaScriptProject other= root.getJavaProject();
 					int entryKind= entry.getEntryKind();
-					if ((entry.isExported() || entryKind == IClasspathEntry.CPE_SOURCE) && addedClaspaths.add(other)) {
+					if ((entry.isExported() || entryKind == IIncludePathEntry.CPE_SOURCE) && addedClaspaths.add(other)) {
 						String[] args= { other.getElementName(), project.getElementName() };
 						String label= Messages.format(CorrectionMessages.ReorgCorrectionsSubProcessor_addcp_project_description, args);
-						IClasspathEntry newEntry= JavaCore.newProjectEntry(other.getPath());
+						IIncludePathEntry newEntry= JavaScriptCore.newProjectEntry(other.getPath());
 						AddToClasspathChange change= new AddToClasspathChange(project, newEntry);
 						if (change.validateClasspath()) {
 							ChangeCorrectionProposal proposal= new ChangeCorrectionProposal(label, change, 8, JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE));
 							proposals.add(proposal);
 						}
 					}
-					if ((entryKind == IClasspathEntry.CPE_LIBRARY || entryKind == IClasspathEntry.CPE_VARIABLE || entryKind == IClasspathEntry.CPE_CONTAINER) && addedClaspaths.add(entry)) {
+					if ((entryKind == IIncludePathEntry.CPE_LIBRARY || entryKind == IIncludePathEntry.CPE_VARIABLE || entryKind == IIncludePathEntry.CPE_CONTAINER) && addedClaspaths.add(entry)) {
 						String label= getAddClasspathLabel(entry, root, project);
 						if (label != null) {
 							AddToClasspathChange change= new AddToClasspathChange(project, entry);
@@ -286,9 +286,9 @@ public class ReorgCorrectionsSubProcessor {
 		}
 	}
 
-	private static String getAddClasspathLabel(IClasspathEntry entry, IPackageFragmentRoot root, IJavaProject project) {
+	private static String getAddClasspathLabel(IIncludePathEntry entry, IPackageFragmentRoot root, IJavaScriptProject project) {
 		switch (entry.getEntryKind()) {
-			case IClasspathEntry.CPE_LIBRARY:
+			case IIncludePathEntry.CPE_LIBRARY:
 				if (root.isArchive()) {
 					String[] args= { JavaElementLabels.getElementLabel(root, JavaElementLabels.REFERENCED_ROOT_POST_QUALIFIED), project.getElementName() };
 					return Messages.format(CorrectionMessages.ReorgCorrectionsSubProcessor_addcp_archive_description, args);
@@ -296,15 +296,15 @@ public class ReorgCorrectionsSubProcessor {
 					String[] args= { JavaElementLabels.getElementLabel(root, JavaElementLabels.REFERENCED_ROOT_POST_QUALIFIED), project.getElementName() };
 					return Messages.format(CorrectionMessages.ReorgCorrectionsSubProcessor_addcp_classfolder_description, args);
 				}
-			case IClasspathEntry.CPE_VARIABLE: {
+			case IIncludePathEntry.CPE_VARIABLE: {
 					String[] args= { JavaElementLabels.getElementLabel(root, 0), project.getElementName() };
 					return Messages.format(CorrectionMessages.ReorgCorrectionsSubProcessor_addcp_variable_description, args);
 				}
-			case IClasspathEntry.CPE_CONTAINER:
+			case IIncludePathEntry.CPE_CONTAINER:
 				try {
 					String[] args= { JavaElementLabels.getContainerEntryLabel(entry.getPath(), root.getJavaProject()), project.getElementName() };
 					return Messages.format(CorrectionMessages.ReorgCorrectionsSubProcessor_addcp_library_description, args);
-				} catch (JavaModelException e) {
+				} catch (JavaScriptModelException e) {
 					// ignore
 				}
 				break;
@@ -324,20 +324,20 @@ public class ReorgCorrectionsSubProcessor {
 		public void apply(IDocument document) {
 			Map data= null;
 			if (fReferencedType != null) {
-				IJavaElement elem= fReferencedType.getJavaElement();
+				IJavaScriptElement elem= fReferencedType.getJavaElement();
 				if (elem != null) {
-					IPackageFragmentRoot root= (IPackageFragmentRoot) elem.getAncestor(IJavaElement.PACKAGE_FRAGMENT_ROOT);
+					IPackageFragmentRoot root= (IPackageFragmentRoot) elem.getAncestor(IJavaScriptElement.PACKAGE_FRAGMENT_ROOT);
 					if (root != null) {
 						try {
-							IClasspathEntry entry= root.getRawClasspathEntry();
+							IIncludePathEntry entry= root.getRawClasspathEntry();
 							if (entry != null) {
 								data= new HashMap(1);
 								data.put(BuildPathsPropertyPage.DATA_REVEAL_ENTRY, entry);
-								if (entry.getEntryKind() != IClasspathEntry.CPE_CONTAINER) {
+								if (entry.getEntryKind() != IIncludePathEntry.CPE_CONTAINER) {
 									data.put(BuildPathsPropertyPage.DATA_REVEAL_ATTRIBUTE_KEY, CPListElement.ACCESSRULES);
 								}
 							}
-						} catch (JavaModelException e) {
+						} catch (JavaScriptModelException e) {
 							// ignore
 						}
 					}
@@ -352,13 +352,13 @@ public class ReorgCorrectionsSubProcessor {
 
 	private static final class ChangeTo50Compliance extends ChangeCorrectionProposal implements IWorkspaceRunnable {
 		
-		private final IJavaProject fProject;
+		private final IJavaScriptProject fProject;
 		private final boolean fChangeOnWorkspace;
 		
 		private Job fUpdateJob;
 		private boolean f50JREFound;
 		
-		public ChangeTo50Compliance(String name, IJavaProject project, boolean changeOnWorkspace, int relevance) {
+		public ChangeTo50Compliance(String name, IJavaScriptProject project, boolean changeOnWorkspace, int relevance) {
 			super(name, null, relevance, JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE));
 			fProject= project;
 			fChangeOnWorkspace= changeOnWorkspace;
@@ -368,7 +368,7 @@ public class ReorgCorrectionsSubProcessor {
 		
 		private boolean is50orGreaterVMInstall(IVMInstall install) {
 			if (install instanceof IVMInstall2) {
-				String compliance= JavaModelUtil.getCompilerCompliance((IVMInstall2) install, JavaCore.VERSION_1_3);
+				String compliance= JavaModelUtil.getCompilerCompliance((IVMInstall2) install, JavaScriptCore.VERSION_1_3);
 				return JavaModelUtil.is50OrHigher(compliance);
 			}
 			return false;
@@ -394,7 +394,7 @@ public class ReorgCorrectionsSubProcessor {
 			}
 		}
 		
-		private boolean updateJRE( IProgressMonitor monitor) throws CoreException, JavaModelException {
+		private boolean updateJRE( IProgressMonitor monitor) throws CoreException, JavaScriptModelException {
 			try {
 				IVMInstall vm50Install= find50OrGreaterVMInstall();
 				f50JREFound= vm50Install != null;
@@ -428,13 +428,13 @@ public class ReorgCorrectionsSubProcessor {
 			return true;
 		}
 
-		private void updateClasspath(IPath newPath, IProgressMonitor monitor) throws JavaModelException {
-			IClasspathEntry[] classpath= fProject.getRawClasspath();
+		private void updateClasspath(IPath newPath, IProgressMonitor monitor) throws JavaScriptModelException {
+			IIncludePathEntry[] classpath= fProject.getRawClasspath();
 			IPath jreContainerPath= new Path(JavaRuntime.JRE_CONTAINER);
 			for (int i= 0; i < classpath.length; i++) {
-				IClasspathEntry curr= classpath[i];
-				if (curr.getEntryKind() == IClasspathEntry.CPE_CONTAINER && curr.getPath().matchingFirstSegments(jreContainerPath) > 0) {
-					classpath[i]= JavaCore.newContainerEntry(newPath, curr.getAccessRules(), curr.getExtraAttributes(), curr.isExported());
+				IIncludePathEntry curr= classpath[i];
+				if (curr.getEntryKind() == IIncludePathEntry.CPE_CONTAINER && curr.getPath().matchingFirstSegments(jreContainerPath) > 0) {
+					classpath[i]= JavaScriptCore.newContainerEntry(newPath, curr.getAccessRules(), curr.getExtraAttributes(), curr.isExported());
 				}
 			}
 			fProject.setRawClasspath(classpath, monitor);
@@ -480,16 +480,16 @@ public class ReorgCorrectionsSubProcessor {
 		 */
 		public void apply(IDocument document) {
 			if (fChangeOnWorkspace) {
-				Hashtable map= JavaCore.getOptions();
+				Hashtable map= JavaScriptCore.getOptions();
 				JavaModelUtil.set50CompilanceOptions(map);
-				JavaCore.setOptions(map);
+				JavaScriptCore.setOptions(map);
 			} else {
 				Map map= fProject.getOptions(false);
 				int optionsCount= map.size();
 				JavaModelUtil.set50CompilanceOptions(map);
 				if (map.size() > optionsCount) {
 					// options have been added -> ensure that all compliance options from preference page set
-					JavaModelUtil.setDefaultClassfileOptions(map, JavaCore.VERSION_1_5);
+					JavaModelUtil.setDefaultClassfileOptions(map, JavaScriptCore.VERSION_1_5);
 				}
 				fProject.setOptions(map);
 			}
@@ -513,12 +513,12 @@ public class ReorgCorrectionsSubProcessor {
 	}
 
 	public static void getNeed50ComplianceProposals(IInvocationContext context, IProblemLocation problem, Collection proposals) {
-		IJavaProject project= context.getCompilationUnit().getJavaProject();
+		IJavaScriptProject project= context.getCompilationUnit().getJavaProject();
 		
 		String label1= CorrectionMessages.ReorgCorrectionsSubProcessor_50_project_compliance_description;
 		proposals.add(new ChangeTo50Compliance(label1, project, false, 5));
 
-		if (project.getOption(JavaCore.COMPILER_COMPLIANCE, false) == null) {
+		if (project.getOption(JavaScriptCore.COMPILER_COMPLIANCE, false) == null) {
 			String label2= CorrectionMessages.ReorgCorrectionsSubProcessor_50_workspace_compliance_description;
 			proposals.add(new ChangeTo50Compliance(label2, project, true, 6));
 		}

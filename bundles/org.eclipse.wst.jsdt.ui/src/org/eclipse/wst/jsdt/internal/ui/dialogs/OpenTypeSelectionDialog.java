@@ -14,7 +14,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchScope;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.ui.dialogs.TypeSelectionExtension;
@@ -26,11 +26,11 @@ public class OpenTypeSelectionDialog extends FilteredTypesSelectionDialog {
 
 	private static final String DIALOG_SETTINGS= "org.eclipse.wst.jsdt.internal.ui.dialogs.OpenTypeSelectionDialog2"; //$NON-NLS-1$
 
-	public OpenTypeSelectionDialog(Shell parent, boolean multi, IRunnableContext context, IJavaSearchScope scope, int elementKinds) {
+	public OpenTypeSelectionDialog(Shell parent, boolean multi, IRunnableContext context, IJavaScriptSearchScope scope, int elementKinds) {
 		this(parent, multi, context, scope, elementKinds, null);
 	}
 
-	public OpenTypeSelectionDialog(Shell parent, boolean multi, IRunnableContext context, IJavaSearchScope scope, int elementKinds, TypeSelectionExtension extension) {
+	public OpenTypeSelectionDialog(Shell parent, boolean multi, IRunnableContext context, IJavaScriptSearchScope scope, int elementKinds, TypeSelectionExtension extension) {
 		super(parent, multi, context, scope, elementKinds, extension);
 	}
 

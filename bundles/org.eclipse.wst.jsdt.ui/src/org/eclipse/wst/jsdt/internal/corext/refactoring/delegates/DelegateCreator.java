@@ -21,7 +21,7 @@ import org.eclipse.ltk.core.refactoring.CategorizedTextEditGroup;
 import org.eclipse.ltk.core.refactoring.GroupCategory;
 import org.eclipse.ltk.core.refactoring.GroupCategorySet;
 import org.eclipse.text.edits.TextEdit;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.dom.AST;
 import org.eclipse.wst.jsdt.core.dom.ASTNode;
 import org.eclipse.wst.jsdt.core.dom.AbstractTypeDeclaration;
@@ -32,7 +32,7 @@ import org.eclipse.wst.jsdt.core.dom.ChildPropertyDescriptor;
 import org.eclipse.wst.jsdt.core.dom.Expression;
 import org.eclipse.wst.jsdt.core.dom.IBinding;
 import org.eclipse.wst.jsdt.core.dom.ITypeBinding;
-import org.eclipse.wst.jsdt.core.dom.Javadoc;
+import org.eclipse.wst.jsdt.core.dom.JSdoc;
 import org.eclipse.wst.jsdt.core.dom.Name;
 import org.eclipse.wst.jsdt.core.dom.TagElement;
 import org.eclipse.wst.jsdt.core.dom.TextElement;
@@ -236,9 +236,9 @@ public abstract class DelegateCreator {
 	 * 
 	 * @param declaration the member declaration
 	 * @return the body of the delegate
-	 * @throws JavaModelException
+	 * @throws JavaScriptModelException
 	 */
-	protected abstract ASTNode createBody(BodyDeclaration declaration) throws JavaModelException;
+	protected abstract ASTNode createBody(BodyDeclaration declaration) throws JavaScriptModelException;
 
 	/**
 	 * Creates the javadoc reference to the old member to be put inside the
@@ -248,9 +248,9 @@ public abstract class DelegateCreator {
 	 * 
 	 * @param declaration the member declaration
 	 * @return the javadoc link node
-	 * @throws JavaModelException
+	 * @throws JavaScriptModelException
 	 */
-	protected abstract ASTNode createDocReference(BodyDeclaration declaration) throws JavaModelException;
+	protected abstract ASTNode createDocReference(BodyDeclaration declaration) throws JavaScriptModelException;
 
 	/**
 	 * Returns the node of the declaration on which to add the body.
@@ -304,7 +304,7 @@ public abstract class DelegateCreator {
 	 * and/or new declaring type, if any.
 	 * 
 	 */
-	public void prepareDelegate() throws JavaModelException {
+	public void prepareDelegate() throws JavaScriptModelException {
 		Assert.isNotNull(fDelegateRewrite);
 		Assert.isNotNull(fDeclaration);
 
@@ -333,27 +333,27 @@ public abstract class DelegateCreator {
 	/**
 	 * Creates the javadoc for the delegate.
 	 * 
-	 * @throws JavaModelException
+	 * @throws JavaScriptModelException
 	 */
-	private void createJavadoc() throws JavaModelException {
+	private void createJavadoc() throws JavaScriptModelException {
 		TagElement tag= getDelegateJavadocTag(fDeclaration);
 
-		Javadoc comment= fDeclaration.getJavadoc();
+		JSdoc comment= fDeclaration.getJavadoc();
 		if (comment == null) {
-			comment= getAst().newJavadoc();
+			comment= getAst().newJSdoc();
 			comment.tags().add(tag);
 			fDelegateRewrite.getASTRewrite().set(fDeclaration, getJavaDocProperty(), comment, null);
 		} else
-			fDelegateRewrite.getASTRewrite().getListRewrite(comment, Javadoc.TAGS_PROPERTY).insertLast(tag, null);
+			fDelegateRewrite.getASTRewrite().getListRewrite(comment, JSdoc.TAGS_PROPERTY).insertLast(tag, null);
 	}
 	
 	/**
 	 * Performs the actual rewriting and adds an edit to the ASTRewrite set with
 	 * {@link #setSourceRewrite(CompilationUnitRewrite)}.
 	 * 
-	 * @throws JavaModelException
+	 * @throws JavaScriptModelException
 	 */
-	public void createEdit() throws JavaModelException {
+	public void createEdit() throws JavaScriptModelException {
 		try {
 			IDocument document= new Document(fDelegateRewrite.getCu().getBuffer().getContents());
 			TextEdit edit= fDelegateRewrite.getASTRewrite().rewriteAST(document, fDelegateRewrite.getCu().getJavaProject().getOptions(true));
@@ -401,7 +401,7 @@ public abstract class DelegateCreator {
 
 	// ******************* INTERNAL HELPERS ***************************
 
-	private TagElement getDelegateJavadocTag(BodyDeclaration declaration) throws JavaModelException {
+	private TagElement getDelegateJavadocTag(BodyDeclaration declaration) throws JavaScriptModelException {
 		Assert.isNotNull(declaration);
 		
 		String msg= RefactoringCoreMessages.DelegateCreator_use_member_instead;
@@ -425,7 +425,7 @@ public abstract class DelegateCreator {
 		return tag;
 	}
 
-	private TagElement createJavadocMemberReferenceTag(BodyDeclaration declaration, final AST ast) throws JavaModelException {
+	private TagElement createJavadocMemberReferenceTag(BodyDeclaration declaration, final AST ast) throws JavaScriptModelException {
 		Assert.isNotNull(ast);
 		Assert.isNotNull(declaration);
 		ASTNode javadocReference= createDocReference(declaration);

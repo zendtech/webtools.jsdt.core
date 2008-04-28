@@ -34,15 +34,15 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.team.core.TeamException;
 import org.eclipse.team.ui.history.ElementLocalHistoryPageSource;
 import org.eclipse.team.ui.history.HistoryPageCompareEditorInput;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.core.ISourceRange;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.dom.ASTNode;
 import org.eclipse.wst.jsdt.core.dom.AnnotationTypeDeclaration;
 import org.eclipse.wst.jsdt.core.dom.BodyDeclaration;
-import org.eclipse.wst.jsdt.core.dom.CompilationUnit;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
 import org.eclipse.wst.jsdt.core.dom.EnumDeclaration;
 import org.eclipse.wst.jsdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.wst.jsdt.internal.corext.SourceRange;
@@ -158,7 +158,7 @@ class JavaReplaceWithEditionActionImpl extends JavaHistoryActionImpl {
 	
 	private void performReplace(IMember input, IFile file,
 			ITextFileBuffer textFileBuffer, IDocument document, ITypedElement ti)
-			throws CoreException, JavaModelException,
+			throws CoreException, JavaScriptModelException,
 			InvocationTargetException, InterruptedException {
 		
 		if (ti instanceof IStreamContentAccessor) {
@@ -172,8 +172,8 @@ class JavaReplaceWithEditionActionImpl extends JavaHistoryActionImpl {
 				return;
 			}
 			
-			ICompilationUnit compilationUnit= input.getCompilationUnit();
-			CompilationUnit root= parsePartialCompilationUnit(compilationUnit);
+			IJavaScriptUnit compilationUnit= input.getCompilationUnit();
+			JavaScriptUnit root= parsePartialCompilationUnit(compilationUnit);
 			
 			
 			final ISourceRange nameRange= input.getNameRange();
@@ -204,7 +204,7 @@ class JavaReplaceWithEditionActionImpl extends JavaHistoryActionImpl {
 			}
 			
 			Map options= null;
-			IJavaProject javaProject= compilationUnit.getJavaProject();
+			IJavaScriptProject javaProject= compilationUnit.getJavaProject();
 			if (javaProject != null)
 				options= javaProject.getOptions(true);
 			applyChanges(rewriter, document, textFileBuffer, getShell(), inEditor, options);

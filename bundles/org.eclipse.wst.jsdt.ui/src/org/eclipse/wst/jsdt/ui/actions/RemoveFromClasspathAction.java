@@ -23,9 +23,9 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.jsdt.core.IClasspathEntry;
+import org.eclipse.wst.jsdt.core.IIncludePathEntry;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
@@ -120,11 +120,11 @@ public class RemoveFromClasspathAction extends SelectionDispatchAction {
 			return false;
 		IPackageFragmentRoot root= (IPackageFragmentRoot)element;
 		try {
-			IClasspathEntry cpe= root.getRawClasspathEntry();
-			if (cpe == null || cpe.getEntryKind() == IClasspathEntry.CPE_CONTAINER)
+			IIncludePathEntry cpe= root.getRawClasspathEntry();
+			if (cpe == null || cpe.getEntryKind() == IIncludePathEntry.CPE_CONTAINER)
 				return false; // don't want to remove the container if only a child is selected
 			return true;
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			if (JavaModelUtil.isExceptionToBeLogged(e))
 				JavaPlugin.log(e);
 		}

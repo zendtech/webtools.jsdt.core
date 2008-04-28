@@ -24,7 +24,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.rename.RenameFieldProcessor;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
@@ -140,7 +140,7 @@ public class RenameFieldWizard extends RenameRefactoringWizard {
 			if (fGetterRenamingErrorMessage != null)
 				return constructDisabledGetterRenamingLabel(defaultLabel);
 			try {
-				IMethod	getter= getRenameFieldProcessor().getGetter();
+				IFunction	getter= getRenameFieldProcessor().getGetter();
 				if (getter == null || ! getter.exists())
 					return defaultLabel;
 				String oldGetterName= getter.getElementName();
@@ -157,7 +157,7 @@ public class RenameFieldWizard extends RenameRefactoringWizard {
 			if (fSetterRenamingErrorMessage != null)
 				return constructDisabledSetterRenamingLabel(defaultLabel);
 			try {
-				IMethod	setter= getRenameFieldProcessor().getSetter();
+				IFunction	setter= getRenameFieldProcessor().getSetter();
 				if (setter == null || ! setter.exists())
 					return defaultLabel;
 				String oldSetterName= setter.getElementName();

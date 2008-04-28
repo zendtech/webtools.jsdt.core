@@ -32,7 +32,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
@@ -88,18 +88,18 @@ class JavaCompareUtilities {
 
 	static ImageDescriptor getImageDescriptor(int type) {
 		switch (type) {			
-		case IJavaElement.INITIALIZER:
-		case IJavaElement.METHOD:
+		case IJavaScriptElement.INITIALIZER:
+		case IJavaScriptElement.METHOD:
 			return getImageDescriptor("obj16/compare_method.gif"); //$NON-NLS-1$			
-		case IJavaElement.FIELD:
+		case IJavaScriptElement.FIELD:
 			return getImageDescriptor("obj16/compare_field.gif"); //$NON-NLS-1$
-		case IJavaElement.PACKAGE_DECLARATION:
+		case IJavaScriptElement.PACKAGE_DECLARATION:
 			return JavaPluginImages.DESC_OBJS_PACKDECL;
-		case IJavaElement.IMPORT_DECLARATION:
+		case IJavaScriptElement.IMPORT_DECLARATION:
 			return JavaPluginImages.DESC_OBJS_IMPDECL;
-		case IJavaElement.IMPORT_CONTAINER:
+		case IJavaScriptElement.IMPORT_CONTAINER:
 			return JavaPluginImages.DESC_OBJS_IMPCONT;
-		case IJavaElement.COMPILATION_UNIT:
+		case IJavaScriptElement.COMPILATION_UNIT:
 			return JavaPluginImages.DESC_OBJS_CUNIT;
 		}
 		return ImageDescriptor.getMissingImageDescriptor();
@@ -121,7 +121,7 @@ class JavaCompareUtilities {
 
 	static ImageDescriptor getImageDescriptor(IMember element) {
 		int t= element.getElementType();
-		if (t == IJavaElement.TYPE) {
+		if (t == IJavaScriptElement.TYPE) {
 			IType type= (IType) element;
 			try {
 				return getTypeImageDescriptor(type.isClass());
@@ -137,7 +137,7 @@ class JavaCompareUtilities {
 	 * Returns a name for the given Java element that uses the same conventions
 	 * as the JavaNode name of a corresponding element.
 	 */
-	static String getJavaElementID(IJavaElement je) {
+	static String getJavaElementID(IJavaScriptElement je) {
 		
 		if (je instanceof IMember && ((IMember)je).isBinary())
 			return null;
@@ -145,34 +145,34 @@ class JavaCompareUtilities {
 		StringBuffer sb= new StringBuffer();
 		
 		switch (je.getElementType()) {
-		case IJavaElement.COMPILATION_UNIT:
+		case IJavaScriptElement.COMPILATION_UNIT:
 			sb.append(COMPILATIONUNIT);
 			break;
-		case IJavaElement.TYPE:
+		case IJavaScriptElement.TYPE:
 			sb.append(TYPE);
 			sb.append(je.getElementName());
 			break;
-		case IJavaElement.FIELD:
+		case IJavaScriptElement.FIELD:
 			sb.append(FIELD);
 			sb.append(je.getElementName());
 			break;
-		case IJavaElement.METHOD:
+		case IJavaScriptElement.METHOD:
 			sb.append(METHOD);
 			sb.append(JavaElementLabels.getElementLabel(je, JavaElementLabels.M_PARAMETER_TYPES));
 			break;
-		case IJavaElement.INITIALIZER:
+		case IJavaScriptElement.INITIALIZER:
 			String id= je.getHandleIdentifier();
 			int pos= id.lastIndexOf(INITIALIZER);
 			if (pos >= 0)
 				sb.append(id.substring(pos));
 			break;
-		case IJavaElement.PACKAGE_DECLARATION:
+		case IJavaScriptElement.PACKAGE_DECLARATION:
 			sb.append(PACKAGEDECLARATION);
 			break;
-		case IJavaElement.IMPORT_CONTAINER:
+		case IJavaScriptElement.IMPORT_CONTAINER:
 			sb.append(IMPORT_CONTAINER);
 			break;
-		case IJavaElement.IMPORT_DECLARATION:
+		case IJavaScriptElement.IMPORT_DECLARATION:
 			sb.append(IMPORTDECLARATION);
 			sb.append(je.getElementName());			
 			break;

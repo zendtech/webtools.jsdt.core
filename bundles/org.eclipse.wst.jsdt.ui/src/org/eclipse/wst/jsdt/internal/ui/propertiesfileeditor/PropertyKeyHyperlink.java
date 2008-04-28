@@ -54,11 +54,11 @@ import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.texteditor.IEditorStatusLine;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchConstants;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchScope;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchConstants;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.core.search.SearchEngine;
 import org.eclipse.wst.jsdt.core.search.SearchMatch;
 import org.eclipse.wst.jsdt.core.search.SearchPattern;
@@ -334,7 +334,7 @@ public class PropertyKeyHyperlink implements IHyperlink {
 		try {
 			IEditorPart part= EditorUtility.openInEditor(keyReference.storage, true);
 			EditorUtility.revealInEditor(part, keyReference.offset, keyReference.length);
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			JavaPlugin.log(new Status(IStatus.ERROR, JavaPlugin.getPluginId(),
 				IJavaStatusConstants.INTERNAL_ERROR, PropertiesFileEditorMessages.OpenAction_error_message, e));
 
@@ -441,14 +441,14 @@ public class PropertyKeyHyperlink implements IHyperlink {
 							
 							if (result.size() == 0 && useDoubleQuotedKey) {
 								//Try without, maybe an eclipse style NLS string
-								IJavaElement element= JavaCore.create(scope);
+								IJavaScriptElement element= JavaScriptCore.create(scope);
 								if (element == null)
 									return;
 								
-								int includeMask = IJavaSearchScope.SOURCES | IJavaSearchScope.APPLICATION_LIBRARIES | IJavaSearchScope.REFERENCED_PROJECTS;
-								IJavaSearchScope javaSearchScope= SearchEngine.createJavaSearchScope(new IJavaElement[] { element }, includeMask);
+								int includeMask = IJavaScriptSearchScope.SOURCES | IJavaScriptSearchScope.APPLICATION_LIBRARIES | IJavaScriptSearchScope.REFERENCED_PROJECTS;
+								IJavaScriptSearchScope javaSearchScope= SearchEngine.createJavaSearchScope(new IJavaScriptElement[] { element }, includeMask);
 	
-								SearchPattern pattern= SearchPattern.createPattern(fPropertiesKey, IJavaSearchConstants.FIELD, IJavaSearchConstants.REFERENCES, SearchPattern.R_PATTERN_MATCH | SearchPattern.R_CASE_SENSITIVE);
+								SearchPattern pattern= SearchPattern.createPattern(fPropertiesKey, IJavaScriptSearchConstants.FIELD, IJavaScriptSearchConstants.REFERENCES, SearchPattern.R_PATTERN_MATCH | SearchPattern.R_CASE_SENSITIVE);
 								try {
 									new SearchEngine().search(pattern, SearchUtils.getDefaultSearchParticipants(), javaSearchScope, new SearchRequestor() {
 										public void acceptSearchMatch(SearchMatch match) throws CoreException {
@@ -481,7 +481,7 @@ public class PropertyKeyHyperlink implements IHyperlink {
 		ArrayList fileNamePatternStrings= new ArrayList();
 		
 		// XXX: Should be configurable via preference, see https://bugs.eclipse.org/bugs/show_bug.cgi?id=81117
-		String[] javaExtensions= JavaCore.getJavaLikeExtensions();
+		String[] javaExtensions= JavaScriptCore.getJavaLikeExtensions();
 		for (int i= 0; i < javaExtensions.length; i++)
 			fileNamePatternStrings.add("*." + javaExtensions[i]); //$NON-NLS-1$
 		fileNamePatternStrings.add("*.xml"); //$NON-NLS-1$

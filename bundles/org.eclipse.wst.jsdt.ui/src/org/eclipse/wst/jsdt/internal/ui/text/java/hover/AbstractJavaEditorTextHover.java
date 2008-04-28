@@ -33,8 +33,8 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.wst.jsdt.core.ICodeAssist;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.IClassFileEditorInput;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.WorkingCopyManager;
@@ -105,7 +105,7 @@ public abstract class AbstractJavaEditorTextHover implements IJavaEditorTextHove
 		ICodeAssist resolve= getCodeAssist();
 		if (resolve != null) {
 			try {
-				IJavaElement[] result= resolve.codeSelect(hoverRegion.getOffset(), hoverRegion.getLength());
+				IJavaScriptElement[] result= resolve.codeSelect(hoverRegion.getOffset(), hoverRegion.getLength());
 				if (result == null)
 					return null;
 
@@ -115,7 +115,7 @@ public abstract class AbstractJavaEditorTextHover implements IJavaEditorTextHove
 
 				return getHoverInfo(result);
 
-			} catch (JavaModelException x) {
+			} catch (JavaScriptModelException x) {
 				return null;
 			}
 		}
@@ -129,7 +129,7 @@ public abstract class AbstractJavaEditorTextHover implements IJavaEditorTextHove
 	 * @return the hover information string
 	 * @since 2.1
 	 */
-	protected String getHoverInfo(IJavaElement[] javaElements) {
+	protected String getHoverInfo(IJavaScriptElement[] javaElements) {
 		return null;
 	}
 

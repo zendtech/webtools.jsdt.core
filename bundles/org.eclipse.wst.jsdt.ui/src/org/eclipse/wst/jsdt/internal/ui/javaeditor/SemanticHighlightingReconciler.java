@@ -26,11 +26,11 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.dom.ASTNode;
 import org.eclipse.wst.jsdt.core.dom.BooleanLiteral;
 import org.eclipse.wst.jsdt.core.dom.CharacterLiteral;
-import org.eclipse.wst.jsdt.core.dom.CompilationUnit;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
 import org.eclipse.wst.jsdt.core.dom.Expression;
 import org.eclipse.wst.jsdt.core.dom.NumberLiteral;
 import org.eclipse.wst.jsdt.core.dom.RegularExpressionLiteral;
@@ -209,11 +209,11 @@ public class SemanticHighlightingReconciler implements IJavaReconcilingListener,
 	 */
 	private boolean fIsReconciling= false;
 
-	/** The semantic highlighting presenter - cache for background thread, only valid during {@link #reconciled(CompilationUnit, boolean, IProgressMonitor)} */
+	/** The semantic highlighting presenter - cache for background thread, only valid during {@link #reconciled(JavaScriptUnit, boolean, IProgressMonitor)} */
 	private SemanticHighlightingPresenter fJobPresenter;
-	/** Semantic highlightings - cache for background thread, only valid during {@link #reconciled(CompilationUnit, boolean, IProgressMonitor)} */
+	/** Semantic highlightings - cache for background thread, only valid during {@link #reconciled(JavaScriptUnit, boolean, IProgressMonitor)} */
 	private SemanticHighlighting[] fJobSemanticHighlightings;
-	/** Highlightings - cache for background thread, only valid during {@link #reconciled(CompilationUnit, boolean, IProgressMonitor)} */
+	/** Highlightings - cache for background thread, only valid during {@link #reconciled(JavaScriptUnit, boolean, IProgressMonitor)} */
 	private Highlighting[] fJobHighlightings;
 
 	/*
@@ -224,9 +224,9 @@ public class SemanticHighlightingReconciler implements IJavaReconcilingListener,
 	}
 
 	/*
-	 * @see org.eclipse.wst.jsdt.internal.ui.text.java.IJavaReconcilingListener#reconciled(CompilationUnit, boolean, IProgressMonitor)
+	 * @see org.eclipse.wst.jsdt.internal.ui.text.java.IJavaReconcilingListener#reconciled(JavaScriptUnit, boolean, IProgressMonitor)
 	 */
-	public void reconciled(CompilationUnit ast, boolean forced, IProgressMonitor progressMonitor) {
+	public void reconciled(JavaScriptUnit ast, boolean forced, IProgressMonitor progressMonitor) {
 		// ensure at most one thread can be reconciling at any time
 		synchronized (fReconcileLock) {
 			if (fIsReconciling)
@@ -399,7 +399,7 @@ public class SemanticHighlightingReconciler implements IJavaReconcilingListener,
 	 * Schedule a background job for retrieving the AST and reconciling the Semantic Highlighting model.
 	 */
 	private void scheduleJob() {
-		final IJavaElement element= fEditor.getInputJavaElement();
+		final IJavaScriptElement element= fEditor.getInputJavaElement();
 
 		synchronized (fJobLock) {
 			final Job oldJob= fJob;
@@ -421,7 +421,7 @@ public class SemanticHighlightingReconciler implements IJavaReconcilingListener,
 						}
 						if (monitor.isCanceled())
 							return Status.CANCEL_STATUS;
-						CompilationUnit ast= JavaPlugin.getDefault().getASTProvider().getAST(element, ASTProvider.WAIT_YES, monitor);
+						JavaScriptUnit ast= JavaPlugin.getDefault().getASTProvider().getAST(element, ASTProvider.WAIT_YES, monitor);
 						reconciled(ast, false, monitor);
 						synchronized (fJobLock) {
 							// allow the job to be gc'ed

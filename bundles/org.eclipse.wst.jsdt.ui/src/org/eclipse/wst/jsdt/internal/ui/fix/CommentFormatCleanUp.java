@@ -14,8 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.dom.CompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
 import org.eclipse.wst.jsdt.core.formatter.DefaultCodeFormatterConstants;
 import org.eclipse.wst.jsdt.internal.corext.fix.CleanUpConstants;
 import org.eclipse.wst.jsdt.internal.corext.fix.IFix;
@@ -31,7 +31,7 @@ public class CommentFormatCleanUp extends AbstractCleanUp {
 		super();
 	}
 	
-	public IFix createFix(ICompilationUnit compilationUnit) throws CoreException {
+	public IFix createFix(IJavaScriptUnit compilationUnit) throws CoreException {
 		if (compilationUnit == null)
 			return null;
 		
@@ -50,21 +50,21 @@ public class CommentFormatCleanUp extends AbstractCleanUp {
 	/**
 	 * {@inheritDoc}
 	 */
-	public IFix createFix(CompilationUnit compilationUnit) throws CoreException {
+	public IFix createFix(JavaScriptUnit compilationUnit) throws CoreException {
 		return null;
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean requireAST(ICompilationUnit unit) throws CoreException {
+	public boolean requireAST(IJavaScriptUnit unit) throws CoreException {
 		return false;
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public IFix createFix(CompilationUnit compilationUnit, IProblemLocation[] problems) throws CoreException {
+	public IFix createFix(JavaScriptUnit compilationUnit, IProblemLocation[] problems) throws CoreException {
 		if (compilationUnit == null)
 			return null;
 		
@@ -95,11 +95,11 @@ public class CommentFormatCleanUp extends AbstractCleanUp {
 	/**
 	 * {@inheritDoc}
 	 */
-	public int maximalNumberOfFixes(CompilationUnit compilationUnit) {
+	public int maximalNumberOfFixes(JavaScriptUnit compilationUnit) {
 		return -1;
 	}
 	
-	public boolean canFix(CompilationUnit compilationUnit, IProblemLocation problem) throws CoreException {
+	public boolean canFix(JavaScriptUnit compilationUnit, IProblemLocation problem) throws CoreException {
 		return false;
 	}
 	

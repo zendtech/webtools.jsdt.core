@@ -18,21 +18,21 @@ import org.eclipse.wst.jsdt.core.JsGlobalScopeContainerInitializer;
 import org.eclipse.wst.jsdt.core.Flags;
 import org.eclipse.wst.jsdt.core.IClassFile;
 import org.eclipse.wst.jsdt.core.IJsGlobalScopeContainer;
-import org.eclipse.wst.jsdt.core.IClasspathEntry;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IIncludePathEntry;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IField;
 import org.eclipse.wst.jsdt.core.IInitializer;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.ILocalVariable;
 import org.eclipse.wst.jsdt.core.IMember;
-import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.ITypeParameter;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
@@ -61,15 +61,15 @@ public class ColoredJavaElementLabels {
 	}
 	
 	/**
-	 * Returns the label of the given object. The object must be of type {@link IJavaElement} or adapt to {@link org.eclipse.ui.model.IWorkbenchAdapter}. The empty string is returned
+	 * Returns the label of the given object. The object must be of type {@link IJavaScriptElement} or adapt to {@link org.eclipse.ui.model.IWorkbenchAdapter}. The empty string is returned
 	 * if the element type is not known.
 	 * @param obj Object to get the label from.
 	 * @param flags The rendering flags
 	 * @return Returns the label or the empty string if the object type is not supported.
 	 */
 	public static ColoredString getTextLabel(Object obj, long flags) {
-		if (obj instanceof IJavaElement) {
-			return getElementLabel((IJavaElement) obj, flags);
+		if (obj instanceof IJavaScriptElement) {
+			return getElementLabel((IJavaScriptElement) obj, flags);
 		} else if (obj instanceof IResource) {
 			return new ColoredString(((IResource) obj).getName());
 		} else if (obj instanceof JsGlobalScopeContainer) {
@@ -85,7 +85,7 @@ public class ColoredJavaElementLabels {
 	 * @param flags The rendering flags.
 	 * @return the label of the Java element
 	 */
-	public static ColoredString getElementLabel(IJavaElement element, long flags) {
+	public static ColoredString getElementLabel(IJavaScriptElement element, long flags) {
 		ColoredString result= new ColoredString();
 		getElementLabel(element, flags, result);
 		return result;
@@ -97,11 +97,11 @@ public class ColoredJavaElementLabels {
 	 * @param flags The rendering flags.
 	 * @param result The buffer to append the resulting label to.
 	 */
-	public static void getElementLabel(IJavaElement element, long flags, ColoredString result) {
+	public static void getElementLabel(IJavaScriptElement element, long flags, ColoredString result) {
 		int type= element.getElementType();
 		IPackageFragmentRoot root= null;
 		
-		if (type != IJavaElement.JAVA_MODEL && type != IJavaElement.JAVA_PROJECT && type != IJavaElement.PACKAGE_FRAGMENT_ROOT)
+		if (type != IJavaScriptElement.JAVA_MODEL && type != IJavaScriptElement.JAVA_PROJECT && type != IJavaScriptElement.PACKAGE_FRAGMENT_ROOT)
 			root= JavaModelUtil.getPackageFragmentRoot(element);
 		if (root != null && getFlag(flags, JavaElementLabels.PREPEND_ROOT_PATH)) {
 			getPackageFragmentRootLabel(root, JavaElementLabels.ROOT_QUALIFIED, result);
@@ -109,40 +109,40 @@ public class ColoredJavaElementLabels {
 		}		
 		
 		switch (type) {
-			case IJavaElement.METHOD:
-				getMethodLabel((IMethod) element, flags, result);
+			case IJavaScriptElement.METHOD:
+				getMethodLabel((IFunction) element, flags, result);
 				break;
-			case IJavaElement.FIELD: 
+			case IJavaScriptElement.FIELD: 
 				getFieldLabel((IField) element, flags, result);
 				break;
-			case IJavaElement.LOCAL_VARIABLE: 
+			case IJavaScriptElement.LOCAL_VARIABLE: 
 				getLocalVariableLabel((ILocalVariable) element, flags, result);
 				break;
-			case IJavaElement.INITIALIZER:
+			case IJavaScriptElement.INITIALIZER:
 				getInitializerLabel((IInitializer) element, flags, result);
 				break;				
-			case IJavaElement.TYPE: 
+			case IJavaScriptElement.TYPE: 
 				getTypeLabel((IType) element, flags, result);
 				break;
-			case IJavaElement.CLASS_FILE: 
+			case IJavaScriptElement.CLASS_FILE: 
 				getClassFileLabel((IClassFile) element, flags, result);
 				break;					
-			case IJavaElement.COMPILATION_UNIT: 
-				getCompilationUnitLabel((ICompilationUnit) element, flags, result);
+			case IJavaScriptElement.COMPILATION_UNIT: 
+				getCompilationUnitLabel((IJavaScriptUnit) element, flags, result);
 				break;	
-			case IJavaElement.PACKAGE_FRAGMENT: 
+			case IJavaScriptElement.PACKAGE_FRAGMENT: 
 				getPackageFragmentLabel((IPackageFragment) element, flags, result);
 				break;
-			case IJavaElement.PACKAGE_FRAGMENT_ROOT: 
+			case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT: 
 				getPackageFragmentRootLabel((IPackageFragmentRoot) element, flags, result);
 				break;
-			case IJavaElement.IMPORT_CONTAINER:
-			case IJavaElement.IMPORT_DECLARATION:
-			case IJavaElement.PACKAGE_DECLARATION:
+			case IJavaScriptElement.IMPORT_CONTAINER:
+			case IJavaScriptElement.IMPORT_DECLARATION:
+			case IJavaScriptElement.PACKAGE_DECLARATION:
 				getDeclarationLabel(element, flags, result);
 				break;
-			case IJavaElement.JAVA_PROJECT:
-			case IJavaElement.JAVA_MODEL:
+			case IJavaScriptElement.JAVA_PROJECT:
+			case IJavaScriptElement.JAVA_MODEL:
 				result.append(element.getElementName());
 				break;
 			default:
@@ -167,7 +167,7 @@ public class ColoredJavaElementLabels {
 	 * @param flags The rendering flags. Flags with names starting with 'M_' are considered.
 	 * @param result The buffer to append the resulting label to.
 	 */		
-	public static void getMethodLabel(IMethod method, long flags, ColoredString result) {
+	public static void getMethodLabel(IFunction method, long flags, ColoredString result) {
 		try {
 			BindingKey resolvedKey= getFlag(flags, JavaElementLabels.USE_RESOLVED) && method.isResolved() ? new BindingKey(method.getKey()) : null;
 			String resolvedSig= (resolvedKey != null) ? resolvedKey.toSignature() : null;
@@ -351,12 +351,12 @@ public class ColoredJavaElementLabels {
 				}
 			}
 			
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			JavaPlugin.log(e); // NotExistsException will not reach this point
 		}
 	}
 
-	private static void getCategoryLabel(IMember member, ColoredString result) throws JavaModelException {
+	private static void getCategoryLabel(IMember member, ColoredString result) throws JavaScriptModelException {
 		String[] categories= member.getCategories();
 		if (categories.length > 0) {
 			ColoredString categoriesBuf= new ColoredString();
@@ -435,7 +435,7 @@ public class ColoredJavaElementLabels {
 				}
 			}
 
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			JavaPlugin.log(e); // NotExistsException will not reach this point
 		}			
 	}
@@ -593,7 +593,7 @@ public class ColoredJavaElementLabels {
 				result.append('.');
 			}
 			int parentType= type.getParent().getElementType();
-			if (parentType == IJavaElement.METHOD || parentType == IJavaElement.FIELD || parentType == IJavaElement.INITIALIZER) { // anonymous or local
+			if (parentType == IJavaScriptElement.METHOD || parentType == IJavaScriptElement.FIELD || parentType == IJavaScriptElement.INITIALIZER) { // anonymous or local
 				getElementLabel(type.getParent(), 0, result);
 				result.append('.');
 			}
@@ -614,7 +614,7 @@ public class ColoredJavaElementLabels {
 					}
 					typeName= Messages.format(JavaUIMessages.JavaElementLabels_anonym_type , supertypeName); 
 				}
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				//ignore
 				typeName= JavaUIMessages.JavaElementLabels_anonym; 
 			}
@@ -633,7 +633,7 @@ public class ColoredJavaElementLabels {
 			} else if (type.exists()) {
 				try {
 					getTypeParametersLabel(type.getTypeParameters(), flags, result);
-				} catch (JavaModelException e) {
+				} catch (JavaScriptModelException e) {
 					// ignore
 				}
 			}
@@ -643,7 +643,7 @@ public class ColoredJavaElementLabels {
 		if (getFlag(flags, JavaElementLabels.T_CATEGORY) && type.exists()) {
 			try {
 				getCategoryLabel(type, result);
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				// ignore
 			}
 		}
@@ -656,7 +656,7 @@ public class ColoredJavaElementLabels {
 			if (declaringType != null) {
 				getTypeLabel(declaringType, JavaElementLabels.T_FULLY_QUALIFIED | (flags & QUALIFIER_FLAGS), result);
 				int parentType= type.getParent().getElementType();
-				if (parentType == IJavaElement.METHOD || parentType == IJavaElement.FIELD || parentType == IJavaElement.INITIALIZER) { // anonymous or local
+				if (parentType == IJavaScriptElement.METHOD || parentType == IJavaScriptElement.FIELD || parentType == IJavaScriptElement.INITIALIZER) { // anonymous or local
 					result.append('.');
 					getElementLabel(type.getParent(), 0, result);
 				}
@@ -675,15 +675,15 @@ public class ColoredJavaElementLabels {
 	 * @param flags The rendering flags. Flags with names starting with 'D_' are considered.
 	 * @param result The buffer to append the resulting label to.
 	 */	
-	public static void getDeclarationLabel(IJavaElement declaration, long flags, ColoredString result) {
+	public static void getDeclarationLabel(IJavaScriptElement declaration, long flags, ColoredString result) {
 		if (getFlag(flags, JavaElementLabels.D_QUALIFIED)) {
-			IJavaElement openable= (IJavaElement) declaration.getOpenable();
+			IJavaScriptElement openable= (IJavaScriptElement) declaration.getOpenable();
 			if (openable != null) {
 				result.append(getElementLabel(openable, JavaElementLabels.CF_QUALIFIED | JavaElementLabels.CU_QUALIFIED | (flags & QUALIFIER_FLAGS)));
 				result.append('/');
 			}	
 		}
-		if (declaration.getElementType() == IJavaElement.IMPORT_CONTAINER) {
+		if (declaration.getElementType() == IJavaScriptElement.IMPORT_CONTAINER) {
 			result.append(JavaUIMessages.JavaElementLabels_import_container); 
 		} else {
 			result.append(declaration.getElementName());
@@ -691,7 +691,7 @@ public class ColoredJavaElementLabels {
 		// post qualification
 		if (getFlag(flags, JavaElementLabels.D_POST_QUALIFIED)) {
 			int offset= result.length();
-			IJavaElement openable= (IJavaElement) declaration.getOpenable();
+			IJavaScriptElement openable= (IJavaScriptElement) declaration.getOpenable();
 			if (openable != null) {
 				result.append(JavaElementLabels.CONCAT_STRING);
 				result.append(getElementLabel(openable, JavaElementLabels.CF_QUALIFIED | JavaElementLabels.CU_QUALIFIED | (flags & QUALIFIER_FLAGS)));
@@ -734,7 +734,7 @@ public class ColoredJavaElementLabels {
 	 * @param flags The rendering flags. Flags with names starting with 'CU_' are considered.
 	 * @param result The buffer to append the resulting label to.
 	 */
-	public static void getCompilationUnitLabel(ICompilationUnit cu, long flags, ColoredString result) {
+	public static void getCompilationUnitLabel(IJavaScriptUnit cu, long flags, ColoredString result) {
 		if (getFlag(flags, JavaElementLabels.CU_QUALIFIED)) {
 			IPackageFragment pack= (IPackageFragment) cu.getParent();
 			if (!pack.isDefaultPackage()) {
@@ -810,8 +810,8 @@ public class ColoredJavaElementLabels {
 	
 	private static boolean getVariableLabel(IPackageFragmentRoot root, long flags, ColoredString result) {
 		try {
-			IClasspathEntry rawEntry= root.getRawClasspathEntry();
-			if (rawEntry != null && rawEntry.getEntryKind() == IClasspathEntry.CPE_VARIABLE) {
+			IIncludePathEntry rawEntry= root.getRawClasspathEntry();
+			if (rawEntry != null && rawEntry.getEntryKind() == IIncludePathEntry.CPE_VARIABLE) {
 				IPath path= rawEntry.getPath().makeRelative();
 				int offset= result.length();
 				if (getFlag(flags, JavaElementLabels.REFERENCED_ROOT_POST_QUALIFIED)) {
@@ -839,7 +839,7 @@ public class ColoredJavaElementLabels {
 				}
 				return true;
 			}
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			JavaPlugin.log(e); // problems with class path
 		}
 		return false;
@@ -947,15 +947,15 @@ public class ColoredJavaElementLabels {
 	 * @param project The project the container is resolved in.
 	 * @return Returns the label of the classpath container
 	 */
-	public static ColoredString getContainerEntryLabel(IPath containerPath, IJavaProject project) {
+	public static ColoredString getContainerEntryLabel(IPath containerPath, IJavaScriptProject project) {
 		try {
-			IJsGlobalScopeContainer container= JavaCore.getJsGlobalScopeContainer(containerPath, project);
+			IJsGlobalScopeContainer container= JavaScriptCore.getJsGlobalScopeContainer(containerPath, project);
 			String description= null;
 			if (container != null) {
 				description= container.getDescription();
 			}
 			if (description == null) {
-				JsGlobalScopeContainerInitializer initializer= JavaCore.getJsGlobalScopeContainerInitializer(containerPath.segment(0));
+				JsGlobalScopeContainerInitializer initializer= JavaScriptCore.getJsGlobalScopeContainerInitializer(containerPath.segment(0));
 				if (initializer != null) {
 					description= initializer.getDescription(containerPath, project);
 				}
@@ -970,7 +970,7 @@ public class ColoredJavaElementLabels {
 				}
 				return str;
 			}
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			// ignore
 		}
 		return new ColoredString(containerPath.toString());

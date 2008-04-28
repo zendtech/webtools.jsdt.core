@@ -19,8 +19,8 @@ import org.eclipse.wst.jsdt.core.dom.ASTNode;
 import org.eclipse.wst.jsdt.core.dom.ChildListPropertyDescriptor;
 import org.eclipse.wst.jsdt.core.dom.ConstructorInvocation;
 import org.eclipse.wst.jsdt.core.dom.Expression;
-import org.eclipse.wst.jsdt.core.dom.IMethodBinding;
-import org.eclipse.wst.jsdt.core.dom.MethodInvocation;
+import org.eclipse.wst.jsdt.core.dom.IFunctionBinding;
+import org.eclipse.wst.jsdt.core.dom.FunctionInvocation;
 import org.eclipse.wst.jsdt.core.dom.SimpleName;
 import org.eclipse.wst.jsdt.core.dom.SuperMethodInvocation;
 
@@ -29,7 +29,7 @@ public class Invocations {
 	public static List getArguments(ASTNode invocation) {
 		switch(invocation.getNodeType()) {
 			case ASTNode.METHOD_INVOCATION:
-				return ((MethodInvocation)invocation).arguments();
+				return ((FunctionInvocation)invocation).arguments();
 			case ASTNode.SUPER_METHOD_INVOCATION:
 				return ((SuperMethodInvocation)invocation).arguments();
 			case ASTNode.CONSTRUCTOR_INVOCATION:
@@ -42,7 +42,7 @@ public class Invocations {
 	public static Expression getExpression(ASTNode invocation) {
 		switch(invocation.getNodeType()) {
 			case ASTNode.METHOD_INVOCATION:
-				return ((MethodInvocation)invocation).getExpression();
+				return ((FunctionInvocation)invocation).getExpression();
 			case ASTNode.SUPER_METHOD_INVOCATION:
 			case ASTNode.CONSTRUCTOR_INVOCATION:
 				return null;
@@ -57,14 +57,14 @@ public class Invocations {
 			type == ASTNode.CONSTRUCTOR_INVOCATION;
 	}
 	
-	public static IMethodBinding resolveBinding(ASTNode invocation) {
+	public static IFunctionBinding resolveBinding(ASTNode invocation) {
 		switch(invocation.getNodeType()) {
 			case ASTNode.METHOD_INVOCATION:
-				SimpleName name = ((MethodInvocation)invocation).getName();
+				SimpleName name = ((FunctionInvocation)invocation).getName();
 				if (name!=null)
-				return (IMethodBinding)name.resolveBinding();
+				return (IFunctionBinding)name.resolveBinding();
 				else
-				return ((MethodInvocation)invocation).resolveMethodBinding();
+				return ((FunctionInvocation)invocation).resolveMethodBinding();
 			case ASTNode.SUPER_METHOD_INVOCATION:
 				return ((SuperMethodInvocation)invocation).resolveMethodBinding();
 			case ASTNode.CONSTRUCTOR_INVOCATION:
@@ -77,7 +77,7 @@ public class Invocations {
 	public static boolean isResolvedTypeInferredFromExpectedType(Expression invocation) {
 		switch(invocation.getNodeType()) {
 			case ASTNode.METHOD_INVOCATION:
-				return ((MethodInvocation) invocation).isResolvedTypeInferredFromExpectedType();
+				return ((FunctionInvocation) invocation).isResolvedTypeInferredFromExpectedType();
 			case ASTNode.SUPER_METHOD_INVOCATION:
 				return ((SuperMethodInvocation) invocation).isResolvedTypeInferredFromExpectedType();
 			case ASTNode.CONSTRUCTOR_INVOCATION:
@@ -90,7 +90,7 @@ public class Invocations {
 	public static ChildListPropertyDescriptor getTypeArgumentsProperty(Expression invocation) {
 		switch(invocation.getNodeType()) {
 			case ASTNode.METHOD_INVOCATION:
-				return MethodInvocation.TYPE_ARGUMENTS_PROPERTY;
+				return FunctionInvocation.TYPE_ARGUMENTS_PROPERTY;
 			case ASTNode.SUPER_METHOD_INVOCATION:
 				return SuperMethodInvocation.TYPE_ARGUMENTS_PROPERTY;
 			case ASTNode.CONSTRUCTOR_INVOCATION:

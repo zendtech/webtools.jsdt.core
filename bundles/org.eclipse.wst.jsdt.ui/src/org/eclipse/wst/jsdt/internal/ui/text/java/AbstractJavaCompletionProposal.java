@@ -65,10 +65,10 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.texteditor.link.EditorLinkedModeUI;
 import org.eclipse.wst.jsdt.core.CompletionProposal;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaProject;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.compiler.CharOperation;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
@@ -798,17 +798,17 @@ public abstract class AbstractJavaCompletionProposal implements IJavaCompletionP
 	 * @since 3.2
 	 */
 	protected boolean isCamelCaseMatching() {
-		IJavaProject project= getProject();
+		IJavaScriptProject project= getProject();
 		String value;
 		if (project == null)
-			value= JavaCore.getOption(JavaCore.CODEASSIST_CAMEL_CASE_MATCH);
+			value= JavaScriptCore.getOption(JavaScriptCore.CODEASSIST_CAMEL_CASE_MATCH);
 		else
-			value= project.getOption(JavaCore.CODEASSIST_CAMEL_CASE_MATCH, true);
+			value= project.getOption(JavaScriptCore.CODEASSIST_CAMEL_CASE_MATCH, true);
 		
-		return JavaCore.ENABLED.equals(value);
+		return JavaScriptCore.ENABLED.equals(value);
 	}
 	
-	private IJavaProject getProject() {
+	private IJavaScriptProject getProject() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -1007,11 +1007,11 @@ public abstract class AbstractJavaCompletionProposal implements IJavaCompletionP
 	 * 
 	 * @return the java element proposed by the receiver, possibly <code>null</code>
 	 */
-	public IJavaElement getJavaElement() {
+	public IJavaScriptElement getJavaElement() {
 		if (getProposalInfo() != null)
 			try {
 				return getProposalInfo().getJavaElement();
-			} catch (JavaModelException x) {
+			} catch (JavaScriptModelException x) {
 				JavaPlugin.log(x);
 			}
 		return null;

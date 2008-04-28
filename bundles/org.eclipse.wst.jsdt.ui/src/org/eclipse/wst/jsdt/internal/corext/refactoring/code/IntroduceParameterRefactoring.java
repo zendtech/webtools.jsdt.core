@@ -34,10 +34,10 @@ import org.eclipse.ltk.core.refactoring.RefactoringDescriptor;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.RefactoringStatusEntry;
 import org.eclipse.ltk.core.refactoring.participants.RefactoringArguments;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IMethod;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IFunction;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.dom.ASTNode;
 import org.eclipse.wst.jsdt.core.dom.ArrayInitializer;
 import org.eclipse.wst.jsdt.core.dom.Assignment;
@@ -46,8 +46,8 @@ import org.eclipse.wst.jsdt.core.dom.Expression;
 import org.eclipse.wst.jsdt.core.dom.FieldAccess;
 import org.eclipse.wst.jsdt.core.dom.IBinding;
 import org.eclipse.wst.jsdt.core.dom.ITypeBinding;
-import org.eclipse.wst.jsdt.core.dom.MethodDeclaration;
-import org.eclipse.wst.jsdt.core.dom.MethodInvocation;
+import org.eclipse.wst.jsdt.core.dom.FunctionDeclaration;
+import org.eclipse.wst.jsdt.core.dom.FunctionInvocation;
 import org.eclipse.wst.jsdt.core.dom.Name;
 import org.eclipse.wst.jsdt.core.dom.NullLiteral;
 import org.eclipse.wst.jsdt.core.dom.QualifiedName;
@@ -87,11 +87,11 @@ public class IntroduceParameterRefactoring extends ScriptableRefactoring impleme
 
 	private static final String[] KNOWN_METHOD_NAME_PREFIXES= {"get", "is"}; //$NON-NLS-2$ //$NON-NLS-1$
 
-	private ICompilationUnit fSourceCU;
+	private IJavaScriptUnit fSourceCU;
 	private int fSelectionStart;
 	private int fSelectionLength;
 	
-	private IMethod fMethod;
+	private IFunction fMethod;
 	private ChangeSignatureRefactoring fChangeSignatureRefactoring;
 	private ParameterInfo fParameter;
 	private String fParameterName;
@@ -106,7 +106,7 @@ public class IntroduceParameterRefactoring extends ScriptableRefactoring impleme
 	 * @param selectionStart
 	 * @param selectionLength
 	 */
-	public IntroduceParameterRefactoring(ICompilationUnit unit, int selectionStart, int selectionLength) {
+	public IntroduceParameterRefactoring(IJavaScriptUnit unit, int selectionStart, int selectionLength) {
 		Assert.isTrue(selectionStart >= 0);
 		Assert.isTrue(selectionLength >= 0);
 		fSourceCU= unit;
@@ -153,11 +153,11 @@ public class IntroduceParameterRefactoring extends ScriptableRefactoring impleme
 			if (! fSourceCU.isStructureKnown())		
 				return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.IntroduceParameterRefactoring_syntax_error); 
 			
-			IJavaElement enclosingElement= SelectionConverter.resolveEnclosingElement(fSourceCU, new TextSelection(fSelectionStart, fSelectionLength));
-			if (! (enclosingElement instanceof IMethod))
+			IJavaScriptElement enclosingElement= SelectionConverter.resolveEnclosingElement(fSourceCU, new TextSelection(fSelectionStart, fSelectionLength));
+			if (! (enclosingElement instanceof IFunction))
 				return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.IntroduceParameterRefactoring_expression_in_method); 
 			
-			fMethod= (IMethod) enclosingElement;
+			fMethod= (IFunction) enclosingElement;
 			pm.worked(1);
 
 			RefactoringStatus result= new RefactoringStatus();
@@ -185,7 +185,7 @@ public class IntroduceParameterRefactoring extends ScriptableRefactoring impleme
 					RefactoringStatusEntry entry= result.getEntryMatchingSeverity(RefactoringStatus.FATAL);
 					if (entry.getCode() == RefactoringStatusCodes.OVERRIDES_ANOTHER_METHOD || entry.getCode() == RefactoringStatusCodes.METHOD_DECLARED_IN_INTERFACE) {
 						// second try:
-						IMethod method= (IMethod) entry.getData();
+						IFunction method= (IFunction) entry.getData();
 						fChangeSignatureRefactoring= RefactoringAvailabilityTester.isChangeSignatureAvailable(method) ? new ChangeSignatureRefactoring(method) : null;
 						if (fChangeSignatureRefactoring == null) {
 							String msg= Messages.format(RefactoringCoreMessages.IntroduceParameterRefactoring_cannot_introduce, entry.getMessage());
@@ -218,7 +218,7 @@ public class IntroduceParameterRefactoring extends ScriptableRefactoring impleme
 			addParameterInfo(cuRewrite);
 			
 			fChangeSignatureRefactoring.setBodyUpdater(new BodyUpdater() {
-				public void updateBody(MethodDeclaration methodDeclaration, CompilationUnitRewrite rewrite, RefactoringStatus updaterResult) {
+				public void updateBody(FunctionDeclaration methodDeclaration, CompilationUnitRewrite rewrite, RefactoringStatus updaterResult) {
 					replaceSelectedExpression(rewrite);
 				}
 			});
@@ -231,7 +231,7 @@ public class IntroduceParameterRefactoring extends ScriptableRefactoring impleme
 		}	
 	}
 
-	private void addParameterInfo(CompilationUnitRewrite cuRewrite) throws JavaModelException {
+	private void addParameterInfo(CompilationUnitRewrite cuRewrite) throws JavaScriptModelException {
 		ITypeBinding typeBinding= Bindings.normalizeForDeclarationUse(fSelectedExpression.resolveTypeBinding(), fSelectedExpression.getAST());
 		String typeName= cuRewrite.getImportRewrite().addImport(typeBinding);
 		String name= fParameterName != null ? fParameterName : guessedParameterName();
@@ -260,7 +260,7 @@ public class IntroduceParameterRefactoring extends ScriptableRefactoring impleme
 		cuRewrite.getASTRewrite().replace(expression, newExpression, cuRewrite.createGroupDescription(description));
 	}
 
-	private void initializeSelectedExpression(CompilationUnitRewrite cuRewrite) throws JavaModelException {
+	private void initializeSelectedExpression(CompilationUnitRewrite cuRewrite) throws JavaScriptModelException {
 		IASTFragment fragment= ASTFragmentFactory.createFragmentForSourceRange(
 				new SourceRange(fSelectionStart, fSelectionLength), cuRewrite.getRoot(), cuRewrite.getCu());
 		
@@ -288,7 +288,7 @@ public class IntroduceParameterRefactoring extends ScriptableRefactoring impleme
 			return CodeRefactoringUtil.checkMethodSyntaxErrors(fSelectionStart, fSelectionLength, cuRewrite.getRoot(), message);
 		}	
 		
-		MethodDeclaration methodDeclaration= (MethodDeclaration) ASTNodes.getParent(fSelectedExpression, MethodDeclaration.class);
+		FunctionDeclaration methodDeclaration= (FunctionDeclaration) ASTNodes.getParent(fSelectedExpression, FunctionDeclaration.class);
 		if (methodDeclaration == null)
 			return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.IntroduceParameterRefactoring_expression_in_method); 
 		if (methodDeclaration.resolveBinding() == null)
@@ -370,7 +370,7 @@ public class IntroduceParameterRefactoring extends ScriptableRefactoring impleme
 		return fParameter;
 	}
 	
-	public String getMethodSignaturePreview() throws JavaModelException {
+	public String getMethodSignaturePreview() throws JavaScriptModelException {
 		return fChangeSignatureRefactoring.getNewMethodSignature();
 	}
 	
@@ -402,14 +402,14 @@ public class IntroduceParameterRefactoring extends ScriptableRefactoring impleme
 	 */
 	public String[] guessParameterNames() {
 		LinkedHashSet proposals= new LinkedHashSet(); //retain ordering, but prevent duplicates
-		if (fSelectedExpression instanceof MethodInvocation){
-			proposals.addAll(guessTempNamesFromMethodInvocation((MethodInvocation) fSelectedExpression, fExcludedParameterNames));
+		if (fSelectedExpression instanceof FunctionInvocation){
+			proposals.addAll(guessTempNamesFromMethodInvocation((FunctionInvocation) fSelectedExpression, fExcludedParameterNames));
 		}
 		proposals.addAll(guessTempNamesFromExpression(fSelectedExpression, fExcludedParameterNames));
 		return (String[]) proposals.toArray(new String[proposals.size()]);
 	}
 	
-	private List/*<String>*/ guessTempNamesFromMethodInvocation(MethodInvocation selectedMethodInvocation, String[] excludedVariableNames) {
+	private List/*<String>*/ guessTempNamesFromMethodInvocation(FunctionInvocation selectedMethodInvocation, String[] excludedVariableNames) {
 		SimpleName name = selectedMethodInvocation.getName();
 		
 		String methodName;
@@ -511,7 +511,7 @@ public class IntroduceParameterRefactoring extends ScriptableRefactoring impleme
 					String signature= fChangeSignatureRefactoring.getMethodName();
 					try {
 						signature= fChangeSignatureRefactoring.getOldMethodSignature();
-					} catch (JavaModelException exception) {
+					} catch (JavaScriptModelException exception) {
 						JavaPlugin.log(exception);
 					}
 					final String description= Messages.format(RefactoringCoreMessages.IntroduceParameterRefactoring_descriptor_description_short, fChangeSignatureRefactoring.getMethod().getElementName());
@@ -549,11 +549,11 @@ public class IntroduceParameterRefactoring extends ScriptableRefactoring impleme
 				return RefactoringStatus.createFatalErrorStatus(Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist, JDTRefactoringDescriptor.ATTRIBUTE_SELECTION));
 			final String handle= extended.getAttribute(JDTRefactoringDescriptor.ATTRIBUTE_INPUT);
 			if (handle != null) {
-				final IJavaElement element= JDTRefactoringDescriptor.handleToElement(extended.getProject(), handle, false);
-				if (element == null || !element.exists() || element.getElementType() != IJavaElement.COMPILATION_UNIT)
+				final IJavaScriptElement element= JDTRefactoringDescriptor.handleToElement(extended.getProject(), handle, false);
+				if (element == null || !element.exists() || element.getElementType() != IJavaScriptElement.COMPILATION_UNIT)
 					return createInputFatalStatus(element, IJavaRefactorings.INTRODUCE_PARAMETER);
 				else
-					fSourceCU= ((IMethod) element).getCompilationUnit();
+					fSourceCU= ((IFunction) element).getCompilationUnit();
 			} else
 				return RefactoringStatus.createFatalErrorStatus(Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist, JDTRefactoringDescriptor.ATTRIBUTE_INPUT));
 			final String name= extended.getAttribute(ATTRIBUTE_ARGUMENT);

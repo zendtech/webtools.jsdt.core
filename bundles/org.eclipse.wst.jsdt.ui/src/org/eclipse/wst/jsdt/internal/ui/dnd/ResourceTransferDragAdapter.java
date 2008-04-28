@@ -31,7 +31,7 @@ import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.part.ResourceTransfer;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.internal.ui.IJavaStatusConstants;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIMessages;
@@ -91,9 +91,9 @@ public class ResourceTransferDragAdapter extends DragSourceAdapter implements Tr
 		for (Iterator iter= selection.iterator(); iter.hasNext();) {
 			Object element= iter.next();
 			IResource resource= null;
-			if (element instanceof IJavaElement) {
+			if (element instanceof IJavaScriptElement) {
 				// don't use IAdaptable as for members only the top level type adapts
-				resource= ((IJavaElement) element).getResource();
+				resource= ((IJavaScriptElement) element).getResource();
 			} else if (element instanceof IAdaptable) {
 				resource= (IResource) ((IAdaptable) element).getAdapter(IResource.class);
 			}

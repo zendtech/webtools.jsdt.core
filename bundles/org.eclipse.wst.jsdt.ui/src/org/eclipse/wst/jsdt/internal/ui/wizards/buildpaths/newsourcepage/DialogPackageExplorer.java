@@ -46,11 +46,11 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.part.ISetSelectionTarget;
-import org.eclipse.wst.jsdt.core.IClasspathEntry;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IIncludePathEntry;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.core.JavaProject;
 import org.eclipse.wst.jsdt.internal.corext.buildpath.ClasspathModifier;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
@@ -111,13 +111,13 @@ public class DialogPackageExplorer implements IMenuListener, ISelectionProvider,
         public Object[] getChildren(Object element) {
             Object[] children= super.getChildren(element);
             if (((element instanceof IPackageFragmentRoot && !((IPackageFragmentRoot)element).isArchive()) || 
-                    (element instanceof IJavaProject && fCurrJProject.isOnClasspath(fCurrJProject))) && fShowOutputFolders) {
+                    (element instanceof IJavaScriptProject && fCurrJProject.isOnClasspath(fCurrJProject))) && fShowOutputFolders) {
                 try {
-                    IClasspathEntry entry;
+                    IIncludePathEntry entry;
                     if (element instanceof IPackageFragmentRoot)
                         entry= ((IPackageFragmentRoot) element).getRawClasspathEntry();
                     else
-                        entry= ClasspathModifier.getClasspathEntryFor(fCurrJProject.getPath(), fCurrJProject, IClasspathEntry.CPE_SOURCE);
+                        entry= ClasspathModifier.getClasspathEntryFor(fCurrJProject.getPath(), fCurrJProject, IIncludePathEntry.CPE_SOURCE);
                     CPListElement parent= CPListElement.createFromExisting(entry, fCurrJProject);                    
                     CPListElementAttribute outputFolder= new CPListElementAttribute(parent, CPListElement.OUTPUT, 
                             parent.getAttribute(CPListElement.OUTPUT), true);
@@ -125,7 +125,7 @@ public class DialogPackageExplorer implements IMenuListener, ISelectionProvider,
                     System.arraycopy(children, 0, extendedChildren, 1, children.length);
                     extendedChildren[0]= outputFolder;
                     return extendedChildren;
-                } catch (JavaModelException e) {
+                } catch (JavaScriptModelException e) {
                     JavaPlugin.log(e);
                 }
                 return null;
@@ -155,7 +155,7 @@ public class DialogPackageExplorer implements IMenuListener, ISelectionProvider,
                 if (element instanceof IPackageFragmentRoot) {
                     IPackageFragmentRoot root= (IPackageFragmentRoot)element;
                     if (root.exists() && ClasspathModifier.filtersSet(root)) {
-                        IClasspathEntry entry= root.getRawClasspathEntry();
+                        IIncludePathEntry entry= root.getRawClasspathEntry();
                         int excluded= entry.getExclusionPatterns().length;
                         if (excluded == 1)
                             return Messages.format(NewWizardMessages.DialogPackageExplorer_LabelProvider_SingleExcluded, text); 
@@ -163,12 +163,12 @@ public class DialogPackageExplorer implements IMenuListener, ISelectionProvider,
                             return Messages.format(NewWizardMessages.DialogPackageExplorer_LabelProvider_MultiExcluded, new Object[] {text, new Integer(excluded)}); 
                     }
                 }
-                if (element instanceof IJavaProject) {
-                    IJavaProject project= (IJavaProject)element;
+                if (element instanceof IJavaScriptProject) {
+                    IJavaScriptProject project= (IJavaScriptProject)element;
                     if (project.exists() && project.isOnClasspath(project)) {
                         IPackageFragmentRoot root= project.findPackageFragmentRoot(project.getPath());
                         if (ClasspathModifier.filtersSet(root)) {
-                            IClasspathEntry entry= root.getRawClasspathEntry();
+                            IIncludePathEntry entry= root.getRawClasspathEntry();
                             int excluded= entry.getExclusionPatterns().length;
                             if (excluded == 1)
                                 return Messages.format(NewWizardMessages.DialogPackageExplorer_LabelProvider_SingleExcluded, text); 
@@ -182,7 +182,7 @@ public class DialogPackageExplorer implements IMenuListener, ISelectionProvider,
                         if (resource.exists() && ClasspathModifier.isExcluded(resource, fCurrJProject))
                             return Messages.format(NewWizardMessages.DialogPackageExplorer_LabelProvider_Excluded, text); 
                 }
-            } catch (JavaModelException e) {
+            } catch (JavaScriptModelException e) {
                 JavaPlugin.log(e);
             }
             return text;
@@ -198,8 +198,8 @@ public class DialogPackageExplorer implements IMenuListener, ISelectionProvider,
                     if (root.exists() && ClasspathModifier.filtersSet(root))
                         return getBlueColor();
                 }
-                if (element instanceof IJavaProject) {
-                    IJavaProject project= (IJavaProject)element;
+                if (element instanceof IJavaScriptProject) {
+                    IJavaScriptProject project= (IJavaScriptProject)element;
                     if (project.exists() && project.isOnClasspath(project)) {
                         IPackageFragmentRoot root= project.findPackageFragmentRoot(project.getPath());
                         if (root != null && ClasspathModifier.filtersSet(root))
@@ -211,7 +211,7 @@ public class DialogPackageExplorer implements IMenuListener, ISelectionProvider,
                     if (resource.exists() && ClasspathModifier.isExcluded(resource, fCurrJProject))
                         return getBlueColor();
                 } 
-            } catch (JavaModelException e) {
+            } catch (JavaScriptModelException e) {
                 JavaPlugin.log(e);
             }
             return null;
@@ -268,8 +268,8 @@ public class DialogPackageExplorer implements IMenuListener, ISelectionProvider,
                     if (file.getName().equals(JavaProject.CLASSPATH_FILENAME) || file.getName().equals(".project")) //$NON-NLS-1$//$NON-NLS-2$
                         return false;
                 } else if (element instanceof IPackageFragmentRoot) {
-                    IClasspathEntry cpe= ((IPackageFragmentRoot)element).getRawClasspathEntry();
-                    if (cpe == null || cpe.getEntryKind() == IClasspathEntry.CPE_CONTAINER || cpe.getEntryKind() == IClasspathEntry.CPE_LIBRARY || cpe.getEntryKind() == IClasspathEntry.CPE_VARIABLE)
+                    IIncludePathEntry cpe= ((IPackageFragmentRoot)element).getRawClasspathEntry();
+                    if (cpe == null || cpe.getEntryKind() == IIncludePathEntry.CPE_CONTAINER || cpe.getEntryKind() == IIncludePathEntry.CPE_LIBRARY || cpe.getEntryKind() == IIncludePathEntry.CPE_VARIABLE)
                         return false;
                 } else if (element instanceof PackageFragmentRootContainer) {
                 	return false;
@@ -282,7 +282,7 @@ public class DialogPackageExplorer implements IMenuListener, ISelectionProvider,
                 	if (folder.getName().startsWith(".")) //$NON-NLS-1$
                 	return false;
                 }
-            } catch (JavaModelException e) {
+            } catch (JavaScriptModelException e) {
                 JavaPlugin.log(e);
             }
             /*if (element instanceof IPackageFragmentRoot) {
@@ -317,9 +317,9 @@ public class DialogPackageExplorer implements IMenuListener, ISelectionProvider,
     private IStructuredSelection fCurrentSelection;
     
     /** The current java project
-     * @see #setInput(IJavaProject)
+     * @see #setInput(IJavaScriptProject)
      */
-    private IJavaProject fCurrJProject;
+    private IJavaScriptProject fCurrJProject;
 	private PackageContentProvider fContentProvider;
     
     public DialogPackageExplorer() {
@@ -412,8 +412,8 @@ public class DialogPackageExplorer implements IMenuListener, ISelectionProvider,
      * 
      * @param project the project to be displayed
      */
-    public void setInput(IJavaProject project) {
-    	IJavaProject oldProject= fCurrJProject;
+    public void setInput(IJavaScriptProject project) {
+    	IJavaScriptProject oldProject= fCurrJProject;
         fCurrJProject= project;
     	if (fContentProvider != null)
         	fContentProvider.inputChanged(fPackageViewer, oldProject, fCurrJProject);
@@ -451,7 +451,7 @@ public class DialogPackageExplorer implements IMenuListener, ISelectionProvider,
 	                fPackageViewer.setSelection(selection, true);
 	                fPackageViewer.getTree().setFocus();
 	                
-	                if (elements.size() == 1 && elements.get(0) instanceof IJavaProject)
+	                if (elements.size() == 1 && elements.get(0) instanceof IJavaScriptProject)
 	                    fPackageViewer.expandToLevel(elements.get(0), 1);
 	            }
 	        }, ResourcesPlugin.getWorkspace().getRoot(), IWorkspace.AVOID_UPDATE, new NullProgressMonitor());

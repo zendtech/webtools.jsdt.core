@@ -27,11 +27,11 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ISetSelectionTarget;
-import org.eclipse.wst.jsdt.core.IClasspathEntry;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaProject;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.IIncludePathEntry;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.buildpath.BuildpathDelta;
 import org.eclipse.wst.jsdt.internal.corext.buildpath.ClasspathModifier;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
@@ -71,14 +71,14 @@ public class AddSelectedLibraryToBuildpathAction extends BuildpathModifierAction
 			return null;
 		
 		IFile file= (IFile)getSelectedElements().get(0);
-        IJavaProject project= JavaCore.create(file.getProject());
+        IJavaScriptProject project= JavaScriptCore.create(file.getProject());
         
         try {
 	        if (ClasspathModifier.isArchive(file, project)) {
 	            String name= ClasspathModifier.escapeSpecialChars(file.getName());
 	            return Messages.format(NewWizardMessages.PackageExplorerActionGroup_FormText_ArchiveToBuildpath, name);
 	        }
-        } catch (JavaModelException e) {
+        } catch (JavaScriptModelException e) {
 	        JavaPlugin.log(e);
         }
         
@@ -95,7 +95,7 @@ public class AddSelectedLibraryToBuildpathAction extends BuildpathModifierAction
 			final IRunnableWithProgress runnable= new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
-				        IJavaProject project= JavaCore.create(files[0].getProject());
+				        IJavaScriptProject project= JavaScriptCore.create(files[0].getProject());
 				        List result= addLibraryEntries(files, project, monitor);
 						selectAndReveal(new StructuredSelection(result));
 					} catch (CoreException e) {
@@ -114,13 +114,13 @@ public class AddSelectedLibraryToBuildpathAction extends BuildpathModifierAction
 		}
 	}
 	
-	private List addLibraryEntries(IFile[] resources, IJavaProject project, IProgressMonitor monitor) throws CoreException {
+	private List addLibraryEntries(IFile[] resources, IJavaScriptProject project, IProgressMonitor monitor) throws CoreException {
 		List addedEntries= new ArrayList();
 		try {
 			monitor.beginTask(NewWizardMessages.ClasspathModifier_Monitor_AddToBuildpath, 4); 
 			for (int i= 0; i < resources.length; i++) {
 				IResource res= resources[i];
-				addedEntries.add(new CPListElement(project, IClasspathEntry.CPE_LIBRARY, res.getFullPath(), res));
+				addedEntries.add(new CPListElement(project, IIncludePathEntry.CPE_LIBRARY, res.getFullPath(), res));
 			}
 			monitor.worked(1);
 			
@@ -135,7 +135,7 @@ public class AddSelectedLibraryToBuildpathAction extends BuildpathModifierAction
 			List result= new ArrayList(addedEntries.size());
 			for (int i= 0; i < resources.length; i++) {
 				IResource res= resources[i];
-				IJavaElement elem= project.getPackageFragmentRoot(res);
+				IJavaScriptElement elem= project.getPackageFragmentRoot(res);
 				if (elem != null) {
 					result.add(elem);
 				}
@@ -157,7 +157,7 @@ public class AddSelectedLibraryToBuildpathAction extends BuildpathModifierAction
 				Object element= iter.next();
 				if (element instanceof IFile) {
 					IFile file= (IFile)element;
-					IJavaProject project= JavaCore.create(file.getProject());
+					IJavaScriptProject project= JavaScriptCore.create(file.getProject());
 					if (project == null)
 						return false;
 					

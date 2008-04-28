@@ -27,14 +27,14 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.ITextEditorExtension3;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IMember;
-import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.ISourceRange;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.codemanipulation.StubUtility;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.MethodOverrideTester;
@@ -112,7 +112,7 @@ public class JavaDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy
 							d.replace(offset, 0, endTag);
 
 							// evaluate method signature
-							ICompilationUnit unit= getCompilationUnit();
+							IJavaScriptUnit unit= getCompilationUnit();
 
 							if (unit != null) {
 								try {
@@ -190,19 +190,19 @@ public class JavaDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy
 	 * @throws CoreException if accessing the java model fails
 	 * @throws BadLocationException if accessing the document fails
 	 */
-	private String createJavaDocTags(IDocument document, DocumentCommand command, String indentation, String lineDelimiter, ICompilationUnit unit)
+	private String createJavaDocTags(IDocument document, DocumentCommand command, String indentation, String lineDelimiter, IJavaScriptUnit unit)
 		throws CoreException, BadLocationException
 	{
-		IJavaElement element= unit.getElementAt(command.offset);
+		IJavaScriptElement element= unit.getElementAt(command.offset);
 		if (element == null)
 			return null;
 
 		switch (element.getElementType()) {
-		case IJavaElement.TYPE:
+		case IJavaScriptElement.TYPE:
 			return createTypeTags(document, command, indentation, lineDelimiter, (IType) element);
 
-		case IJavaElement.METHOD:
-			return createMethodTags(document, command, indentation, lineDelimiter, (IMethod) element);
+		case IJavaScriptElement.METHOD:
+			return createMethodTags(document, command, indentation, lineDelimiter, (IFunction) element);
 
 		default:
 			return null;
@@ -220,7 +220,7 @@ public class JavaDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy
 	 * @param lineDelimiter the line delimiter
 	 * @return a trimmed version of <code>comment</code>
 	 */
-	private String prepareTemplateComment(String comment, String indentation, IJavaProject project, String lineDelimiter) {
+	private String prepareTemplateComment(String comment, String indentation, IJavaScriptProject project, String lineDelimiter) {
 		//	trim comment start and end if any
 		if (comment.endsWith("*/")) //$NON-NLS-1$
 			comment= comment.substring(0, comment.length() - 2);
@@ -256,11 +256,11 @@ public class JavaDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy
 		return null;
 	}
 
-	private String createMethodTags(IDocument document, DocumentCommand command, String indentation, String lineDelimiter, IMethod method)
+	private String createMethodTags(IDocument document, DocumentCommand command, String indentation, String lineDelimiter, IFunction method)
 		throws CoreException, BadLocationException
 	{
 		IRegion partition= TextUtilities.getPartition(document, fPartitioning, command.offset, false);
-		IMethod inheritedMethod= getInheritedMethod(method);
+		IFunction inheritedMethod= getInheritedMethod(method);
 		String comment= CodeGeneration.getMethodComment(method, inheritedMethod, lineDelimiter);
 		if (comment != null) {
 			comment= comment.trim();
@@ -284,7 +284,7 @@ public class JavaDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy
 	 * see also https://bugs.eclipse.org/bugs/show_bug.cgi?id=55325 (don't add parameters if the member already has a comment)
 	 * </p>
 	 */
-	private boolean isFirstComment(IDocument document, DocumentCommand command, IMember member, boolean ignoreNonJavadoc) throws BadLocationException, JavaModelException {
+	private boolean isFirstComment(IDocument document, DocumentCommand command, IMember member, boolean ignoreNonJavadoc) throws BadLocationException, JavaScriptModelException {
 		IRegion partition= TextUtilities.getPartition(document, fPartitioning, command.offset, false);
 		ISourceRange sourceRange= member.getSourceRange();
 		if (sourceRange == null || sourceRange.getOffset() != partition.getOffset())
@@ -397,9 +397,9 @@ public class JavaDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy
 	 * Returns the method inherited from, <code>null</code> if method is newly defined.
 	 * @param method the method being written
 	 * @return the ancestor method, or <code>null</code> if none
-	 * @throws JavaModelException if accessing the java model fails
+	 * @throws JavaScriptModelException if accessing the java model fails
 	 */
-	private static IMethod getInheritedMethod(IMethod method) throws JavaModelException {
+	private static IFunction getInheritedMethod(IFunction method) throws JavaScriptModelException {
 		IType declaringType= method.getDeclaringType();
 		if (declaringType==null)
 			return null;
@@ -412,7 +412,7 @@ public class JavaDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy
 	 * might return <code>null</code> on error.
 	 * @return the compilation unit represented by the document
 	 */
-	private static ICompilationUnit getCompilationUnit() {
+	private static IJavaScriptUnit getCompilationUnit() {
 
 		IWorkbenchWindow window= PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window == null)
@@ -427,7 +427,7 @@ public class JavaDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy
 			return null;
 
 		IWorkingCopyManager manager= JavaPlugin.getDefault().getWorkingCopyManager();
-		ICompilationUnit unit= manager.getWorkingCopy(editor.getEditorInput());
+		IJavaScriptUnit unit= manager.getWorkingCopy(editor.getEditorInput());
 		if (unit == null)
 			return null;
 

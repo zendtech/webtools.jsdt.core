@@ -25,11 +25,11 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.wst.jsdt.core.IJavaModel;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptModel;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.text.java.JavaCompletionProposal;
 import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
@@ -43,12 +43,12 @@ import org.eclipse.wst.jsdt.ui.text.java.CompletionProposalComparator;
 public class JavaSourcePackageFragmentRootCompletionProcessor implements IContentAssistProcessor, ISubjectControlContentAssistProcessor {
 
 	private char[] fProposalAutoActivationSet;
-	private IJavaModel fRoot;
+	private IJavaScriptModel fRoot;
 	private CompletionProposalComparator fComparator;
 	private JavaElementLabelProvider fLabelProvider;
 
 	public JavaSourcePackageFragmentRootCompletionProcessor() {
-		fRoot= JavaCore.create(ResourcesPlugin.getWorkspace().getRoot());
+		fRoot= JavaScriptCore.create(ResourcesPlugin.getWorkspace().getRoot());
 		IPreferenceStore preferenceStore= JavaPlugin.getDefault().getPreferenceStore();
 		String triggers= preferenceStore.getString(PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_JAVA);
 		fProposalAutoActivationSet= triggers.toCharArray();
@@ -103,9 +103,9 @@ public class JavaSourcePackageFragmentRootCompletionProcessor implements IConten
 	private ICompletionProposal[] createSourcePackageFragmentRootProposals(String prefix, int replacementLength) {
 		List proposals= new ArrayList();
 		try {
-			IJavaProject[] projects= fRoot.getJavaProjects();
+			IJavaScriptProject[] projects= fRoot.getJavaProjects();
 			for (int i= 0; i < projects.length; i++) {
-				IJavaProject project= projects[i];
+				IJavaScriptProject project= projects[i];
 				IPackageFragmentRoot[] roots= project.getPackageFragmentRoots();
 				for (int j= 0; j < roots.length; j++) {
 					IPackageFragmentRoot root= roots[j];
@@ -123,7 +123,7 @@ public class JavaSourcePackageFragmentRootCompletionProcessor implements IConten
 					}
 				}
 			}
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			// nothing to do
 		}
 

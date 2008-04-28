@@ -32,7 +32,7 @@ import org.eclipse.core.runtime.IPath;
  * session to another. It is thus highly recommended to register a <code>JsGlobalScopeContainerInitializer</code>
  * for each referenced container (through the extension point "org.eclipse.wst.jsdt.core.JsGlobalScopeContainerInitializer").
  * <p>
- * @see IClasspathEntry
+ * @see IIncludePathEntry
  * @since 2.0
  */
 
@@ -76,24 +76,24 @@ public interface IJsGlobalScopeContainer {
 	 * correct functioning of the Java model, the implementation should use
 	 * only the following Java model APIs:
 	 * <ul>
-	 * <li>{@link JavaCore#newLibraryEntry(IPath, IPath, IPath, boolean)} and variants</li>
-	 * <li>{@link JavaCore#newProjectEntry(IPath, boolean)} and variants</li>
-	 * <li>{@link JavaCore#create(org.eclipse.core.resources.IWorkspaceRoot)}</li>
-	 * <li>{@link JavaCore#create(org.eclipse.core.resources.IProject)}</li>
-	 * <li>{@link IJavaModel#getJavaProjects()}</li>
-	 * <li>{@link IJavaProject#getRawClasspath()}</li>
-	 * <li>{@link IJavaProject#readRawClasspath()}</li>
-	 * <li>{@link IJavaProject#getOutputLocation()}</li>
-	 * <li>{@link IJavaProject#readOutputLocation()}</li>
+	 * <li>{@link JavaScriptCore#newLibraryEntry(IPath, IPath, IPath, boolean)} and variants</li>
+	 * <li>{@link JavaScriptCore#newProjectEntry(IPath, boolean)} and variants</li>
+	 * <li>{@link JavaScriptCore#create(org.eclipse.core.resources.IWorkspaceRoot)}</li>
+	 * <li>{@link JavaScriptCore#create(org.eclipse.core.resources.IProject)}</li>
+	 * <li>{@link IJavaScriptModel#getJavaProjects()}</li>
+	 * <li>{@link IJavaScriptProject#getRawClasspath()}</li>
+	 * <li>{@link IJavaScriptProject#readRawClasspath()}</li>
+	 * <li>{@link IJavaScriptProject#getOutputLocation()}</li>
+	 * <li>{@link IJavaScriptProject#readOutputLocation()}</li>
 	 * <li>Java element operations marked as "handle-only"</li>
 	 * </ul>
 	 * The effects of using other Java model APIs are unspecified.
 	 * </p>
 	 *
-	 * @return IClasspathEntry[] - the classpath entries this container represents
-	 * @see IClasspathEntry
+	 * @return IIncludePathEntry[] - the classpath entries this container represents
+	 * @see IIncludePathEntry
 	 */
-    IClasspathEntry[] getClasspathEntries();
+    IIncludePathEntry[] getClasspathEntries();
 
 	/**
 	 * Answers a readable description of this container

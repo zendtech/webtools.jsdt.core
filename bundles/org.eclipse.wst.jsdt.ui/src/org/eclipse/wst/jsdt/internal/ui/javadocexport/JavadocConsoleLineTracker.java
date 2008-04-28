@@ -23,9 +23,9 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.console.IHyperlink;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.ui.JavaUI;
 
@@ -62,7 +62,7 @@ public class JavadocConsoleLineTracker implements IConsoleLineTracker {
 				if (files.length > 0) {
 					for (int i = 0; i < files.length; i++) {
 						IFile curr= files[0];
-						IJavaElement element= JavaCore.create(curr);
+						IJavaScriptElement element= JavaScriptCore.create(curr);
 						if (element != null && element.exists()) {
 							IEditorPart part= JavaUI.openInEditor(element, true, false);
 							if (part instanceof ITextEditor) {
@@ -76,7 +76,7 @@ public class JavadocConsoleLineTracker implements IConsoleLineTracker {
 				JavaPlugin.log(e);
 			} catch (PartInitException e) {
 				JavaPlugin.log(e);
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				JavaPlugin.log(e);
 			}
 		}

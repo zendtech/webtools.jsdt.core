@@ -54,9 +54,9 @@ import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaProject;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.formatter.DefaultCodeFormatterConstants;
 import org.eclipse.wst.jsdt.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
@@ -467,7 +467,7 @@ public class JavaSourceViewerConfiguration extends TextSourceViewerConfiguration
 			return new JavaStringDoubleClickSelector(getConfiguredDocumentPartitioning(sourceViewer));
 		if (fJavaDoubleClickSelector == null) {
 			fJavaDoubleClickSelector= new JavaDoubleClickSelector();
-			fJavaDoubleClickSelector.setSourceVersion(fPreferenceStore.getString(JavaCore.COMPILER_SOURCE));
+			fJavaDoubleClickSelector.setSourceVersion(fPreferenceStore.getString(JavaScriptCore.COMPILER_SOURCE));
 		}
 		return fJavaDoubleClickSelector;
 	}
@@ -484,18 +484,18 @@ public class JavaSourceViewerConfiguration extends TextSourceViewerConfiguration
 	 * @see SourceViewerConfiguration#getIndentPrefixes(ISourceViewer, String)
 	 */
 	public String[] getIndentPrefixes(ISourceViewer sourceViewer, String contentType) {
- 		IJavaProject project= getProject();
+ 		IJavaScriptProject project= getProject();
 		final int tabWidth= CodeFormatterUtil.getTabWidth(project);
 		final int indentWidth= CodeFormatterUtil.getIndentWidth(project);
 		boolean allowTabs= tabWidth <= indentWidth;
 		
 		String indentMode;
 		if (project == null)
-			indentMode= JavaCore.getOption(DefaultCodeFormatterConstants.FORMATTER_TAB_CHAR);
+			indentMode= JavaScriptCore.getOption(DefaultCodeFormatterConstants.FORMATTER_TAB_CHAR);
 		else
 			indentMode= project.getOption(DefaultCodeFormatterConstants.FORMATTER_TAB_CHAR, true);
 
-		boolean useSpaces= JavaCore.SPACE.equals(indentMode) || DefaultCodeFormatterConstants.MIXED.equals(indentMode);
+		boolean useSpaces= JavaScriptCore.SPACE.equals(indentMode) || DefaultCodeFormatterConstants.MIXED.equals(indentMode);
 		
 		Assert.isLegal(allowTabs || useSpaces);
 		
@@ -548,12 +548,12 @@ public class JavaSourceViewerConfiguration extends TextSourceViewerConfiguration
 		return new String(spaceChars);
 	}
 
-	private IJavaProject getProject() {
+	private IJavaScriptProject getProject() {
 		ITextEditor editor= getEditor();
 		if (editor == null)
 			return null;
 
-		IJavaElement element= null;
+		IJavaScriptElement element= null;
 		IEditorInput input= editor.getEditorInput();
 		IDocumentProvider provider= editor.getDocumentProvider();
 		if (provider instanceof ICompilationUnitDocumentProvider) {
@@ -881,7 +881,7 @@ public class JavaSourceViewerConfiguration extends TextSourceViewerConfiguration
 			fStringScanner.adaptToPreferenceChange(event);
 		if (fJavaDocScanner.affectsBehavior(event))
 			fJavaDocScanner.adaptToPreferenceChange(event);
-		if (fJavaDoubleClickSelector != null && JavaCore.COMPILER_SOURCE.equals(event.getProperty()))
+		if (fJavaDoubleClickSelector != null && JavaScriptCore.COMPILER_SOURCE.equals(event.getProperty()))
 			if (event.getNewValue() instanceof String)
 				fJavaDoubleClickSelector.setSourceVersion((String) event.getNewValue());
 	}

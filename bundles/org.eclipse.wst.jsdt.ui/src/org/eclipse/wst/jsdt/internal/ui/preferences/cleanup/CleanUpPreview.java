@@ -21,7 +21,7 @@ import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.IContentFormatterExtension;
 import org.eclipse.jface.text.formatter.IFormattingContext;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.ui.IJavaStatusConstants;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.fix.ICleanUp;
@@ -35,7 +35,7 @@ public class CleanUpPreview extends JavaPreview {
 	private ICleanUp[] fPreviewCleanUps;
 	private boolean fFormat;
 	public CleanUpPreview(Composite parent, ICleanUp[] cleanUps) {
-		super(JavaCore.getDefaultOptions(), parent);
+		super(JavaScriptCore.getDefaultOptions(), parent);
 		fPreviewCleanUps= cleanUps;
 		fFormat= false;
 	}
@@ -77,7 +77,7 @@ public class CleanUpPreview extends JavaPreview {
 			final IContentFormatter formatter =	fViewerConfiguration.getContentFormatter(fSourceViewer);
 			if (formatter instanceof IContentFormatterExtension) {
 				final IContentFormatterExtension extension = (IContentFormatterExtension) formatter;
-				context.setProperty(FormattingContextProperties.CONTEXT_PREFERENCES, JavaCore.getOptions());
+				context.setProperty(FormattingContextProperties.CONTEXT_PREFERENCES, JavaScriptCore.getOptions());
 				context.setProperty(FormattingContextProperties.CONTEXT_DOCUMENT, Boolean.valueOf(true));
 				extension.format(fPreviewDocument, context);
 			} else

@@ -22,10 +22,10 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.ReorgExecutionLog;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.base.JDTChange;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.reorg.INewNameQuery;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.reorg.IPackageFragmentRootManipulationQuery;
@@ -70,14 +70,14 @@ abstract class PackageFragmentRootReorgChange extends JDTChange {
 		}
 	}
 
-	protected abstract Change doPerformReorg(IPath destinationPath, IProgressMonitor pm) throws JavaModelException;
+	protected abstract Change doPerformReorg(IPath destinationPath, IProgressMonitor pm) throws JavaScriptModelException;
 
 	public Object getModifiedElement() {
 		return getRoot();
 	}
 	
 	protected IPackageFragmentRoot getRoot(){
-		return (IPackageFragmentRoot)JavaCore.create(fRootHandle);
+		return (IPackageFragmentRoot)JavaScriptCore.create(fRootHandle);
 	}
 	
 	protected IPath getDestinationProjectPath(){
@@ -97,7 +97,7 @@ abstract class PackageFragmentRootReorgChange extends JDTChange {
 		return name;
 	}
 	
-	protected int getUpdateModelFlags(boolean isCopy) throws JavaModelException{
+	protected int getUpdateModelFlags(boolean isCopy) throws JavaScriptModelException{
 		final int destination= IPackageFragmentRoot.DESTINATION_PROJECT_CLASSPATH;
 		final int replace= IPackageFragmentRoot.REPLACE;
 		final int originating;
@@ -110,13 +110,13 @@ abstract class PackageFragmentRootReorgChange extends JDTChange {
 			otherProjects= IPackageFragmentRoot.OTHER_REFERRING_PROJECTS_CLASSPATH;
 		}
 		
-		if (! JavaCore.create(getDestinationProject()).exists())
+		if (! JavaScriptCore.create(getDestinationProject()).exists())
 			return replace | originating;
 
 		if (fUpdateClasspathQuery == null)
 			return replace | originating | destination;
 
-		IJavaProject[] referencingProjects= JavaElementUtil.getReferencingProjects(getRoot());
+		IJavaScriptProject[] referencingProjects= JavaElementUtil.getReferencingProjects(getRoot());
 		if (referencingProjects.length <= 1)
 			return replace | originating | destination;
 

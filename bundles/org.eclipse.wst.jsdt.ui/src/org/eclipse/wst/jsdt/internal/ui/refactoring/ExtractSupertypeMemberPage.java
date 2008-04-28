@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.SelectionDialog;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.structure.ExtractSupertypeProcessor;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.structure.ExtractSupertypeRefactoring;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
@@ -385,7 +385,7 @@ public final class ExtractSupertypeMemberPage extends PullUpMemberPage {
 	protected void createSuperTypeControl(final Composite parent) {
 		try {
 			createSuperTypeList(parent);
-		} catch (JavaModelException exception) {
+		} catch (JavaScriptModelException exception) {
 			ExceptionHandler.handle(exception, getShell(), RefactoringMessages.ExtractSupertypeMemberPage_extract_supertype, RefactoringMessages.PullUpInputPage_exception);
 		}
 	}
@@ -418,7 +418,7 @@ public final class ExtractSupertypeMemberPage extends PullUpMemberPage {
 	 * @param parent
 	 *            the parent control
 	 */
-	protected void createSuperTypeList(final Composite parent) throws JavaModelException {
+	protected void createSuperTypeList(final Composite parent) throws JavaScriptModelException {
 		createSpacer(parent);
 
 		final Label label= new Label(parent, SWT.NONE);

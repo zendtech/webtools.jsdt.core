@@ -13,7 +13,7 @@ package org.eclipse.wst.jsdt.internal.core;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.core.runtime.preferences.PreferenceModifyListener;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 
@@ -27,14 +27,14 @@ public class JavaCorePreferenceModifyListener extends PreferenceModifyListener {
 	 */
 	public IEclipsePreferences preApply(IEclipsePreferences node) {
 		Preferences instance = node.node(InstanceScope.SCOPE);
-		cleanJavaCore(instance.node(JavaCore.PLUGIN_ID));
+		cleanJavaCore(instance.node(JavaScriptCore.PLUGIN_ID));
 		return super.preApply(node);
 	}
 
 	/**
 	 * Clean imported preferences from obsolete keys.
 	 *
-	 * @param preferences JavaCore preferences.
+	 * @param preferences JavaScriptCore preferences.
 	 */
 	void cleanJavaCore(Preferences preferences) {
 		try {

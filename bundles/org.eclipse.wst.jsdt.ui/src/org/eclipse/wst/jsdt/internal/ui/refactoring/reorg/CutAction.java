@@ -19,7 +19,7 @@ import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringAvailabilityTester;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringExecutionStarter;
@@ -72,7 +72,7 @@ public class CutAction extends SelectionDispatchAction{
 	private static boolean containsOnlyElementsInsideCompilationUnits(IStructuredSelection selection) {
 		for (Iterator iter = selection.iterator(); iter.hasNext();) {
 			Object object= iter.next();
-			if (! (object instanceof IJavaElement && ReorgUtils.isInsideCompilationUnit((IJavaElement)object)))
+			if (! (object instanceof IJavaScriptElement && ReorgUtils.isInsideCompilationUnit((IJavaScriptElement)object)))
 				return false;
 		}
 		return true;

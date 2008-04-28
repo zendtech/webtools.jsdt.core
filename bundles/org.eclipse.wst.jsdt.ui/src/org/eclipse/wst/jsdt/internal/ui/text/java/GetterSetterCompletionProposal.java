@@ -22,9 +22,9 @@ import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.contentassist.ICompletionProposalExtension4;
 import org.eclipse.wst.jsdt.core.Flags;
 import org.eclipse.wst.jsdt.core.IField;
-import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.core.dom.rewrite.ImportRewrite;
 import org.eclipse.wst.jsdt.core.formatter.CodeFormatter;
@@ -45,7 +45,7 @@ public class GetterSetterCompletionProposal extends JavaTypeCompletionProposal i
 		}
 
 		IField[] fields= type.getFields();
-		IMethod[] methods= type.getMethods();
+		IFunction[] methods= type.getMethods();
 		for (int i= 0; i < fields.length; i++) {
 			IField curr= fields[i];
 			if (!JdtFlags.isEnum(curr)) {
@@ -62,7 +62,7 @@ public class GetterSetterCompletionProposal extends JavaTypeCompletionProposal i
 		}
 	}
 
-	private static boolean hasMethod(IMethod[] methods, String name) {
+	private static boolean hasMethod(IFunction[] methods, String name) {
 		for (int i= 0; i < methods.length; i++) {
 			if (methods[i].getElementName().equals(name)) {
 				return true;
@@ -74,7 +74,7 @@ public class GetterSetterCompletionProposal extends JavaTypeCompletionProposal i
 	private final IField fField;
 	private final boolean fIsGetter;
 
-	public GetterSetterCompletionProposal(IField field, int start, int length, boolean isGetter, int relevance) throws JavaModelException {
+	public GetterSetterCompletionProposal(IField field, int start, int length, boolean isGetter, int relevance) throws JavaScriptModelException {
 		super("", field.getCompilationUnit(), start, length, JavaPluginImages.get(JavaPluginImages.IMG_MISC_PUBLIC), getDisplayName(field, isGetter), relevance); //$NON-NLS-1$
 		Assert.isNotNull(field);
 
@@ -83,7 +83,7 @@ public class GetterSetterCompletionProposal extends JavaTypeCompletionProposal i
 		setProposalInfo(new ProposalInfo(field));
 	}
 
-	private static String getDisplayName(IField field, boolean isGetter) throws JavaModelException {
+	private static String getDisplayName(IField field, boolean isGetter) throws JavaScriptModelException {
 		StringBuffer buf= new StringBuffer();
 		if (isGetter) {
 			buf.append(GetterSetterUtil.getGetterName(field, null));

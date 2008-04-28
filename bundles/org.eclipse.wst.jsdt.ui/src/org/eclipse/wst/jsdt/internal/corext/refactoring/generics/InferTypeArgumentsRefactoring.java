@@ -37,9 +37,9 @@ import org.eclipse.ltk.core.refactoring.RefactoringDescriptor;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.RefactoringArguments;
 import org.eclipse.wst.jsdt.core.BindingKey;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.compiler.IProblem;
 import org.eclipse.wst.jsdt.core.dom.AST;
 import org.eclipse.wst.jsdt.core.dom.ASTNode;
@@ -48,7 +48,7 @@ import org.eclipse.wst.jsdt.core.dom.ASTRequestor;
 import org.eclipse.wst.jsdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.wst.jsdt.core.dom.CastExpression;
 import org.eclipse.wst.jsdt.core.dom.ClassInstanceCreation;
-import org.eclipse.wst.jsdt.core.dom.CompilationUnit;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
 import org.eclipse.wst.jsdt.core.dom.Expression;
 import org.eclipse.wst.jsdt.core.dom.IBinding;
 import org.eclipse.wst.jsdt.core.dom.Name;
@@ -94,7 +94,7 @@ public class InferTypeArgumentsRefactoring extends ScriptableRefactoring {
 	private static final String REWRITTEN= "InferTypeArgumentsRefactoring.rewritten"; //$NON-NLS-1$
 	
 	private TextChangeManager fChangeManager;
-	private IJavaElement[] fElements;
+	private IJavaScriptElement[] fElements;
 	private InferTypeArgumentsTCModel fTCModel;
 
 	private boolean fAssumeCloneReturnsSameType;
@@ -104,7 +104,7 @@ public class InferTypeArgumentsRefactoring extends ScriptableRefactoring {
 	 * Creates a new infer type arguments refactoring.
 	 * @param elements the elements to process, or <code>null</code> if invoked by scripting
 	 */
-	public InferTypeArgumentsRefactoring(IJavaElement[] elements) {
+	public InferTypeArgumentsRefactoring(IJavaScriptElement[] elements) {
 		fElements= elements;
 	}
 	
@@ -144,7 +144,7 @@ public class InferTypeArgumentsRefactoring extends ScriptableRefactoring {
 	 * @see org.eclipse.ltk.core.refactoring.Refactoring#checkFinalConditions(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public RefactoringStatus checkFinalConditions(final IProgressMonitor pm) throws CoreException, OperationCanceledException {
-		HashMap/*<IJavaProject, List<JavaElement>>*/ projectsToElements= getJavaElementsPerProject(fElements);
+		HashMap/*<IJavaScriptProject, List<JavaElement>>*/ projectsToElements= getJavaElementsPerProject(fElements);
 		pm.beginTask("", projectsToElements.size() + 2); //$NON-NLS-1$
 		final RefactoringStatus result= new RefactoringStatus();
 		try {
@@ -153,9 +153,9 @@ public class InferTypeArgumentsRefactoring extends ScriptableRefactoring {
 			
 			for (Iterator iter= projectsToElements.entrySet().iterator(); iter.hasNext(); ) {
 				Entry entry= (Entry) iter.next();
-				IJavaProject project= (IJavaProject) entry.getKey();
+				IJavaScriptProject project= (IJavaScriptProject) entry.getKey();
 				List javaElementsList= (List) entry.getValue();
-				IJavaElement[] javaElements= (IJavaElement[]) javaElementsList.toArray(new IJavaElement[javaElementsList.size()]);
+				IJavaScriptElement[] javaElements= (IJavaScriptElement[]) javaElementsList.toArray(new IJavaScriptElement[javaElementsList.size()]);
 				List cus= Arrays.asList(JavaModelUtil.getAllCompilationUnits(javaElements));
 				
 				int batchSize= 150;
@@ -165,7 +165,7 @@ public class InferTypeArgumentsRefactoring extends ScriptableRefactoring {
 				projectMonitor.setTaskName(RefactoringCoreMessages.InferTypeArgumentsRefactoring_building); 
 				for (int i= 0; i < batches; i++) {
 					List batch= cus.subList(i * batchSize, Math.min(cus.size(), (i + 1) * batchSize));
-					ICompilationUnit[] batchCus= (ICompilationUnit[]) batch.toArray(new ICompilationUnit[batch.size()]);
+					IJavaScriptUnit[] batchCus= (IJavaScriptUnit[]) batch.toArray(new IJavaScriptUnit[batch.size()]);
 					final SubProgressMonitor batchMonitor= new SubProgressMonitor(projectMonitor, 1);
 					batchMonitor.subTask(RefactoringCoreMessages.InferTypeArgumentsRefactoring_calculating_dependencies); 
 					
@@ -174,7 +174,7 @@ public class InferTypeArgumentsRefactoring extends ScriptableRefactoring {
 					parser.setCompilerOptions(RefactoringASTParser.getCompilerOptions(project));
 					parser.setResolveBindings(true);
 					parser.createASTs(batchCus, new String[0], new ASTRequestor() {
-						public void acceptAST(final ICompilationUnit source, final CompilationUnit ast) {
+						public void acceptAST(final IJavaScriptUnit source, final JavaScriptUnit ast) {
 							batchMonitor.subTask(source.getElementName());
 	
 							SafeRunner.run(new ISafeRunnable() {
@@ -240,11 +240,11 @@ public class InferTypeArgumentsRefactoring extends ScriptableRefactoring {
 		fTCModel= null;
 	}
 
-	private HashMap getJavaElementsPerProject(IJavaElement[] elements) {
-		HashMap/*<IJavaProject, List<JavaElement>>*/ result= new HashMap/*<IJavaProject, List<JavaElement>>*/();
+	private HashMap getJavaElementsPerProject(IJavaScriptElement[] elements) {
+		HashMap/*<IJavaScriptProject, List<JavaElement>>*/ result= new HashMap/*<IJavaScriptProject, List<JavaElement>>*/();
 		for (int i= 0; i < fElements.length; i++) {
-			IJavaElement element= fElements[i];
-			IJavaProject javaProject= element.getJavaProject();
+			IJavaScriptElement element= fElements[i];
+			IJavaScriptProject javaProject= element.getJavaProject();
 			ArrayList javaElements= (ArrayList) result.get(javaProject);
 			if (javaElements == null) {
 				javaElements= new ArrayList();
@@ -257,10 +257,10 @@ public class InferTypeArgumentsRefactoring extends ScriptableRefactoring {
 
 	private RefactoringStatus check15() throws CoreException {
 		RefactoringStatus result= new RefactoringStatus();
-		HashSet/*<IJavaProject>*/ checkedProjects= new HashSet/*<IJavaProject>*/();
+		HashSet/*<IJavaScriptProject>*/ checkedProjects= new HashSet/*<IJavaScriptProject>*/();
 		
 		for (int i= 0; i < fElements.length; i++) {
-			IJavaProject javaProject= fElements[i].getJavaProject();
+			IJavaScriptProject javaProject= fElements[i].getJavaProject();
 			if (! checkedProjects.contains(javaProject)) {
 				if (! JavaModelUtil.is50OrHigher(javaProject)) {
 					String message= Messages.format(RefactoringCoreMessages.InferTypeArgumentsRefactoring_not50, javaProject.getElementName()); 
@@ -276,7 +276,7 @@ public class InferTypeArgumentsRefactoring extends ScriptableRefactoring {
 	}
 
 	private void rewriteDeclarations(InferTypeArgumentsUpdate update, IProgressMonitor pm) throws CoreException {
-		HashMap/*<ICompilationUnit, CuUpdate>*/ updates= update.getUpdates();
+		HashMap/*<IJavaScriptUnit, CuUpdate>*/ updates= update.getUpdates();
 		
 		Set entrySet= updates.entrySet();
 		pm.beginTask("", entrySet.size()); //$NON-NLS-1$
@@ -286,7 +286,7 @@ public class InferTypeArgumentsRefactoring extends ScriptableRefactoring {
 				throw new OperationCanceledException();
 			
 			Map.Entry entry= (Map.Entry) iter.next();
-			ICompilationUnit cu= (ICompilationUnit) entry.getKey();
+			IJavaScriptUnit cu= (IJavaScriptUnit) entry.getKey();
 			pm.worked(1);
 			pm.subTask(cu.getElementName());
 
@@ -317,7 +317,7 @@ public class InferTypeArgumentsRefactoring extends ScriptableRefactoring {
 			types[i].setProperty(REWRITTEN, null);
 		}
 		List result= new ArrayList();
-		HashMap/*<ICompilationUnit, CuUpdate>*/ updates= update.getUpdates();
+		HashMap/*<IJavaScriptUnit, CuUpdate>*/ updates= update.getUpdates();
 		Set entrySet= updates.entrySet();
 		for (Iterator iter= entrySet.iterator(); iter.hasNext();) {
 			
@@ -527,7 +527,7 @@ public class InferTypeArgumentsRefactoring extends ScriptableRefactoring {
 			
 				public final ChangeDescriptor getDescriptor() {
 					final Map arguments= new HashMap();
-					final IJavaProject project= getSingleProject();
+					final IJavaScriptProject project= getSingleProject();
 					final String description= RefactoringCoreMessages.InferTypeArgumentsRefactoring_descriptor_description;
 					final String header= project != null ? Messages.format(RefactoringCoreMessages.InferTypeArgumentsRefactoring_descriptor_description_project, project.getElementName()) : RefactoringCoreMessages.InferTypeArgumentsRefactoring_descriptor_description;
 					final String name= project != null ? project.getElementName() : null;
@@ -554,10 +554,10 @@ public class InferTypeArgumentsRefactoring extends ScriptableRefactoring {
 		}	
 	}
 
-	private IJavaProject getSingleProject() {
-		IJavaProject first= null;
+	private IJavaScriptProject getSingleProject() {
+		IJavaScriptProject first= null;
 		for (int index= 0; index < fElements.length; index++) {
-			final IJavaProject project= fElements[index].getJavaProject();
+			final IJavaScriptProject project= fElements[index].getJavaProject();
 			if (project != null) {
 				if (first == null)
 					first= project;
@@ -587,7 +587,7 @@ public class InferTypeArgumentsRefactoring extends ScriptableRefactoring {
 			String attribute= JDTRefactoringDescriptor.ATTRIBUTE_ELEMENT + count;
 			final RefactoringStatus status= new RefactoringStatus();
 			while ((handle= generic.getAttribute(attribute)) != null) {
-				final IJavaElement element= JDTRefactoringDescriptor.handleToElement(generic.getProject(), handle, false);
+				final IJavaScriptElement element= JDTRefactoringDescriptor.handleToElement(generic.getProject(), handle, false);
 				if (element == null || !element.exists())
 					return createInputFatalStatus(element, IJavaRefactorings.INFER_TYPE_ARGUMENTS);
 				else
@@ -595,7 +595,7 @@ public class InferTypeArgumentsRefactoring extends ScriptableRefactoring {
 				count++;
 				attribute= JDTRefactoringDescriptor.ATTRIBUTE_ELEMENT + count;
 			}
-			fElements= (IJavaElement[]) elements.toArray(new IJavaElement[elements.size()]);
+			fElements= (IJavaScriptElement[]) elements.toArray(new IJavaScriptElement[elements.size()]);
 			if (elements.isEmpty())
 				return createInputFatalStatus(null, IJavaRefactorings.INFER_TYPE_ARGUMENTS);
 			if (!status.isOK())

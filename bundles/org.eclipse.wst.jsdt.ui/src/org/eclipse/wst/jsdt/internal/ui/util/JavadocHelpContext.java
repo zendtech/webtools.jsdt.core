@@ -25,10 +25,10 @@ import org.eclipse.help.IContext2;
 import org.eclipse.help.IHelpResource;
 import org.eclipse.wst.jsdt.internal.ui.text.html.HTML2TextReader;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIMessages;
@@ -55,10 +55,10 @@ public class JavadocHelpContext implements IContext2 {
 	
 	private static class JavaUIHelpResource implements IHelpResource {
 
-		private IJavaElement fElement;
+		private IJavaScriptElement fElement;
 		private String fUrl;
 
-		public JavaUIHelpResource(IJavaElement element, String url) {
+		public JavaUIHelpResource(IJavaScriptElement element, String url) {
 			fElement= element;
 			fUrl= url;
 		}
@@ -82,7 +82,7 @@ public class JavadocHelpContext implements IContext2 {
 	// see: https://bugs.eclipse.org/bugs/show_bug.cgi?id=85719
 	private static final boolean BUG_85719_FIXED= false; 
 
-	public JavadocHelpContext(IContext context, Object[] elements) throws JavaModelException {
+	public JavadocHelpContext(IContext context, Object[] elements) throws JavaScriptModelException {
 		Assert.isNotNull(elements);
 		if (context instanceof IContext2)
 			fTitle= ((IContext2)context).getTitle();
@@ -91,8 +91,8 @@ public class JavadocHelpContext implements IContext2 {
 
 		String javadocSummary= null;
 		for (int i= 0; i < elements.length; i++) {
-			if (elements[i] instanceof IJavaElement) {
-				IJavaElement element= (IJavaElement) elements[i];
+			if (elements[i] instanceof IJavaScriptElement) {
+				IJavaScriptElement element= (IJavaScriptElement) elements[i];
 				// if element isn't on the build path skip it
 				if (!ActionUtil.isOnBuildPath(element))
 					continue;
@@ -180,7 +180,7 @@ public class JavadocHelpContext implements IContext2 {
 		return false;
 	}
 
-	private String retrieveText(IJavaElement elem) throws JavaModelException {
+	private String retrieveText(IJavaScriptElement elem) throws JavaScriptModelException {
 		if (elem instanceof IMember) {
 			Reader reader= JavadocContentAccess.getHTMLContentReader((IMember)elem, true, true);
 			if (reader != null)

@@ -25,14 +25,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.jsdt.core.IClassFile;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaModelStatusConstants;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptModelStatusConstants;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.JsGlobalScopeContainerInitializer;
 import org.eclipse.wst.jsdt.core.WorkingCopyOwner;
 import org.eclipse.wst.jsdt.internal.compiler.util.SuffixConstants;
@@ -52,7 +52,7 @@ public class PackageFragment extends Openable implements IPackageFragment, IVirt
 	/**
 	 * Constant empty list of compilation units
 	 */
-	protected static final ICompilationUnit[] NO_COMPILATION_UNITS = new ICompilationUnit[] {};
+	protected static final IJavaScriptUnit[] NO_COMPILATION_UNITS = new IJavaScriptUnit[] {};
 
 	public String[] names;
 
@@ -63,7 +63,7 @@ protected PackageFragment(PackageFragmentRoot root, String[] names) {
 /**
  * @see Openable
  */
-protected boolean buildStructure(OpenableElementInfo info, IProgressMonitor pm, Map newElements, IResource underlyingResource) throws JavaModelException {
+protected boolean buildStructure(OpenableElementInfo info, IProgressMonitor pm, Map newElements, IResource underlyingResource) throws JavaScriptModelException {
 
 	// check whether this pkg can be opened
 	if (!underlyingResource.isAccessible()) throw newNotPresentException();
@@ -83,14 +83,14 @@ protected boolean buildStructure(OpenableElementInfo info, IProgressMonitor pm, 
 		IResource[] members = ((IContainer) underlyingResource).members();
 		int length = members.length;
 		if (length > 0) {
-			IJavaProject project = getJavaProject();
-			String sourceLevel = project.getOption(JavaCore.COMPILER_SOURCE, true);
-			String complianceLevel = project.getOption(JavaCore.COMPILER_COMPLIANCE, true);
+			IJavaScriptProject project = getJavaProject();
+			String sourceLevel = project.getOption(JavaScriptCore.COMPILER_SOURCE, true);
+			String complianceLevel = project.getOption(JavaScriptCore.COMPILER_COMPLIANCE, true);
 			for (int i = 0; i < length; i++) {
 				IResource child = members[i];
 				if (child.getType() != IResource.FOLDER
 						&& !Util.isExcluded(child, inclusionPatterns, exclusionPatterns)) {
-					IJavaElement childElement;
+					IJavaScriptElement childElement;
 					if (kind == IPackageFragmentRoot.K_SOURCE && Util.isValidCompilationUnitName(child.getName(), sourceLevel, complianceLevel)) {
 						childElement = new CompilationUnit(this, child.getName(), DefaultWorkingCopyOwner.PRIMARY);
 						vChildren.add(childElement);
@@ -102,19 +102,19 @@ protected boolean buildStructure(OpenableElementInfo info, IProgressMonitor pm, 
 			}
 		}
 	} catch (CoreException e) {
-		throw new JavaModelException(e);
+		throw new JavaScriptModelException(e);
 	}
 
 	if (kind == IPackageFragmentRoot.K_SOURCE) {
 		// add primary compilation units
-		ICompilationUnit[] primaryCompilationUnits = getCompilationUnits(DefaultWorkingCopyOwner.PRIMARY);
+		IJavaScriptUnit[] primaryCompilationUnits = getCompilationUnits(DefaultWorkingCopyOwner.PRIMARY);
 		for (int i = 0, length = primaryCompilationUnits.length; i < length; i++) {
-			ICompilationUnit primary = primaryCompilationUnits[i];
+			IJavaScriptUnit primary = primaryCompilationUnits[i];
 			vChildren.add(primary);
 		}
 	}
 
-	IJavaElement[] children = new IJavaElement[vChildren.size()];
+	IJavaScriptElement[] children = new IJavaScriptElement[vChildren.size()];
 	vChildren.toArray(children);
 	info.setChildren(children);
 	return true;
@@ -123,21 +123,21 @@ protected boolean buildStructure(OpenableElementInfo info, IProgressMonitor pm, 
  * Returns true if this fragment contains at least one java resource.
  * Returns false otherwise.
  */
-public boolean containsJavaResources() throws JavaModelException {
+public boolean containsJavaResources() throws JavaScriptModelException {
 	return ((PackageFragmentInfo) getElementInfo()).containsJavaResources();
 }
 /**
  * @see org.eclipse.wst.jsdt.core.ISourceManipulation
  */
-public void copy(IJavaElement container, IJavaElement sibling, String rename, boolean force, IProgressMonitor monitor) throws JavaModelException {
+public void copy(IJavaScriptElement container, IJavaScriptElement sibling, String rename, boolean force, IProgressMonitor monitor) throws JavaScriptModelException {
 	if (container == null) {
 		throw new IllegalArgumentException(Messages.operation_nullContainer);
 	}
-	IJavaElement[] elements= new IJavaElement[] {this};
-	IJavaElement[] containers= new IJavaElement[] {container};
-	IJavaElement[] siblings= null;
+	IJavaScriptElement[] elements= new IJavaScriptElement[] {this};
+	IJavaScriptElement[] containers= new IJavaScriptElement[] {container};
+	IJavaScriptElement[] siblings= null;
 	if (sibling != null) {
-		siblings= new IJavaElement[] {sibling};
+		siblings= new IJavaScriptElement[] {sibling};
 	}
 	String[] renamings= null;
 	if (rename != null) {
@@ -148,7 +148,7 @@ public void copy(IJavaElement container, IJavaElement sibling, String rename, bo
 /**
  * @see IPackageFragment
  */
-public ICompilationUnit createCompilationUnit(String cuName, String contents, boolean force, IProgressMonitor monitor) throws JavaModelException {
+public IJavaScriptUnit createCompilationUnit(String cuName, String contents, boolean force, IProgressMonitor monitor) throws JavaScriptModelException {
 	CreateCompilationUnitOperation op= new CreateCompilationUnitOperation(this, cuName, contents, force);
 	op.runOperation(monitor);
 	return new CompilationUnit(this, cuName, DefaultWorkingCopyOwner.PRIMARY);
@@ -162,8 +162,8 @@ protected Object createElementInfo() {
 /**
  * @see org.eclipse.wst.jsdt.core.ISourceManipulation
  */
-public void delete(boolean force, IProgressMonitor monitor) throws JavaModelException {
-	IJavaElement[] elements = new IJavaElement[] {this};
+public void delete(boolean force, IProgressMonitor monitor) throws JavaScriptModelException {
+	IJavaScriptElement[] elements = new IJavaScriptElement[] {this};
 	getJavaModel().delete(elements, force, monitor);
 }
 public boolean equals(Object o) {
@@ -206,7 +206,7 @@ public IClassFile getClassFile(String classFileName) {
  *
  * @see IPackageFragment#getClassFiles()
  */
-public IClassFile[] getClassFiles() throws JavaModelException {
+public IClassFile[] getClassFiles() throws JavaScriptModelException {
 	if (getKind() == IPackageFragmentRoot.K_SOURCE) {
 		return NO_CLASSFILES;
 	}
@@ -220,7 +220,7 @@ public IClassFile[] getClassFiles() throws JavaModelException {
  * @see IPackageFragment#getCompilationUnit(String)
  * @exception IllegalArgumentException if the name does not end with ".js"
  */
-public ICompilationUnit getCompilationUnit(String cuName, String superTypeName) {
+public IJavaScriptUnit getCompilationUnit(String cuName, String superTypeName) {
 	if (!org.eclipse.wst.jsdt.internal.core.util.Util.isJavaLikeFileName(cuName)) {
 		throw new IllegalArgumentException(Messages.convention_unit_notJavaName);
 	}
@@ -244,39 +244,39 @@ public ICompilationUnit getCompilationUnit(String cuName, String superTypeName) 
 	return new CompilationUnit(this, cuName,superTypeName, DefaultWorkingCopyOwner.PRIMARY);
 }
 
-public ICompilationUnit getCompilationUnit(String cuName) {
+public IJavaScriptUnit getCompilationUnit(String cuName) {
 	return getCompilationUnit(cuName,null);
 }
 /**
  * @see IPackageFragment#getCompilationUnits()
  */
-public ICompilationUnit[] getCompilationUnits() throws JavaModelException {
+public IJavaScriptUnit[] getCompilationUnits() throws JavaScriptModelException {
 	if (getKind() == IPackageFragmentRoot.K_BINARY) {
 		return NO_COMPILATION_UNITS;
 	}
 
 	ArrayList list = getChildrenOfType(COMPILATION_UNIT);
-	ICompilationUnit[] array= new ICompilationUnit[list.size()];
+	IJavaScriptUnit[] array= new IJavaScriptUnit[list.size()];
 	list.toArray(array);
 	return array;
 }
 /**
  * @see IPackageFragment#getCompilationUnits(WorkingCopyOwner)
  */
-public ICompilationUnit[] getCompilationUnits(WorkingCopyOwner owner) {
-	ICompilationUnit[] workingCopies = JavaModelManager.getJavaModelManager().getWorkingCopies(owner, false/*don't add primary*/);
+public IJavaScriptUnit[] getCompilationUnits(WorkingCopyOwner owner) {
+	IJavaScriptUnit[] workingCopies = JavaModelManager.getJavaModelManager().getWorkingCopies(owner, false/*don't add primary*/);
 	if (workingCopies == null) return JavaModelManager.NO_WORKING_COPY;
 	int length = workingCopies.length;
-	ICompilationUnit[] result = new ICompilationUnit[length];
+	IJavaScriptUnit[] result = new IJavaScriptUnit[length];
 	int index = 0;
 	for (int i = 0; i < length; i++) {
-		ICompilationUnit wc = workingCopies[i];
+		IJavaScriptUnit wc = workingCopies[i];
 		if (equals(wc.getParent()) && !Util.isExcluded(wc)) { // 59933 - excluded wc shouldn't be answered back
 			result[index++] = wc;
 		}
 	}
 	if (index != length) {
-		System.arraycopy(result, 0, result = new ICompilationUnit[index], 0, index);
+		System.arraycopy(result, 0, result = new IJavaScriptUnit[index], 0, index);
 	}
 	return result;
 }
@@ -286,7 +286,7 @@ public String getElementName() {
 	return Util.concatWith(this.names, '/');
 }
 /**
- * @see IJavaElement
+ * @see IJavaScriptElement
  */
 public int getElementType() {
 	return PACKAGE_FRAGMENT;
@@ -294,7 +294,7 @@ public int getElementType() {
 /*
  * @see JavaElement
  */
-public IJavaElement getHandleFromMemento(String token, MementoTokenizer memento, WorkingCopyOwner owner) {
+public IJavaScriptElement getHandleFromMemento(String token, MementoTokenizer memento, WorkingCopyOwner owner) {
 	switch (token.charAt(0)) {
 		case JEM_CLASSFILE:
 			if (!memento.hasMoreTokens()) return this;
@@ -318,13 +318,13 @@ protected char getHandleMementoDelimiter() {
 /**
  * @see IPackageFragment#getKind()
  */
-public int getKind() throws JavaModelException {
+public int getKind() throws JavaScriptModelException {
 	return ((IPackageFragmentRoot)getParent()).getKind();
 }
 /**
  * Returns an array of non-java resources contained in the receiver.
  */
-public Object[] getNonJavaResources() throws JavaModelException {
+public Object[] getNonJavaResources() throws JavaScriptModelException {
 	if (this.isDefaultPackage()) {
 		// We don't want to show non java resources of the default package (see PR #1G58NB8)
 		return JavaElementInfo.NO_NON_JAVA_RESOURCES;
@@ -333,7 +333,7 @@ public Object[] getNonJavaResources() throws JavaModelException {
 	}
 }
 /**
- * @see IJavaElement#getPath()
+ * @see IJavaScriptElement#getPath()
  */
 public IPath getPath() {
 	PackageFragmentRoot root = this.getPackageFragmentRoot();
@@ -349,7 +349,7 @@ public IPath getPath() {
 	}
 }
 /**
- * @see IJavaElement#getResource()
+ * @see IJavaScriptElement#getResource()
  */
 public IResource getResource() {
 	PackageFragmentRoot root = this.getPackageFragmentRoot();
@@ -368,9 +368,9 @@ public IResource getResource() {
 	}
 }
 /**
- * @see IJavaElement#getUnderlyingResource()
+ * @see IJavaScriptElement#getUnderlyingResource()
  */
-public IResource getUnderlyingResource() throws JavaModelException {
+public IResource getUnderlyingResource() throws JavaScriptModelException {
 	IResource rootResource = this.parent.getUnderlyingResource();
 	if (rootResource == null) {
 		//jar package fragment root that has no associated resource
@@ -402,14 +402,14 @@ public int hashCode() {
 /**
  * @see org.eclipse.wst.jsdt.core.IParent
  */
-public boolean hasChildren() throws JavaModelException {
+public boolean hasChildren() throws JavaScriptModelException {
 	return getChildren().length > 0;
 }
 /**
  * @see IPackageFragment#hasSubpackages()
  */
-public boolean hasSubpackages() throws JavaModelException {
-	IJavaElement[] packages= ((IPackageFragmentRoot)getParent()).getChildren();
+public boolean hasSubpackages() throws JavaScriptModelException {
+	IJavaScriptElement[] packages= ((IPackageFragmentRoot)getParent()).getChildren();
 	int namesLength = this.names.length;
 	nextPackage: for (int i= 0, length = packages.length; i < length; i++) {
 		String[] otherNames = ((PackageFragment) packages[i]).names;
@@ -428,17 +428,17 @@ public boolean isDefaultPackage() {
 	return this.names.length == 0;
 }
 /**
- * @see org.eclipse.wst.jsdt.core.ISourceManipulation#move(IJavaElement, IJavaElement, String, boolean, IProgressMonitor)
+ * @see org.eclipse.wst.jsdt.core.ISourceManipulation#move(IJavaScriptElement, IJavaScriptElement, String, boolean, IProgressMonitor)
  */
-public void move(IJavaElement container, IJavaElement sibling, String rename, boolean force, IProgressMonitor monitor) throws JavaModelException {
+public void move(IJavaScriptElement container, IJavaScriptElement sibling, String rename, boolean force, IProgressMonitor monitor) throws JavaScriptModelException {
 	if (container == null) {
 		throw new IllegalArgumentException(Messages.operation_nullContainer);
 	}
-	IJavaElement[] elements= new IJavaElement[] {this};
-	IJavaElement[] containers= new IJavaElement[] {container};
-	IJavaElement[] siblings= null;
+	IJavaScriptElement[] elements= new IJavaScriptElement[] {this};
+	IJavaScriptElement[] containers= new IJavaScriptElement[] {container};
+	IJavaScriptElement[] siblings= null;
 	if (sibling != null) {
-		siblings= new IJavaElement[] {sibling};
+		siblings= new IJavaScriptElement[] {sibling};
 	}
 	String[] renamings= null;
 	if (rename != null) {
@@ -449,12 +449,12 @@ public void move(IJavaElement container, IJavaElement sibling, String rename, bo
 /**
  * @see org.eclipse.wst.jsdt.core.ISourceManipulation#rename(String, boolean, IProgressMonitor)
  */
-public void rename(String newName, boolean force, IProgressMonitor monitor) throws JavaModelException {
+public void rename(String newName, boolean force, IProgressMonitor monitor) throws JavaScriptModelException {
 	if (newName == null) {
 		throw new IllegalArgumentException(Messages.element_nullName);
 	}
-	IJavaElement[] elements= new IJavaElement[] {this};
-	IJavaElement[] dests= new IJavaElement[] {this.getParent()};
+	IJavaScriptElement[] elements= new IJavaScriptElement[] {this};
+	IJavaScriptElement[] dests= new IJavaScriptElement[] {this.getParent()};
 	String[] renamings= new String[] {newName};
 	getJavaModel().rename(elements, dests, renamings, force, monitor);
 }
@@ -485,9 +485,9 @@ protected void toStringInfo(int tab, StringBuffer buffer, Object info, boolean s
 	}
 }
 /*
- * @see IJavaElement#getAttachedJavadoc(IProgressMonitor)
+ * @see IJavaScriptElement#getAttachedJavadoc(IProgressMonitor)
  */
-public String getAttachedJavadoc(IProgressMonitor monitor) throws JavaModelException {
+public String getAttachedJavadoc(IProgressMonitor monitor) throws JavaScriptModelException {
 	PerProjectInfo projectInfo = JavaModelManager.getJavaModelManager().getPerProjectInfoCheckExistence(this.getJavaProject().getProject());
 	String cachedJavadoc = null;
 	synchronized (projectInfo.javadocCache) {
@@ -511,7 +511,7 @@ public String getAttachedJavadoc(IProgressMonitor monitor) throws JavaModelExcep
 	if (monitor != null && monitor.isCanceled()) throw new OperationCanceledException();
 	final String contents = getURLContents(String.valueOf(pathBuffer));
 	if (monitor != null && monitor.isCanceled()) throw new OperationCanceledException();
-	if (contents == null) throw new JavaModelException(new JavaModelStatus(IJavaModelStatusConstants.CANNOT_RETRIEVE_ATTACHED_JAVADOC, this));
+	if (contents == null) throw new JavaScriptModelException(new JavaModelStatus(IJavaScriptModelStatusConstants.CANNOT_RETRIEVE_ATTACHED_JAVADOC, this));
 	synchronized (projectInfo.javadocCache) {
 		projectInfo.javadocCache.put(this, contents);
 	}
@@ -526,7 +526,7 @@ public JsGlobalScopeContainerInitializer getContainerInitializer() {
 public boolean isSource() {
 	try {
 		return getPackageFragmentRoot().getKind() == IPackageFragmentRoot.K_SOURCE;
-	} catch (JavaModelException e) {
+	} catch (JavaScriptModelException e) {
 	}
 	return true;
 }

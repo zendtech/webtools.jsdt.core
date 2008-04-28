@@ -18,10 +18,10 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.RefactoringArguments;
 import org.eclipse.wst.jsdt.core.Flags;
 import org.eclipse.wst.jsdt.core.IField;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.refactoring.IJavaRefactorings;
 import org.eclipse.wst.jsdt.core.refactoring.descriptors.JavaRefactoringDescriptor;
 import org.eclipse.wst.jsdt.core.refactoring.descriptors.RenameJavaElementDescriptor;
@@ -86,7 +86,7 @@ public final class RenameEnumConstProcessor extends RenameFieldProcessor {
 		if (change != null) {
 			final IField field= getField();
 			String project= null;
-			IJavaProject javaProject= field.getJavaProject();
+			IJavaScriptProject javaProject= field.getJavaProject();
 			if (javaProject != null)
 				project= javaProject.getElementName();
 			int flags= JavaRefactoringDescriptor.JAR_MIGRATION | JavaRefactoringDescriptor.JAR_REFACTORING | RefactoringDescriptor.STRUCTURAL_CHANGE;
@@ -96,7 +96,7 @@ public final class RenameEnumConstProcessor extends RenameFieldProcessor {
 					flags|= RefactoringDescriptor.MULTI_CHANGE;
 				if (declaring.isAnonymous() || declaring.isLocal())
 					flags|= JavaRefactoringDescriptor.JAR_SOURCE_ATTACHMENT;
-			} catch (JavaModelException exception) {
+			} catch (JavaScriptModelException exception) {
 				JavaPlugin.log(exception);
 			}
 			final String description= Messages.format(RefactoringCoreMessages.RenameEnumConstProcessor_descriptor_description_short, fField.getElementName());
@@ -140,8 +140,8 @@ public final class RenameEnumConstProcessor extends RenameFieldProcessor {
 			final JavaRefactoringArguments extended= (JavaRefactoringArguments) arguments;
 			final String handle= extended.getAttribute(JDTRefactoringDescriptor.ATTRIBUTE_INPUT);
 			if (handle != null) {
-				final IJavaElement element= JDTRefactoringDescriptor.handleToElement(extended.getProject(), handle, false);
-				if (element == null || !element.exists() || element.getElementType() != IJavaElement.FIELD)
+				final IJavaScriptElement element= JDTRefactoringDescriptor.handleToElement(extended.getProject(), handle, false);
+				if (element == null || !element.exists() || element.getElementType() != IJavaScriptElement.FIELD)
 					return ScriptableRefactoring.createInputFatalStatus(element, getRefactoring().getName(), IJavaRefactorings.RENAME_ENUM_CONSTANT);
 				else
 					fField= (IField) element;

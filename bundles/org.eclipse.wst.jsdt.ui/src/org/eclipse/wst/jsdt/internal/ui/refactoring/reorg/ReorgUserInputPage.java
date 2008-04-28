@@ -27,9 +27,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.reorg.IReorgDestinationValidator;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
@@ -107,10 +107,10 @@ abstract class ReorgUserInputPage extends UserInputWizardPage{
 	protected abstract Object getInitiallySelectedElement();
 	
 	/** Set and verify destination */
-	protected abstract RefactoringStatus verifyDestination(Object selected) throws JavaModelException;
+	protected abstract RefactoringStatus verifyDestination(Object selected) throws JavaScriptModelException;
 	
 	protected abstract IResource[] getResources();
-	protected abstract IJavaElement[] getJavaElements();
+	protected abstract IJavaScriptElement[] getJavaElements();
 
 	protected abstract IReorgDestinationValidator getDestinationValidator();
 	
@@ -121,7 +121,7 @@ abstract class ReorgUserInputPage extends UserInputWizardPage{
 				setPageComplete(status.isOK());
 			else
 				setPageComplete(status);
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			JavaPlugin.log(e);
 			setPageComplete(false);
 		}
@@ -136,7 +136,7 @@ abstract class ReorgUserInputPage extends UserInputWizardPage{
 		treeViewer.setLabelProvider(new JavaElementLabelProvider(JavaElementLabelProvider.SHOW_SMALL_ICONS));
 		treeViewer.setContentProvider(new DestinationContentProvider(getDestinationValidator()));
 		treeViewer.setComparator(new JavaElementComparator());
-		treeViewer.setInput(JavaCore.create(ResourcesPlugin.getWorkspace().getRoot()));
+		treeViewer.setInput(JavaScriptCore.create(ResourcesPlugin.getWorkspace().getRoot()));
 		return treeViewer;
 	}
 	

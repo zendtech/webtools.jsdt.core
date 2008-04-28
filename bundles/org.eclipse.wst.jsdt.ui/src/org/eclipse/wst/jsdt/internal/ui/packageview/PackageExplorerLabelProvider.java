@@ -21,7 +21,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.wst.jsdt.core.IClassFile;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.internal.ui.navigator.ContainerFolder;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.AppearanceAwareLabelProvider;
@@ -92,8 +92,8 @@ public class PackageExplorerLabelProvider extends AppearanceAwareLabelProvider {
 		text = super.getText(element);
 		if(element instanceof IClassFile) {
 			text = ((IClassFile)element).getPath().lastSegment();
-		}else if (element instanceof ICompilationUnit) {
-			text = ((ICompilationUnit)element).getPath().lastSegment();
+		}else if (element instanceof IJavaScriptUnit) {
+			text = ((IJavaScriptUnit)element).getPath().lastSegment();
 		}
 		
 		return text;

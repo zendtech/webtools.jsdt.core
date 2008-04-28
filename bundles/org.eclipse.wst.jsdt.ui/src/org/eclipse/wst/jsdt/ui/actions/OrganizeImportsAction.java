@@ -36,11 +36,11 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.ISourceRange;
 import org.eclipse.wst.jsdt.core.compiler.IProblem;
-import org.eclipse.wst.jsdt.core.dom.CompilationUnit;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
 import org.eclipse.wst.jsdt.core.search.TypeNameMatch;
 import org.eclipse.wst.jsdt.internal.corext.codemanipulation.CodeGenerationSettings;
 import org.eclipse.wst.jsdt.internal.corext.codemanipulation.OrganizeImportsOperation;
@@ -70,7 +70,7 @@ import com.ibm.icu.text.Collator;
  * Organizes the imports of a compilation unit.
  * <p>
  * The action is applicable to selections containing elements of
- * type <code>ICompilationUnit</code> or <code>IPackage
+ * type <code>IJavaScriptUnit</code> or <code>IPackage
  * </code>.
  *
  * <p>
@@ -186,25 +186,25 @@ public class OrganizeImportsAction extends SelectionDispatchAction {
 	 * Method declared on SelectionDispatchAction.
 	 */
 	public void run(ITextSelection selection) {
-		ICompilationUnit cu= getCompilationUnit(fEditor);
+		IJavaScriptUnit cu= getCompilationUnit(fEditor);
 		if (cu != null) {
 			run(cu);
 		}
 	}
 
-	private static ICompilationUnit getCompilationUnit(JavaEditor editor) {
-		IJavaElement element= JavaUI.getEditorInputJavaElement(editor.getEditorInput());
-		if (!(element instanceof ICompilationUnit))
+	private static IJavaScriptUnit getCompilationUnit(JavaEditor editor) {
+		IJavaScriptElement element= JavaUI.getEditorInputJavaElement(editor.getEditorInput());
+		if (!(element instanceof IJavaScriptUnit))
 			return null;
 		
-		return (ICompilationUnit)element;
+		return (IJavaScriptUnit)element;
 	}
 	
 	/* (non-Javadoc)
 	 * Method declared on SelectionDispatchAction.
 	 */
 	public void run(IStructuredSelection selection) {
-		ICompilationUnit[] cus= fCleanUpDelegate.getCompilationUnits(selection);
+		IJavaScriptUnit[] cus= fCleanUpDelegate.getCompilationUnits(selection);
 		if (cus.length == 0) {
 			MessageDialog.openInformation(getShell(), ActionMessages.OrganizeImportsAction_EmptySelection_title, ActionMessages.OrganizeImportsAction_EmptySelection_description);
 		} else if (cus.length == 1) {
@@ -218,7 +218,7 @@ public class OrganizeImportsAction extends SelectionDispatchAction {
 	 * Perform organize import on multiple compilation units. No editors are opened.
 	 * @param cus The compilation units to run on
 	 */
-	public void runOnMultiple(final ICompilationUnit[] cus) {
+	public void runOnMultiple(final IJavaScriptUnit[] cus) {
 		if (cus.length == 0)
 			return;
 		
@@ -229,7 +229,7 @@ public class OrganizeImportsAction extends SelectionDispatchAction {
 	 * Note: This method is for internal use only. Clients should not call this method.
 	 * @param cu The compilation unit to process
 	 */
-	public void run(ICompilationUnit cu) {
+	public void run(IJavaScriptUnit cu) {
 		if (!ElementValidator.check(cu, getShell(), ActionMessages.OrganizeImportsAction_error_title, fEditor != null)) 
 			return;
 		if (!ActionUtil.isEditable(fEditor, getShell(), cu))
@@ -246,7 +246,7 @@ public class OrganizeImportsAction extends SelectionDispatchAction {
 				}			
 			}
 			
-			CompilationUnit astRoot= JavaPlugin.getDefault().getASTProvider().getAST(cu, ASTProvider.WAIT_ACTIVE_ONLY, null);
+			JavaScriptUnit astRoot= JavaPlugin.getDefault().getASTProvider().getAST(cu, ASTProvider.WAIT_ACTIVE_ONLY, null);
 			
 			OrganizeImportsOperation op= new OrganizeImportsOperation(cu, astRoot, settings.importIgnoreLowercase, !cu.isWorkingCopy(), true, createChooseImportQuery());
 		

@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.AppearanceAwareLabelProvider;
@@ -92,7 +92,7 @@ class PackagesViewLabelProvider extends AppearanceAwareLabelProvider {
 	private boolean isEmpty(IPackageFragment fragment) {
 		try {
 			return (fragment.getCompilationUnits().length == 0) && (fragment.getClassFiles().length == 0);
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			// ignore
 		}
 		return false;

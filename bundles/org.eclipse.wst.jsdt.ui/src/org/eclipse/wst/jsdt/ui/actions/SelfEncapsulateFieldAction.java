@@ -17,8 +17,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.jsdt.core.IField;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringAvailabilityTester;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringExecutionStarter;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
@@ -87,7 +87,7 @@ public class SelfEncapsulateFieldAction extends SelectionDispatchAction {
 	public void selectionChanged(JavaTextSelection selection) {
 		try {
 			setEnabled(RefactoringAvailabilityTester.isSelfEncapsulateAvailable(selection));
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			// http://bugs.eclipse.org/bugs/show_bug.cgi?id=19253
 			if (JavaModelUtil.isExceptionToBeLogged(e))
 				JavaPlugin.log(e);
@@ -100,7 +100,7 @@ public class SelfEncapsulateFieldAction extends SelectionDispatchAction {
 	 */
 	public void run(ITextSelection selection) {
 		try {
-			IJavaElement[] elements= SelectionConverter.codeResolve(fEditor); 
+			IJavaScriptElement[] elements= SelectionConverter.codeResolve(fEditor); 
 			if (elements.length != 1 || !(elements[0] instanceof IField)) {
 				MessageDialog.openInformation(getShell(), ActionMessages.SelfEncapsulateFieldAction_dialog_title, ActionMessages.SelfEncapsulateFieldAction_dialog_unavailable); 
 				return;
@@ -112,7 +112,7 @@ public class SelfEncapsulateFieldAction extends SelectionDispatchAction {
 				return;
 			}
 			run(field);
-		} catch (JavaModelException exception) {
+		} catch (JavaScriptModelException exception) {
 			JavaPlugin.log(exception);
 			return;
 		}
@@ -126,7 +126,7 @@ public class SelfEncapsulateFieldAction extends SelectionDispatchAction {
 	public void selectionChanged(IStructuredSelection selection) {
 		try {
 			setEnabled(RefactoringAvailabilityTester.isSelfEncapsulateAvailable(selection));
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			// http://bugs.eclipse.org/bugs/show_bug.cgi?id=19253
 			if (JavaModelUtil.isExceptionToBeLogged(e))
 				JavaPlugin.log(e);
@@ -142,7 +142,7 @@ public class SelfEncapsulateFieldAction extends SelectionDispatchAction {
 		try {
 			if (RefactoringAvailabilityTester.isSelfEncapsulateAvailable(selection))
 				run((IField) selection.getFirstElement());
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			ExceptionHandler.handle(e, RefactoringMessages.OpenRefactoringWizardAction_refactoring, RefactoringMessages.OpenRefactoringWizardAction_exception); 
 		}
 	}

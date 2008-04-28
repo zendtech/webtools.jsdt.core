@@ -43,21 +43,21 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.wst.jsdt.core.Flags;
 import org.eclipse.wst.jsdt.core.IClassFile;
-import org.eclipse.wst.jsdt.core.IClasspathAttribute;
+import org.eclipse.wst.jsdt.core.IIncludePathAttribute;
 import org.eclipse.wst.jsdt.core.IJsGlobalScopeContainer;
-import org.eclipse.wst.jsdt.core.IClasspathEntry;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IIncludePathEntry;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IField;
 import org.eclipse.wst.jsdt.core.IImportDeclaration;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IMember;
-import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.internal.corext.CorextMessages;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
@@ -121,13 +121,13 @@ public class JavaDocLocations {
 		job.schedule();
 	}
 	
-	final static void updateClasspathEntries(Map oldLocationMap, IProgressMonitor monitor) throws JavaModelException {
+	final static void updateClasspathEntries(Map oldLocationMap, IProgressMonitor monitor) throws JavaScriptModelException {
 		IWorkspaceRoot root= ResourcesPlugin.getWorkspace().getRoot();
-		IJavaProject[] javaProjects= JavaCore.create(root).getJavaProjects();
+		IJavaScriptProject[] javaProjects= JavaScriptCore.create(root).getJavaProjects();
 		try {
 			monitor.beginTask(CorextMessages.JavaDocLocations_migrate_operation, javaProjects.length); 
 			for (int i= 0; i < javaProjects.length; i++) {
-				IJavaProject project= javaProjects[i];
+				IJavaScriptProject project= javaProjects[i];
 				String projectJavadoc= (String) oldLocationMap.get(project.getPath());
 				if (projectJavadoc != null) {
 					try {
@@ -137,10 +137,10 @@ public class JavaDocLocations {
 					}
 				}
 				
-				IClasspathEntry[] rawClasspath= project.getRawClasspath();
+				IIncludePathEntry[] rawClasspath= project.getRawClasspath();
 				boolean hasChange= false;
 				for (int k= 0; k < rawClasspath.length; k++) {
-					IClasspathEntry updated= getConvertedEntry(rawClasspath[k], project, oldLocationMap);
+					IIncludePathEntry updated= getConvertedEntry(rawClasspath[k], project, oldLocationMap);
 					if (updated != null) {
 						rawClasspath[k]= updated;
 						hasChange= true;
@@ -157,20 +157,20 @@ public class JavaDocLocations {
 		}
 	}
 
-	private static IClasspathEntry getConvertedEntry(IClasspathEntry entry, IJavaProject project, Map oldLocationMap) {
+	private static IIncludePathEntry getConvertedEntry(IIncludePathEntry entry, IJavaScriptProject project, Map oldLocationMap) {
 		IPath path= null;
 		switch (entry.getEntryKind()) {
-			case IClasspathEntry.CPE_SOURCE:
-			case IClasspathEntry.CPE_PROJECT:
+			case IIncludePathEntry.CPE_SOURCE:
+			case IIncludePathEntry.CPE_PROJECT:
 				return null;
-			case IClasspathEntry.CPE_CONTAINER:
+			case IIncludePathEntry.CPE_CONTAINER:
 				convertContainer(entry, project, oldLocationMap);
 				return null;
-			case IClasspathEntry.CPE_LIBRARY:
+			case IIncludePathEntry.CPE_LIBRARY:
 				path= entry.getPath();
 				break;
-			case IClasspathEntry.CPE_VARIABLE:
-				path= JavaCore.getResolvedVariablePath(entry.getPath());
+			case IIncludePathEntry.CPE_VARIABLE:
+				path= JavaScriptCore.getResolvedVariablePath(entry.getPath());
 				break;
 			default:
 				return null;
@@ -178,9 +178,9 @@ public class JavaDocLocations {
 		if (path == null) {
 			return null;
 		}
-		IClasspathAttribute[] extraAttributes= entry.getExtraAttributes();
+		IIncludePathAttribute[] extraAttributes= entry.getExtraAttributes();
 		for (int i= 0; i < extraAttributes.length; i++) {
-			if (IClasspathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME.equals(extraAttributes[i].getName())) {
+			if (IIncludePathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME.equals(extraAttributes[i].getName())) {
 				return null;
 			}
 		}
@@ -193,18 +193,18 @@ public class JavaDocLocations {
 		return null;
 	}
 
-	private static void convertContainer(IClasspathEntry entry, IJavaProject project, Map oldLocationMap) {
+	private static void convertContainer(IIncludePathEntry entry, IJavaScriptProject project, Map oldLocationMap) {
 		try {
-			IJsGlobalScopeContainer container= JavaCore.getJsGlobalScopeContainer(entry.getPath(), project);
+			IJsGlobalScopeContainer container= JavaScriptCore.getJsGlobalScopeContainer(entry.getPath(), project);
 			if (container == null) {
 				return;
 			}
 			
-			IClasspathEntry[] entries= container.getClasspathEntries();
+			IIncludePathEntry[] entries= container.getClasspathEntries();
 			boolean hasChange= false;
 			for (int i= 0; i < entries.length; i++) {
-				IClasspathEntry curr= entries[i];
-				IClasspathEntry updatedEntry= getConvertedEntry(curr, project, oldLocationMap);
+				IIncludePathEntry curr= entries[i];
+				IIncludePathEntry updatedEntry= getConvertedEntry(curr, project, oldLocationMap);
 				if (updatedEntry != null) {
 					entries[i]= updatedEntry;
 					hasChange= true;
@@ -221,7 +221,7 @@ public class JavaDocLocations {
 	/**
 	 * Sets the Javadoc location for an archive with the given path.
 	 */
-	public static void setProjectJavadocLocation(IJavaProject project, URL url) {
+	public static void setProjectJavadocLocation(IJavaScriptProject project, URL url) {
 		try {
 			String location= url != null ? url.toExternalForm() : null;
 			setProjectJavadocLocation(project, location);
@@ -230,11 +230,11 @@ public class JavaDocLocations {
 		}
 	}
 	
-	private static void setProjectJavadocLocation(IJavaProject project, String url) throws CoreException {
+	private static void setProjectJavadocLocation(IJavaScriptProject project, String url) throws CoreException {
 		project.getProject().setPersistentProperty(PROJECT_JAVADOC, url);
 	}
 	
-	public static URL getProjectJavadocLocation(IJavaProject project) {
+	public static URL getProjectJavadocLocation(IJavaScriptProject project) {
 		try {
 			String prop= project.getProject().getPersistentProperty(PROJECT_JAVADOC);
 			if (prop == null) {
@@ -250,20 +250,20 @@ public class JavaDocLocations {
 	}
 	
 	
-	public static URL getLibraryJavadocLocation(IClasspathEntry entry) {
+	public static URL getLibraryJavadocLocation(IIncludePathEntry entry) {
 		if (entry == null) {
 			throw new IllegalArgumentException("Entry must not be null"); //$NON-NLS-1$
 		}
 		
 		int kind= entry.getEntryKind();
-		if (kind != IClasspathEntry.CPE_LIBRARY && kind != IClasspathEntry.CPE_VARIABLE) {
+		if (kind != IIncludePathEntry.CPE_LIBRARY && kind != IIncludePathEntry.CPE_VARIABLE) {
 			throw new IllegalArgumentException("Entry must be of kind CPE_LIBRARY or CPE_VARIABLE"); //$NON-NLS-1$
 		}
 		
-		IClasspathAttribute[] extraAttributes= entry.getExtraAttributes();
+		IIncludePathAttribute[] extraAttributes= entry.getExtraAttributes();
 		for (int i= 0; i < extraAttributes.length; i++) {
-			IClasspathAttribute attrib= extraAttributes[i];
-			if (IClasspathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME.equals(attrib.getName())) {
+			IIncludePathAttribute attrib= extraAttributes[i];
+			if (IIncludePathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME.equals(attrib.getName())) {
 				try {
 					return new URL(attrib.getValue());
 				} catch (MalformedURLException e) {
@@ -274,9 +274,9 @@ public class JavaDocLocations {
 		return null;
 	}
 
-	public static URL getJavadocBaseLocation(IJavaElement element) throws JavaModelException {	
-		if (element.getElementType() == IJavaElement.JAVA_PROJECT) {
-			return getProjectJavadocLocation((IJavaProject) element);
+	public static URL getJavadocBaseLocation(IJavaScriptElement element) throws JavaScriptModelException {	
+		if (element.getElementType() == IJavaScriptElement.JAVA_PROJECT) {
+			return getProjectJavadocLocation((IJavaScriptProject) element);
 		}
 		
 		IPackageFragmentRoot root= JavaModelUtil.getPackageFragmentRoot(element);
@@ -285,11 +285,11 @@ public class JavaDocLocations {
 		}
 
 		if (root.getKind() == IPackageFragmentRoot.K_BINARY) {
-			IClasspathEntry entry= root.getRawClasspathEntry();
+			IIncludePathEntry entry= root.getRawClasspathEntry();
 			if (entry == null) {
 				return null;
 			}
-			if (entry.getEntryKind() == IClasspathEntry.CPE_CONTAINER) {
+			if (entry.getEntryKind() == IIncludePathEntry.CPE_CONTAINER) {
 				entry= getRealClasspathEntry(root.getJavaProject(), entry.getPath(), root.getPath());
 				if (entry == null) {
 					return null;
@@ -301,13 +301,13 @@ public class JavaDocLocations {
 		}	
 	}
 	
-	private static IClasspathEntry getRealClasspathEntry(IJavaProject jproject, IPath containerPath, IPath libPath) throws JavaModelException {
-		IJsGlobalScopeContainer container= JavaCore.getJsGlobalScopeContainer(containerPath, jproject);
+	private static IIncludePathEntry getRealClasspathEntry(IJavaScriptProject jproject, IPath containerPath, IPath libPath) throws JavaScriptModelException {
+		IJsGlobalScopeContainer container= JavaScriptCore.getJsGlobalScopeContainer(containerPath, jproject);
 		if (container != null) {
-			IClasspathEntry[] entries= container.getClasspathEntries();
+			IIncludePathEntry[] entries= container.getClasspathEntries();
 			for (int i= 0; i < entries.length; i++) {
-				IClasspathEntry curr= entries[i];
-				IClasspathEntry resolved= JavaCore.getResolvedClasspathEntry(curr);
+				IIncludePathEntry curr= entries[i];
+				IIncludePathEntry resolved= JavaScriptCore.getResolvedClasspathEntry(curr);
 				if (resolved != null && libPath.equals(resolved.getPath())) {
 					return curr; // return the real entry
 				}
@@ -439,7 +439,7 @@ public class JavaDocLocations {
 		}
 	}
 		
-	public static URL getJavadocLocation(IJavaElement element, boolean includeMemberReference) throws JavaModelException {
+	public static URL getJavadocLocation(IJavaScriptElement element, boolean includeMemberReference) throws JavaScriptModelException {
 		URL baseLocation= getJavadocBaseLocation(element);
 		if (baseLocation == null) {
 			return null;
@@ -453,51 +453,51 @@ public class JavaDocLocations {
 		}
 
 		switch (element.getElementType()) {
-			case IJavaElement.PACKAGE_FRAGMENT:
+			case IJavaScriptElement.PACKAGE_FRAGMENT:
 				appendPackageSummaryPath((IPackageFragment) element, pathBuffer);
 				break;
-			case IJavaElement.JAVA_PROJECT:
-			case IJavaElement.PACKAGE_FRAGMENT_ROOT :
+			case IJavaScriptElement.JAVA_PROJECT:
+			case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT :
 				appendIndexPath(pathBuffer);
 				break;
-			case IJavaElement.IMPORT_CONTAINER :
+			case IJavaScriptElement.IMPORT_CONTAINER :
 				element= element.getParent();
 				// fall through
-			case IJavaElement.COMPILATION_UNIT :
-				IType mainType= ((ICompilationUnit) element).findPrimaryType();
+			case IJavaScriptElement.COMPILATION_UNIT :
+				IType mainType= ((IJavaScriptUnit) element).findPrimaryType();
 				if (mainType == null) {
 					return null;
 				}
 				appendTypePath(mainType, pathBuffer);
 				break;
-			case IJavaElement.CLASS_FILE :
+			case IJavaScriptElement.CLASS_FILE :
 				appendTypePath(((IClassFile) element).getType(), pathBuffer);
 				break;
-			case IJavaElement.TYPE :
+			case IJavaScriptElement.TYPE :
 				appendTypePath((IType) element, pathBuffer);
 				break;
-			case IJavaElement.FIELD :
+			case IJavaScriptElement.FIELD :
 				IField field= (IField) element;
 				appendTypePath(field.getDeclaringType(), pathBuffer);
 				if (includeMemberReference) {
 					appendFieldReference(field, pathBuffer);
 				}
 				break;
-			case IJavaElement.METHOD :
-				IMethod method= (IMethod) element;
+			case IJavaScriptElement.METHOD :
+				IFunction method= (IFunction) element;
 				appendTypePath(method.getDeclaringType(), pathBuffer);
 				if (includeMemberReference) {
 					appendMethodReference(method, pathBuffer);
 				}
 				break;
-			case IJavaElement.INITIALIZER :
+			case IJavaScriptElement.INITIALIZER :
 				appendTypePath(((IMember) element).getDeclaringType(), pathBuffer);
 				break;
-			case IJavaElement.IMPORT_DECLARATION :
+			case IJavaScriptElement.IMPORT_DECLARATION :
 				IImportDeclaration decl= (IImportDeclaration) element;
 
 				if (decl.isOnDemand()) {
-					IJavaElement cont= JavaModelUtil.findTypeContainer(element.getJavaProject(), Signature.getQualifier(decl.getElementName()));
+					IJavaScriptElement cont= JavaModelUtil.findTypeContainer(element.getJavaProject(), Signature.getQualifier(decl.getElementName()));
 					if (cont instanceof IType) {
 						appendTypePath((IType) cont, pathBuffer);
 					} else if (cont instanceof IPackageFragment) {
@@ -508,8 +508,8 @@ public class JavaDocLocations {
 					appendTypePath(imp, pathBuffer);
 				}
 				break;
-			case IJavaElement.PACKAGE_DECLARATION :
-				IJavaElement pack= element.getAncestor(IJavaElement.PACKAGE_FRAGMENT);
+			case IJavaScriptElement.PACKAGE_DECLARATION :
+				IJavaScriptElement pack= element.getAncestor(IJavaScriptElement.PACKAGE_FRAGMENT);
 				if (pack != null) {
 					appendPackageSummaryPath((IPackageFragment) pack, pathBuffer);
 				} else {
@@ -553,7 +553,7 @@ public class JavaDocLocations {
 		buf.append(field.getElementName());
 	}
 	
-	private static void appendMethodReference(IMethod meth, StringBuffer buf) throws JavaModelException {
+	private static void appendMethodReference(IFunction meth, StringBuffer buf) throws JavaScriptModelException {
 		buf.append('#');
 		buf.append(meth.getElementName());	
 		

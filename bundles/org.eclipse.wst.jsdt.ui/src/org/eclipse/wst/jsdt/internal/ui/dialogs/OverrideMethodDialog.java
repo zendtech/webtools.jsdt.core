@@ -35,11 +35,11 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.dom.AST;
-import org.eclipse.wst.jsdt.core.dom.CompilationUnit;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
 import org.eclipse.wst.jsdt.core.dom.IBinding;
-import org.eclipse.wst.jsdt.core.dom.IMethodBinding;
+import org.eclipse.wst.jsdt.core.dom.IFunctionBinding;
 import org.eclipse.wst.jsdt.core.dom.IPackageBinding;
 import org.eclipse.wst.jsdt.core.dom.ITypeBinding;
 import org.eclipse.wst.jsdt.core.dom.Modifier;
@@ -91,7 +91,7 @@ public class OverrideMethodDialog extends SourceActionDialog {
 
 		private final Object[] fEmpty= new Object[0];
 
-		private IMethodBinding[] fMethods;
+		private IFunctionBinding[] fMethods;
 
 		private IDialogSettings fSettings;
 
@@ -150,8 +150,8 @@ public class OverrideMethodDialog extends SourceActionDialog {
 		 * @see ITreeContentProvider#getParent(Object)
 		 */
 		public Object getParent(Object element) {
-			if (element instanceof IMethodBinding) {
-				return ((IMethodBinding) element).getDeclaringClass();
+			if (element instanceof IFunctionBinding) {
+				return ((IFunctionBinding) element).getDeclaringClass();
 			}
 			return null;
 		}
@@ -167,7 +167,7 @@ public class OverrideMethodDialog extends SourceActionDialog {
 			return getChildren(element).length > 0;
 		}
 
-		public void init(IMethodBinding[] methods, ITypeBinding[] types) {
+		public void init(IFunctionBinding[] methods, ITypeBinding[] types) {
 			fMethods= methods;
 			fTypes= types;
 		}
@@ -241,7 +241,7 @@ public class OverrideMethodDialog extends SourceActionDialog {
 		public IStatus validate(Object[] selection) {
 			int count= 0;
 			for (int index= 0; index < selection.length; index++) {
-				if (selection[index] instanceof IMethodBinding)
+				if (selection[index] instanceof IFunctionBinding)
 					count++;
 			}
 			if (count == 0)
@@ -273,27 +273,27 @@ public class OverrideMethodDialog extends SourceActionDialog {
 		return null;
 	}
 
-	private CompilationUnit fUnit= null;
+	private JavaScriptUnit fUnit= null;
 
-	public OverrideMethodDialog(Shell shell, CompilationUnitEditor editor, IType type, boolean isSubType) throws JavaModelException {
+	public OverrideMethodDialog(Shell shell, CompilationUnitEditor editor, IType type, boolean isSubType) throws JavaScriptModelException {
 		super(shell, new BindingLabelProvider(), new OverrideMethodContentProvider(), editor, type, false);
 		RefactoringASTParser parser= new RefactoringASTParser(AST.JLS3);
 		fUnit= parser.parse(type.getCompilationUnit(), true);
 		final ITypeBinding binding= ASTNodes.getTypeBinding(fUnit, type);
 		List toImplement= new ArrayList();
-		IMethodBinding[] overridable= null;
+		IFunctionBinding[] overridable= null;
 		if (binding != null) {
 			final IPackageBinding pack= binding.getPackage();
-			final IMethodBinding[] methods= StubUtility2.getOverridableMethods(fUnit.getAST(), binding, false);
+			final IFunctionBinding[] methods= StubUtility2.getOverridableMethods(fUnit.getAST(), binding, false);
 			List list= new ArrayList(methods.length);
 			for (int index= 0; index < methods.length; index++) {
-				final IMethodBinding cur= methods[index];
+				final IFunctionBinding cur= methods[index];
 				if (Bindings.isVisibleInHierarchy(cur, pack))
 					list.add(cur);
 			}
-			overridable= (IMethodBinding[]) list.toArray(new IMethodBinding[list.size()]);
+			overridable= (IFunctionBinding[]) list.toArray(new IFunctionBinding[list.size()]);
 		} else
-			overridable= new IMethodBinding[] {};
+			overridable= new IFunctionBinding[] {};
 		for (int i= 0; i < overridable.length; i++) {
 			if (Modifier.isAbstract(overridable[i].getModifiers())) {
 				toImplement.add(overridable[i]);
@@ -303,16 +303,16 @@ public class OverrideMethodDialog extends SourceActionDialog {
 		if (binding != null) {
 			ITypeBinding cloneable= getSuperType(binding, "java.lang.Cloneable"); //$NON-NLS-1$
 			if (cloneable != null) {
-				IMethodBinding[] methods= fUnit.getAST().resolveWellKnownType("java.lang.Object").getDeclaredMethods(); //$NON-NLS-1$
+				IFunctionBinding[] methods= fUnit.getAST().resolveWellKnownType("java.lang.Object").getDeclaredMethods(); //$NON-NLS-1$
 				for (int index= 0; index < methods.length; index++) {
-					IMethodBinding method= methods[index];
+					IFunctionBinding method= methods[index];
 					if (method.getName().equals("clone") && method.getParameterTypes().length == 0) //$NON-NLS-1$
 						toImplement.add(method);
 				}
 			}
 		}
 
-		IMethodBinding[] toImplementArray= (IMethodBinding[]) toImplement.toArray(new IMethodBinding[toImplement.size()]);
+		IFunctionBinding[] toImplementArray= (IFunctionBinding[]) toImplement.toArray(new IFunctionBinding[toImplement.size()]);
 		setInitialSelections(toImplementArray);
 
 		HashSet expanded= new HashSet(toImplementArray.length);
@@ -344,7 +344,7 @@ public class OverrideMethodDialog extends SourceActionDialog {
 		setInput(new Object());
 	}
 
-	public CompilationUnit getCompilationUnit() {
+	public JavaScriptUnit getCompilationUnit() {
 		return fUnit;
 	}
 

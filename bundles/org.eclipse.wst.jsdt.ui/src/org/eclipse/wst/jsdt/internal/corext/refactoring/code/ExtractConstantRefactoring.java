@@ -30,24 +30,24 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.RefactoringStatusEntry;
 import org.eclipse.ltk.core.refactoring.participants.RefactoringArguments;
 import org.eclipse.text.edits.TextEditGroup;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaProject;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.compiler.IProblem;
 import org.eclipse.wst.jsdt.core.dom.AST;
 import org.eclipse.wst.jsdt.core.dom.ASTNode;
 import org.eclipse.wst.jsdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.wst.jsdt.core.dom.BodyDeclaration;
-import org.eclipse.wst.jsdt.core.dom.CompilationUnit;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
 import org.eclipse.wst.jsdt.core.dom.Expression;
 import org.eclipse.wst.jsdt.core.dom.ExpressionStatement;
 import org.eclipse.wst.jsdt.core.dom.FieldAccess;
 import org.eclipse.wst.jsdt.core.dom.FieldDeclaration;
 import org.eclipse.wst.jsdt.core.dom.ITypeBinding;
 import org.eclipse.wst.jsdt.core.dom.Initializer;
-import org.eclipse.wst.jsdt.core.dom.Javadoc;
-import org.eclipse.wst.jsdt.core.dom.MethodDeclaration;
+import org.eclipse.wst.jsdt.core.dom.JSdoc;
+import org.eclipse.wst.jsdt.core.dom.FunctionDeclaration;
 import org.eclipse.wst.jsdt.core.dom.Modifier;
 import org.eclipse.wst.jsdt.core.dom.Name;
 import org.eclipse.wst.jsdt.core.dom.NullLiteral;
@@ -107,7 +107,7 @@ public class ExtractConstantRefactoring extends ScriptableRefactoring {
 	private CompilationUnitRewrite fCuRewrite;
 	private int fSelectionStart;
 	private int fSelectionLength;
-	private ICompilationUnit fCu;
+	private IJavaScriptUnit fCu;
 
 	private IExpressionFragment fSelectedExpression;
 	private Type fConstantTypeCache;
@@ -139,7 +139,7 @@ public class ExtractConstantRefactoring extends ScriptableRefactoring {
 	 * @param selectionStart
 	 * @param selectionLength
 	 */
-	public ExtractConstantRefactoring(ICompilationUnit unit, int selectionStart, int selectionLength) {
+	public ExtractConstantRefactoring(IJavaScriptUnit unit, int selectionStart, int selectionLength) {
 		Assert.isTrue(selectionStart >= 0);
 		Assert.isTrue(selectionLength >= 0);
 		fSelectionStart= selectionStart;
@@ -150,14 +150,14 @@ public class ExtractConstantRefactoring extends ScriptableRefactoring {
 		fConstantName= ""; //$NON-NLS-1$
 	}
 	
-	public ExtractConstantRefactoring(CompilationUnit astRoot, int selectionStart, int selectionLength) {
+	public ExtractConstantRefactoring(JavaScriptUnit astRoot, int selectionStart, int selectionLength) {
 		Assert.isTrue(selectionStart >= 0);
 		Assert.isTrue(selectionLength >= 0);
-		Assert.isTrue(astRoot.getTypeRoot() instanceof ICompilationUnit);
+		Assert.isTrue(astRoot.getTypeRoot() instanceof IJavaScriptUnit);
 		
 		fSelectionStart= selectionStart;
 		fSelectionLength= selectionLength;
-		fCu= (ICompilationUnit) astRoot.getTypeRoot();
+		fCu= (IJavaScriptUnit) astRoot.getTypeRoot();
 		fCuRewrite= new CompilationUnitRewrite(fCu, astRoot);
 		fLinkedProposalModel= null;
 		fConstantName= ""; //$NON-NLS-1$
@@ -202,7 +202,7 @@ public class ExtractConstantRefactoring extends ScriptableRefactoring {
 		fQualifyReferencesWithDeclaringClassName= qualify;
 	}
 	
-	public String guessConstantName() throws JavaModelException {
+	public String guessConstantName() throws JavaScriptModelException {
 		String[] proposals= guessConstantNames();
 		if (proposals.length > 0)
 			return proposals[0];
@@ -222,7 +222,7 @@ public class ExtractConstantRefactoring extends ScriptableRefactoring {
 					ITypeBinding binding= expression.resolveTypeBinding();
 					fGuessedConstNames= StubUtility.getVariableNameSuggestions(StubUtility.CONSTANT_FIELD, fCu.getJavaProject(), binding, expression, Arrays.asList(getExcludedVariableNames()));
 				} 
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 			}
 			if (fGuessedConstNames == null)
 				fGuessedConstNames= new String[0];
@@ -237,7 +237,7 @@ public class ExtractConstantRefactoring extends ScriptableRefactoring {
 				IExpressionFragment expr= getSelectedExpression();
 				Collection takenNames= new ScopeAnalyzer(fCuRewrite.getRoot()).getUsedVariableNames(expr.getStartPosition(), expr.getLength());
 				fExcludedVariableNames= (String[]) takenNames.toArray(new String[takenNames.size()]);
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				fExcludedVariableNames= new String[0];
 			}
 		}
@@ -254,7 +254,7 @@ public class ExtractConstantRefactoring extends ScriptableRefactoring {
 			pm.worked(1);
 			
 			if (fCuRewrite == null) {
-				CompilationUnit cuNode= RefactoringASTParser.parseWithASTProvider(fCu, true, new SubProgressMonitor(pm, 3));
+				JavaScriptUnit cuNode= RefactoringASTParser.parseWithASTProvider(fCu, true, new SubProgressMonitor(pm, 3));
 				fCuRewrite= new CompilationUnitRewrite(fCu, cuNode);
 			} else {
 				pm.worked(3);
@@ -284,12 +284,12 @@ public class ExtractConstantRefactoring extends ScriptableRefactoring {
 		return fSelectionAllStaticFinal;
 	}
 
-	private void checkAllStaticFinal() throws JavaModelException {
+	private void checkAllStaticFinal() throws JavaScriptModelException {
 		fSelectionAllStaticFinal= ConstantChecks.isStaticFinalConstant(getSelectedExpression());
 		fAllStaticFinalCheckPerformed= true;
 	}
 
-	private RefactoringStatus checkSelection(IProgressMonitor pm) throws JavaModelException {
+	private RefactoringStatus checkSelection(IProgressMonitor pm) throws JavaScriptModelException {
 		try {
 			pm.beginTask("", 2); //$NON-NLS-1$
 			
@@ -313,11 +313,11 @@ public class ExtractConstantRefactoring extends ScriptableRefactoring {
 		}
 	}
 
-	private RefactoringStatus checkExpressionBinding() throws JavaModelException {
+	private RefactoringStatus checkExpressionBinding() throws JavaScriptModelException {
 		return checkExpressionFragmentIsRValue();
 	}
 	
-	private RefactoringStatus checkExpressionFragmentIsRValue() throws JavaModelException {
+	private RefactoringStatus checkExpressionFragmentIsRValue() throws JavaScriptModelException {
 		/* Moved this functionality to Checks, to allow sharing with
 		   ExtractTempRefactoring, others */
 		switch(Checks.checkExpressionIsRValue(getSelectedExpression().getAssociatedExpression())) {
@@ -333,7 +333,7 @@ public class ExtractConstantRefactoring extends ScriptableRefactoring {
 	}
 
 	//	 !!! -- same as in ExtractTempRefactoring
-	private boolean isLiteralNodeSelected() throws JavaModelException {
+	private boolean isLiteralNodeSelected() throws JavaScriptModelException {
 		IExpressionFragment fragment= getSelectedExpression();
 		if (fragment == null)
 			return false;
@@ -354,7 +354,7 @@ public class ExtractConstantRefactoring extends ScriptableRefactoring {
 		}
 	}
 
-	private RefactoringStatus checkExpression() throws JavaModelException {
+	private RefactoringStatus checkExpression() throws JavaScriptModelException {
 		RefactoringStatus result= new RefactoringStatus();
 		result.merge(checkExpressionBinding());
 		if(result.hasFatalError())
@@ -391,16 +391,16 @@ public class ExtractConstantRefactoring extends ScriptableRefactoring {
 	 * contents are changed.
 	 * 
 	 * @return return the resulting status
-	 * @throws JavaModelException thrown when the operation could not be executed
+	 * @throws JavaScriptModelException thrown when the operation could not be executed
 	 */
-	public RefactoringStatus checkConstantNameOnChange() throws JavaModelException {
+	public RefactoringStatus checkConstantNameOnChange() throws JavaScriptModelException {
 		if (Arrays.asList(getExcludedVariableNames()).contains(fConstantName))
 			return RefactoringStatus.createErrorStatus(Messages.format(RefactoringCoreMessages.ExtractConstantRefactoring_another_variable, getConstantName())); 
 		return Checks.checkConstantName(getConstantName());
 	}
 	
 	// !! similar to ExtractTempRefactoring equivalent
-	public String getConstantSignaturePreview() throws JavaModelException {
+	public String getConstantSignaturePreview() throws JavaScriptModelException {
 		String space= " "; //$NON-NLS-1$
 		return getVisibility() + space + MODIFIER + space + getConstantTypeName() + space + fConstantName;
 	}
@@ -427,7 +427,7 @@ public class ExtractConstantRefactoring extends ScriptableRefactoring {
 			fChange= createTextChange(new SubProgressMonitor(pm, 2));
 			
 			String newCuSource= fChange.getPreviewContent(new NullProgressMonitor());
-			CompilationUnit newCUNode= new RefactoringASTParser(AST.JLS3).parse(newCuSource, fCu, true, true, null);
+			JavaScriptUnit newCUNode= new RefactoringASTParser(AST.JLS3).parse(newCuSource, fCu, true, true, null);
 			
 			IProblem[] newProblems= RefactoringAnalyzeUtil.getIntroducedCompileProblems(newCUNode, fCuRewrite.getRoot());
 			for (int i= 0; i < newProblems.length; i++) {
@@ -468,7 +468,7 @@ public class ExtractConstantRefactoring extends ScriptableRefactoring {
 		if (createComments) {
 			String comment= CodeGeneration.getFieldComment(fCu, getConstantTypeName(), fConstantName, StubUtility.getLineDelimiterUsed(fCu));
 			if (comment != null && comment.length() > 0) {
-				Javadoc doc= (Javadoc) fCuRewrite.getASTRewrite().createStringPlaceholder(comment, ASTNode.JAVADOC);
+				JSdoc doc= (JSdoc) fCuRewrite.getASTRewrite().createStringPlaceholder(comment, ASTNode.JAVADOC);
 				fieldDeclaration.setJavadoc(doc);
 			}
 		}
@@ -510,7 +510,7 @@ public class ExtractConstantRefactoring extends ScriptableRefactoring {
 		}
 	}
 
-	private Type getConstantType() throws JavaModelException {
+	private Type getConstantType() throws JavaScriptModelException {
 		if (fConstantTypeCache == null) {
 			IExpressionFragment fragment= getSelectedExpression();
 			ITypeBinding typeBinding= fragment.getAssociatedExpression().resolveTypeBinding();
@@ -524,7 +524,7 @@ public class ExtractConstantRefactoring extends ScriptableRefactoring {
 	public Change createChange(IProgressMonitor monitor) throws CoreException {
 		final Map arguments= new HashMap();
 		String project= null;
-		IJavaProject javaProject= fCu.getJavaProject();
+		IJavaScriptProject javaProject= fCu.getJavaProject();
 		if (javaProject != null)
 			project= javaProject.getElementName();
 		int flags= JavaRefactoringDescriptor.JAR_REFACTORING | JavaRefactoringDescriptor.JAR_SOURCE_ATTACHMENT;
@@ -533,7 +533,7 @@ public class ExtractConstantRefactoring extends ScriptableRefactoring {
 		String pattern= ""; //$NON-NLS-1$
 		try {
 			pattern= BindingLabelProvider.getBindingLabel(getContainingTypeBinding(), JavaElementLabels.ALL_FULLY_QUALIFIED) + "."; //$NON-NLS-1$
-		} catch (JavaModelException exception) {
+		} catch (JavaScriptModelException exception) {
 			JavaPlugin.log(exception);
 		}
 		final String expression= ASTNodes.asString(fSelectedExpression.getAssociatedExpression());
@@ -560,7 +560,7 @@ public class ExtractConstantRefactoring extends ScriptableRefactoring {
 		return new RefactoringDescriptorChange(descriptor, RefactoringCoreMessages.ExtractConstantRefactoring_name, new Change[] { fChange});
 	}
 
-	private void replaceExpressionsWithConstant() throws JavaModelException {
+	private void replaceExpressionsWithConstant() throws JavaScriptModelException {
 		ASTRewrite astRewrite= fCuRewrite.getASTRewrite();
 		AST ast= astRewrite.getAST();
 		
@@ -581,7 +581,7 @@ public class ExtractConstantRefactoring extends ScriptableRefactoring {
 		}
 	}
 	
-	private void computeConstantDeclarationLocation() throws JavaModelException {
+	private void computeConstantDeclarationLocation() throws JavaScriptModelException {
 		if (isDeclarationLocationComputed())
 			return;
 
@@ -648,30 +648,30 @@ public class ExtractConstantRefactoring extends ScriptableRefactoring {
 		return fInsertFirst == true || fToInsertAfter != null;	
 	}
 	
-	private boolean insertFirst() throws JavaModelException {
+	private boolean insertFirst() throws JavaScriptModelException {
 		if(!isDeclarationLocationComputed())
 			computeConstantDeclarationLocation();
 		return fInsertFirst;
 	}
 	
-	private BodyDeclaration getNodeToInsertConstantDeclarationAfter() throws JavaModelException {
+	private BodyDeclaration getNodeToInsertConstantDeclarationAfter() throws JavaScriptModelException {
 		if(!isDeclarationLocationComputed())
 			computeConstantDeclarationLocation();
 		return fToInsertAfter;
 	}
 	
-	private Iterator getBodyDeclarations() throws JavaModelException {
+	private Iterator getBodyDeclarations() throws JavaScriptModelException {
 		if(fBodyDeclarations == null)
 			fBodyDeclarations= getContainingTypeDeclarationNode().bodyDeclarations();
 		return fBodyDeclarations.iterator();
 	}
 
-	private String getConstantTypeName() throws JavaModelException {
+	private String getConstantTypeName() throws JavaScriptModelException {
 		return ASTNodes.asString(getConstantType());
 	}
 
 	private static boolean isStaticFieldOrStaticInitializer(BodyDeclaration node) {
-		if(node instanceof MethodDeclaration || node instanceof AbstractTypeDeclaration)
+		if(node instanceof FunctionDeclaration || node instanceof AbstractTypeDeclaration)
 			return false;
 		
 		int modifiers;
@@ -694,7 +694,7 @@ public class ExtractConstantRefactoring extends ScriptableRefactoring {
 	 * Elements returned by next() are BodyDeclaration
 	 * instances.
 	 */
-	private Iterator getReplacementScope() throws JavaModelException {
+	private Iterator getReplacementScope() throws JavaScriptModelException {
 		boolean declPredecessorReached= false;
 		
 		Collection scope= new ArrayList();
@@ -710,7 +710,7 @@ public class ExtractConstantRefactoring extends ScriptableRefactoring {
 		return scope.iterator();
 	}
 
-	private IASTFragment[] getFragmentsToReplace() throws JavaModelException {
+	private IASTFragment[] getFragmentsToReplace() throws JavaScriptModelException {
 		List toReplace = new ArrayList();
 		if (fReplaceAllOccurrences) {
 			Iterator replacementScope = getReplacementScope();
@@ -752,7 +752,7 @@ public class ExtractConstantRefactoring extends ScriptableRefactoring {
 		return true;
 	}
 
-	private IExpressionFragment getSelectedExpression() throws JavaModelException {
+	private IExpressionFragment getSelectedExpression() throws JavaScriptModelException {
 		if(fSelectedExpression != null)
 			return fSelectedExpression;
 		
@@ -770,13 +770,13 @@ public class ExtractConstantRefactoring extends ScriptableRefactoring {
 		return fSelectedExpression;
 	}
 
-	private AbstractTypeDeclaration getContainingTypeDeclarationNode() throws JavaModelException {
+	private AbstractTypeDeclaration getContainingTypeDeclarationNode() throws JavaScriptModelException {
 		AbstractTypeDeclaration result= (AbstractTypeDeclaration) ASTNodes.getParent(getSelectedExpression().getAssociatedNode(), AbstractTypeDeclaration.class);  
 		Assert.isNotNull(result);
 		return result;
 	}
 
-	private ITypeBinding getContainingTypeBinding() throws JavaModelException {
+	private ITypeBinding getContainingTypeBinding() throws JavaScriptModelException {
 		ITypeBinding result= getContainingTypeDeclarationNode().resolveBinding();
 		Assert.isNotNull(result);
 		return result;
@@ -803,11 +803,11 @@ public class ExtractConstantRefactoring extends ScriptableRefactoring {
 				return RefactoringStatus.createFatalErrorStatus(Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist, JDTRefactoringDescriptor.ATTRIBUTE_SELECTION));
 			final String handle= extended.getAttribute(JDTRefactoringDescriptor.ATTRIBUTE_INPUT);
 			if (handle != null) {
-				final IJavaElement element= JDTRefactoringDescriptor.handleToElement(extended.getProject(), handle, false);
-				if (element == null || !element.exists() || element.getElementType() != IJavaElement.COMPILATION_UNIT)
+				final IJavaScriptElement element= JDTRefactoringDescriptor.handleToElement(extended.getProject(), handle, false);
+				if (element == null || !element.exists() || element.getElementType() != IJavaScriptElement.COMPILATION_UNIT)
 					return createInputFatalStatus(element, IJavaRefactorings.EXTRACT_CONSTANT);
 				else
-					fCu= (ICompilationUnit) element;
+					fCu= (IJavaScriptUnit) element;
 			} else
 				return RefactoringStatus.createFatalErrorStatus(Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist, JDTRefactoringDescriptor.ATTRIBUTE_INPUT));
 			final String visibility= extended.getAttribute(ATTRIBUTE_VISIBILITY);

@@ -52,12 +52,12 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.Resources;
@@ -78,9 +78,9 @@ import org.eclipse.wst.jsdt.ui.text.IJavaPartitions;
  * Formats the code of the compilation units contained in the selection.
  * <p>
  * The action is applicable to selections containing elements of
- * type <code>ICompilationUnit</code>, <code>IPackage
+ * type <code>IJavaScriptUnit</code>, <code>IPackage
  * </code>, <code>IPackageFragmentRoot/code> and
- * <code>IJavaProject</code>.
+ * <code>IJavaScriptProject</code>.
  * </p>
  * <p>
  * This class may be instantiated; it is not intended to be subclassed.
@@ -140,32 +140,32 @@ public class FormatAllAction extends SelectionDispatchAction {
 		setEnabled(isEnabled(selection));
 	}
 	
-	private ICompilationUnit[] getCompilationUnits(IStructuredSelection selection) {
+	private IJavaScriptUnit[] getCompilationUnits(IStructuredSelection selection) {
 		HashSet result= new HashSet();
 		Object[] selected= selection.toArray();
 		for (int i= 0; i < selected.length; i++) {
 			try {
-				if (selected[i] instanceof IJavaElement) {
-					IJavaElement elem= (IJavaElement) selected[i];
+				if (selected[i] instanceof IJavaScriptElement) {
+					IJavaScriptElement elem= (IJavaScriptElement) selected[i];
 					if (elem.exists()) {
 					
 						switch (elem.getElementType()) {
-							case IJavaElement.TYPE:
-								if (elem.getParent().getElementType() == IJavaElement.COMPILATION_UNIT) {
+							case IJavaScriptElement.TYPE:
+								if (elem.getParent().getElementType() == IJavaScriptElement.COMPILATION_UNIT) {
 									result.add(elem.getParent());
 								}
 								break;						
-							case IJavaElement.COMPILATION_UNIT:
+							case IJavaScriptElement.COMPILATION_UNIT:
 								result.add(elem);
 								break;		
-							case IJavaElement.PACKAGE_FRAGMENT:
+							case IJavaScriptElement.PACKAGE_FRAGMENT:
 								collectCompilationUnits((IPackageFragment) elem, result);
 								break;
-							case IJavaElement.PACKAGE_FRAGMENT_ROOT:
+							case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
 								collectCompilationUnits((IPackageFragmentRoot) elem, result);
 								break;
-							case IJavaElement.JAVA_PROJECT:
-								IPackageFragmentRoot[] roots= ((IJavaProject) elem).getPackageFragmentRoots();
+							case IJavaScriptElement.JAVA_PROJECT:
+								IPackageFragmentRoot[] roots= ((IJavaScriptProject) elem).getPackageFragmentRoots();
 								for (int k= 0; k < roots.length; k++) {
 									collectCompilationUnits(roots[k], result);
 								}
@@ -181,20 +181,20 @@ public class FormatAllAction extends SelectionDispatchAction {
 						}
 					}
 				}
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				JavaPlugin.log(e);
 			}
 		}
-		return (ICompilationUnit[]) result.toArray(new ICompilationUnit[result.size()]);
+		return (IJavaScriptUnit[]) result.toArray(new IJavaScriptUnit[result.size()]);
 	}
 	
-	private void collectCompilationUnits(IPackageFragment pack, Collection result) throws JavaModelException {
+	private void collectCompilationUnits(IPackageFragment pack, Collection result) throws JavaScriptModelException {
 		result.addAll(Arrays.asList(pack.getCompilationUnits()));
 	}
 
-	private void collectCompilationUnits(IPackageFragmentRoot root, Collection result) throws JavaModelException {
+	private void collectCompilationUnits(IPackageFragmentRoot root, Collection result) throws JavaScriptModelException {
 		if (root.getKind() == IPackageFragmentRoot.K_SOURCE) {
-			IJavaElement[] children= root.getChildren();
+			IJavaScriptElement[] children= root.getChildren();
 			for (int i= 0; i < children.length; i++) {
 				collectCompilationUnits((IPackageFragment) children[i], result);
 			}
@@ -205,19 +205,19 @@ public class FormatAllAction extends SelectionDispatchAction {
 		Object[] selected= selection.toArray();
 		for (int i= 0; i < selected.length; i++) {
 			try {
-				if (selected[i] instanceof IJavaElement) {
-					IJavaElement elem= (IJavaElement) selected[i];
+				if (selected[i] instanceof IJavaScriptElement) {
+					IJavaScriptElement elem= (IJavaScriptElement) selected[i];
 					if (elem.exists()) {
 						switch (elem.getElementType()) {
-							case IJavaElement.TYPE:
-								return elem.getParent().getElementType() == IJavaElement.COMPILATION_UNIT; // for browsing perspective
-							case IJavaElement.COMPILATION_UNIT:
+							case IJavaScriptElement.TYPE:
+								return elem.getParent().getElementType() == IJavaScriptElement.COMPILATION_UNIT; // for browsing perspective
+							case IJavaScriptElement.COMPILATION_UNIT:
 								return true;
-							case IJavaElement.PACKAGE_FRAGMENT:
-							case IJavaElement.PACKAGE_FRAGMENT_ROOT:
-								IPackageFragmentRoot root= (IPackageFragmentRoot) elem.getAncestor(IJavaElement.PACKAGE_FRAGMENT_ROOT);
+							case IJavaScriptElement.PACKAGE_FRAGMENT:
+							case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
+								IPackageFragmentRoot root= (IPackageFragmentRoot) elem.getAncestor(IJavaScriptElement.PACKAGE_FRAGMENT_ROOT);
 								return (root.getKind() == IPackageFragmentRoot.K_SOURCE);
-							case IJavaElement.JAVA_PROJECT:
+							case IJavaScriptElement.JAVA_PROJECT:
 								// https://bugs.eclipse.org/bugs/show_bug.cgi?id=65638
 								return true;
 						}
@@ -225,7 +225,7 @@ public class FormatAllAction extends SelectionDispatchAction {
 				} else if (selected[i] instanceof LogicalPackage) {
 					return true;
 				}
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				if (JavaModelUtil.isExceptionToBeLogged(e))
 					JavaPlugin.log(e);
 			}
@@ -243,7 +243,7 @@ public class FormatAllAction extends SelectionDispatchAction {
 	 * Method declared on SelectionDispatchAction.
 	 */
 	public void run(IStructuredSelection selection) {
-		ICompilationUnit[] cus= getCompilationUnits(selection);
+		IJavaScriptUnit[] cus= getCompilationUnits(selection);
 		if (cus.length == 0) {
 			MessageDialog.openInformation(getShell(), ActionMessages.FormatAllAction_EmptySelection_title, ActionMessages.FormatAllAction_EmptySelection_description);
 			return;
@@ -269,7 +269,7 @@ public class FormatAllAction extends SelectionDispatchAction {
 		runOnMultiple(cus);
 	}
 
-	private IResource[] getResources(ICompilationUnit[] cus) {
+	private IResource[] getResources(IJavaScriptUnit[] cus) {
 		IResource[] res= new IResource[cus.length];
 		for (int i= 0; i < res.length; i++) {
 			res[i]= cus[i].getResource();
@@ -281,7 +281,7 @@ public class FormatAllAction extends SelectionDispatchAction {
 	 * Perform format all on the given compilation units.
 	 * @param cus The compilation units to format.
 	 */
-	public void runOnMultiple(final ICompilationUnit[] cus) {
+	public void runOnMultiple(final IJavaScriptUnit[] cus) {
 		try {
 			final MultiStatus status= new MultiStatus(JavaUI.ID_PLUGIN, IStatus.OK, ActionMessages.FormatAllAction_status_description, null);
 			
@@ -308,7 +308,7 @@ public class FormatAllAction extends SelectionDispatchAction {
 		}
 	}
 	
-	private static Map getFomatterSettings(IJavaProject project) {
+	private static Map getFomatterSettings(IJavaScriptProject project) {
 		return new HashMap(project.getOptions(true));
 	}
 	
@@ -356,7 +356,7 @@ public class FormatAllAction extends SelectionDispatchAction {
 		}
 	}
 	
-	private void doRunOnMultiple(ICompilationUnit[] cus, MultiStatus status, IProgressMonitor monitor) throws OperationCanceledException {
+	private void doRunOnMultiple(IJavaScriptUnit[] cus, MultiStatus status, IProgressMonitor monitor) throws OperationCanceledException {
 		if (monitor == null) {
 			monitor= new NullProgressMonitor();
 		}	
@@ -365,10 +365,10 @@ public class FormatAllAction extends SelectionDispatchAction {
 		monitor.beginTask("", cus.length * 4); //$NON-NLS-1$
 		try {
 			Map lastOptions= null;
-			IJavaProject lastProject= null;
+			IJavaScriptProject lastProject= null;
 			
 			for (int i= 0; i < cus.length; i++) {
-				ICompilationUnit cu= cus[i];
+				IJavaScriptUnit cu= cus[i];
 				IPath path= cu.getPath();
 				if (lastProject == null || !lastProject.equals(cu.getJavaProject())) {
 					lastProject= cu.getJavaProject();

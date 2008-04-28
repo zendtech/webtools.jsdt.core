@@ -12,7 +12,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 
 import org.eclipse.wst.jsdt.core.JsGlobalScopeContainerInitializer;
 
@@ -36,7 +36,7 @@ public class JSDScopeUiUtil {
 	private static final String CLASS="class";
 	private static final String ID="id";
 	
-	public static IJsGlobalScopeContainerInitializerExtension findLibraryUiInitializer(IPath compUnitPath, IJavaProject javaProject) {
+	public static IJsGlobalScopeContainerInitializerExtension findLibraryUiInitializer(IPath compUnitPath, IJavaScriptProject javaProject) {
 		System.out.println("public static IJsGlobalScopeContainerInitializerExtension findLibraryInitializer(");
 		JsGlobalScopeContainerInitializer init =  JSDScopeUtil.findLibraryInitializer(compUnitPath,javaProject);
 			return (IJsGlobalScopeContainerInitializerExtension)init;

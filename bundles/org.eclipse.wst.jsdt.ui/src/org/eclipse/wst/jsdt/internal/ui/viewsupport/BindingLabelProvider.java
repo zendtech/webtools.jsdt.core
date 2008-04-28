@@ -15,7 +15,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.wst.jsdt.core.dom.IBinding;
-import org.eclipse.wst.jsdt.core.dom.IMethodBinding;
+import org.eclipse.wst.jsdt.core.dom.IFunctionBinding;
 import org.eclipse.wst.jsdt.core.dom.IPackageBinding;
 import org.eclipse.wst.jsdt.core.dom.ITypeBinding;
 import org.eclipse.wst.jsdt.core.dom.IVariableBinding;
@@ -37,7 +37,7 @@ public class BindingLabelProvider extends LabelProvider {
 
 	private static int getAdornmentFlags(IBinding binding, int flags) {
 		int adornments= 0;
-		if (binding instanceof IMethodBinding && ((IMethodBinding) binding).isConstructor())
+		if (binding instanceof IFunctionBinding && ((IFunctionBinding) binding).isConstructor())
 			adornments|= JavaElementImageDescriptor.CONSTRUCTOR;
 		final int modifiers= binding.getModifiers();
 		if (Modifier.isAbstract(modifiers))
@@ -69,10 +69,10 @@ public class BindingLabelProvider extends LabelProvider {
 				typeBinding.getWildcard();
 			}
 			return getTypeImageDescriptor(typeBinding.getDeclaringClass() != null, typeBinding, flags);
-		} else if (binding instanceof IMethodBinding) {
-			ITypeBinding type= ((IMethodBinding) binding).getDeclaringClass();
+		} else if (binding instanceof IFunctionBinding) {
+			ITypeBinding type= ((IFunctionBinding) binding).getDeclaringClass();
 			int modifiers= binding.getModifiers();
-			if (type.isEnum() && (!Modifier.isPublic(modifiers) && !Modifier.isProtected(modifiers) && !Modifier.isPrivate(modifiers)) && ((IMethodBinding) binding).isConstructor())
+			if (type.isEnum() && (!Modifier.isPublic(modifiers) && !Modifier.isProtected(modifiers) && !Modifier.isPrivate(modifiers)) && ((IFunctionBinding) binding).isConstructor())
 				return JavaPluginImages.DESC_MISC_PRIVATE;
 			return getMethodImageDescriptor(binding.getModifiers());
 		} else if (binding instanceof IVariableBinding)
@@ -134,7 +134,7 @@ public class BindingLabelProvider extends LabelProvider {
 			buffer.append(' ');
 		}
 		if (((flags & JavaElementLabels.F_FULLY_QUALIFIED) != 0)) {
-			IMethodBinding declaringMethod= binding.getDeclaringMethod();
+			IFunctionBinding declaringMethod= binding.getDeclaringMethod();
 			if (declaringMethod != null) {
 				getMethodLabel(declaringMethod, flags, buffer);
 				buffer.append('.');
@@ -194,7 +194,7 @@ public class BindingLabelProvider extends LabelProvider {
 	}
 	
 
-	private static void getMethodLabel(IMethodBinding binding, long flags, StringBuffer buffer) {
+	private static void getMethodLabel(IFunctionBinding binding, long flags, StringBuffer buffer) {
 		// return type
 		if ((flags & JavaElementLabels.M_PRE_TYPE_PARAMETERS) != 0) {
 			if (binding.isGenericMethod()) {
@@ -324,7 +324,7 @@ public class BindingLabelProvider extends LabelProvider {
 				getTypeLabel(declaring, JavaElementLabels.T_CONTAINER_QUALIFIED | (flags & JavaElementLabels.P_COMPRESSED), buffer);
 				buffer.append('.');
 			}
-			final IMethodBinding declaringMethod= binding.getDeclaringMethod();
+			final IFunctionBinding declaringMethod= binding.getDeclaringMethod();
 			if (declaringMethod != null) {
 				getMethodLabel(declaringMethod, 0, buffer);
 				buffer.append('.');
@@ -385,7 +385,7 @@ public class BindingLabelProvider extends LabelProvider {
 
 
 		if ((flags & JavaElementLabels.T_POST_QUALIFIED) != 0) {
-			final IMethodBinding declaringMethod= binding.getDeclaringMethod();
+			final IFunctionBinding declaringMethod= binding.getDeclaringMethod();
 			final ITypeBinding declaringType= binding.getDeclaringClass();
 			if (declaringMethod != null) {
 				buffer.append(JavaElementLabels.CONCAT_STRING);
@@ -440,8 +440,8 @@ public class BindingLabelProvider extends LabelProvider {
 		StringBuffer buffer= new StringBuffer(60);
 		if (binding instanceof ITypeBinding) {
 			getTypeLabel(((ITypeBinding) binding), flags, buffer);
-		} else if (binding instanceof IMethodBinding) {
-			getMethodLabel(((IMethodBinding) binding), flags, buffer);
+		} else if (binding instanceof IFunctionBinding) {
+			getMethodLabel(((IFunctionBinding) binding), flags, buffer);
 		} else if (binding instanceof IVariableBinding) {
 			final IVariableBinding variable= (IVariableBinding) binding;
 			if (variable.isField())

@@ -25,10 +25,10 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.jsdt.core.IClassFile;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IMember;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.EditorUtility;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.InternalClassFileEditorInput;
@@ -38,7 +38,7 @@ public class JavaSearchEditorOpener {
 	
 	private IEditorReference fReusedEditor;
 
-	public IEditorPart openElement(Object element) throws PartInitException, JavaModelException {
+	public IEditorPart openElement(Object element) throws PartInitException, JavaScriptModelException {
 		IWorkbenchPage wbPage= JavaPlugin.getActivePage();
 		if (NewSearchUI.reuseEditor())
 			return showWithReuse(element, wbPage);
@@ -46,7 +46,7 @@ public class JavaSearchEditorOpener {
 			return showWithoutReuse(element, wbPage);
 	}
 		
-	public IEditorPart openMatch(Match match) throws PartInitException, JavaModelException {
+	public IEditorPart openMatch(Match match) throws PartInitException, JavaScriptModelException {
 		Object element= getElementToOpen(match);
 		return openElement(element);
 	}
@@ -55,11 +55,11 @@ public class JavaSearchEditorOpener {
 		return match.getElement();
 	}
 
-	private IEditorPart showWithoutReuse(Object element, IWorkbenchPage wbPage) throws PartInitException, JavaModelException {
+	private IEditorPart showWithoutReuse(Object element, IWorkbenchPage wbPage) throws PartInitException, JavaScriptModelException {
 		return EditorUtility.openInEditor(element, false);
 	}
 
-	private IEditorPart showWithReuse(Object element, IWorkbenchPage wbPage) throws JavaModelException, PartInitException {
+	private IEditorPart showWithReuse(Object element, IWorkbenchPage wbPage) throws JavaScriptModelException, PartInitException {
 		IFile file= getFile(element);
 		if (file != null) {
 			String editorID= getEditorID(file);
@@ -72,16 +72,16 @@ public class JavaSearchEditorOpener {
 		return null;
 	}
 
-	private IFile getFile(Object element) throws JavaModelException {
+	private IFile getFile(Object element) throws JavaScriptModelException {
 		if (element instanceof IFile)
 			return (IFile) element;
-		if (element instanceof IJavaElement) {
-			IJavaElement jElement= (IJavaElement) element;
-			ICompilationUnit cu= (ICompilationUnit) jElement.getAncestor(IJavaElement.COMPILATION_UNIT);
+		if (element instanceof IJavaScriptElement) {
+			IJavaScriptElement jElement= (IJavaScriptElement) element;
+			IJavaScriptUnit cu= (IJavaScriptUnit) jElement.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
 			if (cu != null) {
 				return (IFile) cu.getCorrespondingResource();
 			}
-			IClassFile cf= (IClassFile) jElement.getAncestor(IJavaElement.CLASS_FILE);
+			IClassFile cf= (IClassFile) jElement.getAncestor(IJavaScriptElement.CLASS_FILE);
 			if (cf != null)
 				return (IFile) cf.getCorrespondingResource();
 		}
@@ -138,11 +138,11 @@ public class JavaSearchEditorOpener {
 	}
 
 	private IClassFile getClassFile(Object element) {
-		if (!(element instanceof IJavaElement))
+		if (!(element instanceof IJavaScriptElement))
 			return null;
 		if (element instanceof IClassFile)
 			return (IClassFile) element;
-		IJavaElement jElement= (IJavaElement) element;
+		IJavaScriptElement jElement= (IJavaScriptElement) element;
 		if (jElement instanceof IMember)
 			return ((IMember) jElement).getClassFile();
 		return null;

@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.code.ReplaceInvocationsRefactoring;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaSourceViewer;
@@ -126,7 +126,7 @@ public class ReplaceInvocationsInputPage extends UserInputWizardPage {
 			public void documentChanged(DocumentEvent event) {
 				try {
 					fRefactoring.setBody(event.getDocument().get(), fRefactoring.getMethod().getParameterNames());
-				} catch (JavaModelException ex) {
+				} catch (JavaScriptModelException ex) {
 					// TODO Auto-generated catch block
 					JavaPlugin.log(ex);
 				}
@@ -144,7 +144,7 @@ public class ReplaceInvocationsInputPage extends UserInputWizardPage {
 		RefactoringStatus status;
 		try {
 			status= fRefactoring.setCurrentMode(mode);
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			status= RefactoringStatus.createFatalErrorStatus(e.getMessage());
 		}
 		setPageComplete(status);

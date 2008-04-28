@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.templates.TemplateContextType;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.internal.corext.template.java.JavaContextType;
 import org.eclipse.wst.jsdt.internal.corext.template.java.JavaDocContextType;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
@@ -83,7 +83,7 @@ public final class TemplateCompletionProposalComputer implements IJavaCompletion
 				return Collections.EMPTY_LIST;
 
 			JavaContentAssistInvocationContext javaContext= (JavaContentAssistInvocationContext) context;
-			ICompilationUnit unit= javaContext.getCompilationUnit();
+			IJavaScriptUnit unit= javaContext.getCompilationUnit();
 			if (unit == null)
 				return Collections.EMPTY_LIST;
 			

@@ -24,11 +24,11 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.NullChange;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.AbstractJavaElementRenameChange;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.util.JavaElementUtil;
@@ -55,7 +55,7 @@ public final class RenamePackageChange extends AbstractJavaElementRenameChange {
 		fRenameSubpackages= renameSubpackages;
 	}
 
-	private void addStamps(Map stamps, ICompilationUnit[] units) {
+	private void addStamps(Map stamps, IJavaScriptUnit[] units) {
 		for (int i= 0; i < units.length; i++) {
 			IResource resource= units[i].getResource();
 			long stamp= IResource.NULL_STAMP;
@@ -137,7 +137,7 @@ public final class RenamePackageChange extends AbstractJavaElementRenameChange {
 		RefactoringStatus result;
 		try {
 			result= new RefactoringStatus();
-			IJavaElement element= (IJavaElement) getModifiedElement();
+			IJavaScriptElement element= (IJavaScriptElement) getModifiedElement();
 			// don't check for read-only since we don't go through
 			// validate edit.
 			result.merge(isValid(new SubProgressMonitor(pm, 1), DIRTY));
@@ -167,8 +167,8 @@ public final class RenamePackageChange extends AbstractJavaElementRenameChange {
 		return result;
 	}
 
-	private void isValid(RefactoringStatus result, IPackageFragment pack, IProgressMonitor pm) throws JavaModelException {
-		ICompilationUnit[] units= pack.getCompilationUnits();
+	private void isValid(RefactoringStatus result, IPackageFragment pack, IProgressMonitor pm) throws JavaScriptModelException {
+		IJavaScriptUnit[] units= pack.getCompilationUnits();
 		pm.beginTask("", units.length); //$NON-NLS-1$
 		for (int i= 0; i < units.length; i++) {
 			pm.subTask(Messages.format(RefactoringCoreMessages.RenamePackageChange_checking_change, pack.getElementName()));
@@ -178,12 +178,12 @@ public final class RenamePackageChange extends AbstractJavaElementRenameChange {
 		pm.done();
 	}
 
-	private void renamePackage(IPackageFragment pack, IProgressMonitor pm, IPath newPath, String newName) throws JavaModelException, CoreException {
+	private void renamePackage(IPackageFragment pack, IProgressMonitor pm, IPath newPath, String newName) throws JavaScriptModelException, CoreException {
 		pack.rename(newName, false, pm);
 		if (fCompilationUnitStamps != null) {
-			IPackageFragment newPack= (IPackageFragment) JavaCore.create(ResourcesPlugin.getWorkspace().getRoot().getFolder(newPath));
+			IPackageFragment newPack= (IPackageFragment) JavaScriptCore.create(ResourcesPlugin.getWorkspace().getRoot().getFolder(newPath));
 			if (newPack.exists()) {
-				ICompilationUnit[] units= newPack.getCompilationUnits();
+				IJavaScriptUnit[] units= newPack.getCompilationUnits();
 				for (int i= 0; i < units.length; i++) {
 					IResource resource= units[i].getResource();
 					if (resource != null) {

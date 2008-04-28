@@ -32,12 +32,12 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.views.contentoutline.ContentOutline;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaModel;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptModel;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
@@ -119,13 +119,13 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 	 * @param elem the Java element used to compute the initial package
 	 *    fragment root used as the source folder
 	 */
-	protected void initContainerPage(IJavaElement elem) {
+	protected void initContainerPage(IJavaScriptElement elem) {
 		IPackageFragmentRoot initRoot= null;
 		if (elem != null) {
 			initRoot= JavaModelUtil.getPackageFragmentRoot(elem);
 			try {
 				if (initRoot == null || initRoot.getKind() != IPackageFragmentRoot.K_SOURCE) {
-					IJavaProject jproject= elem.getJavaProject();
+					IJavaScriptProject jproject= elem.getJavaProject();
 					if (jproject != null) {
 							initRoot= null;
 							if (jproject.exists()) {
@@ -142,7 +142,7 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 						}
 					}
 				}
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				JavaPlugin.log(e);
 			}
 		}	
@@ -156,23 +156,23 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 	 * @return a Java element to be used as the initial selection, or <code>null</code>,
 	 * if no Java element exists in the given selection
 	 */
-	protected IJavaElement getInitialJavaElement(IStructuredSelection selection) {
-		IJavaElement jelem= null;
+	protected IJavaScriptElement getInitialJavaElement(IStructuredSelection selection) {
+		IJavaScriptElement jelem= null;
 		if (selection != null && !selection.isEmpty()) {
 			Object selectedElement= selection.getFirstElement();
 			if (selectedElement instanceof IAdaptable) {
 				IAdaptable adaptable= (IAdaptable) selectedElement;			
 				
-				jelem= (IJavaElement) adaptable.getAdapter(IJavaElement.class);
+				jelem= (IJavaScriptElement) adaptable.getAdapter(IJavaScriptElement.class);
 				if (jelem == null) {
 					IResource resource= (IResource) adaptable.getAdapter(IResource.class);
 					if (resource != null && resource.getType() != IResource.ROOT) {
 						while (jelem == null && resource.getType() != IResource.PROJECT) {
 							resource= resource.getParent();
-							jelem= (IJavaElement) resource.getAdapter(IJavaElement.class);
+							jelem= (IJavaScriptElement) resource.getAdapter(IJavaScriptElement.class);
 						}
 						if (jelem == null) {
-							jelem= JavaCore.create(resource); // java project
+							jelem= JavaScriptCore.create(resource); // java project
 						}
 					}
 				}
@@ -186,19 +186,19 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 			
 			if (part instanceof IViewPartInputProvider) {
 				Object elem= ((IViewPartInputProvider)part).getViewPartInput();
-				if (elem instanceof IJavaElement) {
-					jelem= (IJavaElement) elem;
+				if (elem instanceof IJavaScriptElement) {
+					jelem= (IJavaScriptElement) elem;
 				}
 			}
 		}
 
-		if (jelem == null || jelem.getElementType() == IJavaElement.JAVA_MODEL) {
+		if (jelem == null || jelem.getElementType() == IJavaScriptElement.JAVA_MODEL) {
 			try {
-				IJavaProject[] projects= JavaCore.create(getWorkspaceRoot()).getJavaProjects();
+				IJavaScriptProject[] projects= JavaScriptCore.create(getWorkspaceRoot()).getJavaProjects();
 				if (projects.length == 1) {
 					jelem= projects[0];
 				}
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				JavaPlugin.log(e);
 			}
 		}
@@ -322,11 +322,11 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 					status.setError(Messages.format(NewWizardMessages.NewContainerWizardPage_error_ProjectClosed, proj.getFullPath().toString())); 
 					return status;
 				}				
-				IJavaProject jproject= JavaCore.create(proj);
+				IJavaScriptProject jproject= JavaScriptCore.create(proj);
 				fCurrRoot= jproject.getPackageFragmentRoot(res);
 				if (res.exists()) {
 					try {
-						if (!proj.hasNature(JavaCore.NATURE_ID)) {
+						if (!proj.hasNature(JavaScriptCore.NATURE_ID)) {
 							if (resType == IResource.PROJECT) {
 								status.setError(NewWizardMessages.NewContainerWizardPage_warning_NotAJavaProject); 
 							} else {
@@ -394,7 +394,7 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 	 * @return The current Java project or <code>null</code>.
 	 * @since 3.3
 	 */
-	public IJavaProject getJavaProject() {
+	public IJavaScriptProject getJavaProject() {
 		IPackageFragmentRoot root= getPackageFragmentRoot();
 		if (root != null) {
 			return root.getJavaProject();
@@ -453,33 +453,33 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 	 * @since 3.2
 	 */
 	protected IPackageFragmentRoot chooseContainer() {
-		IJavaElement initElement= getPackageFragmentRoot();
-		Class[] acceptedClasses= new Class[] { IPackageFragmentRoot.class, IJavaProject.class };
+		IJavaScriptElement initElement= getPackageFragmentRoot();
+		Class[] acceptedClasses= new Class[] { IPackageFragmentRoot.class, IJavaScriptProject.class };
 		TypedElementSelectionValidator validator= new TypedElementSelectionValidator(acceptedClasses, false) {
 			public boolean isSelectedValid(Object element) {
 				try {
-					if (element instanceof IJavaProject) {
-						IJavaProject jproject= (IJavaProject)element;
+					if (element instanceof IJavaScriptProject) {
+						IJavaScriptProject jproject= (IJavaScriptProject)element;
 						IPath path= jproject.getProject().getFullPath();
 						return (jproject.findPackageFragmentRoot(path) != null);
 					} else if (element instanceof IPackageFragmentRoot) {
 						return (((IPackageFragmentRoot)element).getKind() == IPackageFragmentRoot.K_SOURCE);
 					}
 					return true;
-				} catch (JavaModelException e) {
+				} catch (JavaScriptModelException e) {
 					JavaPlugin.log(e.getStatus()); // just log, no UI in validation
 				}
 				return false;
 			}
 		};
 		
-		acceptedClasses= new Class[] { IJavaModel.class, IPackageFragmentRoot.class, IJavaProject.class };
+		acceptedClasses= new Class[] { IJavaScriptModel.class, IPackageFragmentRoot.class, IJavaScriptProject.class };
 		ViewerFilter filter= new TypedViewerFilter(acceptedClasses) {
 			public boolean select(Viewer viewer, Object parent, Object element) {
 				if (element instanceof IPackageFragmentRoot) {
 					try {
 						return (((IPackageFragmentRoot)element).getKind() == IPackageFragmentRoot.K_SOURCE);
-					} catch (JavaModelException e) {
+					} catch (JavaScriptModelException e) {
 						JavaPlugin.log(e.getStatus()); // just log, no UI in validation
 						return false;
 					}
@@ -496,14 +496,14 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 		dialog.setTitle(NewWizardMessages.NewContainerWizardPage_ChooseSourceContainerDialog_title); 
 		dialog.setMessage(NewWizardMessages.NewContainerWizardPage_ChooseSourceContainerDialog_description); 
 		dialog.addFilter(filter);
-		dialog.setInput(JavaCore.create(fWorkspaceRoot));
+		dialog.setInput(JavaScriptCore.create(fWorkspaceRoot));
 		dialog.setInitialSelection(initElement);
 		dialog.setHelpAvailable(false);
 		
 		if (dialog.open() == Window.OK) {
 			Object element= dialog.getFirstResult();
-			if (element instanceof IJavaProject) {
-				IJavaProject jproject= (IJavaProject)element;
+			if (element instanceof IJavaScriptProject) {
+				IJavaScriptProject jproject= (IJavaScriptProject)element;
 				return jproject.getPackageFragmentRoot(jproject.getProject());
 			} else if (element instanceof IPackageFragmentRoot) {
 				return (IPackageFragmentRoot)element;

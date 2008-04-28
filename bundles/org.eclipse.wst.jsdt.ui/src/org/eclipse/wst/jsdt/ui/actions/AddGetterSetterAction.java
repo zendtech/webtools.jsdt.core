@@ -57,15 +57,15 @@ import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.wst.jsdt.core.Flags;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IField;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.core.dom.AST;
-import org.eclipse.wst.jsdt.core.dom.CompilationUnit;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
 import org.eclipse.wst.jsdt.internal.corext.codemanipulation.AddGetterSetterOperation;
 import org.eclipse.wst.jsdt.internal.corext.codemanipulation.CodeGenerationSettings;
 import org.eclipse.wst.jsdt.internal.corext.codemanipulation.GetterSetterUtil;
@@ -167,7 +167,7 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 	public void selectionChanged(IStructuredSelection selection) {
 		try {
 			setEnabled(canEnable(selection));
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			// http://bugs.eclipse.org/bugs/show_bug.cgi?id=19253
 			if (JavaModelUtil.isExceptionToBeLogged(e))
 				JavaPlugin.log(e);
@@ -189,9 +189,9 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 
 			if (firstElement instanceof IType)
 				run((IType) firstElement, new IField[0], false);
-			else if (firstElement instanceof ICompilationUnit) {
+			else if (firstElement instanceof IJavaScriptUnit) {
 				// http://bugs.eclipse.org/bugs/show_bug.cgi?id=38500
-				IType type= ((ICompilationUnit) firstElement).findPrimaryType();
+				IType type= ((IJavaScriptUnit) firstElement).findPrimaryType();
 				// type can be null if file has a bad encoding
 				if (type == null) {
 					MessageDialog.openError(getShell(), 
@@ -209,7 +209,7 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 					notifyResult(false);
 					return;
 				} else
-					run(((ICompilationUnit) firstElement).findPrimaryType(), new IField[0], false);
+					run(((IJavaScriptUnit) firstElement).findPrimaryType(), new IField[0], false);
 			}
 		} catch (CoreException e) {
 			ExceptionHandler.handle(e, getShell(), DIALOG_TITLE, ActionMessages.AddGetterSetterAction_error_actionfailed); 
@@ -217,7 +217,7 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 
 	}
 
-	private boolean canEnable(IStructuredSelection selection) throws JavaModelException {
+	private boolean canEnable(IStructuredSelection selection) throws JavaScriptModelException {
 		if (getSelectedFields(selection) != null)
 			return true;
 
@@ -226,13 +226,13 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 			return type.getCompilationUnit() != null && !type.isInterface() && !type.isLocal();
 		}
 
-		if ((selection.size() == 1) && (selection.getFirstElement() instanceof ICompilationUnit))
+		if ((selection.size() == 1) && (selection.getFirstElement() instanceof IJavaScriptUnit))
 			return true;
 
 		return false;
 	}
 
-	private boolean canRunOn(IField[] fields) throws JavaModelException {
+	private boolean canRunOn(IField[] fields) throws JavaScriptModelException {
 		if (fields == null || fields.length == 0)
 			return false;
 		int count= 0;
@@ -358,7 +358,7 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 						}
 						count++;
 					}
-				} catch (JavaModelException e) {
+				} catch (JavaScriptModelException e) {
 				}
 			}
 
@@ -374,7 +374,7 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 	 * Creates a key used in hash maps for a method signature
 	 * (gettersettername+arguments(fqn)).
 	 */
-	private static String createSignatureKey(String methodName, IField field) throws JavaModelException {
+	private static String createSignatureKey(String methodName, IField field) throws JavaScriptModelException {
 		StringBuffer buffer= new StringBuffer();
 		buffer.append(methodName);
 		String fieldType= field.getTypeSignature();
@@ -509,11 +509,11 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
     	return list;
     }
 
-	private void generate(IType type, IField[] getterFields, IField[] setterFields, IField[] getterSetterFields, CompilationUnit unit, IJavaElement elementPosition) throws CoreException {
+	private void generate(IType type, IField[] getterFields, IField[] setterFields, IField[] getterSetterFields, JavaScriptUnit unit, IJavaScriptElement elementPosition) throws CoreException {
 		if (getterFields.length == 0 && setterFields.length == 0 && getterSetterFields.length == 0)
 			return;
 
-		ICompilationUnit cu= null;
+		IJavaScriptUnit cu= null;
 		if (getterFields.length != 0)
 			cu= getterFields[0].getCompilationUnit();
 		else if (setterFields.length != 0)
@@ -542,16 +542,16 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 				return;
 			}
 
-			IJavaElement[] elements= SelectionConverter.codeResolveForked(fEditor, true);
+			IJavaScriptElement[] elements= SelectionConverter.codeResolveForked(fEditor, true);
 			if (elements.length == 1 && (elements[0] instanceof IField)) {
 				IField field= (IField) elements[0];
 				run(field.getDeclaringType(), new IField[] { field}, true);
 				return;
 			}
-			IJavaElement element= SelectionConverter.getElementAtOffset(fEditor);
+			IJavaScriptElement element= SelectionConverter.getElementAtOffset(fEditor);
 
 			if (element != null) {
-				IType type= (IType) element.getAncestor(IJavaElement.TYPE);
+				IType type= (IType) element.getAncestor(IJavaScriptElement.TYPE);
 				if (type != null) {
 					if (type.getFields().length > 0) {
 						run(type, new IField[0], true);
@@ -571,7 +571,7 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 
 	// ---- Helpers -------------------------------------------------------------------
 
-	private void run(ICompilationUnit cu, IType type, IField[] getterFields, IField[] setterFields, IField[] getterSetterFields, IEditorPart editor, CompilationUnit unit, IJavaElement elementPosition) {
+	private void run(IJavaScriptUnit cu, IType type, IField[] getterFields, IField[] setterFields, IField[] getterSetterFields, IEditorPart editor, JavaScriptUnit unit, IJavaScriptElement elementPosition) {
 		IRewriteTarget target= (IRewriteTarget) editor.getAdapter(IRewriteTarget.class);
 		if (target != null) {
 			target.beginCompoundChange();
@@ -659,7 +659,7 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 		int nElements= elements.size();
 		if (nElements > 0) {
 			IField[] res= new IField[nElements];
-			ICompilationUnit cu= null;
+			IJavaScriptUnit cu= null;
 			for (int i= 0; i < nElements; i++) {
 				Object curr= elements.get(i);
 				if (curr instanceof IField) {
@@ -679,7 +679,7 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 						final IType declaringType= fld.getDeclaringType();
 						if (declaringType==null || declaringType.isInterface())
 							return null;
-					} catch (JavaModelException e) {
+					} catch (JavaScriptModelException e) {
 						JavaPlugin.log(e);
 						return null;
 					}
@@ -711,7 +711,7 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 					} else {
 						return GetterSetterUtil.getSetterName(entry.field, null) + '(' + Signature.getSimpleName(Signature.toString(entry.field.getTypeSignature())) + ')';
 					}
-				} catch (JavaModelException e) {
+				} catch (JavaScriptModelException e) {
 					return ""; //$NON-NLS-1$
 				}
 			}
@@ -726,7 +726,7 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 				int flags= 0;
 				try {
 					flags= ((GetterSetterEntry) element).field.getFlags();
-				} catch (JavaModelException e) {
+				} catch (JavaScriptModelException e) {
 					JavaPlugin.log(e);
 				}
 				ImageDescriptor desc= JavaElementImageProvider.getFieldImageDescriptor(false, Flags.AccPublic);
@@ -741,7 +741,7 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 	/**
 	 * @return map IField -> GetterSetterEntry[]
 	 */
-	private Map createGetterSetterMapping(IType type) throws JavaModelException {
+	private Map createGetterSetterMapping(IType type) throws JavaScriptModelException {
 		IField[] fields= type.getFields();
 		Map result= new LinkedHashMap();
 		for (int i= 0; i < fields.length; i++) {
@@ -881,7 +881,7 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 		private ArrayList fPreviousSelectedFinals;
 
 
-		public GetterSetterTreeSelectionDialog(Shell parent, ILabelProvider labelProvider, AddGetterSetterContentProvider contentProvider, CompilationUnitEditor editor, IType type) throws JavaModelException {
+		public GetterSetterTreeSelectionDialog(Shell parent, ILabelProvider labelProvider, AddGetterSetterContentProvider contentProvider, CompilationUnitEditor editor, IType type) throws JavaScriptModelException {
 			super(parent, labelProvider, contentProvider, editor, type, false);
 			fContentProvider= contentProvider;
 			fPreviousSelectedFinals= new ArrayList();

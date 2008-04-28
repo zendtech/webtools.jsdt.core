@@ -50,8 +50,8 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.link.EditorLinkedModeUI;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.codemanipulation.StubUtility;
 import org.eclipse.wst.jsdt.internal.corext.fix.LinkedProposalModel;
 import org.eclipse.wst.jsdt.internal.corext.fix.LinkedProposalPositionGroup;
@@ -80,7 +80,7 @@ import org.eclipse.wst.jsdt.ui.text.java.IJavaCompletionProposal;
  */
 public class CUCorrectionProposal extends ChangeCorrectionProposal  {
 
-	private ICompilationUnit fCompilationUnit;
+	private IJavaScriptUnit fCompilationUnit;
 	private LinkedProposalModel fLinkedProposalModel;
 
 
@@ -96,7 +96,7 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal  {
 	 * @param image the image that is displayed for this proposal or <code>null</code> if no
 	 * image is desired.
 	 */
-	public CUCorrectionProposal(String name, ICompilationUnit cu, TextChange change, int relevance, Image image) {
+	public CUCorrectionProposal(String name, IJavaScriptUnit cu, TextChange change, int relevance, Image image) {
 		super(name, change, relevance, image);
 		if (cu == null) {
 			throw new IllegalArgumentException("Compilation unit must not be null"); //$NON-NLS-1$
@@ -117,7 +117,7 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal  {
 	 * @param image The image that is displayed for this proposal or <code>null</code> if no
 	 * image is desired.
 	 */
-	protected CUCorrectionProposal(String name, ICompilationUnit cu, int relevance, Image image) {
+	protected CUCorrectionProposal(String name, IJavaScriptUnit cu, int relevance, Image image) {
 		this(name, cu, null, relevance, image);
 	}
 
@@ -246,7 +246,7 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal  {
 	 */
 	public void apply(IDocument document) {
 		try {
-			ICompilationUnit unit= getCompilationUnit();
+			IJavaScriptUnit unit= getCompilationUnit();
 			IEditorPart part= null;
 			if (unit.getResource().exists()) {
 				boolean canEdit= performValidateEdit(unit);
@@ -274,7 +274,7 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal  {
 		}
 	}
 
-	private boolean performValidateEdit(ICompilationUnit unit) {
+	private boolean performValidateEdit(IJavaScriptUnit unit) {
 		IStatus status= Resources.makeCommittable(unit.getResource(), JavaPlugin.getActiveWorkbenchShell());
 		if (!status.isOK()) {
 			String label= CorrectionMessages.CUCorrectionProposal_error_title;
@@ -385,20 +385,20 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal  {
 	/**
 	 * Creates the text change for this proposal.
 	 * This method is only called once and only when no text change has been passed in
-	 * {@link #CUCorrectionProposal(String, ICompilationUnit, TextChange, int, Image)}.
+	 * {@link #CUCorrectionProposal(String, IJavaScriptUnit, TextChange, int, Image)}.
 	 * 
 	 * @return returns the created text change.
 	 * @throws CoreException thrown if the creation of the text change failed.
 	 */
 	protected TextChange createTextChange() throws CoreException {
-		ICompilationUnit cu= getCompilationUnit();
+		IJavaScriptUnit cu= getCompilationUnit();
 		String name= getName();
 		TextChange change;
 		if (!cu.getResource().exists()) {
 			String source;
 			try {
 				source= cu.getSource();
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				JavaPlugin.log(e);
 				source= new String(); // empty
 			}
@@ -442,7 +442,7 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal  {
 	 * 
 	 * @return the compilation unit on that the change works.
 	 */
-	public final ICompilationUnit getCompilationUnit() {
+	public final IJavaScriptUnit getCompilationUnit() {
 		return fCompilationUnit;
 	}
 

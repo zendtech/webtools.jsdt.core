@@ -38,13 +38,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
 import org.eclipse.ui.dialogs.PreferencesUtil;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IMember;
-import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.ISourceRange;
 import org.eclipse.wst.jsdt.core.ISourceReference;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.dom.Modifier;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
@@ -88,7 +88,7 @@ public class SourceActionDialog extends CheckedTreeSelectionDialog {
 	private final String SETTINGS_COMMENTS= "Comments"; //$NON-NLS-1$
 	private Composite fInsertPositionComposite;
 	
-	public SourceActionDialog(Shell parent, ILabelProvider labelProvider, ITreeContentProvider contentProvider, CompilationUnitEditor editor, IType type, boolean isConstructor) throws JavaModelException {
+	public SourceActionDialog(Shell parent, ILabelProvider labelProvider, ITreeContentProvider contentProvider, CompilationUnitEditor editor, IType type, boolean isConstructor) throws JavaScriptModelException {
 		super(parent, labelProvider, contentProvider);
 		fEditor= editor;
 		fContentProvider= contentProvider;		
@@ -117,8 +117,8 @@ public class SourceActionDialog extends CheckedTreeSelectionDialog {
 		fInsertPositions= new ArrayList();
 		fLabels= new ArrayList(); 
 		
-		IJavaElement[] members= fType.getChildren();
-		IMethod[] methods= fType.getMethods();
+		IJavaScriptElement[] members= fType.getChildren();
+		IFunction[] methods= fType.getMethods();
 		
 		fInsertPositions.add(methods.length > 0 ? methods[0]: null); // first
 		fInsertPositions.add(null); // last
@@ -136,7 +136,7 @@ public class SourceActionDialog extends CheckedTreeSelectionDialog {
 		}
 		
 		for (int i = 0; i < methods.length; i++) {
-			IMethod curr= methods[i];
+			IFunction curr= methods[i];
 			String methodLabel= JavaElementLabels.getElementLabel(curr, JavaElementLabels.M_PARAMETER_TYPES);
 			fLabels.add(Messages.format(ActionMessages.SourceActionDialog_after, methodLabel)); 
 			fInsertPositions.add(findSibling(curr, members));
@@ -162,8 +162,8 @@ public class SourceActionDialog extends CheckedTreeSelectionDialog {
 		return defaultValue;
 	}
 
-	private IJavaElement findSibling(IMethod curr, IJavaElement[] members) throws JavaModelException {
-		IJavaElement res= null;
+	private IJavaScriptElement findSibling(IFunction curr, IJavaScriptElement[] members) throws JavaScriptModelException {
+		IJavaScriptElement res= null;
 		int methodStart= curr.getSourceRange().getOffset();
 		for (int i= members.length-1; i >= 0; i--) {
 			IMember member= (IMember) members[i];
@@ -175,7 +175,7 @@ public class SourceActionDialog extends CheckedTreeSelectionDialog {
 		return null;
 	}
 
-	private boolean hasCursorPositionElement(CompilationUnitEditor editor, IJavaElement[] members, List insertPositions) throws JavaModelException {
+	private boolean hasCursorPositionElement(CompilationUnitEditor editor, IJavaScriptElement[] members, List insertPositions) throws JavaScriptModelException {
 		if (editor == null) {
 			return false;
 		}
@@ -615,12 +615,12 @@ public class SourceActionDialog extends CheckedTreeSelectionDialog {
 	/*
 	 * Determine where in the file to enter the newly created methods.
 	 */
-	public IJavaElement getElementPosition() {
-		return (IJavaElement) fInsertPositions.get(fCurrentPositionIndex);	
+	public IJavaScriptElement getElementPosition() {
+		return (IJavaScriptElement) fInsertPositions.get(fCurrentPositionIndex);	
 	}
 	
-	public int getInsertOffset() throws JavaModelException {
-		IJavaElement elementPosition= getElementPosition();
+	public int getInsertOffset() throws JavaScriptModelException {
+		IJavaScriptElement elementPosition= getElementPosition();
 		if (elementPosition instanceof ISourceReference) {
 			return ((ISourceReference) elementPosition).getSourceRange().getOffset();
 		}

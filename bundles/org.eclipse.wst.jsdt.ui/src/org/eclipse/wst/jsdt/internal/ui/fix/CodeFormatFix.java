@@ -27,7 +27,7 @@ import org.eclipse.ltk.core.refactoring.TextChange;
 import org.eclipse.text.edits.DeleteEdit;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.TextEdit;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.formatter.CodeFormatter;
 import org.eclipse.wst.jsdt.internal.corext.fix.IFix;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.changes.CompilationUnitChange;
@@ -37,7 +37,7 @@ import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusInfo;
 
 public class CodeFormatFix implements IFix {
 	
-	public static IFix createCleanUp(ICompilationUnit cu, boolean format, boolean removeTrailingWhitespacesAll, boolean removeTrailingWhitespacesIgnorEmpty) throws CoreException {
+	public static IFix createCleanUp(IJavaScriptUnit cu, boolean format, boolean removeTrailingWhitespacesAll, boolean removeTrailingWhitespacesIgnorEmpty) throws CoreException {
 		if (!format && !removeTrailingWhitespacesAll && !removeTrailingWhitespacesIgnorEmpty)
 			return null;
 		
@@ -132,10 +132,10 @@ public class CodeFormatFix implements IFix {
 		return position;
 	}
 
-	private final ICompilationUnit fCompilationUnit;
+	private final IJavaScriptUnit fCompilationUnit;
 	private final TextChange fChange;
 	
-	public CodeFormatFix(TextChange change, ICompilationUnit compilationUnit) {
+	public CodeFormatFix(TextChange change, IJavaScriptUnit compilationUnit) {
 		fChange= change;
 		fCompilationUnit= compilationUnit;
 	}
@@ -150,7 +150,7 @@ public class CodeFormatFix implements IFix {
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.jsdt.internal.corext.fix.IFix#getCompilationUnit()
 	 */
-	public ICompilationUnit getCompilationUnit() {
+	public IJavaScriptUnit getCompilationUnit() {
 		return fCompilationUnit;
 	}
 	

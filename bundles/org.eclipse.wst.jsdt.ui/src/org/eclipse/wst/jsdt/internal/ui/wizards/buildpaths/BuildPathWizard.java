@@ -20,8 +20,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.LibrarySuperType;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
@@ -53,7 +53,7 @@ public abstract class BuildPathWizard extends NewElementWizard {
 	 */
 	protected void finishPage(IProgressMonitor monitor) throws InterruptedException, CoreException {
 		if (fDoFlushChange) {
-			IJavaProject javaProject= getEntryToEdit().getJavaProject();
+			IJavaScriptProject javaProject= getEntryToEdit().getJavaProject();
 			
 			BuildPathsBlock.flush(getExistingEntries(),  javaProject,  getSuperType(), monitor);
 			
@@ -71,7 +71,7 @@ public abstract class BuildPathWizard extends NewElementWizard {
 	/**
 	 * {@inheritDoc}
 	 */
-	public IJavaElement getCreatedElement() {
+	public IJavaScriptElement getCreatedElement() {
 		return fPackageFragmentRoot;
 	}
 	

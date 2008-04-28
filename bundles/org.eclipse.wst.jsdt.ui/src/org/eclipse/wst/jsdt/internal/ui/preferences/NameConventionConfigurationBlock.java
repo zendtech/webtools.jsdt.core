@@ -31,8 +31,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
-import org.eclipse.wst.jsdt.core.JavaConventions;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.JavaScriptConventions;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.Strings;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
@@ -65,14 +65,14 @@ public class NameConventionConfigurationBlock extends OptionsConfigurationBlock 
 	private final static int LOCAL= 4;
 
 	// Preference store keys
-	private static final Key PREF_FIELD_PREFIXES= getJDTCoreKey(JavaCore.CODEASSIST_FIELD_PREFIXES); 
-	private static final Key PREF_FIELD_SUFFIXES= getJDTCoreKey(JavaCore.CODEASSIST_FIELD_SUFFIXES); 
-	private static final Key PREF_STATIC_FIELD_PREFIXES= getJDTCoreKey(JavaCore.CODEASSIST_STATIC_FIELD_PREFIXES); 
-	private static final Key PREF_STATIC_FIELD_SUFFIXES= getJDTCoreKey(JavaCore.CODEASSIST_STATIC_FIELD_SUFFIXES); 
-	private static final Key PREF_ARGUMENT_PREFIXES= getJDTCoreKey(JavaCore.CODEASSIST_ARGUMENT_PREFIXES); 
-	private static final Key PREF_ARGUMENT_SUFFIXES= getJDTCoreKey(JavaCore.CODEASSIST_ARGUMENT_SUFFIXES); 
-	private static final Key PREF_LOCAL_PREFIXES= getJDTCoreKey(JavaCore.CODEASSIST_LOCAL_PREFIXES); 
-	private static final Key PREF_LOCAL_SUFFIXES= getJDTCoreKey(JavaCore.CODEASSIST_LOCAL_SUFFIXES); 
+	private static final Key PREF_FIELD_PREFIXES= getJDTCoreKey(JavaScriptCore.CODEASSIST_FIELD_PREFIXES); 
+	private static final Key PREF_FIELD_SUFFIXES= getJDTCoreKey(JavaScriptCore.CODEASSIST_FIELD_SUFFIXES); 
+	private static final Key PREF_STATIC_FIELD_PREFIXES= getJDTCoreKey(JavaScriptCore.CODEASSIST_STATIC_FIELD_PREFIXES); 
+	private static final Key PREF_STATIC_FIELD_SUFFIXES= getJDTCoreKey(JavaScriptCore.CODEASSIST_STATIC_FIELD_SUFFIXES); 
+	private static final Key PREF_ARGUMENT_PREFIXES= getJDTCoreKey(JavaScriptCore.CODEASSIST_ARGUMENT_PREFIXES); 
+	private static final Key PREF_ARGUMENT_SUFFIXES= getJDTCoreKey(JavaScriptCore.CODEASSIST_ARGUMENT_SUFFIXES); 
+	private static final Key PREF_LOCAL_PREFIXES= getJDTCoreKey(JavaScriptCore.CODEASSIST_LOCAL_PREFIXES); 
+	private static final Key PREF_LOCAL_SUFFIXES= getJDTCoreKey(JavaScriptCore.CODEASSIST_LOCAL_SUFFIXES); 
 
 	private static final Key PREF_KEYWORD_THIS= getJDTUIKey(PreferenceConstants.CODEGEN_KEYWORD_THIS);
 	private static final Key PREF_IS_FOR_GETTERS= getJDTUIKey(PreferenceConstants.CODEGEN_IS_FOR_GETTERS);
@@ -176,7 +176,7 @@ public class NameConventionConfigurationBlock extends OptionsConfigurationBlock 
 					}							
 				}
 				String name= prefix ? val + "x" : "x" + val; //$NON-NLS-2$ //$NON-NLS-1$
-				IStatus status= JavaConventions.validateFieldName(name);
+				IStatus status= JavaScriptConventions.validateFieldName(name);
 				if (status.matches(IStatus.ERROR)) {
 					if (prefix) {
 						return new StatusInfo(IStatus.ERROR, Messages.format(PreferencesMessages.NameConventionConfigurationBlock_error_invalidprefix, val)); 
@@ -414,7 +414,7 @@ public class NameConventionConfigurationBlock extends OptionsConfigurationBlock 
 			setValue(PREF_EXCEPTION_NAME, name);
 			
 			// validation
-			IStatus status = JavaConventions.validateIdentifier(name);
+			IStatus status = JavaScriptConventions.validateIdentifier(name);
 			if (!status.isOK()) {
 				fContext.statusChanged(status);
 			} else {
@@ -476,7 +476,7 @@ public class NameConventionConfigurationBlock extends OptionsConfigurationBlock 
 		String value= getValue(key);
 		if (value == null) {
 			value= ""; //$NON-NLS-1$
-			JavaPlugin.logErrorMessage("JavaCore preference is null. Key:" + key); //$NON-NLS-1$
+			JavaPlugin.logErrorMessage("JavaScriptCore preference is null. Key:" + key); //$NON-NLS-1$
 		}
 		return value;
 	}

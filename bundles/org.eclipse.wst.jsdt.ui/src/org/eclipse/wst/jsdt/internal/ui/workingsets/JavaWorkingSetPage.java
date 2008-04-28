@@ -50,13 +50,13 @@ import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.IWorkingSetPage;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaModel;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptModel;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
@@ -153,7 +153,7 @@ public class JavaWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		fTree.addFilter(new EmptyInnerPackageFilter());
 		fTree.setUseHashlookup(true);
 		
-		fTree.setInput(JavaCore.create(ResourcesPlugin.getWorkspace().getRoot()));
+		fTree.setInput(JavaScriptCore.create(ResourcesPlugin.getWorkspace().getRoot()));
 
 		fTree.addCheckStateListener(new ICheckStateListener() {
 			public void checkStateChanged(CheckStateChangedEvent event) {
@@ -415,12 +415,12 @@ public class JavaWorkingSetPage extends WizardPage implements IWorkingSetPage {
 						elements= SelectionConverter.getStructuredSelection(part).toArray();
 						for (int i= 0; i < elements.length; i++) {
 							if (elements[i] instanceof IResource) {
-								IJavaElement je= (IJavaElement)((IResource)elements[i]).getAdapter(IJavaElement.class);
+								IJavaScriptElement je= (IJavaScriptElement)((IResource)elements[i]).getAdapter(IJavaScriptElement.class);
 								if (je != null && je.exists() &&  je.getJavaProject().isOnClasspath((IResource)elements[i]))
 									elements[i]= je;
 							}
 						}
-					} catch (JavaModelException e) {
+					} catch (JavaScriptModelException e) {
 						return;
 					}
 				}
@@ -435,8 +435,8 @@ public class JavaWorkingSetPage extends WizardPage implements IWorkingSetPage {
 						if (!project.isAccessible())
 							elements[i]= project;
 					}
-					if (element instanceof IJavaElement) {
-						IJavaProject jProject= ((IJavaElement)element).getJavaProject();
+					if (element instanceof IJavaScriptElement) {
+						IJavaScriptProject jProject= ((IJavaScriptElement)element).getJavaProject();
 						if (jProject != null && !jProject.getProject().isAccessible()) 
 							elements[i]= jProject.getProject();
 					}
@@ -467,13 +467,13 @@ public class JavaWorkingSetPage extends WizardPage implements IWorkingSetPage {
 	
 	private boolean isExpandable(Object element) {
 		return (
-			element instanceof IJavaProject
+			element instanceof IJavaScriptProject
 			||
 			element instanceof IPackageFragmentRoot
 			||
 			element instanceof IPackageFragment
 			||
-			element instanceof IJavaModel
+			element instanceof IJavaScriptModel
 			||
 			element instanceof IContainer);
 	}

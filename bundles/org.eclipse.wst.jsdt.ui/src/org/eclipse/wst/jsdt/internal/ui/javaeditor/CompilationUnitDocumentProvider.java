@@ -86,13 +86,13 @@ import org.eclipse.ui.texteditor.MarkerAnnotation;
 import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.eclipse.ui.texteditor.ResourceMarkerAnnotationModel;
 import org.eclipse.wst.jsdt.core.IBuffer;
-import org.eclipse.wst.jsdt.core.IClasspathEntry;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaModel;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IIncludePathEntry;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptModel;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IProblemRequestor;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.WorkingCopyOwner;
 import org.eclipse.wst.jsdt.core.compiler.CategorizedProblem;
 import org.eclipse.wst.jsdt.core.compiler.IProblem;
@@ -117,7 +117,7 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 		 * Bundle of all required informations to allow working copy management.
 		 */
 		static protected class CompilationUnitInfo extends FileInfo {
-			public ICompilationUnit fCopy;
+			public IJavaScriptUnit fCopy;
 		}
 
 		/**
@@ -166,7 +166,7 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 			private static Image fgQuickFixErrorImage;
 			private static boolean fgQuickFixImagesInitialized= false;
 
-			private ICompilationUnit fCompilationUnit;
+			private IJavaScriptUnit fCompilationUnit;
 			private List fOverlaids;
 			private IProblem fProblem;
 			private Image fImage;
@@ -176,7 +176,7 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 			private boolean fIsQuickFixableStateSet= false;
 
 
-			public ProblemAnnotation(IProblem problem, ICompilationUnit cu) {
+			public ProblemAnnotation(IProblem problem, IJavaScriptUnit cu) {
 
 				fProblem= problem;
 				fCompilationUnit= cu;
@@ -324,7 +324,7 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 			/*
 			 * @see org.eclipse.wst.jsdt.internal.ui.javaeditor.IJavaAnnotation#getCompilationUnit()
 			 */
-			public ICompilationUnit getCompilationUnit() {
+			public IJavaScriptUnit getCompilationUnit() {
 				return fCompilationUnit;
 			}
 
@@ -459,7 +459,7 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 			private ThreadLocal fProblemRequestorState= new ThreadLocal();
 			private int fStateCount= 0;
 
-			private ICompilationUnit fCompilationUnit;
+			private IJavaScriptUnit fCompilationUnit;
 			private List fGeneratedAnnotations= new ArrayList();
 			private IProgressMonitor fProgressMonitor;
 			private boolean fIsActive= false;
@@ -475,7 +475,7 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 				super(resource);
 			}
 
-			public void setCompilationUnit(ICompilationUnit unit)  {
+			public void setCompilationUnit(IJavaScriptUnit unit)  {
 				fCompilationUnit= unit;
 			}
 
@@ -885,10 +885,10 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 	 * @param file the file from which to create the compilation unit
 	 * @return the fake compilation unit
 	 */
-	protected ICompilationUnit createCompilationUnit(IFile file) {
-		Object element= JavaCore.create(file);
-		if (element instanceof ICompilationUnit)
-			return (ICompilationUnit) element;
+	protected IJavaScriptUnit createCompilationUnit(IFile file) {
+		Object element= JavaScriptCore.create(file);
+		if (element instanceof IJavaScriptUnit)
+			return (IJavaScriptUnit) element;
 		return null;
 	}
 
@@ -910,7 +910,7 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 	 * @see org.eclipse.ui.editors.text.TextFileDocumentProvider#createFileInfo(java.lang.Object)
 	 */
 	protected FileInfo createFileInfo(Object element) throws CoreException {
-		ICompilationUnit original= null;
+		IJavaScriptUnit original= null;
 		if (element instanceof IFileEditorInput) {
 			IFileEditorInput input= (IFileEditorInput) element;
 			original= createCompilationUnit(input.getFile());
@@ -960,7 +960,7 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 	 * @return the fake compilation unit
 	 * @since 3.2
 	 */
-	private ICompilationUnit createFakeCompiltationUnit(Object element, boolean setContents) {
+	private IJavaScriptUnit createFakeCompiltationUnit(Object element, boolean setContents) {
 		if (element instanceof IStorageEditorInput)
 			return createFakeCompiltationUnit((IStorageEditorInput)element, setContents); 
 		else if (element instanceof IURIEditorInput)
@@ -976,7 +976,7 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 	 * @return the fake compilation unit
 	 * @since 3.2
 	 */
-	private ICompilationUnit createFakeCompiltationUnit(IStorageEditorInput editorInput, boolean setContents) {
+	private IJavaScriptUnit createFakeCompiltationUnit(IStorageEditorInput editorInput, boolean setContents) {
 		try {
 			final IStorage storage= editorInput.getStorage();
 			final IPath storagePath= storage.getFullPath();
@@ -991,23 +991,23 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 			
 			WorkingCopyOwner woc= new WorkingCopyOwner() {
 				/*
-				 * @see org.eclipse.wst.jsdt.core.WorkingCopyOwner#createBuffer(org.eclipse.wst.jsdt.core.ICompilationUnit)
+				 * @see org.eclipse.wst.jsdt.core.WorkingCopyOwner#createBuffer(org.eclipse.wst.jsdt.core.IJavaScriptUnit)
 				 * @since 3.2
 				 */
-				public IBuffer createBuffer(ICompilationUnit workingCopy) {
+				public IBuffer createBuffer(IJavaScriptUnit workingCopy) {
 					return new DocumentAdapter(workingCopy, documentPath);
 				}
 			};
 
-			IClasspathEntry[] cpEntries= null;
-			IJavaProject jp= findJavaProject(storagePath);
+			IIncludePathEntry[] cpEntries= null;
+			IJavaScriptProject jp= findJavaProject(storagePath);
 			if (jp != null)
 				cpEntries= jp.getResolvedClasspath(true);
 			
 			if (cpEntries == null || cpEntries.length == 0)
-				cpEntries= new IClasspathEntry[] { JavaRuntime.getDefaultJREContainerEntry() };
+				cpEntries= new IIncludePathEntry[] { JavaRuntime.getDefaultJREContainerEntry() };
 
-			final ICompilationUnit cu= woc.newWorkingCopy(storage.getName(), cpEntries, getProgressMonitor());
+			final IJavaScriptUnit cu= woc.newWorkingCopy(storage.getName(), cpEntries, getProgressMonitor());
 			if (setContents) {
 				int READER_CHUNK_SIZE= 2048;
 				int BUFFER_SIZE= 8 * READER_CHUNK_SIZE;
@@ -1062,7 +1062,7 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 	 * @return the fake compilation unit
 	 * @since 3.3
 	 */
-	private ICompilationUnit createFakeCompiltationUnit(IURIEditorInput editorInput) {
+	private IJavaScriptUnit createFakeCompiltationUnit(IURIEditorInput editorInput) {
 		try {
 			final URI uri= editorInput.getURI();
 			final IFileStore fileStore= EFS.getStore(uri);
@@ -1072,23 +1072,23 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 			
 			WorkingCopyOwner woc= new WorkingCopyOwner() {
 				/*
-				 * @see org.eclipse.wst.jsdt.core.WorkingCopyOwner#createBuffer(org.eclipse.wst.jsdt.core.ICompilationUnit)
+				 * @see org.eclipse.wst.jsdt.core.WorkingCopyOwner#createBuffer(org.eclipse.wst.jsdt.core.IJavaScriptUnit)
 				 * @since 3.2
 				 */
-				public IBuffer createBuffer(ICompilationUnit workingCopy) {
+				public IBuffer createBuffer(IJavaScriptUnit workingCopy) {
 					return new DocumentAdapter(workingCopy, path);
 				}
 			};
 			
-			IClasspathEntry[] cpEntries= null;
-			IJavaProject jp= findJavaProject(path);
+			IIncludePathEntry[] cpEntries= null;
+			IJavaScriptProject jp= findJavaProject(path);
 			if (jp != null)
 				cpEntries= jp.getResolvedClasspath(true);
 			
 			if (cpEntries == null || cpEntries.length == 0)
-				cpEntries= new IClasspathEntry[] { JavaRuntime.getDefaultJREContainerEntry() };
+				cpEntries= new IIncludePathEntry[] { JavaRuntime.getDefaultJREContainerEntry() };
 			
-			final ICompilationUnit cu= woc.newWorkingCopy(fileStore.getName(), cpEntries, getProgressMonitor());
+			final IJavaScriptUnit cu= woc.newWorkingCopy(fileStore.getName(), cpEntries, getProgressMonitor());
 			
 			if (!isModifiable(editorInput))
 				JavaModelUtil.reconcile(cu);
@@ -1107,16 +1107,16 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 	 * @return the matching Java project or <code>null</code>
 	 * @since 3.2
 	 */
-	private IJavaProject findJavaProject(IPath path) {
+	private IJavaScriptProject findJavaProject(IPath path) {
 		if (path == null)
 			return null;
 
 		String[] pathSegments= path.segments();
-		IJavaModel model= JavaCore.create(JavaPlugin.getWorkspace().getRoot());
-		IJavaProject[] projects;
+		IJavaScriptModel model= JavaScriptCore.create(JavaPlugin.getWorkspace().getRoot());
+		IJavaScriptProject[] projects;
 		try {
 			projects= model.getJavaProjects();
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			return null; // ignore - use default JRE
 		}
 		for (int i= 0; i < projects.length; i++) {
@@ -1138,7 +1138,7 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 
 			try  {
 			    cuInfo.fCopy.discardWorkingCopy();
-			} catch (JavaModelException x)  {
+			} catch (JavaScriptModelException x)  {
 			    handleCoreException(x, x.getMessage());
 			}
 
@@ -1159,7 +1159,7 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 
 		CompilationUnitInfo info= (CompilationUnitInfo)fFakeCUMapForMissingInfo.get(element);
 		if (info == null) {
-			ICompilationUnit cu= createFakeCompiltationUnit(element, true);
+			IJavaScriptUnit cu= createFakeCompiltationUnit(element, true);
 			if (cu == null)
 				return;
 			info= new CompilationUnitInfo();
@@ -1210,7 +1210,7 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 				// Destroy and unregister fake working copy
 				try {
 					info.fCopy.discardWorkingCopy();
-				} catch (JavaModelException ex) {
+				} catch (JavaScriptModelException ex) {
 					handleCoreException(ex, ex.getMessage());
 				}
 			} else
@@ -1249,8 +1249,8 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 				SafeRunner.run(new ISafeRunnable() {
 					public void run() {
 						try {
-							info.fCopy.reconcile(ICompilationUnit.NO_AST, false, null, subMonitor1);
-						} catch (JavaModelException ex) {
+							info.fCopy.reconcile(IJavaScriptUnit.NO_AST, false, null, subMonitor1);
+						} catch (JavaScriptModelException ex) {
 							handleException(ex);
 						} catch (OperationCanceledException ex) {
 							// do not log this
@@ -1317,7 +1317,7 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 			}
 
 			if (fSavePolicy != null) {
-				ICompilationUnit unit= fSavePolicy.postSave(info.fCopy);
+				IJavaScriptUnit unit= fSavePolicy.postSave(info.fCopy);
 				if (unit != null && info.fModel instanceof AbstractMarkerAnnotationModel) {
 					IResource r= unit.getResource();
 					IMarker[] markers= r.findMarkers(IMarker.MARKER, true, IResource.DEPTH_ZERO);
@@ -1341,7 +1341,7 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 		if (info instanceof CompilationUnitInfo) {
 			
 			// Delegate handling of non-primary CUs
-			ICompilationUnit cu= ((CompilationUnitInfo)info).fCopy;
+			IJavaScriptUnit cu= ((CompilationUnitInfo)info).fCopy;
 			if (cu != null && !JavaModelUtil.isPrimary(cu))
 				return super.createSaveOperation(element, document, overwrite);
 
@@ -1425,7 +1425,7 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 	/*
 	 * @see org.eclipse.wst.jsdt.internal.ui.javaeditor.ICompilationUnitDocumentProvider#getWorkingCopy(java.lang.Object)
 	 */
-	public ICompilationUnit getWorkingCopy(Object element) {
+	public IJavaScriptUnit getWorkingCopy(Object element) {
 		FileInfo fileInfo= getFileInfo(element);
 		if (fileInfo instanceof CompilationUnitInfo) {
 			CompilationUnitInfo info= (CompilationUnitInfo)fileInfo;
@@ -1481,7 +1481,7 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
      * @see IPostSaveListener
      * @since 3.3
      */
-	protected void notifyPostSaveListeners(final ICompilationUnit unit, final CompilationUnitInfo info, final IProgressMonitor monitor) throws CoreException {
+	protected void notifyPostSaveListeners(final IJavaScriptUnit unit, final CompilationUnitInfo info, final IProgressMonitor monitor) throws CoreException {
 		final IBuffer buffer= unit.getBuffer();
 		IPostSaveListener[] listeners= JavaPlugin.getDefault().getSaveParticipantRegistry().getEnabledPostSaveListeners(unit.getJavaProject().getProject());
 		
@@ -1542,7 +1542,7 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 //						else if (buffer.hasUnsavedChanges()) {
 //							try {
 //								buffer.save(getSubProgressMonitor(monitor, 1), true);
-//							} catch (JavaModelException e) {
+//							} catch (JavaScriptModelException e) {
 //								message= Messages.format("Error reverting changes after failure of save participant ''{0}''.", participantName); //$NON-NLS-1$
 //								IStatus status= new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IStatus.OK, message, ex);
 //								JavaPlugin.getDefault().getLog().log(status);

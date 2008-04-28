@@ -13,8 +13,8 @@ package org.eclipse.wst.jsdt.internal.core;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.jsdt.core.IJsGlobalScopeContainer;
-import org.eclipse.wst.jsdt.core.IClasspathEntry;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.IIncludePathEntry;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 
 /**
  *
@@ -34,12 +34,12 @@ public class UserLibraryJsGlobalScopeContainer implements IJsGlobalScopeContaine
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.jsdt.core.IJsGlobalScopeContainer#getClasspathEntries()
 	 */
-	public IClasspathEntry[] getClasspathEntries() {
+	public IIncludePathEntry[] getClasspathEntries() {
 		UserLibrary library= getUserLibrary();
 		if (library != null) {
 			return library.getEntries();
 		}
-		return new IClasspathEntry[0];
+		return new IIncludePathEntry[0];
 
 	}
 
@@ -65,7 +65,7 @@ public class UserLibraryJsGlobalScopeContainer implements IJsGlobalScopeContaine
 	 * @see org.eclipse.wst.jsdt.core.IJsGlobalScopeContainer#getPath()
 	 */
 	public IPath getPath() {
-		return new Path(JavaCore.USER_LIBRARY_CONTAINER_ID).append(this.name);
+		return new Path(JavaScriptCore.USER_LIBRARY_CONTAINER_ID).append(this.name);
 	}
 
 	/* (non-Javadoc)

@@ -13,9 +13,9 @@ package org.eclipse.wst.jsdt.internal.ui;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IParent;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.IClassFileEditorInput;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.JavaElementImageProvider;
 import org.eclipse.wst.jsdt.ui.JavaElementLabels;
@@ -34,11 +34,11 @@ public class JavaWorkbenchAdapter implements IWorkbenchAdapter {
 	}
 
 	public Object[] getChildren(Object element) {
-		IJavaElement je= getJavaElement(element);
+		IJavaScriptElement je= getJavaElement(element);
 		if (je instanceof IParent) {
 			try {
 				return ((IParent)je).getChildren();
-			} catch(JavaModelException e) {
+			} catch(JavaScriptModelException e) {
 				JavaPlugin.log(e); 
 			}
 		}
@@ -46,7 +46,7 @@ public class JavaWorkbenchAdapter implements IWorkbenchAdapter {
 	}
 
 	public ImageDescriptor getImageDescriptor(Object element) {
-		IJavaElement je= getJavaElement(element);
+		IJavaScriptElement je= getJavaElement(element);
 		if (je != null)
 			return fImageProvider.getJavaImageDescriptor(je, JavaElementImageProvider.OVERLAY_ICONS | JavaElementImageProvider.SMALL_ICONS);
 		
@@ -59,13 +59,13 @@ public class JavaWorkbenchAdapter implements IWorkbenchAdapter {
 	}
 
 	public Object getParent(Object element) {
-		IJavaElement je= getJavaElement(element);
+		IJavaScriptElement je= getJavaElement(element);
 		return je != null ? je.getParent() :  null;
 	}
 	
-	private IJavaElement getJavaElement(Object element) {
-		if (element instanceof IJavaElement)
-			return (IJavaElement)element;
+	private IJavaScriptElement getJavaElement(Object element) {
+		if (element instanceof IJavaScriptElement)
+			return (IJavaScriptElement)element;
 		if (element instanceof IClassFileEditorInput)
 			return ((IClassFileEditorInput)element).getClassFile().getPrimaryElement();
 

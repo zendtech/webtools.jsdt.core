@@ -19,12 +19,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.JavaModelException;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchConstants;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchScope;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchConstants;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.core.search.SearchEngine;
 import org.eclipse.wst.jsdt.core.search.SearchMatch;
 import org.eclipse.wst.jsdt.core.search.SearchPattern;
@@ -59,9 +59,9 @@ public class MainMethodSearchEngine{
 			 */
 			public void acceptSearchMatch(SearchMatch match) throws CoreException {
 				Object enclosingElement= match.getElement();
-				if (enclosingElement instanceof IMethod) { // defensive code
+				if (enclosingElement instanceof IFunction) { // defensive code
 					try {
-						IMethod curr= (IMethod) enclosingElement;
+						IFunction curr= (IFunction) enclosingElement;
 						if (curr.isMainMethod()) {
 							if (!considerExternalJars()) {
 								IPackageFragmentRoot root= JavaModelUtil.getPackageFragmentRoot(curr);
@@ -74,7 +74,7 @@ public class MainMethodSearchEngine{
 							}
 							fResult.add(curr.getDeclaringType());
 						}
-					} catch (JavaModelException e) {
+					} catch (JavaScriptModelException e) {
 						JavaPlugin.log(e.getStatus());
 					}
 				}
@@ -86,11 +86,11 @@ public class MainMethodSearchEngine{
 	 * Valid styles are IJavaElementSearchConstants.CONSIDER_BINARIES and
 	 * IJavaElementSearchConstants.CONSIDER_EXTERNAL_JARS
 	 */	
-	public IType[] searchMainMethods(IProgressMonitor pm, IJavaSearchScope scope, int style) throws CoreException {
+	public IType[] searchMainMethods(IProgressMonitor pm, IJavaScriptSearchScope scope, int style) throws CoreException {
 		List typesFound= new ArrayList(200);
 		
 		SearchPattern pattern= SearchPattern.createPattern("main(String[]) void", //$NON-NLS-1$
-				IJavaSearchConstants.METHOD, IJavaSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH | SearchPattern.R_CASE_SENSITIVE);
+				IJavaScriptSearchConstants.METHOD, IJavaScriptSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH | SearchPattern.R_CASE_SENSITIVE);
 		SearchRequestor requestor= new MethodCollector(typesFound, style);
 		new SearchEngine().search(pattern, SearchUtils.getDefaultSearchParticipants(), scope, requestor, pm);
 			
@@ -104,7 +104,7 @@ public class MainMethodSearchEngine{
 	 * Valid styles are IJavaElementSearchConstants.CONSIDER_BINARIES and
 	 * IJavaElementSearchConstants.CONSIDER_EXTERNAL_JARS
 	 */
-	public IType[] searchMainMethods(IRunnableContext context, final IJavaSearchScope scope, final int style) throws InvocationTargetException, InterruptedException  {
+	public IType[] searchMainMethods(IRunnableContext context, final IJavaScriptSearchScope scope, final int style) throws InvocationTargetException, InterruptedException  {
 		int allFlags=  IJavaElementSearchConstants.CONSIDER_EXTERNAL_JARS | IJavaElementSearchConstants.CONSIDER_BINARIES;
 		Assert.isTrue((style | allFlags) == allFlags);
 		

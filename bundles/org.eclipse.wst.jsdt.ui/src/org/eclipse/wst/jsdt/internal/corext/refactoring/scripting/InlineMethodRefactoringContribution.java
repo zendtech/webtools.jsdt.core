@@ -18,14 +18,14 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ltk.core.refactoring.Refactoring;
 import org.eclipse.ltk.core.refactoring.RefactoringDescriptor;
 import org.eclipse.ltk.core.refactoring.participants.RefactoringArguments;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.ISourceRange;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.dom.AST;
 import org.eclipse.wst.jsdt.core.dom.ASTParser;
-import org.eclipse.wst.jsdt.core.dom.CompilationUnit;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
 import org.eclipse.wst.jsdt.core.refactoring.IJavaRefactorings;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.JDTRefactoringContribution;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.JDTRefactoringDescriptor;
@@ -48,8 +48,8 @@ public final class InlineMethodRefactoringContribution extends JDTRefactoringCon
 	public final Refactoring createRefactoring(final RefactoringDescriptor descriptor) throws CoreException {
 		int selectionStart= -1;
 		int selectionLength= -1;
-		ICompilationUnit unit= null;
-		CompilationUnit node= null;
+		IJavaScriptUnit unit= null;
+		JavaScriptUnit node= null;
 		RefactoringArguments arguments= null;
 		if (descriptor instanceof JDTRefactoringDescriptor) {
 			final JDTRefactoringDescriptor extended= (JDTRefactoringDescriptor) descriptor;
@@ -74,16 +74,16 @@ public final class InlineMethodRefactoringContribution extends JDTRefactoringCon
 			}
 			final String handle= extended.getAttribute(JDTRefactoringDescriptor.ATTRIBUTE_INPUT);
 			if (handle != null) {
-				final IJavaElement element= JDTRefactoringDescriptor.handleToElement(extended.getProject(), handle, false);
+				final IJavaScriptElement element= JDTRefactoringDescriptor.handleToElement(extended.getProject(), handle, false);
 				if (element == null || !element.exists())
 					throw new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), 0, Messages.format(RefactoringCoreMessages.InitializableRefactoring_inputs_do_not_exist, new String[] { RefactoringCoreMessages.InlineMethodRefactoring_name, IJavaRefactorings.INLINE_METHOD}), null));
 				else {
-					if (element instanceof ICompilationUnit) {
-						unit= (ICompilationUnit) element;
+					if (element instanceof IJavaScriptUnit) {
+						unit= (IJavaScriptUnit) element;
 						if (selection == null)
 							throw new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), 0, Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist, JDTRefactoringDescriptor.ATTRIBUTE_SELECTION), null));
-					} else if (element instanceof IMethod) {
-						final IMethod method= (IMethod) element;
+					} else if (element instanceof IFunction) {
+						final IFunction method= (IFunction) element;
 						try {
 							final ISourceRange range= method.getNameRange();
 							if (range != null) {
@@ -91,7 +91,7 @@ public final class InlineMethodRefactoringContribution extends JDTRefactoringCon
 								selectionLength= range.getLength();
 							} else
 								throw new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), 0, Messages.format(RefactoringCoreMessages.InitializableRefactoring_illegal_argument, new Object[] { handle, JDTRefactoringDescriptor.ATTRIBUTE_INPUT}), null));
-						} catch (JavaModelException exception) {
+						} catch (JavaScriptModelException exception) {
 							throw new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), 0, Messages.format(RefactoringCoreMessages.InitializableRefactoring_inputs_do_not_exist, new String[] { RefactoringCoreMessages.InlineMethodRefactoring_name, IJavaRefactorings.INLINE_METHOD}), exception));
 						}
 						unit= method.getCompilationUnit();
@@ -100,7 +100,7 @@ public final class InlineMethodRefactoringContribution extends JDTRefactoringCon
 					final ASTParser parser= ASTParser.newParser(AST.JLS3);
 					parser.setResolveBindings(true);
 					parser.setSource(unit);
-					node= (CompilationUnit) parser.createAST(null);
+					node= (JavaScriptUnit) parser.createAST(null);
 				}
 			} else
 				throw new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), 0, Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist, JDTRefactoringDescriptor.ATTRIBUTE_INPUT), null));

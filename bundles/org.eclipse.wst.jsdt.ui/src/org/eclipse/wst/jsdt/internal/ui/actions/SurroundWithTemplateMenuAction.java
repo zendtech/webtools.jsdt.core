@@ -46,7 +46,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowPulldownDelegate2;
 import org.eclipse.ui.dialogs.PreferencesUtil;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaEditor;
@@ -310,7 +310,7 @@ public class SurroundWithTemplateMenuAction implements IWorkbenchWindowPulldownD
 		if (textSelection.getLength() == 0)
 			return null;
 		
-		ICompilationUnit cu= JavaUI.getWorkingCopyManager().getWorkingCopy(editor.getEditorInput());
+		IJavaScriptUnit cu= JavaUI.getWorkingCopyManager().getWorkingCopy(editor.getEditorInput());
 		if (cu == null)
 			return null;
 		

@@ -27,7 +27,7 @@ import org.eclipse.jface.text.templates.GlobalTemplateVariables;
 import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jface.text.templates.TemplateContextType;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.internal.corext.template.java.CompilationUnitContext;
 import org.eclipse.wst.jsdt.internal.corext.template.java.CompilationUnitContextType;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
@@ -82,7 +82,7 @@ public class TemplateEngine {
 	 * @param completionPosition the context position in the document of the text viewer
 	 * @param compilationUnit the compilation unit (may be <code>null</code>)
 	 */
-	public void complete(ITextViewer viewer, int completionPosition, ICompilationUnit compilationUnit) {
+	public void complete(ITextViewer viewer, int completionPosition, IJavaScriptUnit compilationUnit) {
 	    IDocument document= viewer.getDocument();
 
 		if (!(fContextType instanceof CompilationUnitContextType))

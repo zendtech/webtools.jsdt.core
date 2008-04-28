@@ -42,11 +42,11 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.ILocalVariable;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.wst.jsdt.internal.ui.util.SelectionUtil;
 import org.eclipse.wst.jsdt.ui.IContextMenuConstants;
@@ -108,7 +108,7 @@ public abstract class AbstractInfoView extends ViewPart implements ISelectionLis
 
 
 	/** The current input. */
-	protected IJavaElement fCurrentViewInput;
+	protected IJavaScriptElement fCurrentViewInput;
 	/** The copy to clipboard action. */
 	private SelectionDispatchAction fCopyToClipboardAction;
 	/** The goto input action. */
@@ -248,7 +248,7 @@ public abstract class AbstractInfoView extends ViewPart implements ISelectionLis
 	 *
 	 * @return input the input object or <code>null</code> if not input is set
 	 */
-	protected IJavaElement getInput() {
+	protected IJavaScriptElement getInput() {
 		return fCurrentViewInput;
 	}
 
@@ -365,7 +365,7 @@ public abstract class AbstractInfoView extends ViewPart implements ISelectionLis
 	 * @param selection the current selection from the part that provides the input
 	 * @return <code>true</code> if the new input should be ignored
 	 */
-	protected boolean isIgnoringNewInput(IJavaElement je, IWorkbenchPart part, ISelection selection) {
+	protected boolean isIgnoringNewInput(IJavaScriptElement je, IWorkbenchPart part, ISelection selection) {
 		return fCurrentViewInput != null && fCurrentViewInput.equals(je) && je != null;
 	}
 
@@ -376,11 +376,11 @@ public abstract class AbstractInfoView extends ViewPart implements ISelectionLis
 	 * @param selection the selection
 	 * @return the selected Java element
 	 */
-	protected IJavaElement findSelectedJavaElement(IWorkbenchPart part, ISelection selection) {
+	protected IJavaScriptElement findSelectedJavaElement(IWorkbenchPart part, ISelection selection) {
 		Object element;
 		try {
 			if (part instanceof JavaEditor && selection instanceof ITextSelection) {
-				IJavaElement[] elements= TextSelectionConverter.codeResolve((JavaEditor)part, (ITextSelection)selection);
+				IJavaScriptElement[] elements= TextSelectionConverter.codeResolve((JavaEditor)part, (ITextSelection)selection);
 				if (elements != null && elements.length > 0)
 					return elements[0];
 				else
@@ -390,7 +390,7 @@ public abstract class AbstractInfoView extends ViewPart implements ISelectionLis
 			} else {
 				return null;
 			}
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			return null;
 		}
 
@@ -403,14 +403,14 @@ public abstract class AbstractInfoView extends ViewPart implements ISelectionLis
 	 * @param element an object
 	 * @return the Java element represented by the given element or <code>null</code>
 	 */
-	private IJavaElement findJavaElement(Object element) {
+	private IJavaScriptElement findJavaElement(Object element) {
 
 		if (element == null)
 			return null;
 
-		IJavaElement je= null;
+		IJavaScriptElement je= null;
 		if (element instanceof IAdaptable)
-			je= (IJavaElement)((IAdaptable)element).getAdapter(IJavaElement.class);
+			je= (IJavaScriptElement)((IAdaptable)element).getAdapter(IJavaScriptElement.class);
 
 		return je;
 	}
@@ -421,7 +421,7 @@ public abstract class AbstractInfoView extends ViewPart implements ISelectionLis
 	 * @param cu	the compilation unit
 	 * @return	the type with same name as the given CU or the first type in the CU
 	 */
-	protected IType getTypeForCU(ICompilationUnit cu) {
+	protected IType getTypeForCU(IJavaScriptUnit cu) {
 
 		if (cu == null || !cu.exists())
 			return null;
@@ -438,7 +438,7 @@ public abstract class AbstractInfoView extends ViewPart implements ISelectionLis
 				return types[0];
 			else
 				return null;
-		} catch (JavaModelException ex) {
+		} catch (JavaScriptModelException ex) {
 			return null;
 		}
 	}
@@ -495,7 +495,7 @@ public abstract class AbstractInfoView extends ViewPart implements ISelectionLis
 				if (currentCount != fComputeCount)
 					return;
 
-				final IJavaElement je= findSelectedJavaElement(part, selection);
+				final IJavaScriptElement je= findSelectedJavaElement(part, selection);
 
 				if (isIgnoringNewInput(je, part, selection))
 					return;
@@ -539,7 +539,7 @@ public abstract class AbstractInfoView extends ViewPart implements ISelectionLis
 
 		fGotoInputAction.setEnabled(true);
 
-		IJavaElement inputElement= getInput();
+		IJavaScriptElement inputElement= getInput();
 		
 		long flags;
 		if (inputElement instanceof ILocalVariable)

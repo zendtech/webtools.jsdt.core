@@ -25,7 +25,7 @@ import org.eclipse.text.edits.InsertEdit;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.ToolFactory;
 import org.eclipse.wst.jsdt.core.dom.ASTNode;
 import org.eclipse.wst.jsdt.core.dom.Block;
@@ -128,7 +128,7 @@ import org.eclipse.wst.jsdt.core.formatter.IndentManipulation;
 		this.eventStore= eventStore;
 
 		if (options == null) {
-			options= JavaCore.getOptions();
+			options= JavaScriptCore.getOptions();
 		}
 		//options.put(DefaultCodeFormatterConstants.FORMATTER_LINE_SPLIT, String.valueOf(9999));
 

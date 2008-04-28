@@ -22,9 +22,9 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.wst.jsdt.core.JsGlobalScopeContainerInitializer;
 import org.eclipse.wst.jsdt.core.IAccessRule;
 import org.eclipse.wst.jsdt.core.IJsGlobalScopeContainer;
-import org.eclipse.wst.jsdt.core.IClasspathEntry;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.IIncludePathEntry;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJsGlobalScopeContainerInitializerExtension;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
@@ -100,7 +100,7 @@ public class CPListLabelProvider extends LabelProvider {
 			String arg;
 			IPath path= (IPath) attrib.getValue();
 			if (path != null && !path.isEmpty()) {
-				if (attrib.getParent().getEntryKind() == IClasspathEntry.CPE_VARIABLE) {
+				if (attrib.getParent().getEntryKind() == IIncludePathEntry.CPE_VARIABLE) {
 					arg= getVariableString(path);
 				} else {
 					arg= getPathString(path, path.getDevice() != null);
@@ -173,7 +173,7 @@ public class CPListLabelProvider extends LabelProvider {
 			int nRules= rules != null ? rules.length : 0;
 			
 			int parentKind= attrib.getParent().getEntryKind();
-			if (parentKind == IClasspathEntry.CPE_PROJECT) {
+			if (parentKind == IIncludePathEntry.CPE_PROJECT) {
 				Boolean combined= (Boolean) attrib.getParent().getAttribute(CPListElement.COMBINE_ACCESSRULES);
 				if (nRules > 0) {
 					if (combined.booleanValue()) {
@@ -184,7 +184,7 @@ public class CPListLabelProvider extends LabelProvider {
 				} else {
 					return NewWizardMessages.CPListLabelProvider_project_access_rules_no_rules; 
 				}
-			} else if (parentKind == IClasspathEntry.CPE_CONTAINER) {
+			} else if (parentKind == IIncludePathEntry.CPE_CONTAINER) {
 				if (nRules > 0) {
 					return Messages.format(NewWizardMessages.CPListLabelProvider_container_access_rules, String.valueOf(nRules)); 
 				} else {
@@ -216,7 +216,7 @@ public class CPListLabelProvider extends LabelProvider {
 	public String getCPListElementText(CPListElement cpentry) {
 		IPath path= cpentry.getPath();
 		switch (cpentry.getEntryKind()) {
-			case IClasspathEntry.CPE_LIBRARY: {
+			case IIncludePathEntry.CPE_LIBRARY: {
 				
 				JsGlobalScopeContainerInitializer cpinit = cpentry.getContainerInitializer();
 				if(cpinit!=null) {
@@ -250,30 +250,30 @@ public class CPListLabelProvider extends LabelProvider {
 				// should not get here
 				return path.makeRelative().toString();
 			}
-			case IClasspathEntry.CPE_VARIABLE: {
+			case IIncludePathEntry.CPE_VARIABLE: {
 				return getVariableString(path);
 			}
-			case IClasspathEntry.CPE_PROJECT:
+			case IIncludePathEntry.CPE_PROJECT:
 				return path.lastSegment();
-			case IClasspathEntry.CPE_CONTAINER:
+			case IIncludePathEntry.CPE_CONTAINER:
 				try {
-					IJsGlobalScopeContainer container= JavaCore.getJsGlobalScopeContainer(path, cpentry.getJavaProject());
+					IJsGlobalScopeContainer container= JavaScriptCore.getJsGlobalScopeContainer(path, cpentry.getJavaProject());
 					
 					if (container != null) {
 						
 						
 						return container.getDescription();
 					}
-					JsGlobalScopeContainerInitializer initializer= JavaCore.getJsGlobalScopeContainerInitializer(path.segment(0));
+					JsGlobalScopeContainerInitializer initializer= JavaScriptCore.getJsGlobalScopeContainerInitializer(path.segment(0));
 					if (initializer != null) {
 						String description= initializer.getDescription(path, cpentry.getJavaProject());
 						return Messages.format(NewWizardMessages.CPListLabelProvider_unbound_library, description); 
 					}
-				} catch (JavaModelException e) {
+				} catch (JavaScriptModelException e) {
 	
 				}
 				return path.toString();
-			case IClasspathEntry.CPE_SOURCE: {
+			case IIncludePathEntry.CPE_SOURCE: {
 				StringBuffer buf= new StringBuffer(path.makeRelative().toString());
 				IPath linkTarget= cpentry.getLinkTarget();
 				if (linkTarget != null) {
@@ -312,7 +312,7 @@ public class CPListLabelProvider extends LabelProvider {
 	
 	private String getVariableString(IPath path) {
 		String name= path.makeRelative().toString();
-		IPath entryPath= JavaCore.getClasspathVariable(path.segment(0));
+		IPath entryPath= JavaScriptCore.getClasspathVariable(path.segment(0));
 		if (entryPath != null) {
 			String appended= entryPath.append(path.removeFirstSegments(1)).toOSString();
 			return Messages.format(NewWizardMessages.CPListLabelProvider_twopart, new String[] { name, appended }); 
@@ -333,13 +333,13 @@ public class CPListLabelProvider extends LabelProvider {
 		}
 		
 		switch (cpentry.getEntryKind()) {
-			case IClasspathEntry.CPE_SOURCE:
+			case IIncludePathEntry.CPE_SOURCE:
 				if (cpentry.getPath().segmentCount() == 1) {
 					return fProjectImage;
 				} else {
 					return fSharedImages.getImageDescriptor(ISharedImages.IMG_OBJS_PACKFRAG_ROOT);
 				}
-			case IClasspathEntry.CPE_LIBRARY:
+			case IIncludePathEntry.CPE_LIBRARY:
 				IResource res= cpentry.getResource();
 				IPath path= (IPath) cpentry.getAttribute(CPListElement.SOURCEATTACHMENT);
 				if (res == null) {
@@ -357,15 +357,15 @@ public class CPListLabelProvider extends LabelProvider {
 				} else {
 					return fSharedImages.getImageDescriptor(ISharedImages.IMG_OBJS_PACKFRAG_ROOT);
 				}
-			case IClasspathEntry.CPE_PROJECT:
+			case IIncludePathEntry.CPE_PROJECT:
 				return fProjectImage;
-			case IClasspathEntry.CPE_VARIABLE:
+			case IIncludePathEntry.CPE_VARIABLE:
 				ImageDescriptor variableImage= fSharedImages.getImageDescriptor(ISharedImages.IMG_OBJS_CLASSPATH_VAR_ENTRY);
 				if (cpentry.isDeprecated()) {
 					return new JavaElementImageDescriptor(variableImage, JavaElementImageDescriptor.DEPRECATED, JavaElementImageProvider.SMALL_SIZE);
 				}
 				return variableImage;
-			case IClasspathEntry.CPE_CONTAINER:
+			case IIncludePathEntry.CPE_CONTAINER:
 				return fSharedImages.getImageDescriptor(ISharedImages.IMG_OBJS_LIBRARY);
 			default:
 				return null;

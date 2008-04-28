@@ -31,12 +31,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
-import org.eclipse.wst.jsdt.core.JavaConventions;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.JavaScriptConventions;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
@@ -103,12 +103,12 @@ public class NewPackageWizardPage extends NewContainerWizardPage {
 	 * @param selection used to initialize the fields
 	 */
 	public void init(IStructuredSelection selection) {
-		IJavaElement jelem= getInitialJavaElement(selection);	
+		IJavaScriptElement jelem= getInitialJavaElement(selection);	
 		
 		initContainerPage(jelem);
 		String pName= ""; //$NON-NLS-1$
 		if (jelem != null) {
-			IPackageFragment pf= (IPackageFragment) jelem.getAncestor(IJavaElement.PACKAGE_FRAGMENT);
+			IPackageFragment pf= (IPackageFragment) jelem.getAncestor(IJavaScriptElement.PACKAGE_FRAGMENT);
 			if (pf != null && !pf.isDefaultPackage())
 				pName= pf.getElementName();
 		}
@@ -205,13 +205,13 @@ public class NewPackageWizardPage extends NewContainerWizardPage {
 	// ----------- validation ----------
 	
 	private IStatus validatePackageName(String text) {
-		IJavaProject project= getJavaProject();
+		IJavaScriptProject project= getJavaProject();
 		if (project == null || !project.exists()) {
-			return JavaConventions.validatePackageName(text, JavaCore.VERSION_1_3, JavaCore.VERSION_1_3);
+			return JavaScriptConventions.validatePackageName(text, JavaScriptCore.VERSION_1_3, JavaScriptCore.VERSION_1_3);
 		}
-		String sourceLevel= project.getOption(JavaCore.COMPILER_SOURCE, true);
-		String compliance= project.getOption(JavaCore.COMPILER_COMPLIANCE, true);
-		return JavaConventions.validatePackageName(text, sourceLevel, compliance);
+		String sourceLevel= project.getOption(JavaScriptCore.COMPILER_SOURCE, true);
+		String compliance= project.getOption(JavaScriptCore.COMPILER_COMPLIANCE, true);
+		return JavaScriptConventions.validatePackageName(text, sourceLevel, compliance);
 	}
 	
 	/*

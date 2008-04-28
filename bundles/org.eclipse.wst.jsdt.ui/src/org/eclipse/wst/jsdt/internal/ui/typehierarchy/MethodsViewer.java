@@ -30,8 +30,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.wst.jsdt.core.IMethod;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.IFunction;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
@@ -274,10 +274,10 @@ public class MethodsViewer extends ProblemTableViewer {
 				Object[] currElements= getFilteredChildren(getInput());
 				for (int i= 0; i < oldSelections.size(); i++) {
 					Object curr= oldSelections.get(i);
-					if (curr instanceof IMethod && !newSelections.contains(curr)) {
-						IMethod method= (IMethod) curr;
+					if (curr instanceof IFunction && !newSelections.contains(curr)) {
+						IFunction method= (IFunction) curr;
 						if (method.exists()) {
-							IMethod similar= findSimilarMethod(method, currElements);
+							IFunction similar= findSimilarMethod(method, currElements);
 							if (similar != null) {
 								newSelectionElements.add(similar);
 							}
@@ -289,7 +289,7 @@ public class MethodsViewer extends ProblemTableViewer {
 				} else if (currElements.length > 0) {
 					newSelection= new StructuredSelection(currElements[0]);
 				}
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				JavaPlugin.log(e);
 			}
 		}
@@ -297,15 +297,15 @@ public class MethodsViewer extends ProblemTableViewer {
 		updateSelection(newSelection);
 	}
 	
-	private IMethod findSimilarMethod(IMethod meth, Object[] elements) throws JavaModelException {
+	private IFunction findSimilarMethod(IFunction meth, Object[] elements) throws JavaScriptModelException {
 		String name= meth.getElementName();
 		String[] paramTypes= meth.getParameterTypes();
 		boolean isConstructor= meth.isConstructor();
 		
 		for (int i= 0; i < elements.length; i++) {
 			Object curr= elements[i];
-			if (curr instanceof IMethod && JavaModelUtil.isSameMethodSignature(name, paramTypes, isConstructor, (IMethod) curr)) {
-				return (IMethod) curr;
+			if (curr instanceof IFunction && JavaModelUtil.isSameMethodSignature(name, paramTypes, isConstructor, (IFunction) curr)) {
+				return (IFunction) curr;
 			}
 		}
 		return null;

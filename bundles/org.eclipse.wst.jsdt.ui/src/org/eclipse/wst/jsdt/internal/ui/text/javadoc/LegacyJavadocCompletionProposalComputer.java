@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.ui.JavaUI;
 import org.eclipse.wst.jsdt.ui.text.java.ContentAssistInvocationContext;
@@ -75,7 +75,7 @@ public class LegacyJavadocCompletionProposalComputer implements IJavaCompletionP
 		if (context instanceof JavaContentAssistInvocationContext) {
 			JavaContentAssistInvocationContext javaContext= (JavaContentAssistInvocationContext) context;
 			
-			ICompilationUnit cu= javaContext.getCompilationUnit();
+			IJavaScriptUnit cu= javaContext.getCompilationUnit();
 			int offset= javaContext.getInvocationOffset();
 			
 			ArrayList result= new ArrayList();
@@ -106,7 +106,7 @@ public class LegacyJavadocCompletionProposalComputer implements IJavaCompletionP
 		if (context instanceof JavadocContentAssistInvocationContext) {
 			JavadocContentAssistInvocationContext javaContext= (JavadocContentAssistInvocationContext) context;
 			
-			ICompilationUnit cu= javaContext.getCompilationUnit();
+			IJavaScriptUnit cu= javaContext.getCompilationUnit();
 			int offset= javaContext.getInvocationOffset();
 			int length= javaContext.getSelectionLength();
 			Point selection= javaContext.getViewer().getSelectedRange();

@@ -35,7 +35,7 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.RefactoringStatusEntry;
 import org.eclipse.text.edits.TextEdit;
 import org.eclipse.text.edits.TextEditGroup;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.dom.AST;
 import org.eclipse.wst.jsdt.core.dom.ASTNode;
 import org.eclipse.wst.jsdt.core.dom.ASTVisitor;
@@ -45,7 +45,7 @@ import org.eclipse.wst.jsdt.core.dom.Assignment;
 import org.eclipse.wst.jsdt.core.dom.Block;
 import org.eclipse.wst.jsdt.core.dom.BodyDeclaration;
 import org.eclipse.wst.jsdt.core.dom.CastExpression;
-import org.eclipse.wst.jsdt.core.dom.CompilationUnit;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
 import org.eclipse.wst.jsdt.core.dom.DoStatement;
 import org.eclipse.wst.jsdt.core.dom.EnhancedForStatement;
 import org.eclipse.wst.jsdt.core.dom.Expression;
@@ -54,13 +54,13 @@ import org.eclipse.wst.jsdt.core.dom.FieldDeclaration;
 import org.eclipse.wst.jsdt.core.dom.ForInStatement;
 import org.eclipse.wst.jsdt.core.dom.ForStatement;
 import org.eclipse.wst.jsdt.core.dom.IBinding;
-import org.eclipse.wst.jsdt.core.dom.IMethodBinding;
+import org.eclipse.wst.jsdt.core.dom.IFunctionBinding;
 import org.eclipse.wst.jsdt.core.dom.ITypeBinding;
 import org.eclipse.wst.jsdt.core.dom.IVariableBinding;
 import org.eclipse.wst.jsdt.core.dom.IfStatement;
 import org.eclipse.wst.jsdt.core.dom.LabeledStatement;
-import org.eclipse.wst.jsdt.core.dom.MethodDeclaration;
-import org.eclipse.wst.jsdt.core.dom.MethodInvocation;
+import org.eclipse.wst.jsdt.core.dom.FunctionDeclaration;
+import org.eclipse.wst.jsdt.core.dom.FunctionInvocation;
 import org.eclipse.wst.jsdt.core.dom.Modifier;
 import org.eclipse.wst.jsdt.core.dom.Name;
 import org.eclipse.wst.jsdt.core.dom.ParenthesizedExpression;
@@ -102,7 +102,7 @@ import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 
 public class CallInliner {
 
-	private ICompilationUnit fCUnit;
+	private IJavaScriptUnit fCUnit;
 	private ASTRewrite fRewrite;
 	private ImportRewrite fImportRewrite;
 	private ITextFileBuffer fBuffer;
@@ -181,17 +181,17 @@ public class CallInliner {
 	private static class AmbiguousMethodAnalyzer implements TypeBindingVisitor {
 		private TypeEnvironment fTypeEnvironment;
 		private TType[] fTypes;
-		private IMethodBinding fOriginal;
+		private IFunctionBinding fOriginal;
 
-		public AmbiguousMethodAnalyzer(TypeEnvironment typeEnvironment, IMethodBinding original, TType[] types) {
+		public AmbiguousMethodAnalyzer(TypeEnvironment typeEnvironment, IFunctionBinding original, TType[] types) {
 			fTypeEnvironment= typeEnvironment;
 			fOriginal= original;
 			fTypes= types;
 		}
 		public boolean visit(ITypeBinding node) {
-			IMethodBinding[] methods= node.getDeclaredMethods();
+			IFunctionBinding[] methods= node.getDeclaredMethods();
 			for (int i= 0; i < methods.length; i++) {
-				IMethodBinding candidate= methods[i];
+				IFunctionBinding candidate= methods[i];
 				if (candidate == fOriginal) {
 					continue;
 				}
@@ -207,7 +207,7 @@ public class CallInliner {
 		 * Returns <code>true</code> if the method can be called without explicit casts; 
 		 * otherwise <code>false</code>.
 		 */
-		private boolean canImplicitlyCall(IMethodBinding candidate) {
+		private boolean canImplicitlyCall(IFunctionBinding candidate) {
 			ITypeBinding[] parameters= candidate.getParameterTypes();
 			if (parameters.length != fTypes.length) {
 				return false;
@@ -221,7 +221,7 @@ public class CallInliner {
 		}
 	}
 
-	public CallInliner(ICompilationUnit unit, CompilationUnit targetAstRoot, SourceProvider provider) throws CoreException {
+	public CallInliner(IJavaScriptUnit unit, JavaScriptUnit targetAstRoot, SourceProvider provider) throws CoreException {
 		super();
 		fCUnit= unit;
 		fBuffer= RefactoringFileBuffers.acquire(fCUnit);
@@ -308,7 +308,7 @@ public class CallInliner {
 
 	// the checks depend on invocation context and therefore can't be done in SourceAnalyzer
 	private void checkMethodDeclaration(RefactoringStatus result, int severity) {
-		MethodDeclaration methodDeclaration= fSourceProvider.getDeclaration();
+		FunctionDeclaration methodDeclaration= fSourceProvider.getDeclaration();
 		// it is not allowed to inline constructor invocation only if it is used for class instance creation
 		// if constructor is invoked from another constructor then we can inline such invocation
 		if (fInvocation.getNodeType() != ASTNode.CONSTRUCTOR_INVOCATION && methodDeclaration.isConstructor()) {
@@ -318,7 +318,7 @@ public class CallInliner {
 				JavaStatusContext.create(fCUnit, fInvocation)));
 		}
 		if (fSourceProvider.hasSuperMethodInvocation() && fInvocation.getNodeType() == ASTNode.METHOD_INVOCATION) {
-			Expression receiver= ((MethodInvocation)fInvocation).getExpression();
+			Expression receiver= ((FunctionInvocation)fInvocation).getExpression();
 			if (receiver instanceof ThisExpression) {
 				result.addEntry(new RefactoringStatusEntry(
 					severity,
@@ -330,7 +330,7 @@ public class CallInliner {
 
 	private void checkInvocationContext(RefactoringStatus result, int severity) {
 		if (fInvocation.getNodeType() == ASTNode.METHOD_INVOCATION) {
-			Expression exp= ((MethodInvocation)fInvocation).getExpression();
+			Expression exp= ((FunctionInvocation)fInvocation).getExpression();
 			if (exp != null && exp.resolveTypeBinding() == null) {
 				addEntry(result, RefactoringCoreMessages.CallInliner_receiver_type, 
 					RefactoringStatusCodes.INLINE_METHOD_NULL_BINDING, severity);
@@ -622,7 +622,7 @@ public class CallInliner {
 			if (fContext.callMode == ASTNode.EXPRESSION_STATEMENT && fSourceProvider.hasReturnValue()) {
 				if (fSourceProvider.mustEvaluateReturnedExpression()) {
 					if (fSourceProvider.returnValueNeedsLocalVariable()) {
-						IMethodBinding invocation= Invocations.resolveBinding(fInvocation);
+						IFunctionBinding invocation= Invocations.resolveBinding(fInvocation);
 						node= createLocalDeclaration(
 							invocation.getReturnType(), 
 							fInvocationScope.createName(fSourceProvider.getMethodName(), true), 
@@ -682,10 +682,10 @@ public class CallInliner {
 		ASTNode parent= fTargetNode.getParent();
 		int nodeType= parent.getNodeType();
 		if (nodeType == ASTNode.METHOD_INVOCATION) {
-			MethodInvocation methodInvocation= (MethodInvocation)parent;
+			FunctionInvocation methodInvocation= (FunctionInvocation)parent;
 			if(methodInvocation.getExpression() == fTargetNode)
 				return false;
-			IMethodBinding method= methodInvocation.resolveMethodBinding();
+			IFunctionBinding method= methodInvocation.resolveMethodBinding();
 			if (method == null) {
 				status.addError(RefactoringCoreMessages.CallInliner_cast_analysis_error,  
 					JavaStatusContext.create(fCUnit, methodInvocation));

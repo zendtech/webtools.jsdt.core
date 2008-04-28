@@ -50,25 +50,25 @@ import org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor;
 import org.eclipse.ltk.core.refactoring.participants.RenameArguments;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.wst.jsdt.core.Flags;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IField;
 import org.eclipse.wst.jsdt.core.IImportDeclaration;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.ILocalVariable;
 import org.eclipse.wst.jsdt.core.IMember;
-import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.ISourceRange;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.ITypeHierarchy;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.core.dom.AST;
 import org.eclipse.wst.jsdt.core.dom.ASTVisitor;
-import org.eclipse.wst.jsdt.core.dom.CompilationUnit;
-import org.eclipse.wst.jsdt.core.dom.MethodDeclaration;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
+import org.eclipse.wst.jsdt.core.dom.FunctionDeclaration;
 import org.eclipse.wst.jsdt.core.dom.Modifier;
 import org.eclipse.wst.jsdt.core.dom.TypeDeclaration;
 import org.eclipse.wst.jsdt.core.refactoring.IJavaElementMapper;
@@ -76,8 +76,8 @@ import org.eclipse.wst.jsdt.core.refactoring.IJavaRefactorings;
 import org.eclipse.wst.jsdt.core.refactoring.RenameTypeArguments;
 import org.eclipse.wst.jsdt.core.refactoring.descriptors.JavaRefactoringDescriptor;
 import org.eclipse.wst.jsdt.core.refactoring.descriptors.RenameJavaElementDescriptor;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchConstants;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchScope;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchConstants;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.core.search.SearchMatch;
 import org.eclipse.wst.jsdt.core.search.SearchPattern;
 import org.eclipse.wst.jsdt.core.search.TypeReferenceMatch;
@@ -146,13 +146,13 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 	// --- similar elements
 
 	private boolean fUpdateSimilarElements;
-	private Map/* <IJavaElement, String> */fFinalSimilarElementToName= null;
+	private Map/* <IJavaScriptElement, String> */fFinalSimilarElementToName= null;
 	private int fRenamingStrategy;
 
 	// Preloaded information for the UI.
-	private LinkedHashMap/* <IJavaElement, String> */fPreloadedElementToName= null;
-	private Map/* <IJavaElement, Boolean> */fPreloadedElementToSelection= null;
-	private LinkedHashMap/* <IJavaElement, String> */fPreloadedElementToNameDefault= null;
+	private LinkedHashMap/* <IJavaScriptElement, String> */fPreloadedElementToName= null;
+	private Map/* <IJavaScriptElement, Boolean> */fPreloadedElementToSelection= null;
+	private LinkedHashMap/* <IJavaScriptElement, String> */fPreloadedElementToNameDefault= null;
 
 	// Cache information to decide whether to
 	// re-update references and preload info
@@ -228,7 +228,7 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 		result.rename(fType, new RenameTypeArguments(getNewElementName(), getUpdateReferences(), 
 			getUpdateSimilarDeclarations(), getSimilarElements()), createParticipantDescriptorFilter());
 		if (isPrimaryType()) {
-			ICompilationUnit cu= fType.getCompilationUnit();
+			IJavaScriptUnit cu= fType.getCompilationUnit();
 			String newCUName= getNewCompilationUnit().getElementName();
 			result.rename(cu, new RenameArguments(newCUName, getUpdateReferences()));
 		}
@@ -241,7 +241,7 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 	private boolean isPrimaryType() {
 		String cuName= fType.getCompilationUnit().getElementName();
 		String typeName= fType.getElementName();
-		return Checks.isTopLevel(fType) && JavaCore.removeJavaLikeExtension(cuName).equals(typeName);
+		return Checks.isTopLevel(fType) && JavaScriptCore.removeJavaLikeExtension(cuName).equals(typeName);
 	}
 	
 	//---- IRenameProcessor ----------------------------------------------
@@ -270,8 +270,8 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 		}
 	}
 
-	private ICompilationUnit getNewCompilationUnit() {
-		ICompilationUnit cu= fType.getCompilationUnit();
+	private IJavaScriptUnit getNewCompilationUnit() {
+		IJavaScriptUnit cu= fType.getCompilationUnit();
 		if (isPrimaryType()) {
 			IPackageFragment parent= fType.getPackageFragment();
 			String renamedCUName= JavaModelUtil.getRenamedCUName(cu, getNewElementName());
@@ -394,11 +394,11 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 	 * ILocalVariables. Returns <code>null</code> iff similar declaration updating
 	 * is not requested.
 	 */
-	public IJavaElement[] getSimilarElements() {
+	public IJavaScriptElement[] getSimilarElements() {
 		if (fFinalSimilarElementToName == null)
 			return null;
 		Set keys= fFinalSimilarElementToName.keySet();
-		return (IJavaElement[])keys.toArray(new IJavaElement[keys.size()]);
+		return (IJavaScriptElement[])keys.toArray(new IJavaScriptElement[keys.size()]);
 	}
 
 	/**
@@ -415,8 +415,8 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 	/**
 	 * {@inheritDoc}
 	 */
-	public IJavaElement getRefactoredJavaElement(IJavaElement element) {
-		if (element instanceof ICompilationUnit) {
+	public IJavaScriptElement getRefactoredJavaElement(IJavaScriptElement element) {
+		if (element instanceof IJavaScriptUnit) {
 			if (Checks.isTopLevel(fType) && element.equals(fType.getCompilationUnit()))
 				return getNewCompilationUnit();
 		} else if (element instanceof IMember) {
@@ -551,11 +551,11 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 	 * May be called from the UI.
 	 * @param monitor 
 	 * @return initialization status 
-	 * @throws JavaModelException some fundamental error with the underlying model
+	 * @throws JavaScriptModelException some fundamental error with the underlying model
 	 * @throws OperationCanceledException if user canceled the task
 	 * 
 	 */
-	public RefactoringStatus initializeReferences(IProgressMonitor monitor) throws JavaModelException, OperationCanceledException {
+	public RefactoringStatus initializeReferences(IProgressMonitor monitor) throws JavaScriptModelException, OperationCanceledException {
 
 		Assert.isNotNull(fType);
 		Assert.isNotNull(getNewElementName());
@@ -574,7 +574,7 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 
 		
 		try {
-			SearchPattern pattern= SearchPattern.createPattern(fType, IJavaSearchConstants.REFERENCES, SearchUtils.GENERICS_AGNOSTIC_MATCH_RULE);
+			SearchPattern pattern= SearchPattern.createPattern(fType, IJavaScriptSearchConstants.REFERENCES, SearchUtils.GENERICS_AGNOSTIC_MATCH_RULE);
 			fReferences= RefactoringSearchEngine.search(
 					pattern,
 					RefactoringScopeFactory.create(fType),
@@ -595,7 +595,7 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 				RenamingNameSuggestor sugg= new RenamingNameSuggestor(fRenamingStrategy);
 
 				for (int i= 0; i < fReferences.length; i++) {
-					final ICompilationUnit cu= fReferences[i].getCompilationUnit();
+					final IJavaScriptUnit cu= fReferences[i].getCompilationUnit();
 					if (cu == null)
 						continue;
 
@@ -614,14 +614,14 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 						else
 							matches.add(match.getElement());
 
-						final IJavaElement[] others= match.getOtherElements();
+						final IJavaScriptElement[] others= match.getOtherElements();
 						if (others != null)
 							matches.addAll(Arrays.asList(others));
 
 						for (Iterator iter= matches.iterator(); iter.hasNext();) {
-							final IJavaElement element= (IJavaElement) iter.next();
+							final IJavaScriptElement element= (IJavaScriptElement) iter.next();
 
-							if (! (element instanceof IMethod) && ! (element instanceof IField) && ! (element instanceof ILocalVariable))
+							if (! (element instanceof IFunction) && ! (element instanceof IField) && ! (element instanceof ILocalVariable))
 								continue;
 							
 							if (!isInDeclaredType(match.getOffset(), element))
@@ -636,8 +636,8 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 									fPreloadedElementToName.put(currentField, newFieldName);
 							}
 
-							if (element instanceof IMethod) {
-								final IMethod currentMethod= (IMethod) element;
+							if (element instanceof IFunction) {
+								final IFunction currentMethod= (IFunction) element;
 								addMethodRename(unQualifiedTypeName, sugg, currentMethod);
 							}
 
@@ -646,7 +646,7 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 								final boolean isParameter;
 								
 								if (JavaModelUtil.isParameter(currentLocal)) {
-									addMethodRename(unQualifiedTypeName, sugg, (IMethod) currentLocal.getParent());
+									addMethodRename(unQualifiedTypeName, sugg, (IFunction) currentLocal.getParent());
 									isParameter= true;
 								} else
 									isParameter= false;
@@ -665,7 +665,7 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 			}
 
 			for (Iterator iter= fPreloadedElementToName.keySet().iterator(); iter.hasNext();) {
-				IJavaElement element= (IJavaElement) iter.next();
+				IJavaScriptElement element= (IJavaScriptElement) iter.next();
 				fPreloadedElementToSelection.put(element, Boolean.TRUE);
 			}
 			fPreloadedElementToNameDefault= (LinkedHashMap) fPreloadedElementToName.clone();
@@ -685,13 +685,13 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 	 * reference) lies before the element name of its enclosing java element,
 	 * false if not. In other words: If this method returns true, the match is
 	 * the declared type (or return type) of the enclosing element.
-	 * @throws JavaModelException 
+	 * @throws JavaScriptModelException 
 	 * 
 	 */
-	private boolean isInDeclaredType(int matchOffset, IJavaElement parentElement) throws JavaModelException {
+	private boolean isInDeclaredType(int matchOffset, IJavaScriptElement parentElement) throws JavaScriptModelException {
 		if (parentElement != null) {
 			int enclosingNameOffset= 0;
-			if (parentElement instanceof IMethod || parentElement instanceof IField)
+			if (parentElement instanceof IFunction || parentElement instanceof IField)
 				enclosingNameOffset= ((IMember) parentElement).getNameRange().getOffset();
 			else if (parentElement instanceof ILocalVariable)
 				enclosingNameOffset= ((ILocalVariable) parentElement).getNameRange().getOffset();
@@ -701,7 +701,7 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 		return false;
 	}
 	
-	private void addMethodRename(final String unQualifiedTypeName, RenamingNameSuggestor sugg, final IMethod currentMethod) throws JavaModelException {
+	private void addMethodRename(final String unQualifiedTypeName, RenamingNameSuggestor sugg, final IFunction currentMethod) throws JavaScriptModelException {
 		if (!currentMethod.isConstructor()) {
 			final String newMethodName= sugg.suggestNewMethodName(currentMethod.getElementName(), unQualifiedTypeName, getNewElementName());
 
@@ -737,8 +737,8 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 			
 		String msg= Messages.format(RefactoringCoreMessages.RenameTypeRefactoring_imported, 
 											new Object[]{getNewElementName(), fType.getCompilationUnit().getResource().getFullPath()});
-		IJavaElement grandParent= imp.getParent().getParent();
-		if (grandParent instanceof ICompilationUnit)
+		IJavaScriptElement grandParent= imp.getParent().getParent();
+		if (grandParent instanceof IJavaScriptUnit)
 			return RefactoringStatus.createErrorStatus(msg, JavaStatusContext.create(imp));
 
 		return null;	
@@ -792,7 +792,7 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 		return null;
 	}
 	
-	private static IImportDeclaration getImportedType(ICompilationUnit cu, String typeName) throws CoreException {
+	private static IImportDeclaration getImportedType(IJavaScriptUnit cu, String typeName) throws CoreException {
 		IImportDeclaration[] imports= cu.getImports();
 		String dotTypeName= "." + typeName; //$NON-NLS-1$
 		for (int i= 0; i < imports.length; i++){
@@ -803,7 +803,7 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 	}
 	
 	private RefactoringStatus checkForMethodsWithConstructorNames()  throws CoreException{
-		IMethod[] methods= fType.getMethods();
+		IFunction[] methods= fType.getMethods();
 		for (int i= 0; i < methods.length; i++){
 			if (methods[i].isConstructor())
 				continue;
@@ -838,7 +838,7 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 	private RefactoringStatus analyseEnclosedTypes() throws CoreException {
 		final ISourceRange typeRange= fType.getSourceRange();
 		final RefactoringStatus result= new RefactoringStatus();
-		CompilationUnit cuNode= new RefactoringASTParser(AST.JLS3).parse(fType.getCompilationUnit(), false);
+		JavaScriptUnit cuNode= new RefactoringASTParser(AST.JLS3).parse(fType.getCompilationUnit(), false);
 		cuNode.accept(new ASTVisitor(){
 			
 			public boolean visit(TypeDeclaration node){ // enums and annotations can't be local
@@ -862,7 +862,7 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 						result.addError(msg, context);
 				}
 		
-				MethodDeclaration[] methods= node.getMethods();
+				FunctionDeclaration[] methods= node.getMethods();
 				for (int i= 0; i < methods.length; i++) {
 					if (Modifier.isNative(methods[i].getModifiers())){
 						RefactoringStatusContext	context= JavaStatusContext.create(fType.getCompilationUnit(), methods[i]);
@@ -876,8 +876,8 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 		return result;
 	}
 	
-	private static ICompilationUnit getCompilationUnit(IImportDeclaration imp) {
-		return (ICompilationUnit)imp.getParent().getParent();
+	private static IJavaScriptUnit getCompilationUnit(IImportDeclaration imp) {
+		return (IJavaScriptUnit)imp.getParent().getParent();
 	}
 	
 	private void analyzeImportedTypes(IType[] types, RefactoringStatus result, IImportDeclaration imp) throws CoreException {
@@ -891,7 +891,7 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 		}
 	}
 	
-	private static IJavaElement convertFromImportDeclaration(IImportDeclaration declaration) throws CoreException {
+	private static IJavaScriptElement convertFromImportDeclaration(IImportDeclaration declaration) throws CoreException {
 			if (declaration.isOnDemand()){ 
 				String packageName= declaration.getElementName().substring(0, declaration.getElementName().length() - 2);
 				return JavaModelUtil.findTypeContainer(declaration.getJavaProject(), packageName);
@@ -903,12 +903,12 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 		if (!imp.isOnDemand())
 			return; //analyzed earlier
 		
-		IJavaElement imported= convertFromImportDeclaration(imp);
+		IJavaScriptElement imported= convertFromImportDeclaration(imp);
 		if (imported == null)
 			return;
 			
 		if (imported instanceof IPackageFragment){
-			ICompilationUnit[] cus= ((IPackageFragment)imported).getCompilationUnits();
+			IJavaScriptUnit[] cus= ((IPackageFragment)imported).getCompilationUnits();
 			for (int i= 0; i < cus.length; i++) {
 				analyzeImportedTypes(cus[i].getTypes(), result, imp);
 			}	
@@ -933,15 +933,15 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 	
 	private RefactoringStatus checkConflictingTypes(IProgressMonitor pm) throws CoreException {
 		RefactoringStatus result= new RefactoringStatus();
-		IJavaSearchScope scope= RefactoringScopeFactory.create(fType);
+		IJavaScriptSearchScope scope= RefactoringScopeFactory.create(fType);
 		SearchPattern pattern= SearchPattern.createPattern(getNewElementName(),
-				IJavaSearchConstants.TYPE, IJavaSearchConstants.ALL_OCCURRENCES, SearchUtils.GENERICS_AGNOSTIC_MATCH_RULE);
-		ICompilationUnit[] cusWithReferencesToConflictingTypes= RefactoringSearchEngine.findAffectedCompilationUnits(pattern, scope, pm, result);
+				IJavaScriptSearchConstants.TYPE, IJavaScriptSearchConstants.ALL_OCCURRENCES, SearchUtils.GENERICS_AGNOSTIC_MATCH_RULE);
+		IJavaScriptUnit[] cusWithReferencesToConflictingTypes= RefactoringSearchEngine.findAffectedCompilationUnits(pattern, scope, pm, result);
 		if (cusWithReferencesToConflictingTypes.length == 0)
 			return result;
-		ICompilationUnit[] 	cusWithReferencesToRenamedType= getCus(fReferences);
+		IJavaScriptUnit[] 	cusWithReferencesToRenamedType= getCus(fReferences);
 
-		ICompilationUnit[] intersection= isIntersectionEmpty(cusWithReferencesToRenamedType, cusWithReferencesToConflictingTypes);
+		IJavaScriptUnit[] intersection= isIntersectionEmpty(cusWithReferencesToRenamedType, cusWithReferencesToConflictingTypes);
 		if (intersection.length == 0)
 			return result;
 		
@@ -954,24 +954,24 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 		return result;
 	}
 	
-	private static ICompilationUnit[] isIntersectionEmpty(ICompilationUnit[] a1, ICompilationUnit[] a2){
+	private static IJavaScriptUnit[] isIntersectionEmpty(IJavaScriptUnit[] a1, IJavaScriptUnit[] a2){
 		Set set1= new HashSet(Arrays.asList(a1));
 		Set set2= new HashSet(Arrays.asList(a2));
 		set1.retainAll(set2);
-		return (ICompilationUnit[]) set1.toArray(new ICompilationUnit[set1.size()]);
+		return (IJavaScriptUnit[]) set1.toArray(new IJavaScriptUnit[set1.size()]);
 	}
 	
-	private static ICompilationUnit[] getCus(SearchResultGroup[] searchResultGroups){
+	private static IJavaScriptUnit[] getCus(SearchResultGroup[] searchResultGroups){
 		List cus= new ArrayList(searchResultGroups.length);
 		for (int i= 0; i < searchResultGroups.length; i++) {
-			ICompilationUnit cu= searchResultGroups[i].getCompilationUnit();
+			IJavaScriptUnit cu= searchResultGroups[i].getCompilationUnit();
 			if (cu != null)
 				cus.add(cu);
 		}
-		return (ICompilationUnit[]) cus.toArray(new ICompilationUnit[cus.size()]);
+		return (IJavaScriptUnit[]) cus.toArray(new IJavaScriptUnit[cus.size()]);
 	}
 	
-	private static String getFullPath(ICompilationUnit cu) {
+	private static String getFullPath(IJavaScriptUnit cu) {
 		Assert.isTrue(cu.exists());
 		return cu.getResource().getFullPath().toString();
 	}
@@ -980,7 +980,7 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 		try {
 			monitor.beginTask(RefactoringCoreMessages.RenameTypeRefactoring_creating_change, 4);
 			String project= null;
-			IJavaProject javaProject= fType.getJavaProject();
+			IJavaScriptProject javaProject= fType.getJavaProject();
 			if (javaProject != null)
 				project= javaProject.getElementName();
 			int flags= JavaRefactoringDescriptor.JAR_MIGRATION | JavaRefactoringDescriptor.JAR_REFACTORING | RefactoringDescriptor.STRUCTURAL_CHANGE;
@@ -989,7 +989,7 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 					flags|= RefactoringDescriptor.MULTI_CHANGE;
 				if (fType.isAnonymous() || fType.isLocal())
 					flags|= JavaRefactoringDescriptor.JAR_SOURCE_ATTACHMENT;
-			} catch (JavaModelException exception) {
+			} catch (JavaScriptModelException exception) {
 				JavaPlugin.log(exception);
 			}
 			final String description= Messages.format(RefactoringCoreMessages.RenameTypeProcessor_descriptor_description_short, fType.getElementName());
@@ -1053,7 +1053,7 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 	}
 	
 	private boolean willRenameCU() throws CoreException{
-		String name = JavaCore.removeJavaLikeExtension(fType.getCompilationUnit().getElementName());
+		String name = JavaScriptCore.removeJavaLikeExtension(fType.getCompilationUnit().getElementName());
 		if (! (Checks.isTopLevel(fType) && name.equals(fType.getElementName())))
 			return false;
 		if (! checkNewPathValidity().isOK())
@@ -1103,13 +1103,13 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 	private void addTypeDeclarationUpdate(TextChangeManager manager) throws CoreException {
 		String name= RefactoringCoreMessages.RenameTypeRefactoring_update; 
 		int typeNameLength= fType.getElementName().length();
-		ICompilationUnit cu= fType.getCompilationUnit();
+		IJavaScriptUnit cu= fType.getCompilationUnit();
 		TextChangeCompatibility.addTextEdit(manager.get(cu), name, new ReplaceEdit(fType.getNameRange().getOffset(), typeNameLength, getNewElementName()));
 	}
 	
 	private void addConstructorRenames(TextChangeManager manager) throws CoreException {
-		ICompilationUnit cu= fType.getCompilationUnit();
-		IMethod[] methods= fType.getMethods();
+		IJavaScriptUnit cu= fType.getCompilationUnit();
+		IFunction[] methods= fType.getMethods();
 		int typeNameLength= fType.getElementName().length();
 		for (int i= 0; i < methods.length; i++){
 			if (methods[i].isConstructor()) {
@@ -1128,7 +1128,7 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 	private void addReferenceUpdates(TextChangeManager manager, IProgressMonitor pm) {
 		pm.beginTask("", fReferences.length); //$NON-NLS-1$
 		for (int i= 0; i < fReferences.length; i++){
-			ICompilationUnit cu= fReferences[i].getCompilationUnit();
+			IJavaScriptUnit cu= fReferences[i].getCompilationUnit();
 			if (cu == null)
 				continue;
 					
@@ -1158,8 +1158,8 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 			final JavaRefactoringArguments extended= (JavaRefactoringArguments) arguments;
 			final String handle= extended.getAttribute(JDTRefactoringDescriptor.ATTRIBUTE_INPUT);
 			if (handle != null) {
-				final IJavaElement element= JDTRefactoringDescriptor.handleToElement(extended.getProject(), handle, false);
-				if (element == null || !element.exists() || element.getElementType() != IJavaElement.TYPE)
+				final IJavaScriptElement element= JDTRefactoringDescriptor.handleToElement(extended.getProject(), handle, false);
+				if (element == null || !element.exists() || element.getElementType() != IJavaScriptElement.TYPE)
 					return ScriptableRefactoring.createInputFatalStatus(element, getRefactoring().getName(), IJavaRefactorings.RENAME_TYPE);
 				else
 					fType= (IType) element;
@@ -1227,8 +1227,8 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 		final List processors= new ArrayList();
 		fFinalSimilarElementToName= new HashMap();
 		
-		CompilationUnit currentResolvedCU= null;
-		ICompilationUnit currentCU= null;
+		JavaScriptUnit currentResolvedCU= null;
+		IJavaScriptUnit currentCU= null;
 		
 		int current= 0;
 		final int max= fPreloadedElementToName.size();
@@ -1238,7 +1238,7 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 
 		for (Iterator iter= fPreloadedElementToName.keySet().iterator(); iter.hasNext();) {
 
-			final IJavaElement element= (IJavaElement) iter.next();
+			final IJavaScriptElement element= (IJavaScriptElement) iter.next();
 			
 			current++;
 			progressMonitor.worked(3);
@@ -1251,8 +1251,8 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 			if (fFinalSimilarElementToName.containsKey(element))
 				continue;
 			
-			// CompilationUnit changed? (note: fPreloadedElementToName is sorted by CompilationUnit)
-			ICompilationUnit newCU= (ICompilationUnit) element.getAncestor(IJavaElement.COMPILATION_UNIT);
+			// JavaScriptUnit changed? (note: fPreloadedElementToName is sorted by JavaScriptUnit)
+			IJavaScriptUnit newCU= (IJavaScriptUnit) element.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
 			
 			if (!newCU.equals(currentCU)) {
 
@@ -1293,8 +1293,8 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 					return status;
 				fFinalSimilarElementToName.put(currentField, newName);
 			}
-			if (element instanceof IMethod) {
-				IMethod currentMethod= (IMethod) element;
+			if (element instanceof IFunction) {
+				IFunction currentMethod= (IFunction) element;
 				if (MethodChecks.isVirtual(currentMethod)) {
 					
 					final IType declaringType= currentMethod.getDeclaringType();
@@ -1302,13 +1302,13 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 					if (!declaringType.isInterface()) 
 						hierarchy= declaringType.newTypeHierarchy(new NullProgressMonitor());
 					
-					final IMethod topmost= MethodChecks.getTopmostMethod(currentMethod, hierarchy, new NullProgressMonitor());
+					final IFunction topmost= MethodChecks.getTopmostMethod(currentMethod, hierarchy, new NullProgressMonitor());
 					if (topmost != null)
 						currentMethod= topmost;
 					if (handledTopLevelMethods.contains(currentMethod))
 						continue;
 					handledTopLevelMethods.add(currentMethod);
-					final IMethod[] ripples= MethodChecks.getOverriddenMethods(currentMethod, new NullProgressMonitor());
+					final IFunction[] ripples= MethodChecks.getOverriddenMethods(currentMethod, new NullProgressMonitor());
 
 					if (checkForWarnings(warnings, newName, ripples))
 						continue;
@@ -1324,7 +1324,7 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 					}
 				} else {
 					
-					status.merge(checkForConflictingRename(new IMethod[] { currentMethod }, newName));
+					status.merge(checkForConflictingRename(new IFunction[] { currentMethod }, newName));
 					if (status.hasFatalError())
 						break;
 					
@@ -1363,7 +1363,7 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 		return status;
 	}
 
-	private void checkCUCompleteConditions(final RefactoringStatus status, CompilationUnit currentResolvedCU, ICompilationUnit currentCU, List processors) throws CoreException {
+	private void checkCUCompleteConditions(final RefactoringStatus status, JavaScriptUnit currentResolvedCU, IJavaScriptUnit currentCU, List processors) throws CoreException {
 
 		// check local variable conditions
 		List locals= getProcessorsOfType(processors, RenameLocalVariableProcessor.class);
@@ -1415,15 +1415,15 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 	 * 
 	 * @see #checkForConflictingRename(IField, String)
 	 */
-	private RefactoringStatus checkForConflictingRename(IMethod[] methods, String newName) {
+	private RefactoringStatus checkForConflictingRename(IFunction[] methods, String newName) {
 		RefactoringStatus status= new RefactoringStatus();
 		for (Iterator iter= fFinalSimilarElementToName.keySet().iterator(); iter.hasNext();) {
-			IJavaElement element= (IJavaElement) iter.next();
-			if (element instanceof IMethod) {
-				IMethod alreadyRegisteredMethod= (IMethod) element;
+			IJavaScriptElement element= (IJavaScriptElement) iter.next();
+			if (element instanceof IFunction) {
+				IFunction alreadyRegisteredMethod= (IFunction) element;
 				String alreadyRegisteredMethodName= (String) fFinalSimilarElementToName.get(element);
 				for (int i= 0; i < methods.length; i++) {
-					IMethod method2= methods[i];
+					IFunction method2= methods[i];
 					if ( (alreadyRegisteredMethodName.equals(newName)) && (method2.getDeclaringType().equals(alreadyRegisteredMethod.getDeclaringType()))
 							&& (sameParams(alreadyRegisteredMethod, method2))) {
 						String message= Messages.format(RefactoringCoreMessages.RenameTypeProcessor_cannot_rename_methods_same_new_name, new String[] { alreadyRegisteredMethod.getElementName(),
@@ -1437,7 +1437,7 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 		return status;
 	}
 
-	private static boolean sameParams(IMethod method, IMethod method2) {
+	private static boolean sameParams(IFunction method, IFunction method2) {
 
 		if (method.getNumberOfParameters() != method2.getNumberOfParameters())
 			return false;
@@ -1471,7 +1471,7 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 	private RefactoringStatus checkForConflictingRename(IField currentField, String newName) {
 		RefactoringStatus status= new RefactoringStatus();
 		for (Iterator iter= fFinalSimilarElementToName.keySet().iterator(); iter.hasNext();) {
-			IJavaElement element= (IJavaElement) iter.next();
+			IJavaScriptElement element= (IJavaScriptElement) iter.next();
 			if (element instanceof IField) {
 				IField alreadyRegisteredField= (IField) element;
 				String alreadyRegisteredFieldName= (String) fFinalSimilarElementToName.get(element);
@@ -1495,7 +1495,7 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 		// Remove deleted ripple methods from user selection and add warnings
 		for (Iterator iter= warnings.iterator(); iter.hasNext();) {
 			final Warning warning= (Warning) iter.next();
-			final IMethod[] elements= warning.getRipple();
+			final IFunction[] elements= warning.getRipple();
 			if (warning.isSelectionWarning()) {
 				String message= Messages.format(RefactoringCoreMessages.RenameTypeProcessor_deselected_method_is_overridden,
 						new String[] { JavaElementLabels.getElementLabel(elements[0], JavaElementLabels.ALL_DEFAULT),
@@ -1519,7 +1519,7 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 	 * If one of the methods of this ripple was deselected or renamed by
 	 * the user, deselect the whole chain and add warnings.
 	 */
-	private boolean checkForWarnings(final Set warnings, final String newName, final IMethod[] ripples) {
+	private boolean checkForWarnings(final Set warnings, final String newName, final IFunction[] ripples) {
 
 		boolean addSelectionWarning= false;
 		boolean addNameWarning= false;
@@ -1547,11 +1547,11 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 
 	private class Warning {
 
-		private IMethod[] fRipple;
+		private IFunction[] fRipple;
 		private boolean fSelectionWarning;
 		private boolean fNameWarning;
 
-		public Warning(IMethod[] ripple, boolean isSelectionWarning, boolean isNameWarning) {
+		public Warning(IFunction[] ripple, boolean isSelectionWarning, boolean isNameWarning) {
 			fRipple= ripple;
 			fSelectionWarning= isSelectionWarning;
 			fNameWarning= isNameWarning;
@@ -1561,7 +1561,7 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 			return fNameWarning;
 		}
 
-		public IMethod[] getRipple() {
+		public IFunction[] getRipple() {
 			return fRipple;
 		}
 
@@ -1572,13 +1572,13 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 
 	// ----------------- Processor creation --------
 
-	private RenameMethodProcessor createVirtualMethodRenameProcessor(IMethod currentMethod, String newMethodName, IMethod[] ripples, ITypeHierarchy hierarchy) throws JavaModelException {
+	private RenameMethodProcessor createVirtualMethodRenameProcessor(IFunction currentMethod, String newMethodName, IFunction[] ripples, ITypeHierarchy hierarchy) throws JavaScriptModelException {
 		RenameMethodProcessor processor= new RenameVirtualMethodProcessor(currentMethod, ripples, fChangeManager, hierarchy, CATEGORY_METHOD_RENAME);
 		initMethodProcessor(processor, newMethodName);
 		return processor;
 	}
 
-	private RenameMethodProcessor createNonVirtualMethodRenameProcessor(IMethod currentMethod, String newMethodName) {
+	private RenameMethodProcessor createNonVirtualMethodRenameProcessor(IFunction currentMethod, String newMethodName) {
 		RenameMethodProcessor processor= new RenameNonVirtualMethodProcessor(currentMethod, fChangeManager, CATEGORY_METHOD_RENAME);
 		initMethodProcessor(processor, newMethodName);
 		return processor;
@@ -1599,7 +1599,7 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 		return processor;
 	}
 	
-	private RenameLocalVariableProcessor createLocalRenameProcessor(final ILocalVariable local, final String newName, final CompilationUnit compilationUnit) {
+	private RenameLocalVariableProcessor createLocalRenameProcessor(final ILocalVariable local, final String newName, final JavaScriptUnit compilationUnit) {
 		final RenameLocalVariableProcessor processor= new RenameLocalVariableProcessor(local, fChangeManager, compilationUnit, CATEGORY_LOCAL_RENAME);
 		processor.setNewElementName(newName);
 		processor.setUpdateReferences(getUpdateReferences());
@@ -1626,7 +1626,7 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 		final List forbiddenSimpleNames= new ArrayList();
 
 		for (Iterator iter= fFinalSimilarElementToName.keySet().iterator(); iter.hasNext();) {
-			final IJavaElement element= (IJavaElement) iter.next();
+			final IJavaScriptElement element= (IJavaScriptElement) iter.next();
 			if (element instanceof IField) {
 
 				if (forbiddenSimpleNames.contains(element.getElementName()))
@@ -1642,7 +1642,7 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 		}
 
 		for (Iterator iter= fFinalSimilarElementToName.keySet().iterator(); iter.hasNext();) {
-			final IJavaElement element= (IJavaElement) iter.next();
+			final IJavaScriptElement element= (IJavaScriptElement) iter.next();
 			if (element instanceof IField) {
 				final IField field= (IField) element;
 				final String newName= (String) fFinalSimilarElementToName.get(field);
@@ -1655,20 +1655,20 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 	// ------ UI interaction
 
 	/**
-	 * @return the map of similarly named elements (IJavaElement -> String with new name)
+	 * @return the map of similarly named elements (IJavaScriptElement -> String with new name)
 	 * This map is live. Callers may change the new names of the elements; they
 	 * may not change the key set.
 	 */
-	public Map/* <IJavaElement, String> */getSimilarElementsToNewNames() {
+	public Map/* <IJavaScriptElement, String> */getSimilarElementsToNewNames() {
 		return fPreloadedElementToName;
 	}
 
 	/**
-	 * @return the map of similarly named elements (IJavaElement -> Boolean if selected) This
+	 * @return the map of similarly named elements (IJavaScriptElement -> Boolean if selected) This
 	 * map is live. Callers may change the selection status of the elements;
 	 * they may not change the key set.
 	 */
-	public Map/* <IJavaElement, Boolean> */getSimilarElementsToSelection() {
+	public Map/* <IJavaScriptElement, Boolean> */getSimilarElementsToSelection() {
 		return fPreloadedElementToSelection;
 	}
 
@@ -1681,7 +1681,7 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 	public void resetSelectedSimilarElements() {
 		Assert.isNotNull(fPreloadedElementToName);
 		for (Iterator iter= fPreloadedElementToNameDefault.keySet().iterator(); iter.hasNext();) {
-			final IJavaElement element= (IJavaElement) iter.next();
+			final IJavaScriptElement element= (IJavaScriptElement) iter.next();
 			fPreloadedElementToName.put(element, fPreloadedElementToNameDefault.get(element));
 			fPreloadedElementToSelection.put(element, Boolean.TRUE);
 		}

@@ -18,7 +18,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.formatter.DefaultCodeFormatterConstants;
 import org.eclipse.wst.jsdt.internal.ui.preferences.PreferencesAccess;
 import org.eclipse.wst.jsdt.ui.JavaUI;
@@ -33,7 +33,7 @@ public class FormatterProfileManager extends ProfileManager {
 	public final static String DEFAULT_PROFILE= ECLIPSE_PROFILE;
 	
 	private final static KeySet[] KEY_SETS= new KeySet[] {
-		new KeySet(JavaCore.PLUGIN_ID, new ArrayList(DefaultCodeFormatterConstants.getJavaConventionsSettings().keySet())),
+		new KeySet(JavaScriptCore.PLUGIN_ID, new ArrayList(DefaultCodeFormatterConstants.getJavaConventionsSettings().keySet())),
 		new KeySet(JavaUI.ID_PLUGIN, Collections.EMPTY_LIST)	
 	};
 	
@@ -105,10 +105,10 @@ public class FormatterProfileManager extends ProfileManager {
 			profileId= new DefaultScope().getNode(JavaUI.ID_PLUGIN).get(PROFILE_KEY, null);
 			// fix for bug 89739
 			if (DEFAULT_PROFILE.equals(profileId)) { // default default: 
-				IEclipsePreferences node= instanceScope.getNode(JavaCore.PLUGIN_ID);
+				IEclipsePreferences node= instanceScope.getNode(JavaScriptCore.PLUGIN_ID);
 				if (node != null) {
 					String tabSetting= node.get(DefaultCodeFormatterConstants.FORMATTER_TAB_CHAR, null);
-					if (JavaCore.SPACE.equals(tabSetting)) {
+					if (JavaScriptCore.SPACE.equals(tabSetting)) {
 						profileId= JAVA_PROFILE;
 					}
 				}

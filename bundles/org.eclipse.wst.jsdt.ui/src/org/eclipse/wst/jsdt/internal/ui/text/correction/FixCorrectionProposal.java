@@ -27,7 +27,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.wst.jsdt.core.dom.CompilationUnit;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
 import org.eclipse.wst.jsdt.internal.corext.fix.AbstractFix;
 import org.eclipse.wst.jsdt.internal.corext.fix.CleanUpRefactoring;
 import org.eclipse.wst.jsdt.internal.corext.fix.IFix;
@@ -51,7 +51,7 @@ public class FixCorrectionProposal extends LinkedCorrectionProposal implements I
 	
 	private final IFix fFix;
 	private final ICleanUp fCleanUp;
-	private CompilationUnit fCompilationUnit;
+	private JavaScriptUnit fCompilationUnit;
 	
 	public FixCorrectionProposal(IFix fix, ICleanUp cleanUp, int relevance, Image image, IInvocationContext context) {
 		super(fix.getDescription(), fix.getCompilationUnit(), null, relevance, image);

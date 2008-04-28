@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusInfo;
@@ -42,9 +42,9 @@ public class HistoryListAction extends Action {
 		
 		private ListDialogField fHistoryList;
 		private IStatus fHistoryStatus;
-		private IMethod fResult;
+		private IFunction fResult;
 		
-		private HistoryListDialog(Shell shell, IMethod[] elements) {
+		private HistoryListDialog(Shell shell, IFunction[] elements) {
 			super(shell);
 			setTitle(CallHierarchyMessages.HistoryListDialog_title); 
 			
@@ -123,20 +123,20 @@ public class HistoryListAction extends Action {
         		status.setError(""); //$NON-NLS-1$
         		fResult= null;
         	} else {
-        		fResult= (IMethod) selected.get(0);
+        		fResult= (IFunction) selected.get(0);
         	}
         	fHistoryList.enableButton(0, fHistoryList.getSize() > selected.size() && selected.size() != 0);			
         	fHistoryStatus= status;
         	updateStatus(status);	
         }
 				
-		public IMethod getResult() {
+		public IFunction getResult() {
 			return fResult;
 		}
 		
-		public IMethod[] getRemaining() {
+		public IFunction[] getRemaining() {
 			List elems= fHistoryList.getElements();
-			return (IMethod[]) elems.toArray(new IMethod[elems.size()]);
+			return (IFunction[]) elems.toArray(new IFunction[elems.size()]);
 		}	
 		
 		/*
@@ -169,7 +169,7 @@ public class HistoryListAction extends Action {
 	 * @see IAction#run()
 	 */
 	public void run() {
-		IMethod[] historyEntries= fView.getHistoryEntries();
+		IFunction[] historyEntries= fView.getHistoryEntries();
 		HistoryListDialog dialog= new HistoryListDialog(JavaPlugin.getActiveWorkbenchShell(), historyEntries);
 		if (dialog.open() == Window.OK) {
 			fView.setHistoryEntries(dialog.getRemaining());

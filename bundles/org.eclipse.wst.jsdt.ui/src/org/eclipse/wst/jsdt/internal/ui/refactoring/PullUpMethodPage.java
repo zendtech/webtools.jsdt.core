@@ -53,13 +53,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IMember;
-import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.ISourceReference;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.ITypeHierarchy;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.structure.HierarchyProcessor;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.structure.PullUpRefactoring;
@@ -129,7 +129,7 @@ public class PullUpMethodPage extends UserInputWizardPage {
 		}
 
 		public boolean select(final Viewer viewer, final Object parentElement, final Object element) {
-			if (element instanceof IMethod)
+			if (element instanceof IFunction)
 				return true;
 			return fTypesToShow.contains(element);
 		}
@@ -405,14 +405,14 @@ public class PullUpMethodPage extends UserInputWizardPage {
 		fChangedSettings= true;
 	}
 
-	private IMethod[] getCheckedMethods() {
+	private IFunction[] getCheckedMethods() {
 		final Object[] checked= fTreeViewer.getCheckedElements();
 		final List members= new ArrayList(checked.length);
 		for (int i= 0; i < checked.length; i++) {
-			if (checked[i] instanceof IMethod)
+			if (checked[i] instanceof IFunction)
 				members.add(checked[i]);
 		}
-		return (IMethod[]) members.toArray(new IMethod[members.size()]);
+		return (IFunction[]) members.toArray(new IFunction[members.size()]);
 	}
 
 	private ISourceReference getFirstSelectedSourceReference(final SelectionChangedEvent event) {
@@ -481,7 +481,7 @@ public class PullUpMethodPage extends UserInputWizardPage {
 			precheckElements(fTreeViewer);
 			fTreeViewer.expandAll();
 			updateSelectionLabel();
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			ExceptionHandler.handle(e, RefactoringMessages.PullUpInputPage_pull_up1, RefactoringMessages.PullUpInputPage_exception);
 			fTreeViewer.setInput(null);
 		} finally {
@@ -515,7 +515,7 @@ public class PullUpMethodPage extends UserInputWizardPage {
 
 	private void setSourceViewerContents(String contents) {
 		if (contents != null) {
-			final IJavaProject project= getPullUpRefactoring().getPullUpProcessor().getDestinationType().getJavaProject();
+			final IJavaScriptProject project= getPullUpRefactoring().getPullUpProcessor().getDestinationType().getJavaProject();
 			final String[] lines= Strings.convertIntoLines(contents);
 			if (lines.length > 0) {
 				final int indent= Strings.computeIndentUnits(lines[lines.length - 1], project);
@@ -536,7 +536,7 @@ public class PullUpMethodPage extends UserInputWizardPage {
 		super.setVisible(visible);
 	}
 
-	private void showInSourceViewer(final ISourceReference selected) throws JavaModelException {
+	private void showInSourceViewer(final ISourceReference selected) throws JavaScriptModelException {
 		if (selected == null)
 			setSourceViewerContents(null);
 		else
@@ -546,7 +546,7 @@ public class PullUpMethodPage extends UserInputWizardPage {
 	private void treeViewerSelectionChanged(final SelectionChangedEvent event) {
 		try {
 			showInSourceViewer(getFirstSelectedSourceReference(event));
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			ExceptionHandler.handle(e, RefactoringMessages.PullUpInputPage_pull_up1, RefactoringMessages.PullUpInputPage_see_log);
 		}
 	}

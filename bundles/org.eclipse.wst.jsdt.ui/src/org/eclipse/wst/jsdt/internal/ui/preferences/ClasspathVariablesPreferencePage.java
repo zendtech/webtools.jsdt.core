@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.VariableBlock;
@@ -115,11 +115,11 @@ public class ClasspathVariablesPreferencePage extends PreferencePage implements 
 	
 	private String getCurrentSettings() {
 		StringBuffer buf= new StringBuffer();
-		String[] names= JavaCore.getClasspathVariableNames();
+		String[] names= JavaScriptCore.getClasspathVariableNames();
 		for (int i= 0; i < names.length; i++) {
 			String curr= names[i];
 			buf.append(curr).append('\0');
-			IPath val= JavaCore.getClasspathVariable(curr);
+			IPath val= JavaScriptCore.getClasspathVariable(curr);
 			if (val != null) {
 				buf.append(val.toString());
 			}

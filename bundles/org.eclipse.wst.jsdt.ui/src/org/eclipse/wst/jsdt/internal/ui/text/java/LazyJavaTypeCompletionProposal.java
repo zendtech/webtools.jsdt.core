@@ -18,14 +18,14 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.text.edits.TextEdit;
 import org.eclipse.wst.jsdt.core.CompletionProposal;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.Signature;
-import org.eclipse.wst.jsdt.core.dom.CompilationUnit;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
 import org.eclipse.wst.jsdt.core.dom.rewrite.ImportRewrite;
 import org.eclipse.wst.jsdt.internal.corext.codemanipulation.ContextSensitiveImportRewriteContext;
 import org.eclipse.wst.jsdt.internal.corext.codemanipulation.StubUtility;
@@ -46,7 +46,7 @@ public class LazyJavaTypeCompletionProposal extends LazyJavaCompletionProposal {
 	protected static final char[] JDOC_TYPE_TRIGGERS= new char[] { '#', '}', ' ', '.' };
 
 	/** The compilation unit, or <code>null</code> if none is available. */
-	protected final ICompilationUnit fCompilationUnit;
+	protected final IJavaScriptUnit fCompilationUnit;
 
 	private String fQualifiedName;
 	private String fSimpleName;
@@ -83,7 +83,7 @@ public class LazyJavaTypeCompletionProposal extends LazyJavaCompletionProposal {
 		
 		/* Always use the simple name for non-formal javadoc references to types. */
 		// TODO fix
-		 if (fProposal.getKind() == CompletionProposal.TYPE_REF &&  fInvocationContext.getCoreContext().isInJavadocText())
+		 if (fProposal.getKind() == CompletionProposal.TYPE_REF &&  fInvocationContext.getCoreContext().isInJsdocText())
 			 return getSimpleTypeName();
 		
 		String qualifiedTypeName= getQualifiedTypeName();
@@ -120,9 +120,9 @@ public class LazyJavaTypeCompletionProposal extends LazyJavaCompletionProposal {
 		if (fImportRewrite != null) {
 			String packageName=null;
 			try {
-				IJavaElement javaElement = this.getProposalInfo().getJavaElement();
+				IJavaScriptElement javaElement = this.getProposalInfo().getJavaElement();
 				 packageName=JavaModelUtil.getFilePackage(javaElement);
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				JavaPlugin.log(e);
 			}
 			return fImportRewrite.addImport(qualifiedTypeName,packageName, fImportContext);
@@ -155,7 +155,7 @@ public class LazyJavaTypeCompletionProposal extends LazyJavaCompletionProposal {
 	private ImportRewrite createImportRewrite() {
 		if (fCompilationUnit != null && allowAddingImports()) {
 			try {
-				CompilationUnit cu= getASTRoot(fCompilationUnit);
+				JavaScriptUnit cu= getASTRoot(fCompilationUnit);
 				if (cu == null) {
 					ImportRewrite rewrite= StubUtility.createImportRewrite(fCompilationUnit, true);
 					fImportContext= null;
@@ -172,7 +172,7 @@ public class LazyJavaTypeCompletionProposal extends LazyJavaCompletionProposal {
 		return null;
 	}
 
-	private CompilationUnit getASTRoot(ICompilationUnit compilationUnit) {
+	private JavaScriptUnit getASTRoot(IJavaScriptUnit compilationUnit) {
 		return JavaPlugin.getDefault().getASTProvider().getAST(compilationUnit, ASTProvider.WAIT_NO, new NullProgressMonitor());
 	}
 
@@ -230,10 +230,10 @@ public class LazyJavaTypeCompletionProposal extends LazyJavaCompletionProposal {
 	/**
 	 * Remembers the selection in the content assist history.
 	 * 
-	 * @throws JavaModelException if anything goes wrong
+	 * @throws JavaScriptModelException if anything goes wrong
 	 * @since 3.2
 	 */
-	protected final void rememberSelection() throws JavaModelException {
+	protected final void rememberSelection() throws JavaScriptModelException {
 		IType lhs= fInvocationContext.getExpectedType();
 		IType rhs= (IType) getJavaElement();
 		if (lhs != null && rhs != null)
@@ -270,7 +270,7 @@ public class LazyJavaTypeCompletionProposal extends LazyJavaCompletionProposal {
 			// TODO fix
 //			if (!fContext.isInJavadocFormalReference())
 //				return false;
-			if (fProposal.getKind() == CompletionProposal.TYPE_REF &&  fInvocationContext.getCoreContext().isInJavadocText())
+			if (fProposal.getKind() == CompletionProposal.TYPE_REF &&  fInvocationContext.getCoreContext().isInJsdocText())
 				return false;
 			
 			if (!isJavadocProcessingEnabled())
@@ -282,12 +282,12 @@ public class LazyJavaTypeCompletionProposal extends LazyJavaCompletionProposal {
 	}
 
 	private boolean isJavadocProcessingEnabled() {
-		IJavaProject project= fCompilationUnit.getJavaProject();
+		IJavaScriptProject project= fCompilationUnit.getJavaProject();
 		boolean processJavadoc;
 		if (project == null)
-			processJavadoc= JavaCore.ENABLED.equals(JavaCore.getOption(JavaCore.COMPILER_DOC_COMMENT_SUPPORT));
+			processJavadoc= JavaScriptCore.ENABLED.equals(JavaScriptCore.getOption(JavaScriptCore.COMPILER_DOC_COMMENT_SUPPORT));
 		else
-			processJavadoc= JavaCore.ENABLED.equals(project.getOption(JavaCore.COMPILER_DOC_COMMENT_SUPPORT, true));
+			processJavadoc= JavaScriptCore.ENABLED.equals(project.getOption(JavaScriptCore.COMPILER_DOC_COMMENT_SUPPORT, true));
 		return processJavadoc;
 	}
 
@@ -329,7 +329,7 @@ public class LazyJavaTypeCompletionProposal extends LazyJavaCompletionProposal {
 	 */
 	protected ProposalInfo computeProposalInfo() {
 		if (fCompilationUnit != null) {
-			IJavaProject project= fCompilationUnit.getJavaProject();
+			IJavaScriptProject project= fCompilationUnit.getJavaProject();
 			if (project != null)
 				return new TypeProposalInfo(project, fProposal);
 		}

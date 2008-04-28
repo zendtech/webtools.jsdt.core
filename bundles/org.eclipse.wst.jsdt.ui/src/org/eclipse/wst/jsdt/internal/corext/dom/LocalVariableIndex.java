@@ -16,7 +16,7 @@ import org.eclipse.wst.jsdt.core.dom.ASTVisitor;
 import org.eclipse.wst.jsdt.core.dom.BodyDeclaration;
 import org.eclipse.wst.jsdt.core.dom.IVariableBinding;
 import org.eclipse.wst.jsdt.core.dom.Initializer;
-import org.eclipse.wst.jsdt.core.dom.MethodDeclaration;
+import org.eclipse.wst.jsdt.core.dom.FunctionDeclaration;
 import org.eclipse.wst.jsdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.wst.jsdt.core.dom.VariableDeclarationFragment;
 
@@ -37,7 +37,7 @@ public class LocalVariableIndex extends ASTVisitor {
 		Assert.isTrue(declaration != null);
 		switch (declaration.getNodeType()) {
 			case ASTNode.METHOD_DECLARATION:
-				return internalPerform((MethodDeclaration)declaration);
+				return internalPerform((FunctionDeclaration)declaration);
 			case ASTNode.INITIALIZER:
 				return internalPerform((Initializer)declaration);
 			default:
@@ -46,12 +46,12 @@ public class LocalVariableIndex extends ASTVisitor {
 		return -1;
 	}
 	
-	private static int internalPerform(MethodDeclaration method) {
+	private static int internalPerform(FunctionDeclaration method) {
 		// we have to find the outermost method declaration since a local or anonymous
 		// type can reference final variables from the outer scope.
-		MethodDeclaration target= method;
+		FunctionDeclaration target= method;
 		while (ASTNodes.getParent(target, ASTNode.METHOD_DECLARATION) != null) {
-			target= (MethodDeclaration)ASTNodes.getParent(target, ASTNode.METHOD_DECLARATION);
+			target= (FunctionDeclaration)ASTNodes.getParent(target, ASTNode.METHOD_DECLARATION);
 		}
 		return doPerform(target);
 	}

@@ -20,11 +20,11 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IField;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IMember;
-import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.internal.corext.codemanipulation.AddJavaDocStubOperation;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
@@ -103,7 +103,7 @@ public class AddJavaDocStubAction extends SelectionDispatchAction {
 		}
 		
 		try {
-			ICompilationUnit cu= members[0].getCompilationUnit();
+			IJavaScriptUnit cu= members[0].getCompilationUnit();
 			if (!ActionUtil.isEditable(getShell(), cu)) {
 				return;
 			}
@@ -138,11 +138,11 @@ public class AddJavaDocStubAction extends SelectionDispatchAction {
 	 */		
 	public void run(ITextSelection selection) {
 		try {
-			IJavaElement element= SelectionConverter.getElementAtOffset(fEditor);
+			IJavaScriptElement element= SelectionConverter.getElementAtOffset(fEditor);
 			if (!ActionUtil.isEditable(fEditor, getShell(), element))
 				return;
 			int type= element != null ? element.getElementType() : -1;
-			if (type != IJavaElement.METHOD && type != IJavaElement.TYPE && type != IJavaElement.FIELD) {
+			if (type != IJavaScriptElement.METHOD && type != IJavaScriptElement.TYPE && type != IJavaScriptElement.FIELD) {
 		 		element= SelectionConverter.getTypeAtOffset(fEditor);
 		 		if (element == null) {
 					MessageDialog.openInformation(getShell(), getDialogTitle(), 
@@ -166,7 +166,7 @@ public class AddJavaDocStubAction extends SelectionDispatchAction {
 	 * @param cu the compilation unit
 	 * @param members an array of members
 	 */
-	public void run(ICompilationUnit cu, IMember[] members) {
+	public void run(IJavaScriptUnit cu, IMember[] members) {
 		try {
 			AddJavaDocStubOperation op= new AddJavaDocStubOperation(members);
 			PlatformUI.getWorkbench().getProgressService().runInUI(
@@ -185,10 +185,10 @@ public class AddJavaDocStubAction extends SelectionDispatchAction {
 		int nElements= elements.size();
 		if (nElements > 0) {
 			IMember[] res= new IMember[nElements];
-			ICompilationUnit cu= null;
+			IJavaScriptUnit cu= null;
 			for (int i= 0; i < nElements; i++) {
 				Object curr= elements.get(i);
-				if (curr instanceof IMethod || curr instanceof IType || curr instanceof IField) {
+				if (curr instanceof IFunction || curr instanceof IType || curr instanceof IField) {
 					IMember member= (IMember)curr; // limit to methods, types & fields
 					if (! member.exists()) {
 						return null;

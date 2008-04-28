@@ -12,10 +12,10 @@ package org.eclipse.wst.jsdt.ui;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 
 /**
- * Interface for accessing working copies of <code>ICompilationUnit</code>
+ * Interface for accessing working copies of <code>IJavaScriptUnit</code>
  * objects. The original compilation unit is only given indirectly by means
  * of an <code>IEditorInput</code>. The life cycle is as follows:
  * <ul>
@@ -75,7 +75,7 @@ public interface IWorkingCopyManager {
 	 *   input does not encode an editor input, or if there is no remembered working
 	 *   copy for this compilation unit
 	 */
-	ICompilationUnit getWorkingCopy(IEditorInput input);
+	IJavaScriptUnit getWorkingCopy(IEditorInput input);
 	
 	/**
 	 * Shuts down this working copy manager. All working copies still remembered

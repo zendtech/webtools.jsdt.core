@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.TwoPaneElementSelector;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchScope;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIMessages;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
@@ -34,7 +34,7 @@ import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
 public class MainTypeSelectionDialog extends TwoPaneElementSelector {
 
 	private IRunnableContext fRunnableContext;
-	private IJavaSearchScope fScope;
+	private IJavaScriptSearchScope fScope;
 	private int fStyle;
 	
 	private static class PackageRenderer extends JavaElementLabelProvider {
@@ -55,7 +55,7 @@ public class MainTypeSelectionDialog extends TwoPaneElementSelector {
 	 * Constructor.
 	 */
 	public MainTypeSelectionDialog(Shell shell, IRunnableContext context,
-		IJavaSearchScope scope, int style)
+		IJavaScriptSearchScope scope, int style)
 	{
 		super(shell, new JavaElementLabelProvider(JavaElementLabelProvider.SHOW_BASICS | JavaElementLabelProvider.SHOW_OVERLAY_ICONS), 
 			new PackageRenderer());

@@ -23,7 +23,7 @@ import org.eclipse.jface.text.formatter.FormattingContextProperties;
 import org.eclipse.jface.text.formatter.IFormattingContext;
 import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.TextEdit;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.ToolFactory;
 import org.eclipse.wst.jsdt.core.compiler.IScanner;
 import org.eclipse.wst.jsdt.core.compiler.ITerminalSymbols;
@@ -267,7 +267,7 @@ public class CommentFormattingStrategy extends ContextBasedFormattingStrategy {
 		 * that case. See CodeFormatterUtil.
 		 */
 		String key;
-		if (JavaCore.SPACE.equals(preferences.get(DefaultCodeFormatterConstants.FORMATTER_TAB_CHAR)))
+		if (JavaScriptCore.SPACE.equals(preferences.get(DefaultCodeFormatterConstants.FORMATTER_TAB_CHAR)))
 			key= DefaultCodeFormatterConstants.FORMATTER_INDENTATION_SIZE;
 		else
 			key= DefaultCodeFormatterConstants.FORMATTER_TAB_SIZE;
@@ -326,7 +326,7 @@ public class CommentFormattingStrategy extends ContextBasedFormattingStrategy {
 			// should not happen -> recompute
 		}
 
-		IScanner scanner= ToolFactory.createScanner(true, false, false, (String) preferences.get(JavaCore.COMPILER_SOURCE), (String) preferences.get(JavaCore.COMPILER_COMPLIANCE));
+		IScanner scanner= ToolFactory.createScanner(true, false, false, (String) preferences.get(JavaScriptCore.COMPILER_SOURCE), (String) preferences.get(JavaScriptCore.COMPILER_COMPLIANCE));
 		scanner.setSource(document.get().toCharArray());
 
 		try {

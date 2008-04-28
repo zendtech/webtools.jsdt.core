@@ -22,7 +22,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.eclipse.wst.jsdt.core.IJarEntryResource;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIMessages;
 import org.eclipse.wst.jsdt.internal.ui.packageview.PackageFragmentRootContainer;
@@ -62,8 +62,8 @@ public class StatusBarUpdater implements ISelectionChangedListener {
 				return Messages.format(JavaUIMessages.StatusBarUpdater_num_elements_selected, String.valueOf(nElements)); 
 			} else { 
 				Object elem= selection.getFirstElement();
-				if (elem instanceof IJavaElement) {
-					return formatJavaElementMessage((IJavaElement) elem);
+				if (elem instanceof IJavaScriptElement) {
+					return formatJavaElementMessage((IJavaScriptElement) elem);
 				} else if (elem instanceof IResource) {
 					return formatResourceMessage((IResource) elem);
 				} else if (elem instanceof PackageFragmentRootContainer) {
@@ -91,7 +91,7 @@ public class StatusBarUpdater implements ISelectionChangedListener {
 		return "";  //$NON-NLS-1$
 	}
 		
-	private String formatJavaElementMessage(IJavaElement element) {
+	private String formatJavaElementMessage(IJavaScriptElement element) {
 		return JavaElementLabels.getElementLabel(element, LABEL_FLAGS);
 	}
 		

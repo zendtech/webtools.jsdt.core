@@ -24,7 +24,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.SelectionDialog;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchConstants;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchConstants;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
@@ -55,7 +55,7 @@ public class OpenTypeAction extends Action implements IWorkbenchWindowActionDele
 			// use old open type dialog when MOD1 (but no other modifier) is down:
 			dialog= createOpenTypeSelectionDialog2(parent);
 		} else {
-			dialog= new OpenTypeSelectionDialog(parent, true, PlatformUI.getWorkbench().getProgressService(), null, IJavaSearchConstants.TYPE);
+			dialog= new OpenTypeSelectionDialog(parent, true, PlatformUI.getWorkbench().getProgressService(), null, IJavaScriptSearchConstants.TYPE);
 		}
 		dialog.setTitle(JavaUIMessages.OpenTypeAction_dialogTitle);
 		dialog.setMessage(JavaUIMessages.OpenTypeAction_dialogMessage);
@@ -84,7 +84,7 @@ public class OpenTypeAction extends Action implements IWorkbenchWindowActionDele
 	 * @return the dialog
 	 */
 	private SelectionDialog createOpenTypeSelectionDialog2(Shell parent) {
-		return new org.eclipse.wst.jsdt.internal.ui.dialogs.OpenTypeSelectionDialog2(parent, false, PlatformUI.getWorkbench().getProgressService(), null, IJavaSearchConstants.TYPE);
+		return new org.eclipse.wst.jsdt.internal.ui.dialogs.OpenTypeSelectionDialog2(parent, false, PlatformUI.getWorkbench().getProgressService(), null, IJavaScriptSearchConstants.TYPE);
 	}
 
 	// ---- IWorkbenchWindowActionDelegate

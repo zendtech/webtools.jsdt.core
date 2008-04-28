@@ -14,15 +14,15 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaModelStatus;
-import org.eclipse.wst.jsdt.core.IJavaModelStatusConstants;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptModelStatus;
+import org.eclipse.wst.jsdt.core.IJavaScriptModelStatusConstants;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.core.dom.ASTNode;
-import org.eclipse.wst.jsdt.core.dom.MethodDeclaration;
+import org.eclipse.wst.jsdt.core.dom.FunctionDeclaration;
 import org.eclipse.wst.jsdt.core.dom.SimpleName;
 import org.eclipse.wst.jsdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.wst.jsdt.core.dom.rewrite.ASTRewrite;
@@ -46,17 +46,17 @@ public class CreateMethodOperation extends CreateTypeMemberOperation {
  * When executed, this operation will create a method
  * in the given type with the specified source.
  */
-public CreateMethodOperation(IJavaElement parentElement, String source, boolean force) {
+public CreateMethodOperation(IJavaScriptElement parentElement, String source, boolean force) {
 	super(parentElement, source, force);
 }
 /**
  * Returns the type signatures of the parameter types of the
- * current <code>MethodDeclaration</code>
+ * current <code>FunctionDeclaration</code>
  */
 protected String[] convertASTMethodTypesToSignatures() {
 	if (this.parameterTypes == null) {
 		if (this.createdNode != null) {
-			MethodDeclaration methodDeclaration = (MethodDeclaration) this.createdNode;
+			FunctionDeclaration methodDeclaration = (FunctionDeclaration) this.createdNode;
 			List parameters = methodDeclaration.parameters();
 			int size = parameters.size();
 			this.parameterTypes = new String[size];
@@ -74,16 +74,16 @@ protected String[] convertASTMethodTypesToSignatures() {
 	}
 	return this.parameterTypes;
 }
-protected ASTNode generateElementAST(ASTRewrite rewriter, IDocument document, ICompilationUnit cu) throws JavaModelException {
+protected ASTNode generateElementAST(ASTRewrite rewriter, IDocument document, IJavaScriptUnit cu) throws JavaScriptModelException {
 	ASTNode node = super.generateElementAST(rewriter, document, cu);
 	if (node.getNodeType() != ASTNode.METHOD_DECLARATION)
-		throw new JavaModelException(new JavaModelStatus(IJavaModelStatusConstants.INVALID_CONTENTS));
+		throw new JavaScriptModelException(new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_CONTENTS));
 	return node;
 }
 /**
  * @see CreateElementInCUOperation#generateResultHandle
  */
-protected IJavaElement generateResultHandle() {
+protected IJavaScriptElement generateResultHandle() {
 	String[] types = convertASTMethodTypesToSignatures();
 	String name = getASTNodeName();
 	if (getType()!=null)
@@ -91,7 +91,7 @@ protected IJavaElement generateResultHandle() {
 	return getCompilationUnit().getMethod(name,types);
 }
 private String getASTNodeName() {
-	return ((MethodDeclaration) this.createdNode).getName().getIdentifier();
+	return ((FunctionDeclaration) this.createdNode).getName().getIdentifier();
 }
 /**
  * @see CreateElementInCUOperation#getMainTaskName()
@@ -100,7 +100,7 @@ public String getMainTaskName(){
 	return Messages.operation_createMethodProgress;
 }
 protected SimpleName rename(ASTNode node, SimpleName newName) {
-	MethodDeclaration method = (MethodDeclaration) node;
+	FunctionDeclaration method = (FunctionDeclaration) node;
 	SimpleName oldName = method.getName();
 	method.setName(newName);
 	return oldName;
@@ -108,11 +108,11 @@ protected SimpleName rename(ASTNode node, SimpleName newName) {
 /**
  * @see CreateTypeMemberOperation#verifyNameCollision
  */
-	protected IJavaModelStatus verifyNameCollision() {
+	protected IJavaScriptModelStatus verifyNameCollision() {
 		if (this.createdNode != null) {
 			IType type = getType();
 			String name;
-			if (((MethodDeclaration) this.createdNode).isConstructor())
+			if (((FunctionDeclaration) this.createdNode).isConstructor())
 				name = type.getElementName();
 			else
 				name = getASTNodeName();
@@ -120,12 +120,12 @@ protected SimpleName rename(ASTNode node, SimpleName newName) {
 			if (type != null) {
 				if (type.getMethod(name, types).exists())
 					return new JavaModelStatus(
-							IJavaModelStatusConstants.NAME_COLLISION, Messages
+							IJavaScriptModelStatusConstants.NAME_COLLISION, Messages
 									.bind(Messages.status_nameCollision, name));
 			} else {
 				if (this.getCompilationUnit().getMethod(name, types).exists())
 					return new JavaModelStatus(
-							IJavaModelStatusConstants.NAME_COLLISION, Messages
+							IJavaScriptModelStatusConstants.NAME_COLLISION, Messages
 									.bind(Messages.status_nameCollision, name));
 			}
 

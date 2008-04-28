@@ -45,7 +45,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.actions.ActionGroup;
-import org.eclipse.wst.jsdt.core.IJavaModel;
+import org.eclipse.wst.jsdt.core.IJavaScriptModel;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.filters.CustomFiltersDialog;
@@ -332,7 +332,7 @@ public class CustomFiltersActionGroup extends ActionGroup {
 	    if (contentProvider instanceof ITreeContentProvider) {
 	        // the element and all its parents have to be selected
 	        ITreeContentProvider provider = (ITreeContentProvider) contentProvider;
-	        while (element != null && !(element instanceof IJavaModel)) {
+	        while (element != null && !(element instanceof IJavaScriptModel)) {
 	            if (!filter.select(fViewer, parent, element)) 
 	                return false;
 	            element= provider.getParent( element);

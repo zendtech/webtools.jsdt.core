@@ -22,9 +22,9 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.contentassist.ICompletionProposalExtension4;
-import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.JavaConventions;
+import org.eclipse.wst.jsdt.core.JavaScriptConventions;
 import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.core.dom.rewrite.ImportRewrite;
 import org.eclipse.wst.jsdt.core.formatter.CodeFormatter;
@@ -45,7 +45,7 @@ public class MethodDeclarationCompletionProposal extends JavaTypeCompletionPropo
 
 
 	public static void evaluateProposals(IType type, String prefix, int offset, int length, int relevance, Set suggestedMethods, Collection result) throws CoreException {
-		IMethod[] methods= type.getMethods();
+		IFunction[] methods= type.getMethods();
 		if (!type.isInterface()) {
 			String constructorName= type.getElementName();
 			if (constructorName.length() > 0 && constructorName.startsWith(prefix) && !hasMethod(methods, constructorName) && suggestedMethods.add(constructorName)) {
@@ -54,15 +54,15 @@ public class MethodDeclarationCompletionProposal extends JavaTypeCompletionPropo
 		}
 
 		if (prefix.length() > 0 && !"main".equals(prefix) && !hasMethod(methods, prefix) && suggestedMethods.add(prefix)) { //$NON-NLS-1$
-			if (!JavaConventions.validateMethodName(prefix).matches(IStatus.ERROR)) {
+			if (!JavaScriptConventions.validateMethodName(prefix).matches(IStatus.ERROR)) {
 				result.add(new MethodDeclarationCompletionProposal(type, prefix, Signature.SIG_VOID, offset, length, relevance));
 			}
 		}
 	}
 
-	private static boolean hasMethod(IMethod[] methods, String name) {
+	private static boolean hasMethod(IFunction[] methods, String name) {
 		for (int i= 0; i < methods.length; i++) {
-			IMethod curr= methods[i];
+			IFunction curr= methods[i];
 			if (curr.getElementName().equals(name) && curr.getParameterTypes().length == 0) {
 				return true;
 			}

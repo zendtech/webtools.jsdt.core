@@ -30,7 +30,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchScope;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.core.search.SearchEngine;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
@@ -226,7 +226,7 @@ public class TypeFilterPreferencePage extends PreferencePage implements IWorkben
 	}
 	
 	private String[] choosePackage() {
-		IJavaSearchScope scope= SearchEngine.createWorkspaceScope();
+		IJavaScriptSearchScope scope= SearchEngine.createWorkspaceScope();
 		BusyIndicatorRunnableContext context= new BusyIndicatorRunnableContext();
 		int flags= PackageSelectionDialog.F_SHOW_PARENTS | PackageSelectionDialog.F_HIDE_DEFAULT_PACKAGE | PackageSelectionDialog.F_REMOVE_DUPLICATES;
 		PackageSelectionDialog dialog = new PackageSelectionDialog(getShell(), context, flags , scope);

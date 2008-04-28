@@ -14,7 +14,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.wst.jsdt.core.CompletionProposal;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
@@ -169,7 +169,7 @@ public class JavaMethodCompletionProposal extends LazyJavaCompletionProposal {
 	}
 	
 	protected ProposalInfo computeProposalInfo() {
-		IJavaProject project= fInvocationContext.getProject();
+		IJavaScriptProject project= fInvocationContext.getProject();
 		if (project != null)
 			return new MethodProposalInfo(project, fProposal);
 		return super.computeProposalInfo();

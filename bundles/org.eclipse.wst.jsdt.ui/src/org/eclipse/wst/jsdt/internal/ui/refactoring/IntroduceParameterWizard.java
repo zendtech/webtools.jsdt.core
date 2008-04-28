@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.ParameterInfo;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.code.IntroduceParameterRefactoring;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
@@ -185,7 +185,7 @@ public class IntroduceParameterWizard extends RefactoringWizard {
 				int top= fSignaturePreview.getTextWidget().getTopPixel();
 				fSignaturePreviewDocument.set(getIntroduceParameterRefactoring().getMethodSignaturePreview()); 
 				fSignaturePreview.getTextWidget().setTopPixel(top);
-			} catch (JavaModelException e){
+			} catch (JavaScriptModelException e){
 				ExceptionHandler.handle(e, RefactoringMessages.IntroduceParameterWizard_defaultPageTitle, RefactoringMessages.ChangeSignatureInputPage_exception); 
 			}	
 		}

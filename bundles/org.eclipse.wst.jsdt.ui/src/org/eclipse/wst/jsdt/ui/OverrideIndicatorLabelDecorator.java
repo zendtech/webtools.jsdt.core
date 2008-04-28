@@ -19,15 +19,15 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.wst.jsdt.core.Flags;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.ITypeHierarchy;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.dom.ASTNode;
-import org.eclipse.wst.jsdt.core.dom.CompilationUnit;
-import org.eclipse.wst.jsdt.core.dom.IMethodBinding;
-import org.eclipse.wst.jsdt.core.dom.MethodDeclaration;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
+import org.eclipse.wst.jsdt.core.dom.IFunctionBinding;
+import org.eclipse.wst.jsdt.core.dom.FunctionDeclaration;
 import org.eclipse.wst.jsdt.core.dom.SimpleName;
 import org.eclipse.wst.jsdt.internal.corext.dom.Bindings;
 import org.eclipse.wst.jsdt.internal.corext.dom.NodeFinder;
@@ -114,9 +114,9 @@ public class OverrideIndicatorLabelDecorator implements ILabelDecorator, ILightw
 	 * and JavaElementImageDescriptor.OVERRIDES)
 	 */
 	public int computeAdornmentFlags(Object element) {
-		if (element instanceof IMethod) {
+		if (element instanceof IFunction) {
 			try {
-				IMethod method= (IMethod) element;
+				IFunction method= (IFunction) element;
 				if (!method.getJavaProject().isOnClasspath(method)) {
 					return 0;
 				}
@@ -128,7 +128,7 @@ public class OverrideIndicatorLabelDecorator implements ILabelDecorator, ILightw
 					}
 					return res;
 				}
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				if (!e.isDoesNotExist()) {
 					JavaPlugin.log(e);
 				}
@@ -142,10 +142,10 @@ public class OverrideIndicatorLabelDecorator implements ILabelDecorator, ILightw
 	 * @param method The element to decorate
 	 * @return Resulting decorations (combination of JavaElementImageDescriptor.IMPLEMENTS
 	 * and JavaElementImageDescriptor.OVERRIDES)
-	 * @throws JavaModelException
+	 * @throws JavaScriptModelException
 	 */
-	protected int getOverrideIndicators(IMethod method) throws JavaModelException {
-		CompilationUnit astRoot= JavaPlugin.getDefault().getASTProvider().getAST((IJavaElement) method.getOpenable(), ASTProvider.WAIT_ACTIVE_ONLY, null);
+	protected int getOverrideIndicators(IFunction method) throws JavaScriptModelException {
+		JavaScriptUnit astRoot= JavaPlugin.getDefault().getASTProvider().getAST((IJavaScriptElement) method.getOpenable(), ASTProvider.WAIT_ACTIVE_ONLY, null);
 		if (astRoot != null) {
 			int res= findInHierarchyWithAST(astRoot, method);
 			if (res != -1) {
@@ -158,7 +158,7 @@ public class OverrideIndicatorLabelDecorator implements ILabelDecorator, ILightw
 			return 0;
 		
 		MethodOverrideTester methodOverrideTester= SuperTypeHierarchyCache.getMethodOverrideTester(type);
-		IMethod defining= methodOverrideTester.findOverriddenMethod(method, true);
+		IFunction defining= methodOverrideTester.findOverriddenMethod(method, true);
 		if (defining != null) {
 			if (JdtFlags.isAbstract(defining)) {
 				return JavaElementImageDescriptor.IMPLEMENTS;
@@ -169,12 +169,12 @@ public class OverrideIndicatorLabelDecorator implements ILabelDecorator, ILightw
 		return 0;
 	}
 	
-	private int findInHierarchyWithAST(CompilationUnit astRoot, IMethod method) throws JavaModelException {
+	private int findInHierarchyWithAST(JavaScriptUnit astRoot, IFunction method) throws JavaScriptModelException {
 		ASTNode node= NodeFinder.perform(astRoot, method.getNameRange());
-		if (node instanceof SimpleName && node.getParent() instanceof MethodDeclaration) {
-			IMethodBinding binding= ((MethodDeclaration) node.getParent()).resolveBinding();
+		if (node instanceof SimpleName && node.getParent() instanceof FunctionDeclaration) {
+			IFunctionBinding binding= ((FunctionDeclaration) node.getParent()).resolveBinding();
 			if (binding != null) {
-				IMethodBinding defining= Bindings.findOverriddenMethod(binding, true);
+				IFunctionBinding defining= Bindings.findOverriddenMethod(binding, true);
 				if (defining != null) {
 					if (JdtFlags.isAbstract(defining)) {
 						return JavaElementImageDescriptor.IMPLEMENTS;
@@ -195,13 +195,13 @@ public class OverrideIndicatorLabelDecorator implements ILabelDecorator, ILightw
 	 * @param name The name of the method to find.
 	 * @param paramTypes The parameter types of the method to find.
 	 * @return The resulting decoration.
-	 * @throws JavaModelException
+	 * @throws JavaScriptModelException
 	 * @deprecated Not used anymore. This method is not accurate for methods in generic types.
 	 */
-	protected int findInHierarchy(IType type, ITypeHierarchy hierarchy, String name, String[] paramTypes) throws JavaModelException {
+	protected int findInHierarchy(IType type, ITypeHierarchy hierarchy, String name, String[] paramTypes) throws JavaScriptModelException {
 		IType superClass= hierarchy.getSuperclass(type);
 		if (superClass != null) {
-			IMethod res= JavaModelUtil.findMethodInHierarchy(hierarchy, superClass, name, paramTypes, false);
+			IFunction res= JavaModelUtil.findMethodInHierarchy(hierarchy, superClass, name, paramTypes, false);
 			if (res != null && !Flags.isPrivate(res.getFlags()) && JavaModelUtil.isVisibleInHierarchy(res, type.getPackageFragment())) {
 				if (JdtFlags.isAbstract(res)) {
 					return JavaElementImageDescriptor.IMPLEMENTS;
@@ -212,7 +212,7 @@ public class OverrideIndicatorLabelDecorator implements ILabelDecorator, ILightw
 		}
 		IType[] interfaces= hierarchy.getSuperInterfaces(type);
 		for (int i= 0; i < interfaces.length; i++) {
-			IMethod res= JavaModelUtil.findMethodInHierarchy(hierarchy, interfaces[i], name, paramTypes, false);
+			IFunction res= JavaModelUtil.findMethodInHierarchy(hierarchy, interfaces[i], name, paramTypes, false);
 			if (res != null) {
 				if (JdtFlags.isAbstract(res)) {
 					return JavaElementImageDescriptor.IMPLEMENTS;

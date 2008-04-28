@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.formatter.DefaultCodeFormatterConstants;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaSourceViewer;
@@ -107,10 +107,10 @@ public abstract class JavaPreview {
 		tools.setupJavaDocumentPartitioner( fPreviewDocument, IJavaPartitions.JAVA_PARTITIONING);	
 		
 		PreferenceStore prioritizedSettings= new PreferenceStore();
-		prioritizedSettings.setValue(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_5);
-		prioritizedSettings.setValue(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_5);
-		prioritizedSettings.setValue(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_5);
-		prioritizedSettings.setValue(JavaCore.COMPILER_PB_ASSERT_IDENTIFIER, JavaCore.ERROR);
+		prioritizedSettings.setValue(JavaScriptCore.COMPILER_SOURCE, JavaScriptCore.VERSION_1_5);
+		prioritizedSettings.setValue(JavaScriptCore.COMPILER_COMPLIANCE, JavaScriptCore.VERSION_1_5);
+		prioritizedSettings.setValue(JavaScriptCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaScriptCore.VERSION_1_5);
+		prioritizedSettings.setValue(JavaScriptCore.COMPILER_PB_ASSERT_IDENTIFIER, JavaScriptCore.ERROR);
 		
 		IPreferenceStore[] chain= { prioritizedSettings, JavaPlugin.getDefault().getCombinedPreferenceStore() };
 		fPreferenceStore= new ChainedPreferenceStore(chain);

@@ -23,14 +23,14 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaElementDelta;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElementDelta;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 
 /**
@@ -52,25 +52,25 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider im
 	 */
 	public Object[] getChildren(Object parentElement) {
 		try {
-			if (parentElement instanceof IJavaElement) {
-				IJavaElement iJavaElement= (IJavaElement) parentElement;
+			if (parentElement instanceof IJavaScriptElement) {
+				IJavaScriptElement iJavaElement= (IJavaScriptElement) parentElement;
 				int type= iJavaElement.getElementType();
 
 				switch (type) {
-					case IJavaElement.JAVA_PROJECT :
+					case IJavaScriptElement.JAVA_PROJECT :
 						{
 
 							//create new element mapping
 							fMapToLogicalPackage.clear();
 							fMapToPackageFragments.clear();
-							IJavaProject project= (IJavaProject) parentElement;
+							IJavaScriptProject project= (IJavaScriptProject) parentElement;
 
 							IPackageFragment[] topLevelChildren= getTopLevelChildrenByElementName(project.getPackageFragments());
 							List list= new ArrayList();
 							for (int i= 0; i < topLevelChildren.length; i++) {
 								IPackageFragment fragment= topLevelChildren[i];
 
-								IJavaElement el= fragment.getParent();
+								IJavaScriptElement el= fragment.getParent();
 								if (el instanceof IPackageFragmentRoot) {
 									IPackageFragmentRoot root= (IPackageFragmentRoot) el;
 									if (!root.isArchive() || !root.isExternal())
@@ -98,7 +98,7 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider im
 							}
 						}
 
-					case IJavaElement.PACKAGE_FRAGMENT_ROOT :
+					case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT :
 						{
 							IPackageFragmentRoot root= (IPackageFragmentRoot) parentElement;
 
@@ -108,7 +108,7 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider im
 							IResource resource= root.getUnderlyingResource();
 							if (root.isArchive()) {
 								IPackageFragment[] fragments= new IPackageFragment[0];
-								IJavaElement[] els= root.getChildren();
+								IJavaScriptElement[] els= root.getChildren();
 								fragments= getTopLevelChildrenByElementName(els);
 								addFragmentsToMap(fragments);
 								return fragments;
@@ -127,7 +127,7 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider im
 							}
 						}
 
-					case IJavaElement.PACKAGE_FRAGMENT :
+					case IJavaScriptElement.PACKAGE_FRAGMENT :
 						{
 							IPackageFragment packageFragment= (IPackageFragment) parentElement;
 							if (packageFragment.isDefaultPackage())
@@ -174,7 +174,7 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider im
 				return children.toArray();
 			}
 
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			return NO_CHILDREN;
 		} catch (CoreException e) {
 			return NO_CHILDREN;
@@ -199,7 +199,7 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider im
 			
 			if (resource instanceof IFolder) {
 				IFolder folder= (IFolder) resource;
-				IJavaElement element= JavaCore.create(folder);
+				IJavaScriptElement element= JavaScriptCore.create(folder);
 				
 				if (element instanceof IPackageFragment) {
 					list.add(element);	
@@ -218,7 +218,7 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider im
 			
 			if (resource instanceof IFolder) {
 				IFolder folder= (IFolder) resource;
-				IJavaElement element= JavaCore.create(folder);
+				IJavaScriptElement element= JavaScriptCore.create(folder);
 				
 				if (element == null) {
 					list.add(folder);
@@ -232,10 +232,10 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider im
 		List list= new ArrayList();
 		try {
 
-			IJavaElement[] children= parent.getChildren();
+			IJavaScriptElement[] children= parent.getChildren();
 			String fragmentname= fragment.getElementName();
 			for (int i= 0; i < children.length; i++) {
-				IJavaElement element= children[i];
+				IJavaScriptElement element= children[i];
 				if (element instanceof IPackageFragment) {
 					IPackageFragment frag= (IPackageFragment) element;
 
@@ -249,16 +249,16 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider im
 				}
 			}
 
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			JavaPlugin.log(e);
 		}
 		return (IPackageFragment[]) list.toArray(new IPackageFragment[list.size()]);
 	}
 
-	private IPackageFragment[] getTopLevelChildrenByElementName(IJavaElement[] elements){
+	private IPackageFragment[] getTopLevelChildrenByElementName(IJavaScriptElement[] elements){
 		List topLevelElements= new ArrayList();
 		for (int i= 0; i < elements.length; i++) {
-			IJavaElement iJavaElement= elements[i];
+			IJavaScriptElement iJavaElement= elements[i];
 			//if the name of the PackageFragment is the top level package it will contain no "." separators
 			if (iJavaElement instanceof IPackageFragment && iJavaElement.getElementName().indexOf('.')==-1){
 				topLevelElements.add(iJavaElement);
@@ -314,7 +314,7 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider im
 				IFolder folder = (IFolder) element;
 				IResource res = folder.getParent();
 
-				IJavaElement el = JavaCore.create(res);
+				IJavaScriptElement el = JavaScriptCore.create(res);
 				if (el != null) {
 					return el;
 				} else {
@@ -322,7 +322,7 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider im
 				}
 			}
 
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			JavaPlugin.log(e);
 		}
 		return null;
@@ -361,15 +361,15 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider im
 				return logicalPackage;
 			}
 
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			JavaPlugin.log(e);
 		}
 
 		return null;
 	}
 
-	private Object getHierarchicalParent(IPackageFragment fragment) throws JavaModelException {
-		IJavaElement parent= fragment.getParent();
+	private Object getHierarchicalParent(IPackageFragment fragment) throws JavaScriptModelException {
+		IJavaScriptElement parent= fragment.getParent();
 
 		if ((parent instanceof IPackageFragmentRoot) && parent.exists()) {
 			IPackageFragmentRoot root= (IPackageFragmentRoot) parent;
@@ -381,7 +381,7 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider im
 					IFolder folder= (IFolder) resource;
 					IResource res= folder.getParent();
 
-					IJavaElement el= JavaCore.create(res);
+					IJavaScriptElement el= JavaScriptCore.create(res);
 					if (el != null) {
 						return el;
 					} else {
@@ -428,10 +428,10 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider im
 		return getChildren(inputElement);
 	}
 
-	protected void processDelta(IJavaElementDelta delta) throws JavaModelException {
+	protected void processDelta(IJavaScriptElementDelta delta) throws JavaScriptModelException {
 
 		int kind = delta.getKind();
-		final IJavaElement element = delta.getElement();
+		final IJavaScriptElement element = delta.getElement();
 
 		if (isClassPathChange(delta)) {
 			Object input= fViewer.getInput();
@@ -449,7 +449,7 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider im
 			}
 		}
 
-		if (kind == IJavaElementDelta.REMOVED) {
+		if (kind == IJavaScriptElementDelta.REMOVED) {
 			Object input= fViewer.getInput();
 			if (input != null && input.equals(element)) {
 					postRemove(input);
@@ -462,17 +462,17 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider im
 
 			//if fragment was in LogicalPackage refresh,
 			//otherwise just remove
-			if (kind == IJavaElementDelta.REMOVED) {
+			if (kind == IJavaScriptElementDelta.REMOVED) {
 				removeElement(frag);
 				return;
 
-			} else if (kind == IJavaElementDelta.ADDED) {
+			} else if (kind == IJavaScriptElementDelta.ADDED) {
 
 				Object parent= getParent(frag);
 				addElement(frag, parent);
 				return;
 
-			} else if (kind == IJavaElementDelta.CHANGED) {
+			} else if (kind == IJavaScriptElementDelta.CHANGED) {
 				//just refresh
 				LogicalPackage logicalPkg= findLogicalPackage(frag);
 				//in case changed object is filtered out
@@ -500,10 +500,10 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider im
 		return toBeRefreshed;
 	}
 
-	private void processAffectedChildren(IJavaElementDelta delta) throws JavaModelException {
-		IJavaElementDelta[] affectedChildren = delta.getAffectedChildren();
+	private void processAffectedChildren(IJavaScriptElementDelta delta) throws JavaScriptModelException {
+		IJavaScriptElementDelta[] affectedChildren = delta.getAffectedChildren();
 		for (int i = 0; i < affectedChildren.length; i++) {
-			if (!(affectedChildren[i] instanceof ICompilationUnit)) {
+			if (!(affectedChildren[i] instanceof IJavaScriptUnit)) {
 				processDelta(affectedChildren[i]);
 			}
 		}

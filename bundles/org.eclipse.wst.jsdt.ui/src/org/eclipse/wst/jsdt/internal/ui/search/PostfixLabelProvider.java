@@ -13,8 +13,8 @@ package org.eclipse.wst.jsdt.internal.ui.search;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.jsdt.core.IClassFile;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaModel;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptModel;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.ColoredJavaElementLabels;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.ColoredString;
@@ -47,7 +47,7 @@ public class PostfixLabelProvider extends SearchLabelProvider {
 		Object visibleParent= provider.getParent(element);
 		Object realParent= fContentProvider.getParent(element);
 		Object lastElement= element;
-		while (realParent != null && !(realParent instanceof IJavaModel) && !realParent.equals(visibleParent)) {
+		while (realParent != null && !(realParent instanceof IJavaScriptModel) && !realParent.equals(visibleParent)) {
 			if (!isSameInformation(realParent, lastElement))  {
 				res.append(JavaElementLabels.CONCAT_STRING).append(internalGetText(realParent));
 			}
@@ -75,7 +75,7 @@ public class PostfixLabelProvider extends SearchLabelProvider {
 			if (realParent instanceof IClassFile) {
 				if (type.getClassFile().equals(realParent))
 					return true;
-			} else if (realParent instanceof ICompilationUnit) {
+			} else if (realParent instanceof IJavaScriptUnit) {
 				if (type.getCompilationUnit().equals(realParent))
 					return true;
 			}

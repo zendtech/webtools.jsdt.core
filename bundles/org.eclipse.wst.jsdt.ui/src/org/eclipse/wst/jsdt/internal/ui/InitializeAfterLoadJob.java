@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.progress.UIJob;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.ui.JavaUI;
 
 public class InitializeAfterLoadJob extends UIJob {
@@ -29,7 +29,7 @@ public class InitializeAfterLoadJob extends UIJob {
 		protected IStatus run(IProgressMonitor monitor) {
 			monitor.beginTask("", 10); //$NON-NLS-1$
 			try {
-				JavaCore.initializeAfterLoad(new SubProgressMonitor(monitor, 6));
+				JavaScriptCore.initializeAfterLoad(new SubProgressMonitor(monitor, 6));
 				JavaPlugin.initializeAfterLoad(new SubProgressMonitor(monitor, 4));
 			} catch (CoreException e) {
 				JavaPlugin.log(e);

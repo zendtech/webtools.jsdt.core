@@ -29,7 +29,7 @@ import org.eclipse.jface.text.rules.FastPartitioner;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.texteditor.ITextEditorExtension3;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.ToolFactory;
 import org.eclipse.wst.jsdt.core.compiler.IProblem;
 import org.eclipse.wst.jsdt.core.compiler.IScanner;
@@ -38,7 +38,7 @@ import org.eclipse.wst.jsdt.core.compiler.InvalidInputException;
 import org.eclipse.wst.jsdt.core.dom.AST;
 import org.eclipse.wst.jsdt.core.dom.ASTNode;
 import org.eclipse.wst.jsdt.core.dom.ASTParser;
-import org.eclipse.wst.jsdt.core.dom.CompilationUnit;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
 import org.eclipse.wst.jsdt.core.dom.DoStatement;
 import org.eclipse.wst.jsdt.core.dom.Expression;
 import org.eclipse.wst.jsdt.core.dom.ForInStatement;
@@ -81,7 +81,7 @@ public class JavaAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 	private boolean fIsSmartMode;
 
 	private String fPartitioning;
-	private final IJavaProject fProject;
+	private final IJavaScriptProject fProject;
 	private static IScanner fgScanner= ToolFactory.createScanner(false, false, false, false);
 
 	/**
@@ -90,7 +90,7 @@ public class JavaAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 	 * @param partitioning the document partitioning
 	 * @param project the project to get formatting preferences from, or null to use default preferences
 	 */
-	public JavaAutoIndentStrategy(String partitioning, IJavaProject project) {
+	public JavaAutoIndentStrategy(String partitioning, IJavaScriptProject project) {
 		fPartitioning= partitioning;
 		fProject= project;
  	}
@@ -493,11 +493,11 @@ public class JavaAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 		if (info == null)
 			return false;
 
-		CompilationUnit compilationUnit= null;
+		JavaScriptUnit compilationUnit= null;
 		try {
 			ASTParser parser= ASTParser.newParser(AST.JLS3);
 			parser.setSource(info.buffer);
-			compilationUnit= (CompilationUnit) parser.createAST(null);
+			compilationUnit= (JavaScriptUnit) parser.createAST(null);
 		} catch (ArrayIndexOutOfBoundsException x) {
 			// work around for parser problem
 			return false;

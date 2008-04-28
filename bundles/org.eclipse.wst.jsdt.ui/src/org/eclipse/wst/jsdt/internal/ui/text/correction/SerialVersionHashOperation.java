@@ -29,8 +29,8 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.dom.ASTNode;
 import org.eclipse.wst.jsdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.wst.jsdt.core.dom.AnonymousClassDeclaration;
@@ -66,7 +66,7 @@ public final class SerialVersionHashOperation extends AbstractSerialVersionOpera
 	 * @throws CoreException
 	 *             if the project's class path cannot be computed
 	 */
-	public static String[] computeUserAndBootClasspath(final IJavaProject project) throws CoreException {
+	public static String[] computeUserAndBootClasspath(final IJavaScriptProject project) throws CoreException {
 		final IRuntimeClasspathEntry[] unresolved= JavaRuntime.computeUnresolvedRuntimeClasspath(project);
 		final List resolved= new ArrayList(unresolved.length);
 		for (int index= 0; index < unresolved.length; index++) {
@@ -84,7 +84,7 @@ public final class SerialVersionHashOperation extends AbstractSerialVersionOpera
 		return (String[]) resolved.toArray(new String[resolved.size()]);
 	}
 	
-	public static long[] calculateSerialVersionIds(String[] qualifiedNames, IJavaProject project, final IProgressMonitor monitor) throws CoreException, IOException {
+	public static long[] calculateSerialVersionIds(String[] qualifiedNames, IJavaScriptProject project, final IProgressMonitor monitor) throws CoreException, IOException {
 //		final String[] entries= computeUserAndBootClasspath(project);
 //		final IRuntimeClasspathEntry[] classpath= new IRuntimeClasspathEntry[entries.length + 2];
 //		classpath[0]= JavaRuntime.newRuntimeContainerClasspathEntry(new Path(JavaRuntime.JRE_CONTAINER), IRuntimeClasspathEntry.STANDARD_CLASSES, project);
@@ -154,9 +154,9 @@ public final class SerialVersionHashOperation extends AbstractSerialVersionOpera
 		return result[0];
 	}
 
-	private final ICompilationUnit fCompilationUnit;
+	private final IJavaScriptUnit fCompilationUnit;
 	
-	public SerialVersionHashOperation(ICompilationUnit unit, ASTNode[] nodes) {
+	public SerialVersionHashOperation(IJavaScriptUnit unit, ASTNode[] nodes) {
 		super(unit, nodes);
 		fCompilationUnit= unit;
 	}
@@ -196,7 +196,7 @@ public final class SerialVersionHashOperation extends AbstractSerialVersionOpera
 		long serialVersionID= SERIAL_VALUE;
 		try {
 			monitor.beginTask(CorrectionMessages.SerialVersionHashProposal_computing_id, 200);
-			final IJavaProject project= fCompilationUnit.getJavaProject();
+			final IJavaScriptProject project= fCompilationUnit.getJavaProject();
 			final IPath path= fCompilationUnit.getResource().getFullPath();
 			try {
 				FileBuffers.getTextFileBufferManager().connect(path, LocationKind.IFILE, new SubProgressMonitor(monitor, 10));

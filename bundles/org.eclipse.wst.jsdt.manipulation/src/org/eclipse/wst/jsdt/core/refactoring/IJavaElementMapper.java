@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.jsdt.core.refactoring;
 
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 
 /**
  * An <code>IJavaElementMapper</code> provides methods to map an original
@@ -37,5 +37,5 @@ public interface IJavaElementMapper {
 	 * 
 	 * @return the refactored element for the given element
 	 */
-	IJavaElement getRefactoredJavaElement(IJavaElement element);
+	IJavaScriptElement getRefactoredJavaElement(IJavaScriptElement element);
 }

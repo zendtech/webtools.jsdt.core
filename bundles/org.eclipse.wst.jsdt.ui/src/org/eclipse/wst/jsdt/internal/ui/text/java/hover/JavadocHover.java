@@ -26,11 +26,11 @@ import org.eclipse.jface.text.information.IInformationProviderExtension2;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.editors.text.EditorsUI;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.core.IOpenable;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.javadoc.JavaDocLocations;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.ui.JavaElementLabels;
@@ -138,7 +138,7 @@ public class JavadocHover extends AbstractJavaEditorTextHover implements IInform
 	/*
 	 * @see JavaElementHover
 	 */
-	protected String getHoverInfo(IJavaElement[] result) {
+	protected String getHoverInfo(IJavaScriptElement[] result) {
 
 		StringBuffer buffer= new StringBuffer();
 		int nResults= result.length;
@@ -150,8 +150,8 @@ public class JavadocHover extends AbstractJavaEditorTextHover implements IInform
 
 			for (int i= 0; i < result.length; i++) {
 				HTMLPrinter.startBulletList(buffer);
-				IJavaElement curr= result[i];
-				if (curr instanceof IMember || curr.getElementType() == IJavaElement.LOCAL_VARIABLE) {
+				IJavaScriptElement curr= result[i];
+				if (curr instanceof IMember || curr.getElementType() == IJavaScriptElement.LOCAL_VARIABLE) {
 					HTMLPrinter.addBullet(buffer, getInfoText(curr));
 					hasContents= true;
 				}
@@ -160,7 +160,7 @@ public class JavadocHover extends AbstractJavaEditorTextHover implements IInform
 
 		} else {
 
-			IJavaElement curr= result[0];
+			IJavaScriptElement curr= result[0];
 			if (curr instanceof IMember) {
 				IMember member= (IMember) curr;
 				HTMLPrinter.addSmallHeader(buffer, getInfoText(member));
@@ -171,7 +171,7 @@ public class JavadocHover extends AbstractJavaEditorTextHover implements IInform
 					// Provide hint why there's no Javadoc
 					if (reader == null && member.isBinary()) {
 						boolean hasAttachedJavadoc= JavaDocLocations.getJavadocBaseLocation(member) != null;
-						IPackageFragmentRoot root= (IPackageFragmentRoot)member.getAncestor(IJavaElement.PACKAGE_FRAGMENT_ROOT);
+						IPackageFragmentRoot root= (IPackageFragmentRoot)member.getAncestor(IJavaScriptElement.PACKAGE_FRAGMENT_ROOT);
 						boolean hasAttachedSource= root != null && root.getSourceAttachmentPath() != null;
 						IOpenable openable= member.getOpenable();
 						boolean hasSource= openable.getBuffer() != null;
@@ -186,7 +186,7 @@ public class JavadocHover extends AbstractJavaEditorTextHover implements IInform
 							reader= new StringReader(JavaHoverMessages.JavadocHover_noInformation);
 					}
 					
-				} catch (JavaModelException ex) {
+				} catch (JavaScriptModelException ex) {
 					reader= new StringReader(JavaHoverMessages.JavadocHover_error_gettingJavadoc);
 					JavaPlugin.log(ex.getStatus());
 				}
@@ -195,7 +195,7 @@ public class JavadocHover extends AbstractJavaEditorTextHover implements IInform
 					HTMLPrinter.addParagraph(buffer, reader);
 				}
 				hasContents= true;
-			} else if (curr.getElementType() == IJavaElement.LOCAL_VARIABLE || curr.getElementType() == IJavaElement.TYPE_PARAMETER) {
+			} else if (curr.getElementType() == IJavaScriptElement.LOCAL_VARIABLE || curr.getElementType() == IJavaScriptElement.TYPE_PARAMETER) {
 				HTMLPrinter.addSmallHeader(buffer, getInfoText(curr));
 				hasContents= true;
 			}
@@ -213,8 +213,8 @@ public class JavadocHover extends AbstractJavaEditorTextHover implements IInform
 		return null;
 	}
 
-	private String getInfoText(IJavaElement member) {
-		long flags= member.getElementType() == IJavaElement.LOCAL_VARIABLE ? LOCAL_VARIABLE_FLAGS : LABEL_FLAGS;
+	private String getInfoText(IJavaScriptElement member) {
+		long flags= member.getElementType() == IJavaScriptElement.LOCAL_VARIABLE ? LOCAL_VARIABLE_FLAGS : LABEL_FLAGS;
 		String label= JavaElementLabels.getElementLabel(member, flags);
 		StringBuffer buf= new StringBuffer();
 		for (int i= 0; i < label.length(); i++) {

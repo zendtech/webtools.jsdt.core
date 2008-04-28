@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.formatter.CodeFormatter;
 import org.eclipse.wst.jsdt.core.formatter.DefaultCodeFormatterConstants;
 import org.eclipse.wst.jsdt.internal.ui.preferences.formatter.SnippetPreview.PreviewSnippet;
@@ -129,11 +129,11 @@ public final class WhiteSpaceOptions {
 	    }
 	    
         public void setChecked(boolean checked) {
-        	fWorkingValues.put(fKey, checked ? JavaCore.INSERT : JavaCore.DO_NOT_INSERT);
+        	fWorkingValues.put(fKey, checked ? JavaScriptCore.INSERT : JavaScriptCore.DO_NOT_INSERT);
         }
         
         public boolean getChecked() {
-            return JavaCore.INSERT.equals(fWorkingValues.get(fKey));
+            return JavaScriptCore.INSERT.equals(fWorkingValues.get(fKey));
         }
         
         public List getSnippets() {

@@ -23,22 +23,22 @@ import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jface.text.templates.TemplateException;
 import org.eclipse.jface.text.templates.TemplateTranslator;
 import org.eclipse.jface.text.templates.TemplateVariableResolver;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 
 public class CodeTemplateContext extends TemplateContext {
 	
 	private String fLineDelimiter;
-	private IJavaProject fProject;
+	private IJavaScriptProject fProject;
 
-	public CodeTemplateContext(String contextTypeName, IJavaProject project, String lineDelim) {
+	public CodeTemplateContext(String contextTypeName, IJavaScriptProject project, String lineDelim) {
 		super(JavaPlugin.getDefault().getCodeTemplateContextRegistry().getContextType(contextTypeName));
 		fLineDelimiter= lineDelim;
 		fProject= project;
 	}
 
-	public IJavaProject getJavaProject() {
+	public IJavaScriptProject getJavaProject() {
 		return fProject;
 	}
 
@@ -98,7 +98,7 @@ public class CodeTemplateContext extends TemplateContext {
 		return true;
 	}
 	
-	public void setCompilationUnitVariables(ICompilationUnit cu) {
+	public void setCompilationUnitVariables(IJavaScriptUnit cu) {
 		setVariable(CodeTemplateContextType.FILENAME, cu.getElementName());
 		setVariable(CodeTemplateContextType.PACKAGENAME, cu.getParent().getElementName());
 		setVariable(CodeTemplateContextType.PROJECTNAME, cu.getJavaProject().getElementName());

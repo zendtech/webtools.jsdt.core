@@ -15,10 +15,10 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.wst.jsdt.core.IBuffer;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.core.IOpenable;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 
 public class CallLocation implements IAdaptable {
@@ -40,7 +40,7 @@ public class CallLocation implements IAdaptable {
     }
 
     /**
-     * @return IMethod
+     * @return IFunction
      */
     public IMember getCalledMember() {
         return fCalledMember;
@@ -110,7 +110,7 @@ public class CallLocation implements IAdaptable {
             if (openable != null && fMember.exists()) {
                 buffer = openable.getBuffer();
             }
-        } catch (JavaModelException e) {
+        } catch (JavaScriptModelException e) {
             JavaPlugin.log(e);
         }
         return buffer;
@@ -121,7 +121,7 @@ public class CallLocation implements IAdaptable {
     }
     
     public Object getAdapter(Class adapter) {
-        if (IJavaElement.class.isAssignableFrom(adapter)) {
+        if (IJavaScriptElement.class.isAssignableFrom(adapter)) {
             return getMember();
         }
 

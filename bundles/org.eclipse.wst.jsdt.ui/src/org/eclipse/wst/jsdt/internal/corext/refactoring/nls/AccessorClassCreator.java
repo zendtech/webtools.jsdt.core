@@ -27,12 +27,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.text.edits.TextEdit;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.dom.rewrite.ImportRewrite;
 import org.eclipse.wst.jsdt.core.formatter.CodeFormatter;
 import org.eclipse.wst.jsdt.internal.corext.codemanipulation.StubUtility;
@@ -48,7 +48,7 @@ import com.ibm.icu.text.Collator;
 
 public class AccessorClassCreator {
 
-	private final ICompilationUnit fCu;
+	private final IJavaScriptUnit fCu;
 	private final String fAccessorClassName;
 	private final IPath fAccessorPath;
 	private final IPath fResourceBundlePath;
@@ -57,7 +57,7 @@ public class AccessorClassCreator {
 	private final NLSSubstitution[] fNLSSubstitutions;
 	private final String fSubstitutionPattern;
 
-	private AccessorClassCreator(ICompilationUnit cu, String accessorClassname, IPath accessorPath, IPackageFragment accessorPackage, IPath resourceBundlePath, boolean isEclipseNLS, NLSSubstitution[] nlsSubstitutions, String substitutionPattern) {
+	private AccessorClassCreator(IJavaScriptUnit cu, String accessorClassname, IPath accessorPath, IPackageFragment accessorPackage, IPath resourceBundlePath, boolean isEclipseNLS, NLSSubstitution[] nlsSubstitutions, String substitutionPattern) {
 		fCu= cu;
 		fAccessorClassName= accessorClassname;
 		fAccessorPath= accessorPath;
@@ -68,7 +68,7 @@ public class AccessorClassCreator {
 		fSubstitutionPattern= substitutionPattern;
 	}
 
-	public static Change create(ICompilationUnit cu, String accessorClassname, IPath accessorPath, IPackageFragment accessorPackage, IPath resourceBundlePath, boolean isEclipseNLS, NLSSubstitution[] nlsSubstitutions, String substitutionPattern, IProgressMonitor pm) throws CoreException {
+	public static Change create(IJavaScriptUnit cu, String accessorClassname, IPath accessorPath, IPackageFragment accessorPackage, IPath resourceBundlePath, boolean isEclipseNLS, NLSSubstitution[] nlsSubstitutions, String substitutionPattern, IProgressMonitor pm) throws CoreException {
 		AccessorClassCreator accessorClass= new AccessorClassCreator(cu, accessorClassname, accessorPath, accessorPackage, resourceBundlePath, isEclipseNLS, nlsSubstitutions, substitutionPattern);
 
 		return new CreateTextFileChange(accessorPath, accessorClass.createAccessorCUSource(pm), null, "java"); //$NON-NLS-1$
@@ -87,12 +87,12 @@ public class AccessorClassCreator {
 	}
 
 	private String getUnformattedSource(IProgressMonitor pm) throws CoreException {
-		ICompilationUnit newCu= null;
+		IJavaScriptUnit newCu= null;
 		try {
 			newCu= fAccessorPackage.getCompilationUnit(fAccessorPath.lastSegment()).getWorkingCopy(null);
 
 			String typeComment= null, fileComment= null;
-			final IJavaProject project= newCu.getJavaProject();
+			final IJavaScriptProject project= newCu.getJavaProject();
 			final String lineDelim= StubUtility.getLineDelimiterUsed(project);
 			if (StubUtility.doAddComments(project)) {
 				typeComment= CodeGeneration.getTypeComment(newCu, fAccessorClassName, lineDelim);
@@ -126,7 +126,7 @@ public class AccessorClassCreator {
 		}
 	}
 
-	private void addImportsToAccessorCu(ICompilationUnit newCu, IProgressMonitor pm) throws CoreException {
+	private void addImportsToAccessorCu(IJavaScriptUnit newCu, IProgressMonitor pm) throws CoreException {
 		ImportRewrite is= StubUtility.createImportRewrite(newCu, true);
 		if (fIsEclipseNLS) {
 			is.addImport("org.eclipse.osgi.util.NLS"); //$NON-NLS-1$
@@ -317,12 +317,12 @@ public class AccessorClassCreator {
 	private String getResourceBundleName() throws CoreException {
 		IResource res= ResourcesPlugin.getWorkspace().getRoot().findMember(fResourceBundlePath.removeLastSegments(1));
 		if (res != null && res.exists()) {
-			IJavaElement el= JavaCore.create(res);
+			IJavaScriptElement el= JavaScriptCore.create(res);
 			if (el instanceof IPackageFragment) {
 				IPackageFragment p= (IPackageFragment) el;
 				return p.getElementName() + '.' + getPropertyFileNameWithoutExtension();
 			} else
-				if ((el instanceof IPackageFragmentRoot) || (el instanceof IJavaProject)) {
+				if ((el instanceof IPackageFragmentRoot) || (el instanceof IJavaScriptProject)) {
 					return getPropertyFileNameWithoutExtension();
 				}
 		}

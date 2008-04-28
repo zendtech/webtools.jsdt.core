@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
@@ -42,7 +42,7 @@ import org.eclipse.wst.jsdt.ui.JavaUI;
  * browser. 
  * <p>
  * The action is applicable to selections containing elements of 
- * type <code>IJavaElement</code>.
+ * type <code>IJavaScriptElement</code>.
  * 
  * <p>
  * This class may be instantiated; it is not intended to be subclassed.
@@ -115,22 +115,22 @@ public class OpenExternalJavadocAction extends SelectionDispatchAction {
 	private boolean checkEnabled(IStructuredSelection selection) {
 		if (selection.size() != 1)
 			return false;
-		return selection.getFirstElement() instanceof IJavaElement;
+		return selection.getFirstElement() instanceof IJavaScriptElement;
 	}
 	
 	/* (non-Javadoc)
 	 * Method declared on SelectionDispatchAction.
 	 */
 	public void run(ITextSelection selection) {
-		IJavaElement element= SelectionConverter.getInput(fEditor);
+		IJavaScriptElement element= SelectionConverter.getInput(fEditor);
 		if (!ActionUtil.isProcessable(getShell(), element))
 			return;
 		
 		try {
-			IJavaElement[] elements= SelectionConverter.codeResolveOrInputForked(fEditor);
+			IJavaScriptElement[] elements= SelectionConverter.codeResolveOrInputForked(fEditor);
 			if (elements == null || elements.length == 0)
 				return;
-			IJavaElement candidate= elements[0];
+			IJavaScriptElement candidate= elements[0];
 			if (elements.length > 1) {
 				candidate= SelectionConverter.selectJavaElement(elements, getShell(), getDialogTitle(), ActionMessages.OpenExternalJavadocAction_select_element);
 			}
@@ -150,7 +150,7 @@ public class OpenExternalJavadocAction extends SelectionDispatchAction {
 	public void run(IStructuredSelection selection) {
 		if (!checkEnabled(selection))
 			return;
-		IJavaElement element= (IJavaElement)selection.getFirstElement();
+		IJavaScriptElement element= (IJavaScriptElement)selection.getFirstElement();
 		if (!ActionUtil.isProcessable(getShell(), element))
 			return;			
 		run(element);
@@ -160,7 +160,7 @@ public class OpenExternalJavadocAction extends SelectionDispatchAction {
 	 * No Javadoc since the method isn't meant to be public but is
 	 * since the beginning
 	 */
-	public void run(IJavaElement element) {
+	public void run(IJavaScriptElement element) {
 		if (element == null)
 			return;
 		Shell shell= getShell();
@@ -174,7 +174,7 @@ public class OpenExternalJavadocAction extends SelectionDispatchAction {
 					String message= ActionMessages.OpenExternalJavadocAction_libraries_no_location;	 
 					showMessage(shell, Messages.format(message, new String[] { labelName, root.getElementName() }), false);
 				} else {
-					IJavaElement annotatedElement= element.getJavaProject();
+					IJavaScriptElement annotatedElement= element.getJavaProject();
 					String message= ActionMessages.OpenExternalJavadocAction_source_no_location;	 
 					showMessage(shell, Messages.format(message, new String[] { labelName, annotatedElement.getElementName() }), false);
 				}

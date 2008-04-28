@@ -27,9 +27,9 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.jsdt.core.CompletionContext;
 import org.eclipse.wst.jsdt.core.CompletionProposal;
 import org.eclipse.wst.jsdt.core.CompletionRequestor;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.core.compiler.IProblem;
@@ -59,7 +59,7 @@ import org.eclipse.wst.jsdt.internal.ui.viewsupport.ImageDescriptorRegistry;
  * The lifecycle of a <code>CompletionProposalCollector</code> instance is very
  * simple:
  * <pre>
- * ICompilationUnit unit= ...
+ * IJavaScriptUnit unit= ...
  * int offset= ...
  * 
  * CompletionProposalCollector collector= new CompletionProposalCollector(unit);
@@ -99,8 +99,8 @@ public class CompletionProposalCollector extends CompletionRequestor {
 	private final List fKeywords= new ArrayList();
 	private final Set fSuggestedMethodNames= new HashSet();
 
-	private final ICompilationUnit fCompilationUnit;
-	private final IJavaProject fJavaProject;
+	private final IJavaScriptUnit fCompilationUnit;
+	private final IJavaScriptProject fJavaProject;
 	private int fUserReplacementLength;
 
 	private CompletionContext fContext;
@@ -119,14 +119,14 @@ public class CompletionProposalCollector extends CompletionRequestor {
 
 	/**
 	 * Creates a new instance ready to collect proposals. If the passed
-	 * <code>ICompilationUnit</code> is not contained in an
-	 * {@link IJavaProject}, no javadoc will be available as
+	 * <code>IJavaScriptUnit</code> is not contained in an
+	 * {@link IJavaScriptProject}, no javadoc will be available as
 	 * {@link org.eclipse.jface.text.contentassist.ICompletionProposal#getAdditionalProposalInfo() additional info}
 	 * on the created proposals.
 	 *
 	 * @param cu the compilation unit that the result collector will operate on
 	 */
-	public CompletionProposalCollector(ICompilationUnit cu) {
+	public CompletionProposalCollector(IJavaScriptUnit cu) {
 		this(cu.getJavaProject(), cu);
 	}
 
@@ -135,7 +135,7 @@ public class CompletionProposalCollector extends CompletionRequestor {
 	 * for anonymous types and method declarations are not created when using
 	 * this constructor, as those need to know the compilation unit that they
 	 * are created on. Use
-	 * {@link CompletionProposalCollector#CompletionProposalCollector(ICompilationUnit)}
+	 * {@link CompletionProposalCollector#CompletionProposalCollector(IJavaScriptUnit)}
 	 * instead to get all proposals.
 	 * <p>
 	 * If the passed Java project is <code>null</code>, no javadoc will be
@@ -146,11 +146,11 @@ public class CompletionProposalCollector extends CompletionRequestor {
 	 * @param project the project that the result collector will operate on, or
 	 *        <code>null</code>
 	 */
-	public CompletionProposalCollector(IJavaProject project) {
+	public CompletionProposalCollector(IJavaScriptProject project) {
 		this(project, null);
 	}
 
-	private CompletionProposalCollector(IJavaProject project, ICompilationUnit cu) {
+	private CompletionProposalCollector(IJavaScriptProject project, IJavaScriptUnit cu) {
 		fJavaProject= project;
 		fCompilationUnit= cu;
 
@@ -384,15 +384,15 @@ public class CompletionProposalCollector extends CompletionRequestor {
 				return createPackageProposal(proposal);
 			case CompletionProposal.TYPE_REF:
 				return createTypeProposal(proposal);
-			case CompletionProposal.JAVADOC_TYPE_REF:
+			case CompletionProposal.JSDOC_TYPE_REF:
 				return createJavadocLinkTypeProposal(proposal);
 			case CompletionProposal.FIELD_REF:
-			case CompletionProposal.JAVADOC_FIELD_REF:
-			case CompletionProposal.JAVADOC_VALUE_REF:
+			case CompletionProposal.JSDOC_FIELD_REF:
+			case CompletionProposal.JSDOC_VALUE_REF:
 				return createFieldProposal(proposal);
 			case CompletionProposal.METHOD_REF:
 			case CompletionProposal.METHOD_NAME_REFERENCE:
-			case CompletionProposal.JAVADOC_METHOD_REF:
+			case CompletionProposal.JSDOC_METHOD_REF:
 				return createMethodReferenceProposal(proposal);
 			case CompletionProposal.METHOD_DECLARATION:
 				return createMethodDeclarationProposal(proposal);
@@ -405,10 +405,10 @@ public class CompletionProposalCollector extends CompletionRequestor {
 				return createLocalVariableProposal(proposal);
 			case CompletionProposal.ANNOTATION_ATTRIBUTE_REF:
 				return createAnnotationAttributeReferenceProposal(proposal);
-			case CompletionProposal.JAVADOC_BLOCK_TAG:
-			case CompletionProposal.JAVADOC_PARAM_REF:
+			case CompletionProposal.JSDOC_BLOCK_TAG:
+			case CompletionProposal.JSDOC_PARAM_REF:
 				return createJavadocSimpleProposal(proposal);
-			case CompletionProposal.JAVADOC_INLINE_TAG:
+			case CompletionProposal.JSDOC_INLINE_TAG:
 				return createJavadocInlineTagProposal(proposal);
 			case CompletionProposal.POTENTIAL_METHOD_DECLARATION:
 			default:
@@ -430,13 +430,13 @@ public class CompletionProposalCollector extends CompletionRequestor {
 
 	/**
 	 * Returns the compilation unit that the receiver operates on, or
-	 * <code>null</code> if the <code>IJavaProject</code> constructor was
+	 * <code>null</code> if the <code>IJavaScriptProject</code> constructor was
 	 * used to create the receiver.
 	 *
 	 * @return the compilation unit that the receiver operates on, or
 	 *         <code>null</code>
 	 */
-	protected final ICompilationUnit getCompilationUnit() {
+	protected final IJavaScriptUnit getCompilationUnit() {
 		return fCompilationUnit;
 	}
 
@@ -543,14 +543,14 @@ public class CompletionProposalCollector extends CompletionRequestor {
 		switch (proposal.getKind()) {
 			case CompletionProposal.METHOD_DECLARATION:
 			case CompletionProposal.METHOD_NAME_REFERENCE:
-			case CompletionProposal.JAVADOC_METHOD_REF:
+			case CompletionProposal.JSDOC_METHOD_REF:
 			case CompletionProposal.METHOD_REF:
 			case CompletionProposal.ANNOTATION_ATTRIBUTE_REF:
 			case CompletionProposal.POTENTIAL_METHOD_DECLARATION:
 			case CompletionProposal.ANONYMOUS_CLASS_DECLARATION:
 			case CompletionProposal.FIELD_REF:
-			case CompletionProposal.JAVADOC_FIELD_REF:
-			case CompletionProposal.JAVADOC_VALUE_REF:
+			case CompletionProposal.JSDOC_FIELD_REF:
+			case CompletionProposal.JSDOC_VALUE_REF:
 				char[] declaration= proposal.getDeclarationSignature();
 				// special methods may not have a declaring type: methods defined on arrays etc.
 				// Currently known: class literals don't have a declaring type - use Object
@@ -559,16 +559,16 @@ public class CompletionProposalCollector extends CompletionRequestor {
 				return Signature.toCharArray(declaration);
 			case CompletionProposal.PACKAGE_REF:
 				return proposal.getDeclarationSignature();
-			case CompletionProposal.JAVADOC_TYPE_REF:
+			case CompletionProposal.JSDOC_TYPE_REF:
 			case CompletionProposal.TYPE_REF:
 				return Signature.toCharArray(proposal.getSignature());
 			case CompletionProposal.LOCAL_VARIABLE_REF:
 			case CompletionProposal.VARIABLE_DECLARATION:
 			case CompletionProposal.KEYWORD:
 			case CompletionProposal.LABEL_REF:
-			case CompletionProposal.JAVADOC_BLOCK_TAG:
-			case CompletionProposal.JAVADOC_INLINE_TAG:
-			case CompletionProposal.JAVADOC_PARAM_REF:
+			case CompletionProposal.JSDOC_BLOCK_TAG:
+			case CompletionProposal.JSDOC_INLINE_TAG:
+			case CompletionProposal.JSDOC_PARAM_REF:
 				return null;
 			default:
 				Assert.isTrue(false);
@@ -586,9 +586,9 @@ public class CompletionProposalCollector extends CompletionRequestor {
 		int relevance= computeRelevance(proposal);
 
 		try {
-			IJavaElement element= fCompilationUnit.getElementAt(proposal.getCompletionLocation() + 1);
+			IJavaScriptElement element= fCompilationUnit.getElementAt(proposal.getCompletionLocation() + 1);
 			if (element != null) {
-				IType type= (IType) element.getAncestor(IJavaElement.TYPE);
+				IType type= (IType) element.getAncestor(IJavaScriptElement.TYPE);
 				if (type != null) {
 					GetterSetterCompletionProposal.evaluateProposals(type, prefix, completionStart, completionEnd - completionStart, relevance + 1, fSuggestedMethodNames, fJavaProposals);
 					MethodDeclarationCompletionProposal.evaluateProposals(type, prefix, completionStart, completionEnd - completionStart, relevance, fSuggestedMethodNames, fJavaProposals);
@@ -630,7 +630,7 @@ public class CompletionProposalCollector extends CompletionRequestor {
 		Image image= getImage(fLabelProvider.createFieldImageDescriptor(proposal));
 		int relevance= computeRelevance(proposal);
 
-		JavaCompletionProposal javaProposal= new JavaCompletionProposal(completion, start, length, image, label, relevance, getContext().isInJavadoc(), getInvocationContext());
+		JavaCompletionProposal javaProposal= new JavaCompletionProposal(completion, start, length, image, label, relevance, getContext().isInJsdoc(), getInvocationContext());
 		if (fJavaProject != null)
 			javaProposal.setProposalInfo(new FieldProposalInfo(fJavaProject, proposal));
 

@@ -19,7 +19,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchConstants;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchConstants;
 import org.eclipse.wst.jsdt.core.search.SearchEngine;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
@@ -42,7 +42,7 @@ public class OpenTypeInHierarchyAction extends Action implements IWorkbenchWindo
 		Shell parent= JavaPlugin.getActiveWorkbenchShell();
 		OpenTypeSelectionDialog dialog= new OpenTypeSelectionDialog(parent, false, 
 			PlatformUI.getWorkbench().getProgressService(), 
-			SearchEngine.createWorkspaceScope(), IJavaSearchConstants.TYPE);
+			SearchEngine.createWorkspaceScope(), IJavaScriptSearchConstants.TYPE);
 		
 		dialog.setTitle(ActionMessages.OpenTypeInHierarchyAction_dialogTitle); 
 		dialog.setMessage(ActionMessages.OpenTypeInHierarchyAction_dialogMessage); 

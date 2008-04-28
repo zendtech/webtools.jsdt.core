@@ -45,9 +45,9 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.actions.WorkspaceModifyDelegatingOperation;
-import org.eclipse.wst.jsdt.core.IClasspathEntry;
-import org.eclipse.wst.jsdt.core.IJavaProject;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.IIncludePathEntry;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.LibrarySuperType;
 import org.eclipse.wst.jsdt.internal.core.JavaProject;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
@@ -200,7 +200,7 @@ public class JavaProjectWizardSecondPage extends JavaCapabilityConfigurationPage
 				}	
 			}
 				
-			IClasspathEntry[] entries= null;
+			IIncludePathEntry[] entries= null;
 //			IPath outputLocation= null;
 	
 			if (fFirstPage.getDetect()) {
@@ -234,18 +234,18 @@ public class JavaProjectWizardSecondPage extends JavaCapabilityConfigurationPage
 
 				// configure the classpath entries, including the default jre library.
 				List cpEntries= new ArrayList();
-				cpEntries.add(JavaCore.newSourceEntry(projectPath.append(srcPath)));
+				cpEntries.add(JavaScriptCore.newSourceEntry(projectPath.append(srcPath)));
 				cpEntries.addAll(Arrays.asList(getDefaultClasspathEntry()));
-				entries= (IClasspathEntry[]) cpEntries.toArray(new IClasspathEntry[cpEntries.size()]);
+				entries= (IIncludePathEntry[]) cpEntries.toArray(new IIncludePathEntry[cpEntries.size()]);
 				
 				// configure the output location
 //				outputLocation= projectPath.append(binPath);
 			} else {
 				IPath projectPath= fCurrProject.getFullPath();
 				List cpEntries= new ArrayList();
-				cpEntries.add(JavaCore.newSourceEntry(projectPath));
+				cpEntries.add(JavaScriptCore.newSourceEntry(projectPath));
 				cpEntries.addAll(Arrays.asList(getDefaultClasspathEntry()));
-				entries= (IClasspathEntry[]) cpEntries.toArray(new IClasspathEntry[cpEntries.size()]);
+				entries= (IIncludePathEntry[]) cpEntries.toArray(new IIncludePathEntry[cpEntries.size()]);
 
 //				outputLocation= projectPath;
 				monitor.worked(2);
@@ -253,7 +253,7 @@ public class JavaProjectWizardSecondPage extends JavaCapabilityConfigurationPage
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException();
 			}
-			IJavaProject javaProject = JavaCore.create(fCurrProject);
+			IJavaScriptProject javaProject = JavaScriptCore.create(fCurrProject);
             init(javaProject,  entries, false);
 			if(fFirstPage.isWebEnabled()) {
 				LibrarySuperType superType = new LibrarySuperType(new Path( JavaRuntime.BASE_BROWSER_LIB),  getJavaProject(), SUPER_TYPE_NAME);
@@ -276,7 +276,7 @@ public class JavaProjectWizardSecondPage extends JavaCapabilityConfigurationPage
 		return URIUtil.toURI(fFirstPage.getLocationPath());
 	}
 	
-	private IClasspathEntry[] getDefaultClasspathEntry() {
+	private IIncludePathEntry[] getDefaultClasspathEntry() {
 		
 		
 		boolean browserlib= fFirstPage.isWebEnabled();
@@ -285,14 +285,14 @@ public class JavaProjectWizardSecondPage extends JavaCapabilityConfigurationPage
 		 
 		if (fFirstPage.isWebEnabled()) {
 			// use default
-			return new IClasspathEntry[] { JavaCore.newContainerEntry(jreContainerPath),
-																	   JavaCore.newContainerEntry(BROWSER_LIB)  };
+			return new IIncludePathEntry[] { JavaScriptCore.newContainerEntry(jreContainerPath),
+																	   JavaScriptCore.newContainerEntry(BROWSER_LIB)  };
 		}else {
-			return new IClasspathEntry[] { JavaCore.newContainerEntry(jreContainerPath)};
+			return new IIncludePathEntry[] { JavaScriptCore.newContainerEntry(jreContainerPath)};
 		}
 		
 		
-//		IClasspathEntry[] defaultJRELibrary= PreferenceConstants.getDefaultJRELibrary();
+//		IIncludePathEntry[] defaultJRELibrary= PreferenceConstants.getDefaultJRELibrary();
 //		boolean browserlib= fFirstPage.isWebEnabled();
 //		IPath jreContainerPath= new Path(JavaRuntime.JRE_CONTAINER);
 //		IPath BROWSER_LIB = new Path(JavaRuntime.BASE_BROWSER_LIB);
@@ -303,7 +303,7 @@ public class JavaProjectWizardSecondPage extends JavaCapabilityConfigurationPage
 //		}
 //		IPath newPath= fFirstPage.getJREContainerPath();
 //		if (newPath != null) {
-//			return new IClasspathEntry[] { JavaCore.newContainerEntry(newPath) };
+//			return new IIncludePathEntry[] { JavaScriptCore.newContainerEntry(newPath) };
 //		}
 //		return defaultJRELibrary;
 	}
@@ -419,7 +419,7 @@ public class JavaProjectWizardSecondPage extends JavaCapabilityConfigurationPage
 //			if (!fKeepContent) {
 //				String compliance= fFirstPage.getCompilerCompliance();
 //				if (compliance != null) {
-//					IJavaProject project= JavaCore.create(fCurrProject);
+//					IJavaScriptProject project= JavaScriptCore.create(fCurrProject);
 //					Map options= project.getOptions(false);
 //					JavaModelUtil.setCompilanceOptions(options, compliance);
 //					JavaModelUtil.setDefaultClassfileOptions(options, compliance); // complete compliance options

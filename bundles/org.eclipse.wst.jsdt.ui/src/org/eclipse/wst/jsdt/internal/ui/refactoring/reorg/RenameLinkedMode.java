@@ -49,16 +49,16 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.texteditor.link.EditorLinkedModeUI;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IField;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaProject;
-import org.eclipse.wst.jsdt.core.IMethod;
-import org.eclipse.wst.jsdt.core.JavaConventions;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.IFunction;
+import org.eclipse.wst.jsdt.core.JavaScriptConventions;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.dom.ASTNode;
-import org.eclipse.wst.jsdt.core.dom.CompilationUnit;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
 import org.eclipse.wst.jsdt.core.dom.SimpleName;
 import org.eclipse.wst.jsdt.core.refactoring.IJavaRefactorings;
 import org.eclipse.wst.jsdt.core.refactoring.descriptors.RenameJavaElementDescriptor;
@@ -127,7 +127,7 @@ public class RenameLinkedMode {
 	private static RenameLinkedMode fgActiveLinkedMode;
 	
 	private final CompilationUnitEditor fEditor;
-	private final IJavaElement fJavaElement;
+	private final IJavaScriptElement fJavaElement;
 
 	private RenameInformationPopup fInfoPopup;
 	
@@ -142,7 +142,7 @@ public class RenameLinkedMode {
 	private boolean fShowPreview;
 
 
-	public RenameLinkedMode(IJavaElement element, CompilationUnitEditor editor) {
+	public RenameLinkedMode(IJavaScriptElement element, CompilationUnitEditor editor) {
 		Assert.isNotNull(element);
 		Assert.isNotNull(editor);
 		fEditor= editor;
@@ -180,7 +180,7 @@ public class RenameLinkedMode {
 		int offset= fOriginalSelection.x;
 		
 		try {
-			CompilationUnit root= JavaPlugin.getDefault().getASTProvider().getAST(getCompilationUnit(), ASTProvider.WAIT_YES, null);
+			JavaScriptUnit root= JavaPlugin.getDefault().getASTProvider().getAST(getCompilationUnit(), ASTProvider.WAIT_YES, null);
 			
 			fLinkedPositionGroup= new LinkedPositionGroup();
 			ASTNode selectedNode= NodeFinder.perform(root, fOriginalSelection.x, fOriginalSelection.y);
@@ -421,8 +421,8 @@ public class RenameLinkedMode {
 		return renameSupport;
 	}
 
-	private ICompilationUnit getCompilationUnit() {
-		return (ICompilationUnit) EditorUtility.getEditorInputJavaElement(fEditor, false);
+	private IJavaScriptUnit getCompilationUnit() {
+		return (IJavaScriptUnit) EditorUtility.getEditorInputJavaElement(fEditor, false);
 	}
 	
 	public void startFullDialog() {
@@ -444,46 +444,46 @@ public class RenameLinkedMode {
 	 * @param javaElement
 	 * @param newName
 	 * @return a rename descriptor with current settings as used in the refactoring dialogs 
-	 * @throws JavaModelException
+	 * @throws JavaScriptModelException
 	 */
-	private RenameJavaElementDescriptor createRenameDescriptor(IJavaElement javaElement, String newName) throws JavaModelException {
+	private RenameJavaElementDescriptor createRenameDescriptor(IJavaScriptElement javaElement, String newName) throws JavaScriptModelException {
 		String contributionId;
 		// see RefactoringExecutionStarter#createRenameSupport(..):
 		int elementType= javaElement.getElementType();
 		switch (elementType) {
-			case IJavaElement.JAVA_PROJECT:
+			case IJavaScriptElement.JAVA_PROJECT:
 				contributionId= IJavaRefactorings.RENAME_JAVA_PROJECT;
 				break;
-			case IJavaElement.PACKAGE_FRAGMENT_ROOT:
+			case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
 				contributionId= IJavaRefactorings.RENAME_SOURCE_FOLDER;
 				break;
-			case IJavaElement.PACKAGE_FRAGMENT:
+			case IJavaScriptElement.PACKAGE_FRAGMENT:
 				contributionId= IJavaRefactorings.RENAME_PACKAGE;
 				break;
-			case IJavaElement.COMPILATION_UNIT:
+			case IJavaScriptElement.COMPILATION_UNIT:
 				contributionId= IJavaRefactorings.RENAME_COMPILATION_UNIT;
 				break;
-			case IJavaElement.TYPE:
+			case IJavaScriptElement.TYPE:
 				contributionId= IJavaRefactorings.RENAME_TYPE;
 				break;
-			case IJavaElement.METHOD:
-				final IMethod method= (IMethod) javaElement;
+			case IJavaScriptElement.METHOD:
+				final IFunction method= (IFunction) javaElement;
 				if (method.isConstructor())
 					return createRenameDescriptor(method.getDeclaringType(), newName);
 				else
 					contributionId= IJavaRefactorings.RENAME_METHOD;
 				break;
-			case IJavaElement.FIELD:
+			case IJavaScriptElement.FIELD:
 				IField field= (IField) javaElement;
 				if (field.isEnumConstant())
 					contributionId= IJavaRefactorings.RENAME_ENUM_CONSTANT;
 				else
 					contributionId= IJavaRefactorings.RENAME_FIELD;
 				break;
-			case IJavaElement.TYPE_PARAMETER:
+			case IJavaScriptElement.TYPE_PARAMETER:
 				contributionId= IJavaRefactorings.RENAME_TYPE_PARAMETER;
 				break;
-			case IJavaElement.LOCAL_VARIABLE:
+			case IJavaScriptElement.LOCAL_VARIABLE:
 				contributionId= IJavaRefactorings.RENAME_LOCAL_VARIABLE;
 				break;
 			default:
@@ -493,7 +493,7 @@ public class RenameLinkedMode {
 		RenameJavaElementDescriptor descriptor= (RenameJavaElementDescriptor) RefactoringCore.getRefactoringContribution(contributionId).createDescriptor();
 		descriptor.setJavaElement(javaElement);
 		descriptor.setNewName(newName);
-		if (elementType != IJavaElement.PACKAGE_FRAGMENT_ROOT)
+		if (elementType != IJavaScriptElement.PACKAGE_FRAGMENT_ROOT)
 			descriptor.setUpdateReferences(true);
 		
 		IDialogSettings javaSettings= JavaPlugin.getDefault().getDialogSettings();
@@ -503,14 +503,14 @@ public class RenameLinkedMode {
 		}
 		
 		switch (elementType) {
-			case IJavaElement.METHOD:
-			case IJavaElement.FIELD:
+			case IJavaScriptElement.METHOD:
+			case IJavaScriptElement.FIELD:
 				descriptor.setDeprecateDelegate(refactoringSettings.getBoolean(DelegateUIHelper.DELEGATE_DEPRECATION));
 				descriptor.setKeepOriginal(refactoringSettings.getBoolean(DelegateUIHelper.DELEGATE_UPDATING));
 		}
 		switch (elementType) {
-			case IJavaElement.TYPE:
-//			case IJavaElement.COMPILATION_UNIT: // TODO
+			case IJavaScriptElement.TYPE:
+//			case IJavaScriptElement.COMPILATION_UNIT: // TODO
 				descriptor.setUpdateSimilarDeclarations(refactoringSettings.getBoolean(RenameRefactoringWizard.TYPE_UPDATE_SIMILAR_ELEMENTS));
 				int strategy;
 				try {
@@ -521,12 +521,12 @@ public class RenameLinkedMode {
 				descriptor.setMatchStrategy(strategy);
 		}
 		switch (elementType) {
-			case IJavaElement.PACKAGE_FRAGMENT:
+			case IJavaScriptElement.PACKAGE_FRAGMENT:
 				descriptor.setUpdateHierarchy(refactoringSettings.getBoolean(RenameRefactoringWizard.PACKAGE_RENAME_SUBPACKAGES));
 		}
 		switch (elementType) {
-			case IJavaElement.PACKAGE_FRAGMENT:
-			case IJavaElement.TYPE:
+			case IJavaScriptElement.PACKAGE_FRAGMENT:
+			case IJavaScriptElement.TYPE:
 				String fileNamePatterns= refactoringSettings.get(RenameRefactoringWizard.QUALIFIED_NAMES_PATTERNS);
 				if (fileNamePatterns != null && fileNamePatterns.length() != 0) {
 					descriptor.setFileNamePatterns(fileNamePatterns);
@@ -536,15 +536,15 @@ public class RenameLinkedMode {
 				}
 		}
 		switch (elementType) {
-			case IJavaElement.PACKAGE_FRAGMENT:
-			case IJavaElement.TYPE:
-			case IJavaElement.FIELD:
+			case IJavaScriptElement.PACKAGE_FRAGMENT:
+			case IJavaScriptElement.TYPE:
+			case IJavaScriptElement.FIELD:
 				boolean updateTextualOccurrences= refactoringSettings.getBoolean(RenameRefactoringWizard.UPDATE_TEXTUAL_MATCHES);
 				descriptor.setUpdateTextualOccurrences(updateTextualOccurrences);
 				fShowPreview|= updateTextualOccurrences;
 		}
 		switch (elementType) {
-			case IJavaElement.FIELD:
+			case IJavaScriptElement.FIELD:
 				descriptor.setRenameGetters(refactoringSettings.getBoolean(RenameRefactoringWizard.FIELD_RENAME_GETTER));
 				descriptor.setRenameSetters(refactoringSettings.getBoolean(RenameRefactoringWizard.FIELD_RENAME_SETTER));
 		}
@@ -596,10 +596,10 @@ public class RenameLinkedMode {
 			 * but make sure implementations don't access outdated Java Model
 			 * (cache all necessary information before starting linked mode).
 			 */
-			IJavaProject project= fJavaElement.getJavaProject();
-			String sourceLevel= project.getOption(JavaCore.COMPILER_SOURCE, true);
-			String complianceLevel= project.getOption(JavaCore.COMPILER_COMPLIANCE, true);
-			return JavaConventions.validateIdentifier(newName, sourceLevel, complianceLevel).isOK();
+			IJavaScriptProject project= fJavaElement.getJavaProject();
+			String sourceLevel= project.getOption(JavaScriptCore.COMPILER_SOURCE, true);
+			String complianceLevel= project.getOption(JavaScriptCore.COMPILER_COMPLIANCE, true);
+			return JavaScriptConventions.validateIdentifier(newName, sourceLevel, complianceLevel).isOK();
 		} catch (BadLocationException e) {
 			return false;
 		}

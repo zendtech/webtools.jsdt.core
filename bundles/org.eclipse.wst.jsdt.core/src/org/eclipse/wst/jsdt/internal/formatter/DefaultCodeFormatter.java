@@ -18,7 +18,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.TextEdit;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.compiler.ITerminalSymbols;
 import org.eclipse.wst.jsdt.core.compiler.InvalidInputException;
 import org.eclipse.wst.jsdt.core.formatter.CodeFormatter;
@@ -84,7 +84,7 @@ public class DefaultCodeFormatter extends CodeFormatter {
 			this.options = options;
 			this.preferences = new DefaultCodeFormatterOptions(options);
 		} else {
-			this.options = JavaCore.getOptions();
+			this.options = JavaScriptCore.getOptions();
 			this.preferences = new DefaultCodeFormatterOptions(DefaultCodeFormatterConstants.getJavaConventionsSettings());
 		}
 		this.defaultCompilerOptions = getDefaultCompilerOptions();

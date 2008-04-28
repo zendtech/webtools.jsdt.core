@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.preferences.PreferencesAccess;
@@ -414,10 +414,10 @@ public abstract class ProfileConfigurationBlock {
 	public void performApply() {
 		try {
 			fCurrContext.getNode(JavaUI.ID_PLUGIN).flush();
-			fCurrContext.getNode(JavaCore.PLUGIN_ID).flush();
+			fCurrContext.getNode(JavaScriptCore.PLUGIN_ID).flush();
 			if (fCurrContext != fInstanceScope) {
 				fInstanceScope.getNode(JavaUI.ID_PLUGIN).flush();
-				fInstanceScope.getNode(JavaCore.PLUGIN_ID).flush();
+				fInstanceScope.getNode(JavaScriptCore.PLUGIN_ID).flush();
 			}
 		} catch (BackingStoreException e) {
 			JavaPlugin.log(e);

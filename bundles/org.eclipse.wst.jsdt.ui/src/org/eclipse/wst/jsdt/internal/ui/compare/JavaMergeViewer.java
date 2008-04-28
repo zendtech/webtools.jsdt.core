@@ -40,9 +40,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaProject;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.compare.JavaTokenComparator.ITokenComparatorFactory;
 import org.eclipse.wst.jsdt.internal.ui.text.PreferencesAdapter;
@@ -87,7 +87,7 @@ public class JavaMergeViewer extends TextMergeViewer {
 		super.handleDispose(event);
 	}
 	
-	public IJavaProject getJavaProject(ICompareInput input) {
+	public IJavaScriptProject getJavaProject(ICompareInput input) {
 		
 		if (input == null)
 			return null;
@@ -109,7 +109,7 @@ public class JavaMergeViewer extends TextMergeViewer {
 		if (rp != null) {
 			IResource resource= rp.getResource();
 			if (resource != null) {
-				IJavaElement element= JavaCore.create(resource);
+				IJavaScriptElement element= JavaScriptCore.create(resource);
 				if (element != null)
 					return element.getJavaProject();
 			}
@@ -120,7 +120,7 @@ public class JavaMergeViewer extends TextMergeViewer {
     public void setInput(Object input) {
     	
     	if (input instanceof ICompareInput) {    		
-    		IJavaProject project= getJavaProject((ICompareInput)input);
+    		IJavaScriptProject project= getJavaProject((ICompareInput)input);
 			if (project != null) {
 				setPreferenceStore(createChainedPreferenceStore(project));
 				if (fSourceViewer != null) {
@@ -137,12 +137,12 @@ public class JavaMergeViewer extends TextMergeViewer {
     	super.setInput(input);
     }
     
-    private ChainedPreferenceStore createChainedPreferenceStore(IJavaProject project) {
+    private ChainedPreferenceStore createChainedPreferenceStore(IJavaScriptProject project) {
     	ArrayList stores= new ArrayList(4);
     	if (project != null)
-    		stores.add(new EclipsePreferencesAdapter(new ProjectScope(project.getProject()), JavaCore.PLUGIN_ID));
+    		stores.add(new EclipsePreferencesAdapter(new ProjectScope(project.getProject()), JavaScriptCore.PLUGIN_ID));
 		stores.add(JavaPlugin.getDefault().getPreferenceStore());
-		stores.add(new PreferencesAdapter(JavaCore.getPlugin().getPluginPreferences()));
+		stores.add(new PreferencesAdapter(JavaScriptCore.getPlugin().getPluginPreferences()));
 		stores.add(EditorsUI.getPreferenceStore());
 		return new ChainedPreferenceStore((IPreferenceStore[]) stores.toArray(new IPreferenceStore[stores.size()]));
     }

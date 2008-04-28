@@ -26,10 +26,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 import org.eclipse.wst.jsdt.core.IAccessRule;
-import org.eclipse.wst.jsdt.core.IClasspathEntry;
-import org.eclipse.wst.jsdt.core.IJavaProject;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.IIncludePathEntry;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.util.PixelConverter;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.JavaUILabelProvider;
@@ -51,7 +51,7 @@ public class ProjectsWorkbookPage extends BuildPathBasePage {
 	private final int IDX_REMOVE= 3;
 	
 	private ListDialogField fClassPathList;
-	private IJavaProject fCurrJProject;
+	private IJavaScriptProject fCurrJProject;
 	
 	private TreeListDialogField fProjectsList;
 	
@@ -83,7 +83,7 @@ public class ProjectsWorkbookPage extends BuildPathBasePage {
 		fProjectsList.setViewerComparator(new CPListElementSorter());
 	}
 	
-	public void init(final IJavaProject jproject) {
+	public void init(final IJavaScriptProject jproject) {
 		fCurrJProject= jproject;
 		
 		if (Display.getCurrent() != null) {
@@ -97,7 +97,7 @@ public class ProjectsWorkbookPage extends BuildPathBasePage {
 		}
 	}
 		
-	private void updateProjectsList(IJavaProject currJProject) {
+	private void updateProjectsList(IJavaScriptProject currJProject) {
 		// add the projects-cpentries that are already on the class path
 		List cpelements= fClassPathList.getElements();
 		
@@ -176,7 +176,7 @@ public class ProjectsWorkbookPage extends BuildPathBasePage {
 	 * @see org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.BuildPathBasePage#isEntryKind(int)
 	 */
 	public boolean isEntryKind(int kind) {
-		return kind == IClasspathEntry.CPE_PROJECT;
+		return kind == IIncludePathEntry.CPE_PROJECT;
 	}
 
 
@@ -408,7 +408,7 @@ public class ProjectsWorkbookPage extends BuildPathBasePage {
 			List elements= fProjectsList.getElements();
 			for (int i= 0; i < elements.size(); i++) {
 				CPListElement curr= (CPListElement) elements.get(0);
-				IJavaProject proj= (IJavaProject) JavaCore.create(curr.getResource());
+				IJavaScriptProject proj= (IJavaScriptProject) JavaScriptCore.create(curr.getResource());
 				selectable.remove(proj);
 			}
 			Object[] selectArr= selectable.toArray();
@@ -421,12 +421,12 @@ public class ProjectsWorkbookPage extends BuildPathBasePage {
 				Object[] result= dialog.getResult();
 				CPListElement[] cpElements= new CPListElement[result.length];
 				for (int i= 0; i < result.length; i++) {
-					IJavaProject curr= (IJavaProject) result[i];
-					cpElements[i]= new CPListElement(fCurrJProject, IClasspathEntry.CPE_PROJECT, curr.getPath(), curr.getResource());
+					IJavaScriptProject curr= (IJavaScriptProject) result[i];
+					cpElements[i]= new CPListElement(fCurrJProject, IIncludePathEntry.CPE_PROJECT, curr.getPath(), curr.getResource());
 				}
 				return cpElements;
 			}
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			return null;
 		}
 		return null;

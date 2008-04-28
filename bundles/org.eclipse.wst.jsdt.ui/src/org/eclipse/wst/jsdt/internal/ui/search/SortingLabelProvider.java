@@ -13,7 +13,7 @@ package org.eclipse.wst.jsdt.internal.ui.search;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.jsdt.core.IImportDeclaration;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.ColoredJavaElementLabels;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.ColoredString;
 import org.eclipse.wst.jsdt.ui.JavaElementLabels;
@@ -37,7 +37,7 @@ public class SortingLabelProvider extends SearchLabelProvider {
 
 	public Image getImage(Object element) {
 		Image image= null;
-		if (element instanceof IJavaElement || element instanceof IResource)
+		if (element instanceof IJavaScriptElement || element instanceof IResource)
 			image= super.getImage(element);
 		if (image != null)
 			return image;

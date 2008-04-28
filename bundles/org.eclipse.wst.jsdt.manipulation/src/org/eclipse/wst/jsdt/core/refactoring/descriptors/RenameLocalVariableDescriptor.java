@@ -12,7 +12,7 @@ package org.eclipse.wst.jsdt.core.refactoring.descriptors;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.ISourceRange;
 import org.eclipse.wst.jsdt.core.refactoring.IJavaRefactorings;
 import org.eclipse.wst.jsdt.internal.core.refactoring.descriptors.DescriptorMessages;
@@ -44,7 +44,7 @@ public final class RenameLocalVariableDescriptor extends JavaRefactoringDescript
 	private ISourceRange fSelection= null;
 
 	/** The compilation unit attribute */
-	private ICompilationUnit fUnit= null;
+	private IJavaScriptUnit fUnit= null;
 
 	/**
 	 * Creates a new refactoring descriptor.
@@ -70,7 +70,7 @@ public final class RenameLocalVariableDescriptor extends JavaRefactoringDescript
 	 * @param unit
 	 *            the compilation unit to set
 	 */
-	public void setCompilationUnit(final ICompilationUnit unit) {
+	public void setCompilationUnit(final IJavaScriptUnit unit) {
 		Assert.isNotNull(unit);
 		fUnit= unit;
 	}

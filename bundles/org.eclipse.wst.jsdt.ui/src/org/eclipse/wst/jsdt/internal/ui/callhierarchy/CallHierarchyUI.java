@@ -32,11 +32,11 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IMember;
-import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.ISourceRange;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.callhierarchy.CallHierarchy;
 import org.eclipse.wst.jsdt.internal.corext.callhierarchy.CallLocation;
 import org.eclipse.wst.jsdt.internal.corext.callhierarchy.MethodWrapper;
@@ -87,11 +87,11 @@ public class CallHierarchyUI {
         settings.setValue(PREF_MAX_CALL_DEPTH, maxCallDepth);
     }
     
-    public static void jumpToMember(IJavaElement element) {
+    public static void jumpToMember(IJavaScriptElement element) {
         if (element != null) {
             try {
                 JavaUI.openInEditor(element, true, true);
-            } catch (JavaModelException e) {
+            } catch (JavaScriptModelException e) {
                 JavaPlugin.log(e);
             } catch (PartInitException e) {
                 JavaPlugin.log(e);
@@ -107,7 +107,7 @@ public class CallHierarchyUI {
                 editor.selectAndReveal(callLocation.getStart(),
                     (callLocation.getEnd() - callLocation.getStart()));
             }
-        } catch (JavaModelException e) {
+        } catch (JavaScriptModelException e) {
             JavaPlugin.log(e);
         } catch (PartInitException e) {
             JavaPlugin.log(e);
@@ -157,7 +157,7 @@ public class CallHierarchyUI {
 				editor.selectAndReveal(selectionStart, selectionLength);
             }
             return true;
-        } catch (JavaModelException e) {
+        } catch (JavaScriptModelException e) {
             JavaPlugin.log(new Status(IStatus.ERROR, JavaPlugin.getPluginId(),
                     IJavaStatusConstants.INTERNAL_ERROR,
                     CallHierarchyMessages.CallHierarchyUI_open_in_editor_error_message, e)); 
@@ -183,7 +183,7 @@ public class CallHierarchyUI {
     }
 
     public static IEditorPart isOpenInEditor(Object elem) {
-        IJavaElement javaElement= null;
+        IJavaScriptElement javaElement= null;
         if (elem instanceof MethodWrapper) {
             javaElement= ((MethodWrapper) elem).getMember();
         } else if (elem instanceof CallLocation) {
@@ -198,21 +198,21 @@ public class CallHierarchyUI {
     /**
      * Converts the input to a possible input candidates
      */ 
-    public static IJavaElement[] getCandidates(Object input) {
-        if (!(input instanceof IJavaElement)) {
+    public static IJavaScriptElement[] getCandidates(Object input) {
+        if (!(input instanceof IJavaScriptElement)) {
             return null;
         }
-        IJavaElement elem= (IJavaElement) input;
-        if (elem.getElementType() == IJavaElement.METHOD) {
-            return new IJavaElement[] { elem };
+        IJavaScriptElement elem= (IJavaScriptElement) input;
+        if (elem.getElementType() == IJavaScriptElement.METHOD) {
+            return new IJavaScriptElement[] { elem };
         }
         return null;    
     }
     
-    public static CallHierarchyViewPart open(IJavaElement[] candidates, IWorkbenchWindow window) {
+    public static CallHierarchyViewPart open(IJavaScriptElement[] candidates, IWorkbenchWindow window) {
         Assert.isTrue(candidates != null && candidates.length != 0);
             
-        IJavaElement input= null;
+        IJavaScriptElement input= null;
         if (candidates.length > 1) {
             String title= CallHierarchyMessages.CallHierarchyUI_selectionDialog_title;  
             String message= CallHierarchyMessages.CallHierarchyUI_selectionDialog_message; 
@@ -226,11 +226,11 @@ public class CallHierarchyUI {
         return openInViewPart(window, input);
     }
     
-    private static CallHierarchyViewPart openInViewPart(IWorkbenchWindow window, IJavaElement input) {
+    private static CallHierarchyViewPart openInViewPart(IWorkbenchWindow window, IJavaScriptElement input) {
         IWorkbenchPage page= window.getActivePage();
         try {
             CallHierarchyViewPart result= (CallHierarchyViewPart)page.showView(CallHierarchyViewPart.ID_CALL_HIERARCHY);
-            result.setMethod((IMethod)input);
+            result.setMethod((IFunction)input);
             return result;
         } catch (CoreException e) {
             ExceptionHandler.handle(e, window.getShell(), 

@@ -16,7 +16,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.source.ILineRange;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.wst.jsdt.internal.ui.text.JavaHeuristicScanner;
 import org.eclipse.wst.jsdt.internal.ui.text.JavaIndenter;
@@ -35,7 +35,7 @@ public final class IndentUtil {
 	/**
 	 * The result of an indentation operation. The result may be passed to
 	 * subsequent calls to
-	 * {@link IndentUtil#indentLines(IDocument, ILineRange, IJavaProject, IndentResult) indentLines}
+	 * {@link IndentUtil#indentLines(IDocument, ILineRange, IJavaScriptProject, IndentResult) indentLines}
 	 * to obtain consistent results with respect to the indentation of
 	 * line-comments.
 	 */
@@ -77,7 +77,7 @@ public final class IndentUtil {
 	 * @throws BadLocationException if <code>lines</code> is not a valid line
 	 *         range on <code>document</code>
 	 */
-	public static IndentResult indentLines(IDocument document, ILineRange lines, IJavaProject project, IndentResult result) throws BadLocationException {
+	public static IndentResult indentLines(IDocument document, ILineRange lines, IJavaScriptProject project, IndentResult result) throws BadLocationException {
 		int numberOfLines= lines.getNumberOfLines();
 		
 		if (numberOfLines < 1)
@@ -119,7 +119,7 @@ public final class IndentUtil {
 	 * @throws BadLocationException if <code>lines</code> is not a
 	 *         valid line range on <code>document</code>
 	 */
-	public static IndentResult shiftLines(IDocument document, ILineRange lines, IJavaProject project, IndentResult result) throws BadLocationException {
+	public static IndentResult shiftLines(IDocument document, ILineRange lines, IJavaScriptProject project, IndentResult result) throws BadLocationException {
 		int numberOfLines= lines.getNumberOfLines();
 		
 		if (numberOfLines < 1)

@@ -17,8 +17,8 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ltk.core.refactoring.RefactoringDescriptorProxy;
 import org.eclipse.ltk.core.refactoring.history.RefactoringHistory;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider;
 
 /**
@@ -42,13 +42,13 @@ public final class JavaModelContentProvider extends StandardJavaElementContentPr
 	 * {@inheritDoc}
 	 */
 	public Object[] getChildren(final Object element) {
-		if (element instanceof ICompilationUnit)
+		if (element instanceof IJavaScriptUnit)
 			return NO_CHILDREN;
 		else if (element instanceof RefactoringHistory)
 			return ((RefactoringHistory) element).getDescriptors();
-		else if (element instanceof IJavaProject) {
+		else if (element instanceof IJavaScriptProject) {
 			final List elements= new ArrayList();
-			elements.add(((IJavaProject) element).getProject().getFolder(NAME_SETTINGS_FOLDER));
+			elements.add(((IJavaScriptProject) element).getProject().getFolder(NAME_SETTINGS_FOLDER));
 			final Object[] children= super.getChildren(element);
 			for (int index= 0; index < children.length; index++) {
 				if (!elements.contains(children[index]))
@@ -70,7 +70,7 @@ public final class JavaModelContentProvider extends StandardJavaElementContentPr
 	 * {@inheritDoc}
 	 */
 	public boolean hasChildren(final Object element) {
-		if (element instanceof ICompilationUnit)
+		if (element instanceof IJavaScriptUnit)
 			return false;
 		else if (element instanceof RefactoringHistory)
 			return true;

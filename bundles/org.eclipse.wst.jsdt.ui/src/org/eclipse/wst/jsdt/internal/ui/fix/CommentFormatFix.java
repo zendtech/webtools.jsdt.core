@@ -32,8 +32,8 @@ import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.corext.fix.IFix;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.changes.CompilationUnitChange;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
@@ -44,7 +44,7 @@ import org.eclipse.wst.jsdt.ui.text.IJavaPartitions;
 
 public class CommentFormatFix implements IFix {
 	
-	public static IFix createCleanUp(ICompilationUnit unit, boolean singleLine, boolean multiLine, boolean javaDoc, HashMap preferences) throws CoreException {
+	public static IFix createCleanUp(IJavaScriptUnit unit, boolean singleLine, boolean multiLine, boolean javaDoc, HashMap preferences) throws CoreException {
 		if (!singleLine && !multiLine && !javaDoc)
 			return null;
 		
@@ -74,7 +74,7 @@ public class CommentFormatFix implements IFix {
 		if (!singleLine && !multiLine && !javaDoc)
 			return input;
 		
-		HashMap preferences= new HashMap(JavaCore.getOptions());
+		HashMap preferences= new HashMap(JavaScriptCore.getOptions());
 		Document document= new Document(input);
 		List edits= format(document, singleLine, multiLine, javaDoc, preferences);
 		
@@ -166,10 +166,10 @@ public class CommentFormatFix implements IFix {
 		return edit;
 	}
 	
-	private final ICompilationUnit fCompilationUnit;
+	private final IJavaScriptUnit fCompilationUnit;
 	private final TextChange fChange;
 	
-	public CommentFormatFix(TextChange change, ICompilationUnit compilationUnit) {
+	public CommentFormatFix(TextChange change, IJavaScriptUnit compilationUnit) {
 		fChange= change;
 		fCompilationUnit= compilationUnit;
 	}
@@ -184,7 +184,7 @@ public class CommentFormatFix implements IFix {
 	/**
 	 * {@inheritDoc}
 	 */
-	public ICompilationUnit getCompilationUnit() {
+	public IJavaScriptUnit getCompilationUnit() {
 		return fCompilationUnit;
 	}
 	

@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.wst.jsdt.core.JavaConventions;
+import org.eclipse.wst.jsdt.core.JavaScriptConventions;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.Checks;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.ParameterInfo;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringCoreMessages;
@@ -191,7 +191,7 @@ public class ParameterEditDialog extends StatusDialog {
 		String text= fName.getText();
 		if (text.length() == 0)
 			return createErrorStatus(RefactoringMessages.ParameterEditDialog_name_error);
-		IStatus status= JavaConventions.validateFieldName(text);
+		IStatus status= JavaScriptConventions.validateFieldName(text);
 		if (status.matches(IStatus.ERROR))
 			return status;
 		if (! Checks.startsWithLowerCase(text))

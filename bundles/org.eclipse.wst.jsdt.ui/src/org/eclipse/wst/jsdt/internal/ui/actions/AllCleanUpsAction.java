@@ -19,8 +19,8 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.eclipse.ui.IWorkbenchSite;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.fix.CleanUpConstants;
 import org.eclipse.wst.jsdt.internal.corext.fix.CleanUpRefactoring;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringExecutionStarter;
@@ -53,7 +53,7 @@ public class AllCleanUpsAction extends CleanUpAction {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected ICleanUp[] createCleanUps(ICompilationUnit[] units) {
+	protected ICleanUp[] createCleanUps(IJavaScriptUnit[] units) {
 		return CleanUpRefactoring.createCleanUps();
 	}
 
@@ -67,7 +67,7 @@ public class AllCleanUpsAction extends CleanUpAction {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected void performRefactoring(ICompilationUnit[] cus, ICleanUp[] cleanUps) throws JavaModelException, InvocationTargetException {
+	protected void performRefactoring(IJavaScriptUnit[] cus, ICleanUp[] cleanUps) throws JavaScriptModelException, InvocationTargetException {
 		RefactoringExecutionStarter.startCleanupRefactoring(cus, cleanUps, getShell(), showWizard(), getActionName());
 	}
 

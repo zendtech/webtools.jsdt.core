@@ -29,7 +29,7 @@ import org.eclipse.team.core.mapping.ISynchronizationContext;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 
 /**
@@ -148,8 +148,8 @@ public final class JavaSynchronizationCompareAdapter extends AbstractSynchroniza
 	public void save(final ResourceMapping[] mappings, final IMemento memento) {
 		for (int index= 0; index < mappings.length; index++) {
 			final Object object= mappings[index].getModelObject();
-			if (object instanceof IJavaElement) {
-				final IJavaElement element= (IJavaElement) object;
+			if (object instanceof IJavaScriptElement) {
+				final IJavaScriptElement element= (IJavaScriptElement) object;
 				final IResource resource= (IResource) element.getAdapter(IResource.class);
 				if (resource != null) {
 					final IMemento child= memento.createChild(RESOURCES);

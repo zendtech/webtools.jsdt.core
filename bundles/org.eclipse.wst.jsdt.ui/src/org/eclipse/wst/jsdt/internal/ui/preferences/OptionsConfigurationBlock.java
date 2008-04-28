@@ -49,7 +49,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 import org.eclipse.ui.preferences.IWorkingCopyManager;
 import org.eclipse.ui.preferences.WorkingCopyManager;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.util.CoreUtility;
 import org.eclipse.wst.jsdt.internal.ui.wizards.IStatusChangeListener;
@@ -239,7 +239,7 @@ public abstract class OptionsConfigurationBlock {
 	}
 	
 	protected final static Key getJDTCoreKey(String key) {
-		return getKey(JavaCore.PLUGIN_ID, key);
+		return getKey(JavaScriptCore.PLUGIN_ID, key);
 	}
 	
 	protected final static Key getJDTUIKey(String key) {

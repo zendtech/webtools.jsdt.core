@@ -23,9 +23,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.jsdt.core.IJavaProject;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchConstants;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchScope;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchConstants;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.core.search.SearchEngine;
 import org.eclipse.wst.jsdt.core.search.TypeNameMatch;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
@@ -60,8 +60,8 @@ public class SuperInterfaceSelectionDialog extends OpenTypeSelectionDialog {
 	 *            the java project which will be considered when searching for
 	 *            interfaces
 	 */
-	public SuperInterfaceSelectionDialog(Shell parent, IRunnableContext context, NewTypeWizardPage page, IJavaProject p) {
-		super(parent, true, context, createSearchScope(p), IJavaSearchConstants.INTERFACE);
+	public SuperInterfaceSelectionDialog(Shell parent, IRunnableContext context, NewTypeWizardPage page, IJavaScriptProject p) {
+		super(parent, true, context, createSearchScope(p), IJavaScriptSearchConstants.INTERFACE);
 		fTypeWizardPage= page;
 		// to restore the content of the dialog field if the dialog is canceled
 		fOldContent= fTypeWizardPage.getSuperInterfaces();
@@ -157,8 +157,8 @@ public class SuperInterfaceSelectionDialog extends OpenTypeSelectionDialog {
 	/*
 	 * Creates a searching scope including only one project.
 	 */
-	private static IJavaSearchScope createSearchScope(IJavaProject p) {
-		return SearchEngine.createJavaSearchScope(new IJavaProject[] { p });
+	private static IJavaScriptSearchScope createSearchScope(IJavaScriptProject p) {
+		return SearchEngine.createJavaSearchScope(new IJavaScriptProject[] { p });
 	}
 
 	/*(non-Javadoc)

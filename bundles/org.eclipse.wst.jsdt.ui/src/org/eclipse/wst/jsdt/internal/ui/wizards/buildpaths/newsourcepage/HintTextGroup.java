@@ -37,7 +37,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.preferences.ScrolledPageContent;
@@ -189,7 +189,7 @@ public final class HintTextGroup implements ISelectionChangedListener {
         if (result.size() == 1) {
             try {
 	            fNewFolders.add(((IPackageFragmentRoot)result.get(0)).getCorrespondingResource());
-            } catch (JavaModelException e) {
+            } catch (JavaScriptModelException e) {
 	            JavaPlugin.log(e);
             }
         }

@@ -23,12 +23,12 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
-import org.eclipse.wst.jsdt.core.JavaConventions;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.JavaScriptConventions;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.Checks;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.rename.RenamePackageProcessor;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.reorg.INewNameQueries;
@@ -69,8 +69,8 @@ public class NewNameQueries implements INewNameQueries {
 		return JavaPlugin.getActiveWorkbenchShell();
 	}
 
-	public INewNameQuery createNewCompilationUnitNameQuery(ICompilationUnit cu, String initialSuggestedName) {
-		String[] keys= {JavaCore.removeJavaLikeExtension(cu.getElementName())};
+	public INewNameQuery createNewCompilationUnitNameQuery(IJavaScriptUnit cu, String initialSuggestedName) {
+		String[] keys= {JavaScriptCore.removeJavaLikeExtension(cu.getElementName())};
 		String message= Messages.format(ReorgMessages.ReorgQueries_enterNewNameQuestion, keys); 
 		return createStaticQuery(createCompilationUnitNameValidator(cu), message, initialSuggestedName, getShell());
 	}
@@ -151,13 +151,13 @@ public class NewNameQueries implements INewNameQueries {
 		return validator;
 	}
 
-	private static IInputValidator createCompilationUnitNameValidator(final ICompilationUnit cu) {
+	private static IInputValidator createCompilationUnitNameValidator(final IJavaScriptUnit cu) {
 		IInputValidator validator= new IInputValidator(){
 			public String isValid(String newText) {
 				if (newText == null || "".equals(newText)) //$NON-NLS-1$
 					return INVALID_NAME_NO_MESSAGE;
 				String newCuName= JavaModelUtil.getRenamedCUName(cu, newText);
-				IStatus status= JavaConventions.validateCompilationUnitName(newCuName);	
+				IStatus status= JavaScriptConventions.validateCompilationUnitName(newCuName);	
 				if (status.getSeverity() == IStatus.ERROR)
 					return status.getMessage();
 				RefactoringStatus refStatus;
@@ -189,11 +189,11 @@ public class NewNameQueries implements INewNameQueries {
 			public String isValid(String newText) {
 				if (newText == null || "".equals(newText)) //$NON-NLS-1$
 					return INVALID_NAME_NO_MESSAGE;
-				IStatus status= JavaConventions.validatePackageName(newText);
+				IStatus status= JavaScriptConventions.validatePackageName(newText);
 				if (status.getSeverity() == IStatus.ERROR)
 					return status.getMessage();
 				
-				IJavaElement parent= pack.getParent();
+				IJavaScriptElement parent= pack.getParent();
 				try {
 					if (parent instanceof IPackageFragmentRoot){ 
 						if (! RenamePackageProcessor.isPackageNameOkInRoot(newText, (IPackageFragmentRoot)parent))

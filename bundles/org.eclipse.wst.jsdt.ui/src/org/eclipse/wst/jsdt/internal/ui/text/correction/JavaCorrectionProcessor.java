@@ -37,7 +37,7 @@ import org.eclipse.ui.IMarkerHelpRegistry;
 import org.eclipse.ui.IMarkerResolution;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.texteditor.SimpleMarkerAnnotation;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.IJavaAnnotation;
 import org.eclipse.wst.jsdt.ui.JavaUI;
@@ -87,7 +87,7 @@ public class JavaCorrectionProcessor implements org.eclipse.jface.text.quickassi
 		return fgContributedAssistProcessors;
 	}
 
-	public static boolean hasCorrections(ICompilationUnit cu, int problemId, String markerType) {
+	public static boolean hasCorrections(IJavaScriptUnit cu, int problemId, String markerType) {
 		ContributedProcessorDescriptor[] processors= getCorrectionProcessors();
 		SafeHasCorrections collector= new SafeHasCorrections(cu, problemId);
 		for (int i= 0; i < processors.length; i++) {
@@ -111,7 +111,7 @@ public class JavaCorrectionProcessor implements org.eclipse.jface.text.quickassi
 			IJavaAnnotation javaAnnotation= (IJavaAnnotation) annotation;
 			int problemId= javaAnnotation.getId();
 			if (problemId != -1) {
-				ICompilationUnit cu= javaAnnotation.getCompilationUnit();
+				IJavaScriptUnit cu= javaAnnotation.getCompilationUnit();
 				if (cu != null) {
 					return hasCorrections(cu, problemId, javaAnnotation.getMarkerType());
 				}
@@ -187,7 +187,7 @@ public class JavaCorrectionProcessor implements org.eclipse.jface.text.quickassi
 		
 		IEditorPart part= fAssistant.getEditor();
 
-		ICompilationUnit cu= JavaUI.getWorkingCopyManager().getWorkingCopy(part.getEditorInput());
+		IJavaScriptUnit cu= JavaUI.getWorkingCopyManager().getWorkingCopy(part.getEditorInput());
 		IAnnotationModel model= JavaUI.getDocumentProvider().getAnnotationModel(part.getEditorInput());
 		
 		int length= viewer != null ? viewer.getSelectedRange().y : 0;
@@ -390,11 +390,11 @@ public class JavaCorrectionProcessor implements org.eclipse.jface.text.quickassi
 	}
 
 	private static class SafeHasCorrections extends SafeCorrectionProcessorAccess {
-		private final ICompilationUnit fCu;
+		private final IJavaScriptUnit fCu;
 		private final int fProblemId;
 		private boolean fHasCorrections;
 
-		public SafeHasCorrections(ICompilationUnit cu, int problemId) {
+		public SafeHasCorrections(IJavaScriptUnit cu, int problemId) {
 			fCu= cu;
 			fProblemId= problemId;
 			fHasCorrections= false;

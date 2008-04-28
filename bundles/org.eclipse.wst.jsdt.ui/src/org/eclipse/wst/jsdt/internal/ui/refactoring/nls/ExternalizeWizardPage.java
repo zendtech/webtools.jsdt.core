@@ -82,9 +82,9 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaProject;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.nls.KeyValuePair;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.nls.NLSRefactoring;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.nls.NLSSubstitution;
@@ -495,7 +495,7 @@ class ExternalizeWizardPage extends UserInputWizardPage {
 	private TableViewer fTableViewer;
 	private SourceViewer fSourceViewer;
 
-	private final ICompilationUnit fCu;
+	private final IJavaScriptUnit fCu;
 	private NLSSubstitution[] fSubstitutions;
 	private Button fExternalizeButton;
 	private Button fIgnoreButton;
@@ -634,7 +634,7 @@ class ExternalizeWizardPage extends UserInputWizardPage {
 	private boolean willCreateAccessorClass() {
 		try {
 			return fNLSRefactoring.willCreateAccessorClass();
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			return false;
 		}
 	}
@@ -857,7 +857,7 @@ class ExternalizeWizardPage extends UserInputWizardPage {
 			gd.widthHint= convertWidthInCharsToPixels(40);
 			fSourceViewer.getControl().setLayoutData(gd);
 
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			ExceptionHandler.handle(e, NLSUIMessages.ExternalizeWizardPage_exception_title, NLSUIMessages.ExternalizeWizardPage_exception_message); 
 		}
 	}
@@ -891,13 +891,13 @@ class ExternalizeWizardPage extends UserInputWizardPage {
 		if (fNLSRefactoring == null || fNLSRefactoring.getCu() == null)
 			return false;
 		
-		IJavaProject jp= fNLSRefactoring.getCu().getJavaProject();
+		IJavaScriptProject jp= fNLSRefactoring.getCu().getJavaProject();
 		if (jp == null || !jp.exists())
 			return false;
 		
 		try {
 			return jp.findType("org.eclipse.osgi.util.NLS") != null; //$NON-NLS-1$
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			return false;
 		}
 	}

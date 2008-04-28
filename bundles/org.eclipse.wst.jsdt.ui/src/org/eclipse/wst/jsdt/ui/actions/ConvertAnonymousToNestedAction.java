@@ -15,10 +15,10 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.ISourceRange;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringAvailabilityTester;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringExecutionStarter;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
@@ -78,7 +78,7 @@ public class ConvertAnonymousToNestedAction extends SelectionDispatchAction {
 	public void selectionChanged(IStructuredSelection selection) {
 		try {
 			setEnabled(RefactoringAvailabilityTester.isConvertAnonymousAvailable(selection));
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			if (JavaModelUtil.isExceptionToBeLogged(e))
 				JavaPlugin.log(e);
 			setEnabled(false);
@@ -96,7 +96,7 @@ public class ConvertAnonymousToNestedAction extends SelectionDispatchAction {
 		try {
 			range= type.getNameRange();
 			run(type.getCompilationUnit(), range.getOffset(), range.getLength());
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			ExceptionHandler.handle(e, RefactoringMessages.ConvertAnonymousToNestedAction_dialog_title, RefactoringMessages.NewTextRefactoringAction_exception); 
 		}
 	}
@@ -111,7 +111,7 @@ public class ConvertAnonymousToNestedAction extends SelectionDispatchAction {
 		try {
 			if (type.isAnonymous())
 				return type;
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			// fall through
 		}
 		return null;
@@ -125,7 +125,7 @@ public class ConvertAnonymousToNestedAction extends SelectionDispatchAction {
 	public void run(ITextSelection selection) {
 		try{
 			run(SelectionConverter.getInputAsCompilationUnit(fEditor), selection.getOffset(), selection.getLength());
-		} catch (JavaModelException e){
+		} catch (JavaScriptModelException e){
 			ExceptionHandler.handle(e, RefactoringMessages.ConvertAnonymousToNestedAction_dialog_title, RefactoringMessages.NewTextRefactoringAction_exception); 
 		}	
 	}
@@ -143,14 +143,14 @@ public class ConvertAnonymousToNestedAction extends SelectionDispatchAction {
 	public void selectionChanged(JavaTextSelection selection) {
 		try {
 			setEnabled(RefactoringAvailabilityTester.isConvertAnonymousAvailable(selection));
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			setEnabled(false);
 		}
 	}
 
 	//---- helpers -------------------------------------------------------------------
 	
-	private void run(ICompilationUnit unit, int offset, int length) throws JavaModelException {
+	private void run(IJavaScriptUnit unit, int offset, int length) throws JavaScriptModelException {
 		if (!ActionUtil.isEditable(fEditor, getShell(), unit))
 			return;
 		RefactoringExecutionStarter.startConvertAnonymousRefactoring(unit, offset, length, getShell());

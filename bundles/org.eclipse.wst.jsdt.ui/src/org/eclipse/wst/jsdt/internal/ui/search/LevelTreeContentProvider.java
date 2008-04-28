@@ -21,8 +21,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.wst.jsdt.core.IClassFile;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider;
 
@@ -35,11 +35,11 @@ public class LevelTreeContentProvider extends JavaSearchContentProvider implemen
 	public static final int LEVEL_PACKAGE= 3;
 	public static final int LEVEL_PROJECT= 4;
 	
-	private static final int[][] JAVA_ELEMENT_TYPES= {{IJavaElement.TYPE},
-			{IJavaElement.CLASS_FILE, IJavaElement.COMPILATION_UNIT},
-			{IJavaElement.PACKAGE_FRAGMENT},
-			{IJavaElement.JAVA_PROJECT, IJavaElement.PACKAGE_FRAGMENT_ROOT},
-			{IJavaElement.JAVA_MODEL}};
+	private static final int[][] JAVA_ELEMENT_TYPES= {{IJavaScriptElement.TYPE},
+			{IJavaScriptElement.CLASS_FILE, IJavaScriptElement.COMPILATION_UNIT},
+			{IJavaScriptElement.PACKAGE_FRAGMENT},
+			{IJavaScriptElement.JAVA_PROJECT, IJavaScriptElement.PACKAGE_FRAGMENT_ROOT},
+			{IJavaScriptElement.JAVA_MODEL}};
 	private static final int[][] RESOURCE_TYPES= {
 			{}, 
 			{IResource.FILE},
@@ -63,8 +63,8 @@ public class LevelTreeContentProvider extends JavaSearchContentProvider implemen
 
 	public Object getParent(Object child) {
 		Object possibleParent= internalGetParent(child);
-		if (possibleParent instanceof IJavaElement) {
-			IJavaElement javaElement= (IJavaElement) possibleParent;
+		if (possibleParent instanceof IJavaScriptElement) {
+			IJavaScriptElement javaElement= (IJavaScriptElement) possibleParent;
 			for (int j= fCurrentLevel; j < MAX_LEVEL + 1; j++) {
 				for (int i= 0; i < JAVA_ELEMENT_TYPES[j].length; i++) {
 					if (javaElement.getElementType() == JAVA_ELEMENT_TYPES[j][i]) {
@@ -84,7 +84,7 @@ public class LevelTreeContentProvider extends JavaSearchContentProvider implemen
 		}
 		if (fCurrentLevel != LEVEL_FILE && child instanceof IType) {
 			IType type= (IType) child;
-			if (possibleParent instanceof ICompilationUnit
+			if (possibleParent instanceof IJavaScriptUnit
 					|| possibleParent instanceof IClassFile)
 				possibleParent= type.getPackageFragment();
 		}

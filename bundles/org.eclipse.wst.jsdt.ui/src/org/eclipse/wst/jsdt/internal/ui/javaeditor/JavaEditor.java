@@ -131,21 +131,21 @@ import org.eclipse.ui.texteditor.TextOperationAction;
 import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.jsdt.core.IClassFile;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IImportContainer;
 import org.eclipse.wst.jsdt.core.IImportDeclaration;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.ILocalVariable;
 import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.core.IPackageDeclaration;
 import org.eclipse.wst.jsdt.core.ISourceRange;
 import org.eclipse.wst.jsdt.core.ISourceReference;
 import org.eclipse.wst.jsdt.core.ITypeParameter;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.dom.ASTNode;
-import org.eclipse.wst.jsdt.core.dom.CompilationUnit;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
 import org.eclipse.wst.jsdt.core.dom.IBinding;
 import org.eclipse.wst.jsdt.core.dom.IVariableBinding;
 import org.eclipse.wst.jsdt.core.dom.Name;
@@ -1125,11 +1125,11 @@ public abstract class JavaEditor extends AbstractDecoratedTextEditor implements 
 					if (type.equals(IDocument.DEFAULT_CONTENT_TYPE) && selection.y == 0) {
 
 						try {
-							final IJavaElement element= getElementAt(selection.x, true);
+							final IJavaScriptElement element= getElementAt(selection.x, true);
 							if (element != null && element.exists()) {
 
 								final int kind= element.getElementType();
-								if (kind == IJavaElement.TYPE || kind == IJavaElement.METHOD || kind == IJavaElement.INITIALIZER) {
+								if (kind == IJavaScriptElement.TYPE || kind == IJavaScriptElement.METHOD || kind == IJavaScriptElement.INITIALIZER) {
 
 									final ISourceReference reference= (ISourceReference)element;
 									final ISourceRange range= reference.getSourceRange();
@@ -1140,7 +1140,7 @@ public abstract class JavaEditor extends AbstractDecoratedTextEditor implements 
 									}
 								}
 							}
-						} catch (JavaModelException exception) {
+						} catch (JavaScriptModelException exception) {
 							// Should not happen
 						}
 					} else {
@@ -1494,15 +1494,15 @@ public abstract class JavaEditor extends AbstractDecoratedTextEditor implements 
 	 * @param offset the offset inside of the requested element
 	 * @return the most narrow java element
 	 */
-	abstract protected IJavaElement getElementAt(int offset);
+	abstract protected IJavaScriptElement getElementAt(int offset);
 
 	/**
-	 * Returns the java element of this editor's input corresponding to the given IJavaElement.
+	 * Returns the java element of this editor's input corresponding to the given IJavaScriptElement.
 	 *
 	 * @param element the java element
 	 * @return the corresponding Java element
 	 */
-	abstract protected IJavaElement getCorrespondingElement(IJavaElement element);
+	abstract protected IJavaScriptElement getCorrespondingElement(IJavaScriptElement element);
 
 	/**
 	 * Default constructor.
@@ -1521,7 +1521,7 @@ public abstract class JavaEditor extends AbstractDecoratedTextEditor implements 
 		if (page == null)
 			return;
 		
-		IJavaElement je= getInputJavaElement();
+		IJavaScriptElement je= getInputJavaElement();
 		if (je != null && je.exists())
 			page.setInput(je);
 		else
@@ -1645,13 +1645,13 @@ public abstract class JavaEditor extends AbstractDecoratedTextEditor implements 
 	private IPreferenceStore createCombinedPreferenceStore(IEditorInput input) {
 		List stores= new ArrayList(3);
 
-		IJavaProject project= EditorUtility.getJavaProject(input);
+		IJavaScriptProject project= EditorUtility.getJavaProject(input);
 		if (project != null) {
-			stores.add(new EclipsePreferencesAdapter(new ProjectScope(project.getProject()), JavaCore.PLUGIN_ID));
+			stores.add(new EclipsePreferencesAdapter(new ProjectScope(project.getProject()), JavaScriptCore.PLUGIN_ID));
 		}
 
 		stores.add(JavaPlugin.getDefault().getPreferenceStore());
-		stores.add(new PreferencesAdapter(JavaCore.getPlugin().getPluginPreferences()));
+		stores.add(new PreferencesAdapter(JavaScriptCore.getPlugin().getPluginPreferences()));
 		stores.add(EditorsUI.getPreferenceStore());
 
 		return new ChainedPreferenceStore((IPreferenceStore[]) stores.toArray(new IPreferenceStore[stores.size()]));
@@ -1784,13 +1784,13 @@ public abstract class JavaEditor extends AbstractDecoratedTextEditor implements 
 						 * @since 3.3
 						 */
 						public ISelection getSelection() {
-							IJavaElement je= null;
+							IJavaScriptElement je= null;
 							try {
 								je= SelectionConverter.getElementAtOffset(JavaEditor.this);
 								if (je==null)
 									return null;
 								return new StructuredSelection(je);
-							} catch (JavaModelException ex) {
+							} catch (JavaScriptModelException ex) {
 								return null;
 							}
 						}
@@ -1859,7 +1859,7 @@ public abstract class JavaEditor extends AbstractDecoratedTextEditor implements 
 			try {
 				ISourceRange range= null;
 				if (reference instanceof ILocalVariable) {
-					IJavaElement je= ((ILocalVariable)reference).getParent();
+					IJavaScriptElement je= ((ILocalVariable)reference).getParent();
 					if (je instanceof ISourceReference)
 						range= ((ISourceReference)je).getSourceRange();
 				} else
@@ -1946,7 +1946,7 @@ public abstract class JavaEditor extends AbstractDecoratedTextEditor implements 
 					markInNavigationHistory();
 				}
 
-			} catch (JavaModelException x) {
+			} catch (JavaScriptModelException x) {
 			} catch (IllegalArgumentException x) {
 			}
 
@@ -1956,18 +1956,18 @@ public abstract class JavaEditor extends AbstractDecoratedTextEditor implements 
 		}
 	}
 
-	public void setSelection(IJavaElement element) {
+	public void setSelection(IJavaScriptElement element) {
 
-		if (element == null || element instanceof ICompilationUnit || element instanceof IClassFile) {
+		if (element == null || element instanceof IJavaScriptUnit || element instanceof IClassFile) {
 			/*
-			 * If the element is an ICompilationUnit this unit is either the input
+			 * If the element is an IJavaScriptUnit this unit is either the input
 			 * of this editor or not being displayed. In both cases, nothing should
 			 * happened. (http://dev.eclipse.org/bugs/show_bug.cgi?id=5128)
 			 */
 			return;
 		}
 
-		IJavaElement corresponding= getCorrespondingElement(element);
+		IJavaScriptElement corresponding= getCorrespondingElement(element);
 		if (corresponding instanceof ISourceReference) {
 			ISourceReference reference= (ISourceReference) corresponding;
 			// set highlight range
@@ -2007,7 +2007,7 @@ public abstract class JavaEditor extends AbstractDecoratedTextEditor implements 
 		if (!(textSelection instanceof ITextSelection))
 			return;
 		
-		CompilationUnit ast= JavaPlugin.getDefault().getASTProvider().getAST(getInputJavaElement(), ASTProvider.WAIT_ACTIVE_ONLY, getProgressMonitor());
+		JavaScriptUnit ast= JavaPlugin.getDefault().getASTProvider().getAST(getInputJavaElement(), ASTProvider.WAIT_ACTIVE_ONLY, getProgressMonitor());
 		if (ast != null) {
 			fForcedMarkOccurrencesSelection= textSelection;
 			updateOccurrenceAnnotations((ITextSelection)textSelection, ast);
@@ -2022,7 +2022,7 @@ public abstract class JavaEditor extends AbstractDecoratedTextEditor implements 
 
 		try {
 
-			IJavaElement element= getElementAt(offset, false);
+			IJavaScriptElement element= getElementAt(offset, false);
 			while (element instanceof ISourceReference) {
 				ISourceRange range= ((ISourceReference) element).getSourceRange();
 				if (range != null && offset < range.getOffset() + range.getLength() && range.getOffset() < offset + length) {
@@ -2045,7 +2045,7 @@ public abstract class JavaEditor extends AbstractDecoratedTextEditor implements 
 				element= element.getParent();
 			}
 
-		} catch (JavaModelException x) {
+		} catch (JavaScriptModelException x) {
 			JavaPlugin.log(x.getStatus());
 		}
 
@@ -2441,7 +2441,7 @@ public abstract class JavaEditor extends AbstractDecoratedTextEditor implements 
 				return;
 			}
 
-			if (JavaCore.COMPILER_SOURCE.equals(property)) {
+			if (JavaScriptCore.COMPILER_SOURCE.equals(property)) {
 				if (event.getNewValue() instanceof String)
 					fBracketMatcher.setSourceVersion((String) event.getNewValue());
 				// fall through as others are interested in source change as well.
@@ -2570,7 +2570,7 @@ public abstract class JavaEditor extends AbstractDecoratedTextEditor implements 
 	 * @see org.eclipse.wst.jsdt.internal.ui.viewsupport.IViewPartInputProvider#getViewPartInput()
 	 */
 	public Object getViewPartInput() {
-		return getEditorInput().getAdapter(IJavaElement.class);
+		return getEditorInput().getAdapter(IJavaScriptElement.class);
 	}
 
 	/*
@@ -2610,7 +2610,7 @@ public abstract class JavaEditor extends AbstractDecoratedTextEditor implements 
 
 	protected void configureSourceViewerDecorationSupport(SourceViewerDecorationSupport support) {
 
-		fBracketMatcher.setSourceVersion(getPreferenceStore().getString(JavaCore.COMPILER_SOURCE));
+		fBracketMatcher.setSourceVersion(getPreferenceStore().getString(JavaScriptCore.COMPILER_SOURCE));
 		support.setCharacterPairMatcher(fBracketMatcher);
 		support.setMatchingCharacterPainterPreferenceKeys(MATCHING_BRACKETS, MATCHING_BRACKETS_COLOR);
 
@@ -2768,7 +2768,7 @@ public abstract class JavaEditor extends AbstractDecoratedTextEditor implements 
 	 * @param astRoot the compilation unit AST
 	 * @since 3.0
 	 */
-	protected void updateOccurrenceAnnotations(ITextSelection selection, CompilationUnit astRoot) {
+	protected void updateOccurrenceAnnotations(ITextSelection selection, JavaScriptUnit astRoot) {
 
 		if (fOccurrencesFinderJob != null)
 			fOccurrencesFinderJob.cancel();
@@ -2877,7 +2877,7 @@ public abstract class JavaEditor extends AbstractDecoratedTextEditor implements 
 		fMarkOccurrenceAnnotations= true;
 
 		fPostSelectionListenerWithAST= new ISelectionListenerWithAST() {
-			public void selectionChanged(IEditorPart part, ITextSelection selection, CompilationUnit astRoot) {
+			public void selectionChanged(IEditorPart part, ITextSelection selection, JavaScriptUnit astRoot) {
 				updateOccurrenceAnnotations(selection, astRoot);
 			}
 		};
@@ -2982,7 +2982,7 @@ public abstract class JavaEditor extends AbstractDecoratedTextEditor implements 
 	protected void installOverrideIndicator(boolean provideAST) {
 		uninstallOverrideIndicator();
 		IAnnotationModel model= getDocumentProvider().getAnnotationModel(getEditorInput());
-		final IJavaElement inputElement= getInputJavaElement();
+		final IJavaScriptElement inputElement= getInputJavaElement();
 
 		if (model == null || inputElement == null)
 			return;
@@ -2990,7 +2990,7 @@ public abstract class JavaEditor extends AbstractDecoratedTextEditor implements 
 		fOverrideIndicatorManager= new OverrideIndicatorManager(model, inputElement, null);
 		
 		if (provideAST) {
-			CompilationUnit ast= JavaPlugin.getDefault().getASTProvider().getAST(inputElement, ASTProvider.WAIT_ACTIVE_ONLY, getProgressMonitor());
+			JavaScriptUnit ast= JavaPlugin.getDefault().getASTProvider().getAST(inputElement, ASTProvider.WAIT_ACTIVE_ONLY, getProgressMonitor());
 			fOverrideIndicatorManager.reconciled(ast, true, getProgressMonitor());
 		}
 	}
@@ -3081,7 +3081,7 @@ public abstract class JavaEditor extends AbstractDecoratedTextEditor implements 
 	 * @return the Java element wrapped by this editors input.
 	 * @since 3.0
 	 */
-	protected IJavaElement getInputJavaElement() {
+	protected IJavaScriptElement getInputJavaElement() {
 		return EditorUtility.getEditorInputJavaElement(this, false);
 	}
 
@@ -3366,12 +3366,12 @@ public abstract class JavaEditor extends AbstractDecoratedTextEditor implements 
 			caret= offset + styledText.getCaretOffset();
 		}
 
-		IJavaElement element= getElementAt(caret, false);
+		IJavaScriptElement element= getElementAt(caret, false);
 
 		if ( !(element instanceof ISourceReference))
 			return null;
 
-		if (element.getElementType() == IJavaElement.IMPORT_DECLARATION) {
+		if (element.getElementType() == IJavaScriptElement.IMPORT_DECLARATION) {
 
 			IImportDeclaration declaration= (IImportDeclaration) element;
 			IImportContainer container= (IImportContainer) declaration.getParent();
@@ -3379,7 +3379,7 @@ public abstract class JavaEditor extends AbstractDecoratedTextEditor implements 
 
 			try {
 				srcRange= container.getSourceRange();
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 			}
 
 			if (srcRange != null && srcRange.getOffset() == caret)
@@ -3397,7 +3397,7 @@ public abstract class JavaEditor extends AbstractDecoratedTextEditor implements 
 	 * @return the most narrow java element
 	 * @since 3.0
 	 */
-	protected IJavaElement getElementAt(int offset, boolean reconcile) {
+	protected IJavaScriptElement getElementAt(int offset, boolean reconcile) {
 		return getElementAt(offset);
 	}
 

@@ -68,12 +68,12 @@ import org.eclipse.ui.dialogs.SearchPattern;
 import org.eclipse.wst.jsdt.core.Flags;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.JavaConventions;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptConventions;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.WorkingCopyOwner;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchConstants;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchScope;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchConstants;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.core.search.SearchEngine;
 import org.eclipse.wst.jsdt.core.search.TypeNameMatch;
 import org.eclipse.wst.jsdt.core.search.TypeNameMatchRequestor;
@@ -135,7 +135,7 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 
 	private ShowContainerForDuplicatesAction fShowContainerForDuplicatesAction;
 
-	private IJavaSearchScope fSearchScope;
+	private IJavaScriptSearchScope fSearchScope;
 	
 	private boolean fAllowScopeSwitching;
 
@@ -169,16 +169,16 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 	 *            scope used when searching for types
 	 * @param elementKinds
 	 *            flags defining nature of searched elements; the only valid
-	 *            values are: <code>IJavaSearchConstants.TYPE</code>
-	 * 	<code>IJavaSearchConstants.ANNOTATION_TYPE</code>
-	 * 	<code>IJavaSearchConstants.INTERFACE</code>
-	 * 	<code>IJavaSearchConstants.ENUM</code>
-	 * 	<code>IJavaSearchConstants.CLASS_AND_INTERFACE</code>
-	 * 	<code>IJavaSearchConstants.CLASS_AND_ENUM</code>.
+	 *            values are: <code>IJavaScriptSearchConstants.TYPE</code>
+	 * 	<code>IJavaScriptSearchConstants.ANNOTATION_TYPE</code>
+	 * 	<code>IJavaScriptSearchConstants.INTERFACE</code>
+	 * 	<code>IJavaScriptSearchConstants.ENUM</code>
+	 * 	<code>IJavaScriptSearchConstants.CLASS_AND_INTERFACE</code>
+	 * 	<code>IJavaScriptSearchConstants.CLASS_AND_ENUM</code>.
 	 *            Please note that the bitwise OR combination of the elementary
 	 *            constants is not supported.
 	 */
-	public FilteredTypesSelectionDialog(Shell parent, boolean multi, IRunnableContext context, IJavaSearchScope scope, int elementKinds) {
+	public FilteredTypesSelectionDialog(Shell parent, boolean multi, IRunnableContext context, IJavaScriptSearchScope scope, int elementKinds) {
 		this(parent, multi, context, scope, elementKinds, null);
 	}
 
@@ -198,19 +198,19 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 	 *            choose a working set as scope. 
 	 * @param elementKinds
 	 *            flags defining nature of searched elements; the only valid
-	 *            values are: <code>IJavaSearchConstants.TYPE</code>
-	 * 	<code>IJavaSearchConstants.ANNOTATION_TYPE</code>
-	 * 	<code>IJavaSearchConstants.INTERFACE</code>
-	 * 	<code>IJavaSearchConstants.ENUM</code>
-	 * 	<code>IJavaSearchConstants.CLASS_AND_INTERFACE</code>
-	 * 	<code>IJavaSearchConstants.CLASS_AND_ENUM</code>.
+	 *            values are: <code>IJavaScriptSearchConstants.TYPE</code>
+	 * 	<code>IJavaScriptSearchConstants.ANNOTATION_TYPE</code>
+	 * 	<code>IJavaScriptSearchConstants.INTERFACE</code>
+	 * 	<code>IJavaScriptSearchConstants.ENUM</code>
+	 * 	<code>IJavaScriptSearchConstants.CLASS_AND_INTERFACE</code>
+	 * 	<code>IJavaScriptSearchConstants.CLASS_AND_ENUM</code>.
 	 *            Please note that the bitwise OR combination of the elementary
 	 *            constants is not supported.
 	 * @param extension
 	 *            an extension of the standard type selection dialog; See
 	 *            {@link TypeSelectionExtension}
 	 */
-	public FilteredTypesSelectionDialog(Shell shell, boolean multi, IRunnableContext context, IJavaSearchScope scope, int elementKinds, TypeSelectionExtension extension) {
+	public FilteredTypesSelectionDialog(Shell shell, boolean multi, IRunnableContext context, IJavaScriptSearchScope scope, int elementKinds, TypeSelectionExtension extension) {
 		super(shell, multi);
 		
 		setSelectionHistory(new TypeSelectionHistory());
@@ -466,7 +466,7 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 					String text= ((ITextSelection) selection).getText();
 					if (text != null) {
 						text= text.trim();
-						if (text.length() > 0 && JavaConventions.validateJavaTypeName(text, JavaCore.VERSION_1_3, JavaCore.VERSION_1_3).isOK()) {
+						if (text.length() > 0 && JavaScriptConventions.validateJavaTypeName(text, JavaScriptCore.VERSION_1_3, JavaScriptCore.VERSION_1_3).isOK()) {
 							setInitialPattern(text, FULL_SELECTION);
 						}
 					}
@@ -588,7 +588,7 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 					typeSearchFilter.getElementKind(),
 					typeSearchFilter.getSearchScope(),
 					requestor,
-					IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH,
+					IJavaScriptSearchConstants.WAIT_UNTIL_READY_TO_SEARCH,
 					progressMonitor);
 		} finally {
 			typeSearchFilter.setMatchEverythingMode(false);
@@ -640,7 +640,7 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 	 * @param scope
 	 *            the new scope
 	 */
-	private void setSearchScope(IJavaSearchScope scope) {
+	private void setSearchScope(IJavaScriptSearchScope scope) {
 		fSearchScope= scope;
 	}
 	
@@ -682,12 +682,12 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 						// make sure we search a concrete name. This is faster according to Kent  
 						"_______________".toCharArray(), //$NON-NLS-1$
 						SearchPattern.RULE_EXACT_MATCH | SearchPattern.RULE_CASE_SENSITIVE, 
-						IJavaSearchConstants.ENUM,
+						IJavaScriptSearchConstants.ENUM,
 						SearchEngine.createWorkspaceScope(), 
 						new TypeNameRequestor() {}, 
-						IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, 
+						IJavaScriptSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, 
 						monitor);
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				throw new InvocationTargetException(e);
 			}
 		}
@@ -1102,7 +1102,7 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 
 		private static final int TYPE_MODIFIERS= Flags.AccEnum | Flags.AccAnnotation | Flags.AccInterface;
 
-		private final IJavaSearchScope fScope;
+		private final IJavaScriptSearchScope fScope;
 
 		private final boolean fIsWorkspaceScope;
 
@@ -1125,7 +1125,7 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 		 * @param elementKind
 		 * @param extension
 		 */
-		public TypeItemsFilter(IJavaSearchScope scope, int elementKind, ITypeInfoFilterExtension extension) {
+		public TypeItemsFilter(IJavaScriptSearchScope scope, int elementKind, ITypeInfoFilterExtension extension) {
 			super(new TypeSearchPattern());
 			fScope= scope;
 			fIsWorkspaceScope= scope == null ? false : scope.equals(SearchEngine.createWorkspaceScope());
@@ -1177,7 +1177,7 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 			return fFilterExt;
 		}
 
-		public IJavaSearchScope getSearchScope() {
+		public IJavaScriptSearchScope getSearchScope() {
 			return fScope;
 		}
 
@@ -1239,21 +1239,21 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 		}
 
 		private boolean matchesModifiers(TypeNameMatch type) {
-			if (fElemKind == IJavaSearchConstants.TYPE)
+			if (fElemKind == IJavaScriptSearchConstants.TYPE)
 				return true;
 			int modifiers= type.getModifiers() & TYPE_MODIFIERS;
 			switch (fElemKind) {
-			case IJavaSearchConstants.CLASS:
+			case IJavaScriptSearchConstants.CLASS:
 				return modifiers == 0;
-			case IJavaSearchConstants.ANNOTATION_TYPE:
+			case IJavaScriptSearchConstants.ANNOTATION_TYPE:
 				return Flags.isAnnotation(modifiers);
-			case IJavaSearchConstants.INTERFACE:
+			case IJavaScriptSearchConstants.INTERFACE:
 				return Flags.isInterface(modifiers);
-			case IJavaSearchConstants.ENUM:
+			case IJavaScriptSearchConstants.ENUM:
 				return Flags.isEnum(modifiers);
-			case IJavaSearchConstants.CLASS_AND_INTERFACE:
+			case IJavaScriptSearchConstants.CLASS_AND_INTERFACE:
 				return modifiers == 0 || Flags.isInterface(modifiers);
-			case IJavaSearchConstants.CLASS_AND_ENUM:
+			case IJavaScriptSearchConstants.CLASS_AND_ENUM:
 				return modifiers == 0 || Flags.isEnum(modifiers);
 			}
 			return false;
@@ -1567,7 +1567,7 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 			try {
 				if (type.getPackageFragmentRoot().getKind() == IPackageFragmentRoot.K_SOURCE)
 					return 0;
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				JavaPlugin.log(e);
 			}
 			return 1;

@@ -17,8 +17,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.CopyProjectAction;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringAvailabilityTester;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringExecutionStarter;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.reorg.ReorgUtils;
@@ -49,12 +49,12 @@ public class ReorgCopyAction extends SelectionDispatchAction {
 			try {
 				List elements= selection.toList();
 				IResource[] resources= ReorgUtils.getResources(elements);
-				IJavaElement[] javaElements= ReorgUtils.getJavaElements(elements);
+				IJavaScriptElement[] javaElements= ReorgUtils.getJavaElements(elements);
 				if (elements.size() != resources.length + javaElements.length)
 					setEnabled(false);
 				else
 					setEnabled(RefactoringAvailabilityTester.isCopyAvailable(resources, javaElements));
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				// no ui here - this happens on selection changes
 				// http://bugs.eclipse.org/bugs/show_bug.cgi?id=19253
 				if (JavaModelUtil.isExceptionToBeLogged(e))
@@ -79,10 +79,10 @@ public class ReorgCopyAction extends SelectionDispatchAction {
 		try {
 			List elements= selection.toList();
 			IResource[] resources= ReorgUtils.getResources(elements);
-			IJavaElement[] javaElements= ReorgUtils.getJavaElements(elements);
+			IJavaScriptElement[] javaElements= ReorgUtils.getJavaElements(elements);
 			if (RefactoringAvailabilityTester.isCopyAvailable(resources, javaElements)) 
 				RefactoringExecutionStarter.startCopyRefactoring(resources, javaElements, getShell());
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			ExceptionHandler.handle(e, RefactoringMessages.OpenRefactoringWizardAction_refactoring, RefactoringMessages.OpenRefactoringWizardAction_exception); 
 		}
 	}

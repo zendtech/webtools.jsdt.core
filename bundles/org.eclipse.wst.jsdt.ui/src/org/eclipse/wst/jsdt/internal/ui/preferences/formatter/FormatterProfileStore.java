@@ -22,7 +22,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.preferences.PreferencesAccess;
 import org.eclipse.wst.jsdt.internal.ui.preferences.formatter.ProfileManager.CustomProfile;
@@ -113,7 +113,7 @@ public class FormatterProfileStore extends ProfileStore {
 			}
 			ProfileManager manager= new FormatterProfileManager(profiles, instanceScope, access, profileVersioner);
 			if (manager.getSelected() instanceof CustomProfile) {
-				manager.commitChanges(instanceScope); // updates JavaCore options
+				manager.commitChanges(instanceScope); // updates JavaScriptCore options
 			}
 			uiPreferences.putInt(PREF_FORMATTER_PROFILES + VERSION_KEY_SUFFIX, profileVersioner.getCurrentVersion());
 			savePreferences(instanceScope);
@@ -123,7 +123,7 @@ public class FormatterProfileStore extends ProfileStore {
 				IScopeContext scope= access.getProjectScope(projects[i]);
 				if (manager.hasProjectSpecificSettings(scope)) {
 					manager= new FormatterProfileManager(profiles, scope, access, profileVersioner);
-					manager.commitChanges(scope); // updates JavaCore project options
+					manager.commitChanges(scope); // updates JavaScriptCore project options
 					savePreferences(scope);
 				}
 			}
@@ -138,7 +138,7 @@ public class FormatterProfileStore extends ProfileStore {
 		try {
 			context.getNode(JavaUI.ID_PLUGIN).flush();
 		} finally {
-			context.getNode(JavaCore.PLUGIN_ID).flush();
+			context.getNode(JavaScriptCore.PLUGIN_ID).flush();
 		}
 	}
 }

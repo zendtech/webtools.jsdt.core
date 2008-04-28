@@ -30,11 +30,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ISetSelectionTarget;
-import org.eclipse.wst.jsdt.core.IClasspathEntry;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IIncludePathEntry;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.buildpath.BuildpathDelta;
 import org.eclipse.wst.jsdt.internal.corext.buildpath.CPJavaProject;
 import org.eclipse.wst.jsdt.internal.corext.buildpath.ClasspathModifier;
@@ -46,7 +46,7 @@ import org.eclipse.wst.jsdt.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.CPListElement;
 import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.newsourcepage.ClasspathModifierQueries.IRemoveLinkedFolderQuery;
 
-//SelectedElements iff enabled: IPackageFramgentRoot || IJavaProject || JsGlobalScopeContainer
+//SelectedElements iff enabled: IPackageFramgentRoot || IJavaScriptProject || JsGlobalScopeContainer
 public class RemoveFromBuildpathAction extends BuildpathModifierAction {
 
 	private final IRunnableContext fContext;
@@ -85,11 +85,11 @@ public class RemoveFromBuildpathAction extends BuildpathModifierAction {
 		
 		Object elem= getSelectedElements().get(0);
         
-        if (elem instanceof IJavaProject) {
-            String name= ClasspathModifier.escapeSpecialChars(((IJavaElement)elem).getElementName());
+        if (elem instanceof IJavaScriptProject) {
+            String name= ClasspathModifier.escapeSpecialChars(((IJavaScriptElement)elem).getElementName());
         	return Messages.format(NewWizardMessages.PackageExplorerActionGroup_FormText_ProjectFromBuildpath, name);
         } else if (elem instanceof IPackageFragmentRoot) {
-            String name= ClasspathModifier.escapeSpecialChars(((IJavaElement)elem).getElementName());
+            String name= ClasspathModifier.escapeSpecialChars(((IJavaScriptElement)elem).getElementName());
         	return Messages.format(NewWizardMessages.PackageExplorerActionGroup_FormText_fromBuildpath, name);
         } else if (elem instanceof JsGlobalScopeContainer) {
         	return NewWizardMessages.PackageExplorerActionGroup_FormText_Default_FromBuildpath;
@@ -104,10 +104,10 @@ public class RemoveFromBuildpathAction extends BuildpathModifierAction {
 	public void run() {
 		try {
 
-			final IJavaProject project;
+			final IJavaScriptProject project;
 			Object object= getSelectedElements().get(0);
-			if (object instanceof IJavaProject) {
-				project= (IJavaProject)object;
+			if (object instanceof IJavaScriptProject) {
+				project= (IJavaScriptProject)object;
 			} else if (object instanceof IPackageFragmentRoot) {
 				IPackageFragmentRoot root= (IPackageFragmentRoot)object;
 				project= root.getJavaProject();
@@ -130,8 +130,8 @@ public class RemoveFromBuildpathAction extends BuildpathModifierAction {
 						int i= 0;
 						for (Iterator iterator= elementsToRemove.iterator(); iterator.hasNext();) {
 							Object element= iterator.next();
-							if (element instanceof IJavaProject) {
-								toRemove[i]= ClasspathModifier.getListElement(((IJavaProject)element).getPath(), cpProject.getCPListElements());
+							if (element instanceof IJavaScriptProject) {
+								toRemove[i]= ClasspathModifier.getListElement(((IJavaScriptProject)element).getPath(), cpProject.getCPListElements());
 							} else if (element instanceof IPackageFragmentRoot) {
 								toRemove[i]= CPListElement.createFromExisting(((IPackageFragmentRoot)element).getRawClasspathEntry(), project);
 							} else {
@@ -188,7 +188,7 @@ public class RemoveFromBuildpathAction extends BuildpathModifierAction {
 		}
 	}
 	
-	private void queryToRemoveLinkedFolders(final List elementsToRemove, final List foldersToDelete) throws JavaModelException {
+	private void queryToRemoveLinkedFolders(final List elementsToRemove, final List foldersToDelete) throws JavaScriptModelException {
 		final Shell shell= getShell();
 		for (Iterator iter= getSelectedElements().iterator(); iter.hasNext();) {
 			Object element= iter.next();
@@ -216,7 +216,7 @@ public class RemoveFromBuildpathAction extends BuildpathModifierAction {
 		}
 	}
 
-	private IFolder getLinkedSourceFolder(IPackageFragmentRoot root) throws JavaModelException {
+	private IFolder getLinkedSourceFolder(IPackageFragmentRoot root) throws JavaScriptModelException {
 		if (root.getKind() != IPackageFragmentRoot.K_SOURCE)
 			return null;
 
@@ -239,14 +239,14 @@ public class RemoveFromBuildpathAction extends BuildpathModifierAction {
 			for (Iterator iter= elements.iterator(); iter.hasNext();) {
 				Object element= iter.next();
 
-				if (element instanceof IJavaProject) {
-					IJavaProject project= (IJavaProject)element;
+				if (element instanceof IJavaScriptProject) {
+					IJavaScriptProject project= (IJavaScriptProject)element;
 					if (!ClasspathModifier.isSourceFolder(project))
 						return false;
 
 				} else if (element instanceof IPackageFragmentRoot) {
-					IClasspathEntry entry= ((IPackageFragmentRoot) element).getRawClasspathEntry();
-					if (entry != null && entry.getEntryKind() == IClasspathEntry.CPE_CONTAINER) {
+					IIncludePathEntry entry= ((IPackageFragmentRoot) element).getRawClasspathEntry();
+					if (entry != null && entry.getEntryKind() == IIncludePathEntry.CPE_CONTAINER) {
 						return false;
 					}
 				} else if (element instanceof JsGlobalScopeContainer) {
@@ -256,7 +256,7 @@ public class RemoveFromBuildpathAction extends BuildpathModifierAction {
 				}
 			}
 			return true;
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 		}
 		return false;
 	}

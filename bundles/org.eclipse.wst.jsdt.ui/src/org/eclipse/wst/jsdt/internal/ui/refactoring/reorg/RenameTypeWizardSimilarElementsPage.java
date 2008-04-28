@@ -61,16 +61,16 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IField;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.ILocalVariable;
 import org.eclipse.wst.jsdt.core.IMember;
-import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.ISourceRange;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.JavaConventions;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptConventions;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.Checks;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.rename.RenameCompilationUnitProcessor;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.rename.RenameTypeProcessor;
@@ -109,9 +109,9 @@ class RenameTypeWizardSimilarElementsPage extends UserInputWizardPage {
 	public static class EditElementDialog extends StatusDialog implements IDialogFieldListener {
 
 		private StringDialogField fNameField;
-		private IJavaElement fElementToEdit;
+		private IJavaScriptElement fElementToEdit;
 
-		public EditElementDialog(Shell parent, IJavaElement elementToEdit, String newName) {
+		public EditElementDialog(Shell parent, IJavaScriptElement elementToEdit, String newName) {
 			super(parent);
 			setTitle(RefactoringMessages.RenameTypeWizardSimilarElementsPage_change_element_name);
 			setShellStyle(getShellStyle() | SWT.RESIZE);
@@ -159,7 +159,7 @@ class RenameTypeWizardSimilarElementsPage extends UserInputWizardPage {
 			if (name.length() == 0) {
 				return new StatusInfo(IStatus.ERROR, RefactoringMessages.RenameTypeWizardSimilarElementsPage_name_empty);
 			}
-			IStatus status= JavaConventions.validateIdentifier(name);
+			IStatus status= JavaScriptConventions.validateIdentifier(name);
 			if (status.matches(IStatus.ERROR))
 				return status;
 			if (!Checks.startsWithLowerCase(name))
@@ -172,8 +172,8 @@ class RenameTypeWizardSimilarElementsPage extends UserInputWizardPage {
 					if (f.exists())
 						return new StatusInfo(IStatus.ERROR, RefactoringMessages.RenameTypeWizardSimilarElementsPage_field_exists);
 				}
-				if (fElementToEdit instanceof IMethod) {
-					final IMethod m= type.getMethod(name, ((IMethod) fElementToEdit).getParameterTypes());
+				if (fElementToEdit instanceof IFunction) {
+					final IFunction m= type.getMethod(name, ((IFunction) fElementToEdit).getParameterTypes());
 					if (m.exists())
 						return new StatusInfo(IStatus.ERROR, RefactoringMessages.RenameTypeWizardSimilarElementsPage_method_exists);
 				}
@@ -191,8 +191,8 @@ class RenameTypeWizardSimilarElementsPage extends UserInputWizardPage {
 
 	private static class SimilarElementTreeContentProvider implements ITreeContentProvider {
 
-		private Map/* <IJavaElement,Set<IJavaElement>> */fTreeElementMap;
-		private Set/* <ICompilationUnit> */fTopLevelElements;
+		private Map/* <IJavaScriptElement,Set<IJavaScriptElement>> */fTreeElementMap;
+		private Set/* <IJavaScriptUnit> */fTopLevelElements;
 
 		/*
 		 * @see ITreeContentProvider#getChildren(Object)
@@ -210,9 +210,9 @@ class RenameTypeWizardSimilarElementsPage extends UserInputWizardPage {
 		 */
 		public Object getParent(Object element) {
 			if (element instanceof IMember || element instanceof ILocalVariable) {
-				return ((IJavaElement) element).getParent();
+				return ((IJavaScriptElement) element).getParent();
 			}
-			if (element instanceof ICompilationUnit)
+			if (element instanceof IJavaScriptUnit)
 				return null;
 			Assert.isTrue(false, "Should not get here"); //$NON-NLS-1$
 			return null;
@@ -250,17 +250,17 @@ class RenameTypeWizardSimilarElementsPage extends UserInputWizardPage {
 			if (newInput == null)
 				return;
 			final Map similarElementsMap= (Map) newInput;
-			final IJavaElement[] similarElements= (IJavaElement[]) similarElementsMap.keySet().toArray(new IJavaElement[0]);
+			final IJavaScriptElement[] similarElements= (IJavaScriptElement[]) similarElementsMap.keySet().toArray(new IJavaScriptElement[0]);
 			fTreeElementMap= new HashMap();
 			fTopLevelElements= new HashSet();
 			for (int i= 0; i < similarElements.length; i++) {
-				final IType declaring= (IType) similarElements[i].getAncestor(IJavaElement.TYPE);
+				final IType declaring= (IType) similarElements[i].getAncestor(IJavaScriptElement.TYPE);
 				if (similarElements[i] instanceof IMember) {
 					// methods, fields, initializers, inner types
 					addToMap(declaring, similarElements[i]);
 				} else {
 					// local variables
-					final IJavaElement parent= similarElements[i].getParent();
+					final IJavaScriptElement parent= similarElements[i].getParent();
 					if (parent instanceof IMember) {
 						// parent is a method or an initializer
 						addToMap(parent, similarElements[i]);
@@ -271,10 +271,10 @@ class RenameTypeWizardSimilarElementsPage extends UserInputWizardPage {
 			}
 		}
 
-		private void handleDeclaring(final IJavaElement someType) {
+		private void handleDeclaring(final IJavaScriptElement someType) {
 
-			final IJavaElement enclosing= someType.getParent();
-			if (enclosing instanceof ICompilationUnit) {
+			final IJavaScriptElement enclosing= someType.getParent();
+			if (enclosing instanceof IJavaScriptUnit) {
 				fTopLevelElements.add(someType.getParent());
 				addToMap(someType.getParent(), someType);
 			} else {
@@ -283,7 +283,7 @@ class RenameTypeWizardSimilarElementsPage extends UserInputWizardPage {
 			}
 		}
 
-		private void addToMap(final IJavaElement key, final IJavaElement element) {
+		private void addToMap(final IJavaScriptElement key, final IJavaScriptElement element) {
 			Set elements= (Set) fTreeElementMap.get(key);
 			if (elements == null) {
 				elements= new HashSet();
@@ -367,7 +367,7 @@ class RenameTypeWizardSimilarElementsPage extends UserInputWizardPage {
 				IMember member= (IMember) element;
 				try {
 					sourceRange= member.getNameRange();
-				} catch (JavaModelException e) {
+				} catch (JavaScriptModelException e) {
 					// fall through
 				}
 			}
@@ -608,10 +608,10 @@ class RenameTypeWizardSimilarElementsPage extends UserInputWizardPage {
 	}
 
 	private void initializeRefFromUI() {
-		IJavaElement[] selected= getCheckedSimilarElements();
+		IJavaScriptElement[] selected= getCheckedSimilarElements();
 		Map selection= getRenameTypeProcessor().getSimilarElementsToSelection();
 		for (Iterator iter= selection.keySet().iterator(); iter.hasNext();) {
-			IJavaElement element= (IJavaElement) iter.next();
+			IJavaScriptElement element= (IJavaScriptElement) iter.next();
 			selection.put(element, Boolean.FALSE);
 		}
 		for (int i= 0; i < selected.length; i++)
@@ -627,7 +627,7 @@ class RenameTypeWizardSimilarElementsPage extends UserInputWizardPage {
 	protected void editCurrentElement() {
 		IStructuredSelection selection= (IStructuredSelection) fTreeViewer.getSelection();
 		if ( (selection != null) && isSimilarElement(selection.getFirstElement())) {
-			IJavaElement element= (IJavaElement) selection.getFirstElement();
+			IJavaScriptElement element= (IJavaScriptElement) selection.getFirstElement();
 			String newName= (String) fSimilarElementsToNewName.get(element);
 			if (newName == null)
 				return;
@@ -645,7 +645,7 @@ class RenameTypeWizardSimilarElementsPage extends UserInputWizardPage {
 	private void restoreSelectionAndNames(final Map selection) {
 		final Map selectedElements= selection;
 		for (Iterator iter= selectedElements.keySet().iterator(); iter.hasNext();) {
-			IJavaElement element= (IJavaElement) iter.next();
+			IJavaScriptElement element= (IJavaScriptElement) iter.next();
 			boolean isSelected= ((Boolean) selectedElements.get(element)).booleanValue();
 			fTreeViewer.setChecked(element, isSelected);
 			fTreeViewer.update(element, null);
@@ -697,17 +697,17 @@ class RenameTypeWizardSimilarElementsPage extends UserInputWizardPage {
 
 	private void treeViewerSelectionChanged(SelectionChangedEvent event) {
 		try {
-			final IJavaElement selection= getFirstSelectedSourceReference(event);
+			final IJavaScriptElement selection= getFirstSelectedSourceReference(event);
 			setSourceViewerContents(selection);
 			fEditElementButton.setEnabled(selection != null && (isSimilarElement(selection)));
 			fCurrentElementLabel.setText(selection != null ? JavaElementLabels.getElementLabel(selection, LABEL_FLAGS) : RefactoringMessages.RenameTypeWizardSimilarElementsPage_select_element_to_view_source);
 			fCurrentElementLabel.setImage(selection != null ? fTreeViewerLabelProvider.getJavaImage(selection) : null);
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			ExceptionHandler.handle(e, RefactoringMessages.RenameTypeWizard_defaultPageTitle, RefactoringMessages.RenameTypeWizard_unexpected_exception);
 		}
 	}
 
-	private IJavaElement getFirstSelectedSourceReference(SelectionChangedEvent event) {
+	private IJavaScriptElement getFirstSelectedSourceReference(SelectionChangedEvent event) {
 		ISelection s= event.getSelection();
 		if (! (s instanceof IStructuredSelection))
 			return null;
@@ -715,18 +715,18 @@ class RenameTypeWizardSimilarElementsPage extends UserInputWizardPage {
 		if (strSel.size() != 1)
 			return null;
 		Object first= strSel.getFirstElement();
-		if (! (first instanceof IJavaElement))
+		if (! (first instanceof IJavaScriptElement))
 			return null;
-		return (IJavaElement) first;
+		return (IJavaScriptElement) first;
 	}
 
-	private void setSourceViewerContents(IJavaElement el) throws JavaModelException {
+	private void setSourceViewerContents(IJavaScriptElement el) throws JavaScriptModelException {
 		String EMPTY= ""; //$NON-NLS-1$
 		if (el == null) {
 			fSourceViewer.getDocument().set(EMPTY);
 			return;
 		}
-		ICompilationUnit element= (ICompilationUnit) el.getAncestor(IJavaElement.COMPILATION_UNIT);
+		IJavaScriptUnit element= (IJavaScriptUnit) el.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
 		if (element == null) {
 			fSourceViewer.getDocument().set(EMPTY);
 			return;
@@ -745,7 +745,7 @@ class RenameTypeWizardSimilarElementsPage extends UserInputWizardPage {
 		}		
 	}
 
-	private ISourceRange getNameRange(IJavaElement element) throws JavaModelException {
+	private ISourceRange getNameRange(IJavaScriptElement element) throws JavaScriptModelException {
 		if (element instanceof IMember)
 			return ((IMember) element).getNameRange();
 		else if (element instanceof ILocalVariable)
@@ -754,14 +754,14 @@ class RenameTypeWizardSimilarElementsPage extends UserInputWizardPage {
 			return null;
 	}
 
-	private IJavaElement[] getCheckedSimilarElements() {
+	private IJavaScriptElement[] getCheckedSimilarElements() {
 		Object[] checked= fTreeViewer.getCheckedElements();
 		List elements= new ArrayList(checked.length);
 		for (int i= 0; i < checked.length; i++) {
 			if (isSimilarElement(checked[i]))
 				elements.add(checked[i]);
 		}
-		return (IJavaElement[]) elements.toArray(new IJavaElement[elements.size()]);
+		return (IJavaScriptElement[]) elements.toArray(new IJavaScriptElement[elements.size()]);
 	}
 
 	public RenameTypeProcessor getRenameTypeProcessor() {

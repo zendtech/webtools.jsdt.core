@@ -18,7 +18,7 @@ import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.IPlaceholderFolderLayout;
 import org.eclipse.ui.console.IConsoleConstants;
 import org.eclipse.ui.progress.IProgressConstants;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.ui.JavaUI;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 
@@ -28,7 +28,7 @@ public class JavaBrowsingPerspectiveFactory implements IPerspectiveFactory {
 	/*
 	 * XXX: This is a workaround for: http://dev.eclipse.org/bugs/show_bug.cgi?id=13070
 	 */
-	static IJavaElement fgJavaElementFromAction;
+	static IJavaScriptElement fgJavaElementFromAction;
 
 	/**
 	 * Constructs a new Default layout engine.
@@ -154,14 +154,14 @@ public class JavaBrowsingPerspectiveFactory implements IPerspectiveFactory {
 	}
 
 	private boolean shouldShowProjectsView() {
-		return fgJavaElementFromAction == null || fgJavaElementFromAction.getElementType() == IJavaElement.JAVA_MODEL;
+		return fgJavaElementFromAction == null || fgJavaElementFromAction.getElementType() == IJavaScriptElement.JAVA_MODEL;
 	}
 
 	private boolean shouldShowPackagesView() {
 		if (fgJavaElementFromAction == null)
 			return true;
 		int type= fgJavaElementFromAction.getElementType();
-		return type == IJavaElement.JAVA_MODEL || type == IJavaElement.JAVA_PROJECT || type == IJavaElement.PACKAGE_FRAGMENT_ROOT;
+		return type == IJavaScriptElement.JAVA_MODEL || type == IJavaScriptElement.JAVA_PROJECT || type == IJavaScriptElement.PACKAGE_FRAGMENT_ROOT;
 	}
 
 	private boolean stackBrowsingViewsVertically() {
@@ -172,8 +172,8 @@ public class JavaBrowsingPerspectiveFactory implements IPerspectiveFactory {
 	 * XXX: This is a workaround for: http://dev.eclipse.org/bugs/show_bug.cgi?id=13070
 	 */
 	static void setInputFromAction(IAdaptable input) {
-		if (input instanceof IJavaElement)
-			fgJavaElementFromAction= (IJavaElement)input;
+		if (input instanceof IJavaScriptElement)
+			fgJavaElementFromAction= (IJavaScriptElement)input;
 		else
 			fgJavaElementFromAction= null;
 	}

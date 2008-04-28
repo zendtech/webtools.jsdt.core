@@ -377,8 +377,8 @@ public class JavaProjectWizardFirstPage extends WizardPage {
 //					IVMInstall i0= (IVMInstall)arg0;
 //					IVMInstall i1= (IVMInstall)arg1;
 //					if (i1 instanceof IVMInstall2 && i0 instanceof IVMInstall2) {
-//						String cc0= JavaModelUtil.getCompilerCompliance((IVMInstall2) i0, JavaCore.VERSION_1_4);
-//						String cc1= JavaModelUtil.getCompilerCompliance((IVMInstall2) i1, JavaCore.VERSION_1_4);
+//						String cc0= JavaModelUtil.getCompilerCompliance((IVMInstall2) i0, JavaScriptCore.VERSION_1_4);
+//						String cc1= JavaModelUtil.getCompilerCompliance((IVMInstall2) i1, JavaScriptCore.VERSION_1_4);
 //						int result= cc1.compareTo(cc0);
 //						if (result == 0)
 //							result= i0.getName().compareTo(i1.getName());
@@ -398,9 +398,9 @@ public class JavaProjectWizardFirstPage extends WizardPage {
 //					selectionIndex= i;
 //				}
 //				if (fInstalledJVMs[i] instanceof IVMInstall2) {
-//					fComplianceData[i]= JavaModelUtil.getCompilerCompliance((IVMInstall2) fInstalledJVMs[i], JavaCore.VERSION_1_4);
+//					fComplianceData[i]= JavaModelUtil.getCompilerCompliance((IVMInstall2) fInstalledJVMs[i], JavaScriptCore.VERSION_1_4);
 //				} else {
-//					fComplianceData[i]= JavaCore.VERSION_1_4;
+//					fComplianceData[i]= JavaScriptCore.VERSION_1_4;
 //				}
 //			}
 //			comboField.setItems(fComplianceLabels);
@@ -554,20 +554,20 @@ public class JavaProjectWizardFirstPage extends WizardPage {
 //		public void handlePossibleJVMChange() {
 //			String selectedCompliance= fJREGroup.getSelectedCompilerCompliance();
 //			if (selectedCompliance == null) {
-//				selectedCompliance= JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE);
+//				selectedCompliance= JavaScriptCore.getOption(JavaScriptCore.COMPILER_COMPLIANCE);
 //			}
 //			IVMInstall selectedJVM= fJREGroup.getSelectedJVM();
 //			if (selectedJVM == null) {
 //				selectedJVM= JavaRuntime.getDefaultVMInstall();
 //			}
-//			String jvmCompliance= JavaCore.VERSION_1_4;
+//			String jvmCompliance= JavaScriptCore.VERSION_1_4;
 //			if (selectedJVM instanceof IVMInstall2) {
-//				jvmCompliance= JavaModelUtil.getCompilerCompliance((IVMInstall2) selectedJVM, JavaCore.VERSION_1_4);
+//				jvmCompliance= JavaModelUtil.getCompilerCompliance((IVMInstall2) selectedJVM, JavaScriptCore.VERSION_1_4);
 //			}
 //			if (!selectedCompliance.equals(jvmCompliance) && (JavaModelUtil.is50OrHigher(selectedCompliance) || JavaModelUtil.is50OrHigher(jvmCompliance))) {
-//				if (selectedCompliance.equals(JavaCore.VERSION_1_5))
+//				if (selectedCompliance.equals(JavaScriptCore.VERSION_1_5))
 //					selectedCompliance= "5.0"; //$NON-NLS-1$
-//				else if (selectedCompliance.equals(JavaCore.VERSION_1_6))
+//				else if (selectedCompliance.equals(JavaScriptCore.VERSION_1_6))
 //					selectedCompliance= "6.0"; //$NON-NLS-1$
 //				
 //				fHintText.setText(Messages.format(NewWizardMessages.JavaProjectWizardFirstPage_DetectGroup_jre_message, new String[] {selectedCompliance, jvmCompliance}));

@@ -28,10 +28,10 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.RefactoringStatusContext;
 import org.eclipse.ltk.core.refactoring.participants.RefactoringArguments;
 import org.eclipse.text.edits.TextEdit;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaProject;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.dom.AST;
 import org.eclipse.wst.jsdt.core.dom.ASTNode;
 import org.eclipse.wst.jsdt.core.dom.AbstractTypeDeclaration;
@@ -43,7 +43,7 @@ import org.eclipse.wst.jsdt.core.dom.Assignment;
 import org.eclipse.wst.jsdt.core.dom.Block;
 import org.eclipse.wst.jsdt.core.dom.CatchClause;
 import org.eclipse.wst.jsdt.core.dom.ChildListPropertyDescriptor;
-import org.eclipse.wst.jsdt.core.dom.CompilationUnit;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
 import org.eclipse.wst.jsdt.core.dom.ConstructorInvocation;
 import org.eclipse.wst.jsdt.core.dom.Expression;
 import org.eclipse.wst.jsdt.core.dom.ExpressionStatement;
@@ -51,8 +51,8 @@ import org.eclipse.wst.jsdt.core.dom.FieldDeclaration;
 import org.eclipse.wst.jsdt.core.dom.IBinding;
 import org.eclipse.wst.jsdt.core.dom.ITypeBinding;
 import org.eclipse.wst.jsdt.core.dom.IVariableBinding;
-import org.eclipse.wst.jsdt.core.dom.Javadoc;
-import org.eclipse.wst.jsdt.core.dom.MethodDeclaration;
+import org.eclipse.wst.jsdt.core.dom.JSdoc;
+import org.eclipse.wst.jsdt.core.dom.FunctionDeclaration;
 import org.eclipse.wst.jsdt.core.dom.Modifier;
 import org.eclipse.wst.jsdt.core.dom.SimpleName;
 import org.eclipse.wst.jsdt.core.dom.Type;
@@ -97,7 +97,7 @@ public class PromoteTempToFieldRefactoring extends ScriptableRefactoring {
 
 	private int fSelectionStart;
     private int fSelectionLength;
-    private ICompilationUnit fCu;
+    private IJavaScriptUnit fCu;
 	
 	public static final int INITIALIZE_IN_FIELD= 0;
 	public static final int INITIALIZE_IN_METHOD= 1;
@@ -113,7 +113,7 @@ public class PromoteTempToFieldRefactoring extends ScriptableRefactoring {
 	private int fInitializeIn; /*see INITIALIZE_IN_* constraints */
 
 	//------ fields used for computations ---------//
-    private CompilationUnit fCompilationUnitNode;
+    private JavaScriptUnit fCompilationUnitNode;
     private VariableDeclaration fTempDeclarationNode;
 	//------ analysis ---------//
 	private boolean fInitializerUsesLocalTypes;
@@ -128,7 +128,7 @@ public class PromoteTempToFieldRefactoring extends ScriptableRefactoring {
 	 * @param selectionStart
 	 * @param selectionLength
 	 */
-	public PromoteTempToFieldRefactoring(ICompilationUnit unit, int selectionStart, int selectionLength){
+	public PromoteTempToFieldRefactoring(IJavaScriptUnit unit, int selectionStart, int selectionLength){
 		Assert.isTrue(selectionStart >= 0);
 		Assert.isTrue(selectionLength >= 0);
 		fSelectionStart= selectionStart;
@@ -154,12 +154,12 @@ public class PromoteTempToFieldRefactoring extends ScriptableRefactoring {
 		Assert.isTrue(resolveBinding != null && !resolveBinding.isParameter() && !resolveBinding.isField());
 
 		ASTNode root= declaration.getRoot();
-		Assert.isTrue(root instanceof CompilationUnit);
-		fCompilationUnitNode= (CompilationUnit) root;
+		Assert.isTrue(root instanceof JavaScriptUnit);
+		fCompilationUnitNode= (JavaScriptUnit) root;
 		
-		IJavaElement input= fCompilationUnitNode.getJavaElement();
-		Assert.isTrue(input instanceof ICompilationUnit);
-		fCu= (ICompilationUnit) input;
+		IJavaScriptElement input= fCompilationUnitNode.getJavaElement();
+		Assert.isTrue(input instanceof IJavaScriptUnit);
+		fCu= (IJavaScriptUnit) input;
 
 		fSelectionStart= declaration.getStartPosition();
 		fSelectionLength= declaration.getLength();
@@ -276,8 +276,8 @@ public class PromoteTempToFieldRefactoring extends ScriptableRefactoring {
     	return Modifier.isStatic(getMethodDeclaration().getModifiers());
     }
     
-    private MethodDeclaration getMethodDeclaration(){
-    	return (MethodDeclaration)ASTNodes.getParent(fTempDeclarationNode, MethodDeclaration.class);
+    private FunctionDeclaration getMethodDeclaration(){
+    	return (FunctionDeclaration)ASTNodes.getParent(fTempDeclarationNode, FunctionDeclaration.class);
     }
 
     private boolean isDeclaredInAnonymousClass() {
@@ -289,7 +289,7 @@ public class PromoteTempToFieldRefactoring extends ScriptableRefactoring {
 	 */
 	public RefactoringStatus checkInitialConditions(IProgressMonitor pm) throws CoreException {
 		RefactoringStatus result= Checks.validateModifiesFiles(
-			ResourceUtil.getFiles(new ICompilationUnit[]{fCu}),
+			ResourceUtil.getFiles(new IJavaScriptUnit[]{fCu}),
 			getValidationContext());
 		if (result.hasFatalError())
 			return result;
@@ -299,7 +299,7 @@ public class PromoteTempToFieldRefactoring extends ScriptableRefactoring {
 		if (fTempDeclarationNode == null)
 			return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.PromoteTempToFieldRefactoring_select_declaration); 
 		
-		if (! Checks.isDeclaredIn(fTempDeclarationNode, MethodDeclaration.class))
+		if (! Checks.isDeclaredIn(fTempDeclarationNode, FunctionDeclaration.class))
 			return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.PromoteTempToFieldRefactoring_only_declared_in_methods); 
 		
 		if (isMethodParameter())
@@ -408,7 +408,7 @@ public class PromoteTempToFieldRefactoring extends ScriptableRefactoring {
     }
     
     private boolean isMethodParameter() {
-    	return (fTempDeclarationNode.getParent() instanceof MethodDeclaration);
+    	return (fTempDeclarationNode.getParent() instanceof FunctionDeclaration);
     }
     
 	private void initAST(IProgressMonitor pm){
@@ -442,9 +442,9 @@ public class PromoteTempToFieldRefactoring extends ScriptableRefactoring {
 		Assert.isTrue(!isDeclaredInAnonymousClass());
 		final AbstractTypeDeclaration declaration= (AbstractTypeDeclaration) getMethodDeclaration().getParent();
 		if (declaration instanceof TypeDeclaration) {
-			MethodDeclaration[] methods= ((TypeDeclaration) declaration).getMethods();
+			FunctionDeclaration[] methods= ((TypeDeclaration) declaration).getMethods();
 			for (int i= 0; i < methods.length; i++) {
-				MethodDeclaration method= methods[i];
+				FunctionDeclaration method= methods[i];
 				if (!method.isConstructor())
 					continue;
 				NameCollector nameCollector= new NameCollector(method) {
@@ -552,10 +552,10 @@ public class PromoteTempToFieldRefactoring extends ScriptableRefactoring {
     private void addInitializersToConstructors(ASTRewrite rewrite) throws CoreException {
     	Assert.isTrue(! isDeclaredInAnonymousClass());
     	final AbstractTypeDeclaration declaration= (AbstractTypeDeclaration)getMethodDeclaration().getParent();
-    	final MethodDeclaration[] constructors= getAllConstructors(declaration);
+    	final FunctionDeclaration[] constructors= getAllConstructors(declaration);
     	if (constructors.length == 0) {
     		AST ast= rewrite.getAST();
-    		MethodDeclaration newConstructor= ast.newMethodDeclaration();
+    		FunctionDeclaration newConstructor= ast.newFunctionDeclaration();
     		newConstructor.setConstructor(true);
     		newConstructor.modifiers().addAll(ast.newModifiers(declaration.getModifiers() & ModifierRewrite.VISIBILITY_MODIFIERS));
     		newConstructor.setName(ast.newSimpleName(declaration.getName().getIdentifier()));
@@ -582,11 +582,11 @@ public class PromoteTempToFieldRefactoring extends ScriptableRefactoring {
 		return (AbstractTypeDeclaration)ASTNodes.getParent(getTempDeclarationStatement(), AbstractTypeDeclaration.class);
 	}
 
-	private Javadoc getNewConstructorComment(ASTRewrite rewrite) throws CoreException {
+	private JSdoc getNewConstructorComment(ASTRewrite rewrite) throws CoreException {
 		if (StubUtility.doAddComments(fCu.getJavaProject())){
 			String comment= CodeGeneration.getMethodComment(fCu, getEnclosingTypeName(), getEnclosingTypeName(), new String[0], new String[0], null, null, StubUtility.getLineDelimiterUsed(fCu));
 			if (comment != null && comment.length() > 0) {
-				return (Javadoc) rewrite.createStringPlaceholder(comment, ASTNode.JAVADOC);
+				return (JSdoc) rewrite.createStringPlaceholder(comment, ASTNode.JAVADOC);
 			}
 		}
 		return null;
@@ -605,20 +605,20 @@ public class PromoteTempToFieldRefactoring extends ScriptableRefactoring {
     
     private int findFirstMethodIndex(AbstractTypeDeclaration typeDeclaration) {
     	for (int i= 0, n= typeDeclaration.bodyDeclarations().size(); i < n; i++) {
-            if (typeDeclaration.bodyDeclarations().get(i) instanceof MethodDeclaration)
+            if (typeDeclaration.bodyDeclarations().get(i) instanceof FunctionDeclaration)
             	return i;
         }
         return -1;
     }
     
-    private void addFieldInitializationToConstructor(ASTRewrite rewrite, MethodDeclaration constructor) throws JavaModelException {
+    private void addFieldInitializationToConstructor(ASTRewrite rewrite, FunctionDeclaration constructor) throws JavaScriptModelException {
     	if (constructor.getBody() == null)
 	    	constructor.setBody(getAST().newBlock());
         ExpressionStatement newStatement= createExpressionStatementThatInitializesField(rewrite);
 		rewrite.getListRewrite(constructor.getBody(), Block.STATEMENTS_PROPERTY).insertLast(newStatement, null);
     }
     
-    private static boolean shouldInsertTempInitialization(MethodDeclaration constructor){
+    private static boolean shouldInsertTempInitialization(FunctionDeclaration constructor){
     	Assert.isTrue(constructor.isConstructor());
         if (constructor.getBody() == null)
         	return false;
@@ -630,24 +630,24 @@ public class PromoteTempToFieldRefactoring extends ScriptableRefactoring {
 		return true;        
     }
 
-    private static MethodDeclaration[] getAllConstructors(AbstractTypeDeclaration typeDeclaration) {
+    private static FunctionDeclaration[] getAllConstructors(AbstractTypeDeclaration typeDeclaration) {
 		if (typeDeclaration instanceof TypeDeclaration) {
-			MethodDeclaration[] allMethods= ((TypeDeclaration) typeDeclaration).getMethods();
+			FunctionDeclaration[] allMethods= ((TypeDeclaration) typeDeclaration).getMethods();
 			List result= new ArrayList(Math.min(allMethods.length, 1));
 			for (int i= 0; i < allMethods.length; i++) {
-				MethodDeclaration declaration= allMethods[i];
+				FunctionDeclaration declaration= allMethods[i];
 				if (declaration.isConstructor())
 					result.add(declaration);
 			}
-			return (MethodDeclaration[]) result.toArray(new MethodDeclaration[result.size()]);
+			return (FunctionDeclaration[]) result.toArray(new FunctionDeclaration[result.size()]);
 		}
-		return new MethodDeclaration[] {};
+		return new FunctionDeclaration[] {};
 	}
 
     private Change createChange(ASTRewrite rewrite) throws CoreException {
 		final Map arguments= new HashMap();
 		String project= null;
-		IJavaProject javaProject= fCu.getJavaProject();
+		IJavaScriptProject javaProject= fCu.getJavaProject();
 		if (javaProject != null)
 			project= javaProject.getElementName();
 		final IVariableBinding binding= fTempDeclarationNode.resolveBinding();
@@ -692,7 +692,7 @@ public class PromoteTempToFieldRefactoring extends ScriptableRefactoring {
 		return result;
 	}
 
-    private void addLocalDeclarationSplit(ASTRewrite rewrite) throws JavaModelException {
+    private void addLocalDeclarationSplit(ASTRewrite rewrite) throws JavaScriptModelException {
     	VariableDeclarationStatement tempDeclarationStatement= getTempDeclarationStatement();
     	Block block= (Block)tempDeclarationStatement.getParent();//XXX can it be anything else?
     	int statementIndex= block.statements().indexOf(tempDeclarationStatement);
@@ -734,7 +734,7 @@ public class PromoteTempToFieldRefactoring extends ScriptableRefactoring {
         }
     }
     
-    private ExpressionStatement createExpressionStatementThatInitializesField(ASTRewrite rewrite) throws JavaModelException{
+    private ExpressionStatement createExpressionStatementThatInitializesField(ASTRewrite rewrite) throws JavaScriptModelException{
 		AST ast= getAST();
 		Assignment assignment= ast.newAssignment();
 		SimpleName fieldName= ast.newSimpleName(fFieldName);
@@ -750,7 +750,7 @@ public class PromoteTempToFieldRefactoring extends ScriptableRefactoring {
 		}
 	}
 	
-	private Expression getTempInitializerCopy(ASTRewrite rewrite) throws JavaModelException {
+	private Expression getTempInitializerCopy(ASTRewrite rewrite) throws JavaScriptModelException {
 		final Expression initializer= (Expression) rewrite.createCopyTarget(getTempInitializer());
 		if (initializer instanceof ArrayInitializer && ASTNodes.getDimensions(fTempDeclarationNode) > 0) {
 			ArrayCreation arrayCreation= rewrite.getAST().newArrayCreation();
@@ -888,11 +888,11 @@ public class PromoteTempToFieldRefactoring extends ScriptableRefactoring {
 				return RefactoringStatus.createFatalErrorStatus(Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist, JDTRefactoringDescriptor.ATTRIBUTE_SELECTION));
 			final String handle= extended.getAttribute(JDTRefactoringDescriptor.ATTRIBUTE_INPUT);
 			if (handle != null) {
-				final IJavaElement element= JDTRefactoringDescriptor.handleToElement(extended.getProject(), handle, false);
-				if (element == null || !element.exists() || element.getElementType() != IJavaElement.COMPILATION_UNIT)
+				final IJavaScriptElement element= JDTRefactoringDescriptor.handleToElement(extended.getProject(), handle, false);
+				if (element == null || !element.exists() || element.getElementType() != IJavaScriptElement.COMPILATION_UNIT)
 					return createInputFatalStatus(element, IJavaRefactorings.CONVERT_LOCAL_VARIABLE);
 				else
-					fCu= (ICompilationUnit) element;
+					fCu= (IJavaScriptUnit) element;
 			} else
 				return RefactoringStatus.createFatalErrorStatus(Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist, JDTRefactoringDescriptor.ATTRIBUTE_INPUT));
 			final String visibility= extended.getAttribute(ATTRIBUTE_VISIBILITY);

@@ -16,12 +16,12 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 
 public class JavadocProjectContentProvider implements ITreeContentProvider {
@@ -31,13 +31,13 @@ public class JavadocProjectContentProvider implements ITreeContentProvider {
 	 */
 	public Object[] getChildren(Object parentElement) {
 		try {
-			if (parentElement instanceof IJavaProject) {
-				IJavaProject project= (IJavaProject) parentElement;
+			if (parentElement instanceof IJavaScriptProject) {
+				IJavaScriptProject project= (IJavaScriptProject) parentElement;
 				return getPackageFragmentRoots(project);
 			} else if (parentElement instanceof IPackageFragmentRoot) {
 				return getPackageFragments((IPackageFragmentRoot) parentElement);
 			}
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			JavaPlugin.log(e);
 		}
 		return new Object[0];
@@ -48,8 +48,8 @@ public class JavadocProjectContentProvider implements ITreeContentProvider {
 	public Object[] getElements(Object inputElement) {
 		IWorkspaceRoot root= ResourcesPlugin.getWorkspace().getRoot();
 		try {
-			return JavaCore.create(root).getJavaProjects();
-		} catch (JavaModelException e) {
+			return JavaScriptCore.create(root).getJavaProjects();
+		} catch (JavaScriptModelException e) {
 			JavaPlugin.log(e);
 		}
 		return new Object[0];
@@ -60,7 +60,7 @@ public class JavadocProjectContentProvider implements ITreeContentProvider {
 	 */
 	public Object getParent(Object element) {
 		
-		IJavaElement parent= ((IJavaElement)element).getParent();
+		IJavaScriptElement parent= ((IJavaScriptElement)element).getParent();
 		if (parent instanceof IPackageFragmentRoot) {
 			IPackageFragmentRoot root= (IPackageFragmentRoot) parent;
 			if (root.getPath().equals(root.getJavaProject().getProject().getFullPath())) {
@@ -89,7 +89,7 @@ public class JavadocProjectContentProvider implements ITreeContentProvider {
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 	}
 
-	private Object[] getPackageFragmentRoots(IJavaProject project) throws JavaModelException {
+	private Object[] getPackageFragmentRoots(IJavaScriptProject project) throws JavaScriptModelException {
 		ArrayList result= new ArrayList();
 
 		IPackageFragmentRoot[] roots= project.getPackageFragmentRoots();
@@ -109,10 +109,10 @@ public class JavadocProjectContentProvider implements ITreeContentProvider {
 		return result.toArray();
 	}
 
-	private Object[] getPackageFragments(IPackageFragmentRoot root) throws JavaModelException {
+	private Object[] getPackageFragments(IPackageFragmentRoot root) throws JavaScriptModelException {
 		ArrayList packageFragments= new ArrayList();
 
-		IJavaElement[] children= root.getChildren();
+		IJavaScriptElement[] children= root.getChildren();
 		for (int i= 0; i < children.length; i++) {
 			if (((IPackageFragment) children[i]).containsJavaResources())
 				packageFragments.add(children[i]);

@@ -17,9 +17,9 @@ import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.jsdt.core.IField;
 import org.eclipse.wst.jsdt.core.IMember;
-import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.ISourceRange;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.core.dom.PrimitiveType;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringAvailabilityTester;
@@ -80,7 +80,7 @@ public class ChangeTypeAction extends SelectionDispatchAction {
 	public void selectionChanged(IStructuredSelection selection) {
 		try {
 			setEnabled(RefactoringAvailabilityTester.isGeneralizeTypeAvailable(selection));
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			if (JavaModelUtil.isExceptionToBeLogged(e))
 				JavaPlugin.log(e);
 			setEnabled(false);
@@ -99,7 +99,7 @@ public class ChangeTypeAction extends SelectionDispatchAction {
 		}
 	}
 
-	private static IMember getMember(IStructuredSelection selection) throws JavaModelException {
+	private static IMember getMember(IStructuredSelection selection) throws JavaScriptModelException {
 		if (selection.size() != 1)
 			return null;
 		
@@ -107,8 +107,8 @@ public class ChangeTypeAction extends SelectionDispatchAction {
 		if (!(element instanceof IMember))
 			return null;
 		
-		if (element instanceof IMethod) {
-			IMethod method= (IMethod)element;
+		if (element instanceof IFunction) {
+			IFunction method= (IFunction)element;
 			String returnType= method.getReturnType();
 			if (PrimitiveType.toCode(Signature.toString(returnType)) != null)
 				return null;
@@ -135,7 +135,7 @@ public class ChangeTypeAction extends SelectionDispatchAction {
 	public void selectionChanged(JavaTextSelection selection) {
 		try {
 			setEnabled(RefactoringAvailabilityTester.isGeneralizeTypeAvailable(selection));
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			setEnabled(false);
 		}
 	}

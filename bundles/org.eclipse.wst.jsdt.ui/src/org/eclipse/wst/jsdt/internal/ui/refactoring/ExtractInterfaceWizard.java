@@ -33,9 +33,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IMember;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.structure.ExtractInterfaceProcessor;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.structure.ExtractInterfaceRefactoring;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.structure.constraints.SuperTypeRefactoringProcessor;
@@ -178,7 +178,7 @@ public class ExtractInterfaceWizard extends RefactoringWizard {
 			fTableViewer.setContentProvider(new ArrayContentProvider());
 			try {
 				fTableViewer.setInput(getExtractableMembers());
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				ExceptionHandler.handle(e, RefactoringMessages.ExtractInterfaceInputPage_Extract_Interface, RefactoringMessages.ExtractInterfaceInputPage_Internal_Error); 
 				fTableViewer.setInput(new IMember[0]);
 			}
@@ -193,7 +193,7 @@ public class ExtractInterfaceWizard extends RefactoringWizard {
 			createButtonComposite(composite);
 		}
 
-		private IMember[] getExtractableMembers() throws JavaModelException {
+		private IMember[] getExtractableMembers() throws JavaScriptModelException {
 			return getExtractInterfaceRefactoring().getExtractInterfaceProcessor().getExtractableMembers();
 		}
 
@@ -202,7 +202,7 @@ public class ExtractInterfaceWizard extends RefactoringWizard {
 			IMember[] extractable;
 			try {
 				extractable= getExtractableMembers();
-			} catch (JavaModelException exception) {
+			} catch (JavaScriptModelException exception) {
 				extractable= new IMember[0];
 				JavaPlugin.log(exception);
 			}
@@ -217,7 +217,7 @@ public class ExtractInterfaceWizard extends RefactoringWizard {
 
 		private static boolean containsMethods(IMember[] members) {
 			for (int i= 0; i < members.length; i++) {
-				if (members[i].getElementType() == IJavaElement.METHOD)
+				if (members[i].getElementType() == IJavaScriptElement.METHOD)
 					return true;
 			}
 			return false;
@@ -270,7 +270,7 @@ public class ExtractInterfaceWizard extends RefactoringWizard {
 		private boolean anyMembersToExtract() {
 			try {
 				return getExtractableMembers().length > 0;
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				return false;
 			}
 		}
@@ -348,7 +348,7 @@ public class ExtractInterfaceWizard extends RefactoringWizard {
 				initializeRefactoring();
 				storeDialogSettings();
 				return super.getNextPage();
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				JavaPlugin.log(e);
 				return null;
 			}
@@ -362,13 +362,13 @@ public class ExtractInterfaceWizard extends RefactoringWizard {
 				initializeRefactoring();
 				storeDialogSettings();
 				return super.performFinish();
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				JavaPlugin.log(e);
 				return false;
 			}
 		}
 
-		private void initializeRefactoring() throws JavaModelException {
+		private void initializeRefactoring() throws JavaScriptModelException {
 			final ExtractInterfaceProcessor processor= getExtractInterfaceRefactoring().getExtractInterfaceProcessor();
 			processor.setTypeName(getText());
 			processor.setReplace(fReplaceAllCheckbox.getSelection());

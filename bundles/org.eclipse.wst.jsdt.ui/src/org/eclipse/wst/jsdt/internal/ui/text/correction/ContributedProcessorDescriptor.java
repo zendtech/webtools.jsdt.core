@@ -22,10 +22,10 @@ import org.eclipse.core.expressions.ExpressionTagNames;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaModelMarker;
-import org.eclipse.wst.jsdt.core.IJavaProject;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptModelMarker;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusInfo;
@@ -71,9 +71,9 @@ public final class ContributedProcessorDescriptor {
 			}
 		}
 		if (map.isEmpty()) {
-			map.add(IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER);
-			map.add(IJavaModelMarker.BUILDPATH_PROBLEM_MARKER);
-			map.add(IJavaModelMarker.TASK_MARKER);
+			map.add(IJavaScriptModelMarker.JAVA_MODEL_PROBLEM_MARKER);
+			map.add(IJavaScriptModelMarker.BUILDPATH_PROBLEM_MARKER);
+			map.add(IJavaScriptModelMarker.TASK_MARKER);
 		}
 		return map;
 	}
@@ -87,9 +87,9 @@ public final class ContributedProcessorDescriptor {
 		return new StatusInfo(IStatus.OK, "Syntactically correct quick assist/fix processor"); //$NON-NLS-1$
 	}
 
-	private boolean matches(ICompilationUnit cunit) {
+	private boolean matches(IJavaScriptUnit cunit) {
 		if (fRequiredSourceLevel != null) {
-			String current= cunit.getJavaProject().getOption(JavaCore.COMPILER_SOURCE, true);
+			String current= cunit.getJavaProject().getOption(JavaScriptCore.COMPILER_SOURCE, true);
 			if (JavaModelUtil.isVersionLessThan(current, fRequiredSourceLevel)) {
 				return false;
 			}
@@ -106,10 +106,10 @@ public final class ContributedProcessorDescriptor {
 				Expression expression= parser.perform(children[0]);
 				EvaluationContext evalContext= new EvaluationContext(null, cunit);
 				evalContext.addVariable("compilationUnit", cunit); //$NON-NLS-1$
-				IJavaProject javaProject= cunit.getJavaProject();
+				IJavaScriptProject javaProject= cunit.getJavaProject();
 				String[] natures= javaProject.getProject().getDescription().getNatureIds();
 				evalContext.addVariable("projectNatures", Arrays.asList(natures)); //$NON-NLS-1$
-				evalContext.addVariable("sourceLevel", javaProject.getOption(JavaCore.COMPILER_SOURCE, true)); //$NON-NLS-1$
+				evalContext.addVariable("sourceLevel", javaProject.getOption(JavaScriptCore.COMPILER_SOURCE, true)); //$NON-NLS-1$
 				fLastResult= !(expression.evaluate(evalContext) != EvaluationResult.TRUE);
 				return fLastResult;
 			} catch (CoreException e) {
@@ -120,7 +120,7 @@ public final class ContributedProcessorDescriptor {
 		return false;
 	}
 	
-	public Object getProcessor(ICompilationUnit cunit) throws CoreException {
+	public Object getProcessor(IJavaScriptUnit cunit) throws CoreException {
 		if (matches(cunit)) {
 			if (fProcessorInstance == null) {
 				fProcessorInstance= fConfigurationElement.createExecutableExtension(CLASS);

@@ -31,12 +31,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
-import org.eclipse.wst.jsdt.core.JavaModelException;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchConstants;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchScope;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchConstants;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.core.search.SearchEngine;
 import org.eclipse.wst.jsdt.core.search.SearchMatch;
 import org.eclipse.wst.jsdt.core.search.SearchPattern;
@@ -65,7 +65,7 @@ public class PackageSelectionDialog extends ElementListSelectionDialog {
 	private Point fSize;
 	
 	private IRunnableContext fContext;
-	private IJavaSearchScope fScope;
+	private IJavaScriptSearchScope fScope;
 	private int fFlags;
 
 	/**
@@ -76,7 +76,7 @@ public class PackageSelectionDialog extends ElementListSelectionDialog {
 	 *  <code>F_HIDE_DEFAULT_PACKAGE</code> and  <code>F_HIDE_EMPTY_INNER</code>
 	 * @param scope the scope defining the available packages.
 	 */
-	public PackageSelectionDialog(Shell parent, IRunnableContext context, int flags, IJavaSearchScope scope) {
+	public PackageSelectionDialog(Shell parent, IRunnableContext context, int flags, IJavaScriptSearchScope scope) {
 		super(parent, createLabelProvider(flags));
 		fFlags= flags;
 		fScope= scope;
@@ -113,7 +113,7 @@ public class PackageSelectionDialog extends ElementListSelectionDialog {
 						private final boolean fIncludeParents= (fFlags & F_SHOW_PARENTS) != 0;
 
 						public void acceptSearchMatch(SearchMatch match) throws CoreException {
-							IJavaElement enclosingElement= (IJavaElement) match.getElement();
+							IJavaScriptElement enclosingElement= (IJavaScriptElement) match.getElement();
 							String name= enclosingElement.getElementName();
 							if (fAddDefault || name.length() > 0) {
 								if (fDuplicates || fSet.add(name)) {
@@ -125,7 +125,7 @@ public class PackageSelectionDialog extends ElementListSelectionDialog {
 							}
 						}
 						
-						private void addParentPackages(IJavaElement enclosingElement, String name) {
+						private void addParentPackages(IJavaScriptElement enclosingElement, String name) {
 							IPackageFragmentRoot root= (IPackageFragmentRoot) enclosingElement.getParent();
 							int idx= name.lastIndexOf('.');
 							while (idx != -1) {
@@ -138,7 +138,7 @@ public class PackageSelectionDialog extends ElementListSelectionDialog {
 						}
 					};
 					SearchPattern pattern= SearchPattern.createPattern("*", //$NON-NLS-1$
-							IJavaSearchConstants.PACKAGE, IJavaSearchConstants.DECLARATIONS,
+							IJavaScriptSearchConstants.PACKAGE, IJavaScriptSearchConstants.DECLARATIONS,
 							SearchPattern.R_PATTERN_MATCH | SearchPattern.R_CASE_SENSITIVE);
 					new SearchEngine().search(pattern, SearchUtils.getDefaultSearchParticipants(), fScope, requestor, new SubProgressMonitor(monitor, 1));
 					
@@ -158,7 +158,7 @@ public class PackageSelectionDialog extends ElementListSelectionDialog {
 				}
 			}
 			
-			private void removeEmptyPackages(IProgressMonitor monitor) throws JavaModelException, InterruptedException {
+			private void removeEmptyPackages(IProgressMonitor monitor) throws JavaScriptModelException, InterruptedException {
 				monitor.beginTask(JavaUIMessages.PackageSelectionDialog_progress_findEmpty, packageList.size());
 				try {
 					ArrayList res= new ArrayList(packageList.size());

@@ -56,10 +56,10 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.progress.UIJob;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.WorkingCopyOwner;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchConstants;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchScope;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchConstants;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.core.search.SearchEngine;
 import org.eclipse.wst.jsdt.core.search.SearchPattern;
 import org.eclipse.wst.jsdt.core.search.TypeNameMatch;
@@ -201,7 +201,7 @@ public class TypeInfoViewer {
 			try {
 				if (type.getPackageFragmentRoot().getKind() == IPackageFragmentRoot.K_SOURCE)
 					return 0;
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -636,12 +636,12 @@ public class TypeInfoViewer {
 	}
 	
 	private static class SearchEngineJob extends AbstractSearchJob {
-		private IJavaSearchScope fScope;
+		private IJavaScriptSearchScope fScope;
 		private int fElementKind;
 		private SearchRequestor fReqestor;
 		
 		public SearchEngineJob(int ticket, TypeInfoViewer viewer, TypeInfoFilter filter, OpenTypeHistory history, int numberOfVisibleItems, int mode, 
-				IJavaSearchScope scope, int elementKind) {
+				IJavaScriptSearchScope scope, int elementKind) {
 			super(ticket, viewer, filter, history, numberOfVisibleItems, mode);
 			fScope= scope;
 			fElementKind= elementKind;
@@ -666,7 +666,7 @@ public class TypeInfoViewer {
 				fElementKind, 
 				fScope, 
 				fReqestor, 
-				IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, 
+				IJavaScriptSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, 
 				monitor);
 			if (DEBUG)
 				System.out.println("Time needed until search has finished: " + (System.currentTimeMillis() - start)); //$NON-NLS-1$
@@ -719,12 +719,12 @@ public class TypeInfoViewer {
 					// make sure we search a concrete name. This is faster according to Kent  
 					"_______________".toCharArray(), //$NON-NLS-1$
 					SearchPattern.R_EXACT_MATCH | SearchPattern.R_CASE_SENSITIVE, 
-					IJavaSearchConstants.ENUM,
+					IJavaScriptSearchConstants.ENUM,
 					SearchEngine.createWorkspaceScope(), 
 					new TypeNameRequestor() {}, 
-					IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, 
+					IJavaScriptSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, 
 					monitor);
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				JavaPlugin.log(e);
 				return new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.ERROR, JavaUIMessages.TypeInfoViewer_job_error, e);
 			} catch (OperationCanceledException e) {
@@ -829,7 +829,7 @@ public class TypeInfoViewer {
 	
 	private int fSearchJobTicket;
 	protected int fElementKind;
-	protected IJavaSearchScope fSearchScope;
+	protected IJavaScriptSearchScope fSearchScope;
 	
 	private AbstractSearchJob fSearchJob;
 
@@ -849,7 +849,7 @@ public class TypeInfoViewer {
 		
 
 	public TypeInfoViewer(Composite parent, int flags, Label progressLabel, 
-			IJavaSearchScope scope, int elementKind, String initialFilter,
+			IJavaScriptSearchScope scope, int elementKind, String initialFilter,
 			ITypeInfoFilterExtension filterExtension, ITypeInfoImageProvider imageExtension) {
 		Assert.isNotNull(scope);
 		fDisplay= parent.getDisplay();
@@ -1058,7 +1058,7 @@ public class TypeInfoViewer {
 		}
 	}
 	
-	public void setSearchScope(IJavaSearchScope scope, boolean refresh) {
+	public void setSearchScope(IJavaScriptSearchScope scope, boolean refresh) {
 		fSearchScope= scope;
 		if (!refresh)
 			return;

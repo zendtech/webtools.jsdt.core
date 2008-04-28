@@ -31,7 +31,7 @@ import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.keys.IBindingService;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.dom.ASTNode;
 import org.eclipse.wst.jsdt.core.dom.SimpleName;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionUtil;
@@ -59,7 +59,7 @@ public class CorrectionCommandHandler extends AbstractHandler {
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		ISelection selection= fEditor.getSelectionProvider().getSelection();
-		ICompilationUnit cu= JavaUI.getWorkingCopyManager().getWorkingCopy(fEditor.getEditorInput());
+		IJavaScriptUnit cu= JavaUI.getWorkingCopyManager().getWorkingCopy(fEditor.getEditorInput());
 		IAnnotationModel model= JavaUI.getDocumentProvider().getAnnotationModel(fEditor.getEditorInput());
 		if (selection instanceof ITextSelection && cu != null && model != null) {
 			if (! ActionUtil.isEditable(fEditor)) {
@@ -73,7 +73,7 @@ public class CorrectionCommandHandler extends AbstractHandler {
 		return null;
 	}
 	
-	private ICompletionProposal findCorrection(String id, boolean isAssist, ITextSelection selection, ICompilationUnit cu, IAnnotationModel model) {
+	private ICompletionProposal findCorrection(String id, boolean isAssist, ITextSelection selection, IJavaScriptUnit cu, IAnnotationModel model) {
 		AssistContext context= new AssistContext(cu, selection.getOffset(), selection.getLength());
 		Collection proposals= new ArrayList(10);
 		if (isAssist) {

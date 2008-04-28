@@ -42,13 +42,13 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.wst.jsdt.core.IClassFile;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
@@ -100,7 +100,7 @@ public class PackagesView extends JavaBrowsingPart{
 			boolean firstTime= true;
 			for (int i= 0; i < fragments.length; i++) {
 				IPackageFragment fragment= fragments[i];
-				IJavaElement element= fragment.getParent();
+				IJavaScriptElement element= fragment.getParent();
 				if (element instanceof IPackageFragmentRoot) {
 					IPackageFragmentRoot root= (IPackageFragmentRoot) element;
 					String label= JavaElementLabels.getElementLabel(root, JavaElementLabels.DEFAULT_QUALIFIED | JavaElementLabels.ROOT_QUALIFIED);
@@ -145,7 +145,7 @@ public class PackagesView extends JavaBrowsingPart{
 	protected NonJavaElementFilter createNonJavaElementFilter() {
 		return new NonJavaElementFilter(){
 			public boolean select(Viewer viewer, Object parent, Object element){
-				return ((element instanceof IJavaElement) || (element instanceof LogicalPackage) || (element instanceof IFolder));
+				return ((element instanceof IJavaScriptElement) || (element instanceof LogicalPackage) || (element instanceof IFolder));
 			}
 		};
 	}
@@ -271,11 +271,11 @@ public class PackagesView extends JavaBrowsingPart{
 	 * @return	<true> if the given element is a valid input
 	 */
 	protected boolean isValidInput(Object element) {
-		if (element instanceof IJavaProject || (element instanceof IPackageFragmentRoot && ((IJavaElement)element).getElementName() != IPackageFragmentRoot.DEFAULT_PACKAGEROOT_PATH))
+		if (element instanceof IJavaScriptProject || (element instanceof IPackageFragmentRoot && ((IJavaScriptElement)element).getElementName() != IPackageFragmentRoot.DEFAULT_PACKAGEROOT_PATH))
 			try {
-				IJavaProject jProject= ((IJavaElement)element).getJavaProject();
+				IJavaScriptProject jProject= ((IJavaScriptElement)element).getJavaProject();
 				if (jProject != null)
-					return jProject.getProject().hasNature(JavaCore.NATURE_ID);
+					return jProject.getProject().hasNature(JavaScriptCore.NATURE_ID);
 			} catch (CoreException ex) {
 				return false;
 			}
@@ -291,7 +291,7 @@ public class PackagesView extends JavaBrowsingPart{
 	 */
 	protected boolean isValidElement(Object element) {
 		if (element instanceof IPackageFragment) {
-			IJavaElement parent= ((IPackageFragment)element).getParent();
+			IJavaScriptElement parent= ((IPackageFragment)element).getParent();
 			if (parent != null)
 				return super.isValidElement(parent) || super.isValidElement(parent.getJavaProject());
 		}
@@ -299,20 +299,20 @@ public class PackagesView extends JavaBrowsingPart{
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.wst.jsdt.internal.ui.browsing.JavaBrowsingPart#findElementToSelect(org.eclipse.wst.jsdt.core.IJavaElement)
+	 * @see org.eclipse.wst.jsdt.internal.ui.browsing.JavaBrowsingPart#findElementToSelect(org.eclipse.wst.jsdt.core.IJavaScriptElement)
 	 */
-	protected IJavaElement findElementToSelect(IJavaElement je) {
+	protected IJavaScriptElement findElementToSelect(IJavaScriptElement je) {
 		if (je == null)
 			return null;
 
 		switch (je.getElementType()) {
-			case IJavaElement.PACKAGE_FRAGMENT:
+			case IJavaScriptElement.PACKAGE_FRAGMENT:
 				return je;
-			case IJavaElement.COMPILATION_UNIT:
-				return ((ICompilationUnit)je).getParent();
-			case IJavaElement.CLASS_FILE:
+			case IJavaScriptElement.COMPILATION_UNIT:
+				return ((IJavaScriptUnit)je).getParent();
+			case IJavaScriptElement.CLASS_FILE:
 				return ((IClassFile)je).getParent();
-			case IJavaElement.TYPE:
+			case IJavaScriptElement.TYPE:
 				return ((IType)je).getPackageFragment();
 			default:
 				return findElementToSelect(je.getParent());
@@ -530,20 +530,20 @@ public class PackagesView extends JavaBrowsingPart{
 		actionBars.updateActionBars();
 	}
 
-	protected IJavaElement findInputForJavaElement(IJavaElement je) {
+	protected IJavaScriptElement findInputForJavaElement(IJavaScriptElement je) {
 		// null check has to take place here as well (not only in
-		// findInputForJavaElement(IJavaElement, boolean) since we
+		// findInputForJavaElement(IJavaScriptElement, boolean) since we
 		// are accessing the Java element
 		if (je == null)
 			return null;
-		if(je.getElementType() == IJavaElement.PACKAGE_FRAGMENT_ROOT || je.getElementType() == IJavaElement.JAVA_PROJECT)
+		if(je.getElementType() == IJavaScriptElement.PACKAGE_FRAGMENT_ROOT || je.getElementType() == IJavaScriptElement.JAVA_PROJECT)
 			return findInputForJavaElement(je, true);
 		else
 			return findInputForJavaElement(je, false);
 
 	}
 
-	protected IJavaElement findInputForJavaElement(IJavaElement je, boolean canChangeInputType) {
+	protected IJavaScriptElement findInputForJavaElement(IJavaScriptElement je, boolean canChangeInputType) {
 		if (je == null || !je.exists())
 			return null;
 
@@ -551,10 +551,10 @@ public class PackagesView extends JavaBrowsingPart{
 
 			//don't update if input must be project (i.e. project is used as source folder)
 			if (canChangeInputType)
-				fLastInputWasProject= je.getElementType() == IJavaElement.JAVA_PROJECT;
+				fLastInputWasProject= je.getElementType() == IJavaScriptElement.JAVA_PROJECT;
 			return je;
 		} else if (fLastInputWasProject) {
-			IPackageFragmentRoot packageFragmentRoot= (IPackageFragmentRoot)je.getAncestor(IJavaElement.PACKAGE_FRAGMENT_ROOT);
+			IPackageFragmentRoot packageFragmentRoot= (IPackageFragmentRoot)je.getAncestor(IJavaScriptElement.PACKAGE_FRAGMENT_ROOT);
 			if (!packageFragmentRoot.isExternal())
 				return je.getJavaProject();
 		}
@@ -601,22 +601,22 @@ public class PackagesView extends JavaBrowsingPart{
 	/*
 	 * Overridden from JavaBrowsingPart to handel LogicalPackages and tree
 	 * structure.
-	 * @see org.eclipse.wst.jsdt.internal.ui.browsing.JavaBrowsingPart#adjustInputAndSetSelection(org.eclipse.wst.jsdt.core.IJavaElement)
+	 * @see org.eclipse.wst.jsdt.internal.ui.browsing.JavaBrowsingPart#adjustInputAndSetSelection(org.eclipse.wst.jsdt.core.IJavaScriptElement)
 	 */
-	void adjustInputAndSetSelection(IJavaElement je) {
+	void adjustInputAndSetSelection(IJavaScriptElement je) {
 
-		IJavaElement jElementToSelect= findElementToSelect(je);
+		IJavaScriptElement jElementToSelect= findElementToSelect(je);
 		LogicalPackagesProvider p= (LogicalPackagesProvider) fWrappedViewer.getContentProvider();
 
 		Object elementToSelect= jElementToSelect;
-		if (jElementToSelect != null && jElementToSelect.getElementType() == IJavaElement.PACKAGE_FRAGMENT) {
+		if (jElementToSelect != null && jElementToSelect.getElementType() == IJavaScriptElement.PACKAGE_FRAGMENT) {
 			IPackageFragment pkgFragment= (IPackageFragment)jElementToSelect;
 			elementToSelect= p.findLogicalPackage(pkgFragment);
 			if (elementToSelect == null)
 				elementToSelect= pkgFragment;
 		}
 
-		IJavaElement newInput= findInputForJavaElement(je);
+		IJavaScriptElement newInput= findInputForJavaElement(je);
 		if (elementToSelect == null && !isValidInput(newInput))
 			setInput(null);
 		else if (elementToSelect == null || getViewer().testFindItem(elementToSelect) == null) {

@@ -14,8 +14,8 @@ import java.util.Map;
 
 import org.eclipse.ltk.core.refactoring.Refactoring;
 import org.eclipse.ltk.core.refactoring.RefactoringDescriptor;
-import org.eclipse.wst.jsdt.core.IMethod;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.IFunction;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.refactoring.IJavaRefactorings;
 import org.eclipse.wst.jsdt.core.refactoring.descriptors.RenameJavaElementDescriptor;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.JDTRefactoringContribution;
@@ -36,11 +36,11 @@ public final class RenameMethodRefactoringContribution extends JDTRefactoringCon
 	/**
 	 * {@inheritDoc}
 	 */
-	public Refactoring createRefactoring(final RefactoringDescriptor descriptor) throws JavaModelException {
+	public Refactoring createRefactoring(final RefactoringDescriptor descriptor) throws JavaScriptModelException {
 		String project= descriptor.getProject();
 		Map arguments= ((JDTRefactoringDescriptor) descriptor).getArguments();
 		String input= (String) arguments.get(JDTRefactoringDescriptor.ATTRIBUTE_INPUT);
-		IMethod method= (IMethod) JDTRefactoringDescriptor.handleToElement(project, input);
+		IFunction method= (IFunction) JDTRefactoringDescriptor.handleToElement(project, input);
 		
 		JavaRenameProcessor processor;
 		if (MethodChecks.isVirtual(method)) {

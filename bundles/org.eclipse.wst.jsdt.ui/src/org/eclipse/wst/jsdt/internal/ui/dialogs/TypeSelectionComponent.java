@@ -55,7 +55,7 @@ import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.XMLMemento;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchScope;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.core.search.SearchEngine;
 import org.eclipse.wst.jsdt.core.search.TypeNameMatch;
 import org.eclipse.wst.jsdt.internal.corext.util.Strings;
@@ -87,7 +87,7 @@ public class TypeSelectionComponent extends Composite implements ITypeSelectionC
 	private TypeSelectionExtension fTypeSelectionExtension;
 	private Text fFilter;
 	private String fInitialFilterText;
-	private IJavaSearchScope fScope;
+	private IJavaScriptSearchScope fScope;
 	private TypeInfoViewer fViewer;
 	private ViewForm fForm;
 	private CLabel fLabel;
@@ -142,7 +142,7 @@ public class TypeSelectionComponent extends Composite implements ITypeSelectionC
 	}
 	
 	public TypeSelectionComponent(Composite parent, int style, String message, boolean multi, 
-			IJavaSearchScope scope, int elementKind, String initialFilter, ITitleLabel titleLabel,
+			IJavaScriptSearchScope scope, int elementKind, String initialFilter, ITitleLabel titleLabel,
 			TypeSelectionExtension extension) {
 		super(parent, style);
 		setFont(parent.getFont());
@@ -171,7 +171,7 @@ public class TypeSelectionComponent extends Composite implements ITypeSelectionC
 		return fViewer.getSelection();
 	}
 	
-	public IJavaSearchScope getScope() {
+	public IJavaScriptSearchScope getScope() {
 		return fScope;
 	}
 	

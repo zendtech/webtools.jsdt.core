@@ -34,9 +34,9 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorExtension3;
 import org.eclipse.ui.texteditor.TextEditorAction;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaProject;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.formatter.DefaultCodeFormatterConstants;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaEditor;
@@ -371,7 +371,7 @@ public class IndentAction extends TextEditorAction {
 	 */
 	private String getTabEquivalent() {
 		String tab;
-		if (JavaCore.SPACE.equals(getCoreFormatterOption(DefaultCodeFormatterConstants.FORMATTER_TAB_CHAR))) {
+		if (JavaScriptCore.SPACE.equals(getCoreFormatterOption(DefaultCodeFormatterConstants.FORMATTER_TAB_CHAR))) {
 			int size= getTabSize();
 			StringBuffer buf= new StringBuffer();
 			for (int i= 0; i< size; i++)
@@ -411,9 +411,9 @@ public class IndentAction extends TextEditorAction {
 	 * @since 3.1
 	 */
 	private String getCoreFormatterOption(String key) {
-		IJavaProject project= getJavaProject();
+		IJavaScriptProject project= getJavaProject();
 		if (project == null)
-			return JavaCore.getOption(key);
+			return JavaScriptCore.getOption(key);
 		return project.getOption(key, true);
 	}
 
@@ -435,19 +435,19 @@ public class IndentAction extends TextEditorAction {
 	}
 
 	/**
-	 * Returns the <code>IJavaProject</code> of the current editor input, or
+	 * Returns the <code>IJavaScriptProject</code> of the current editor input, or
 	 * <code>null</code> if it cannot be found.
 	 * 
-	 * @return the <code>IJavaProject</code> of the current editor input, or
+	 * @return the <code>IJavaScriptProject</code> of the current editor input, or
 	 *         <code>null</code> if it cannot be found
 	 * @since 3.1
 	 */
-	private IJavaProject getJavaProject() {
+	private IJavaScriptProject getJavaProject() {
 		ITextEditor editor= getTextEditor();
 		if (editor == null)
 			return null;
 		
-		ICompilationUnit cu= JavaPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(editor.getEditorInput());
+		IJavaScriptUnit cu= JavaPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(editor.getEditorInput());
 		if (cu == null)
 			return null;
 		return cu.getJavaProject();

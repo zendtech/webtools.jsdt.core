@@ -35,14 +35,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.JavaConventions;
-import org.eclipse.wst.jsdt.core.JavaModelException;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchConstants;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchScope;
+import org.eclipse.wst.jsdt.core.JavaScriptConventions;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchConstants;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.core.search.SearchEngine;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.structure.MoveStaticMembersProcessor;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
@@ -168,7 +168,7 @@ public class MoveMembersWizard extends RefactoringWizard {
 					handleDestinationChanged();
 				}
 				private void handleDestinationChanged() {
-					IStatus status= JavaConventions.validateJavaTypeName(fDestinationField.getText());
+					IStatus status= JavaScriptConventions.validateJavaTypeName(fDestinationField.getText());
 					if (status.getSeverity() == IStatus.ERROR){
 						error(status.getMessage());
 					} else {
@@ -184,7 +184,7 @@ public class MoveMembersWizard extends RefactoringWizard {
 							} else {
 								error(validationStatus.getMessage());
 							}
-						} catch(JavaModelException ex) {
+						} catch(JavaScriptModelException ex) {
 							JavaPlugin.log(ex); //no ui here
 							error(RefactoringMessages.MoveMembersInputPage_invalid_name); 
 						}
@@ -201,7 +201,7 @@ public class MoveMembersWizard extends RefactoringWizard {
 				setPageComplete(false);
 			}
 			JavaTypeCompletionProcessor processor= new JavaTypeCompletionProcessor(false, false, true);
-			IPackageFragment context= (IPackageFragment) getMoveProcessor().getDeclaringType().getAncestor(IJavaElement.PACKAGE_FRAGMENT);
+			IPackageFragment context= (IPackageFragment) getMoveProcessor().getDeclaringType().getAncestor(IJavaScriptElement.PACKAGE_FRAGMENT);
 			processor.setPackageFragment(context);
 			ControlContentAssistHelper.createComboContentAssistant(fDestinationField, processor);
 			TextFieldNavigationHandler.install(fDestinationField);
@@ -235,19 +235,19 @@ public class MoveMembersWizard extends RefactoringWizard {
 				fgMruDestinations.add(0, destination);
 				
 				getMoveProcessor().setDestinationTypeFullyQualifiedName(destination);
-			} catch(JavaModelException e) {
+			} catch(JavaScriptModelException e) {
 				ExceptionHandler.handle(e, getShell(), RefactoringMessages.MoveMembersInputPage_move_Member, RefactoringMessages.MoveMembersInputPage_exception); 
 			}
 		}
 	
-		private IJavaSearchScope createWorkspaceSourceScope(){
-			IJavaElement[] project= new IJavaElement[] { getMoveProcessor().getDeclaringType().getJavaProject() };
-			return SearchEngine.createJavaSearchScope(project, IJavaSearchScope.REFERENCED_PROJECTS | IJavaSearchScope.SOURCES);
+		private IJavaScriptSearchScope createWorkspaceSourceScope(){
+			IJavaScriptElement[] project= new IJavaScriptElement[] { getMoveProcessor().getDeclaringType().getJavaProject() };
+			return SearchEngine.createJavaSearchScope(project, IJavaScriptSearchScope.REFERENCED_PROJECTS | IJavaScriptSearchScope.SOURCES);
 		}
 	
 		private void openTypeSelectionDialog(){
-			int elementKinds= IJavaSearchConstants.TYPE;
-			final IJavaSearchScope scope= createWorkspaceSourceScope();
+			int elementKinds= IJavaScriptSearchConstants.TYPE;
+			final IJavaScriptSearchScope scope= createWorkspaceSourceScope();
 			FilteredTypesSelectionDialog dialog= new FilteredTypesSelectionDialog(getShell(), false,
 				getWizard().getContainer(), scope, elementKinds);
 			dialog.setTitle(RefactoringMessages.MoveMembersInputPage_choose_Type); 

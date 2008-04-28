@@ -17,13 +17,13 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.WorkbenchException;
 import org.eclipse.wst.jsdt.core.IClassFile;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IImportDeclaration;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
@@ -38,18 +38,18 @@ public class OpenTypeHierarchyUtil {
 	private OpenTypeHierarchyUtil() {
 	}
 
-	public static TypeHierarchyViewPart open(IJavaElement element, IWorkbenchWindow window) {
-		IJavaElement[] candidates= getCandidates(element);
+	public static TypeHierarchyViewPart open(IJavaScriptElement element, IWorkbenchWindow window) {
+		IJavaScriptElement[] candidates= getCandidates(element);
 		if (candidates != null) {
 			return open(candidates, window);
 		}
 		return null;
 	}	
 	
-	public static TypeHierarchyViewPart open(IJavaElement[] candidates, IWorkbenchWindow window) {
+	public static TypeHierarchyViewPart open(IJavaScriptElement[] candidates, IWorkbenchWindow window) {
 		Assert.isTrue(candidates != null && candidates.length != 0);
 			
-		IJavaElement input= null;
+		IJavaScriptElement input= null;
 		if (candidates.length > 1) {
 			String title= JavaUIMessages.OpenTypeHierarchyUtil_selectionDialog_title;  
 			String message= JavaUIMessages.OpenTypeHierarchyUtil_selectionDialog_message; 
@@ -71,7 +71,7 @@ public class OpenTypeHierarchyUtil {
 			ExceptionHandler.handle(e, window.getShell(),
 				JavaUIMessages.OpenTypeHierarchyUtil_error_open_perspective, 
 				e.getMessage());
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			ExceptionHandler.handle(e, window.getShell(),
 				JavaUIMessages.OpenTypeHierarchyUtil_error_open_editor, 
 				e.getMessage());
@@ -79,7 +79,7 @@ public class OpenTypeHierarchyUtil {
 		return null;
 	}
 
-	private static TypeHierarchyViewPart openInViewPart(IWorkbenchWindow window, IJavaElement input) {
+	private static TypeHierarchyViewPart openInViewPart(IWorkbenchWindow window, IJavaScriptElement input) {
 		IWorkbenchPage page= window.getActivePage();
 		try {
 			TypeHierarchyViewPart result= (TypeHierarchyViewPart) page.findView(JavaUI.ID_TYPE_HIERARCHY);
@@ -96,16 +96,16 @@ public class OpenTypeHierarchyUtil {
 		return null;		
 	}
 	
-	private static TypeHierarchyViewPart openInPerspective(IWorkbenchWindow window, IJavaElement input) throws WorkbenchException, JavaModelException {
+	private static TypeHierarchyViewPart openInPerspective(IWorkbenchWindow window, IJavaScriptElement input) throws WorkbenchException, JavaScriptModelException {
 		IWorkbench workbench= JavaPlugin.getDefault().getWorkbench();
 		// The problem is that the input element can be a working copy. So we first convert it to the original element if
 		// it exists.
-		IJavaElement perspectiveInput= input;
+		IJavaScriptElement perspectiveInput= input;
 		
 		if (input instanceof IMember) {
-			if (input.getElementType() != IJavaElement.TYPE) {
+			if (input.getElementType() != IJavaScriptElement.TYPE) {
 				IMember member=(IMember)input;
-				perspectiveInput= member.getDeclaringType()!=null ? member.getDeclaringType() : (IJavaElement)member.getCompilationUnit();
+				perspectiveInput= member.getDeclaringType()!=null ? member.getDeclaringType() : (IJavaScriptElement)member.getCompilationUnit();
 			} else {
 				perspectiveInput= input;
 			}
@@ -130,27 +130,27 @@ public class OpenTypeHierarchyUtil {
 	/**
 	 * Converts the input to a possible input candidates
 	 */	
-	public static IJavaElement[] getCandidates(Object input) {
-		if (!(input instanceof IJavaElement)) {
+	public static IJavaScriptElement[] getCandidates(Object input) {
+		if (!(input instanceof IJavaScriptElement)) {
 			return null;
 		}
 		try {
-			IJavaElement elem= (IJavaElement) input;
+			IJavaScriptElement elem= (IJavaScriptElement) input;
 			switch (elem.getElementType()) {
-				case IJavaElement.INITIALIZER:
-				case IJavaElement.METHOD:
-				case IJavaElement.FIELD:
-				case IJavaElement.TYPE:
-				case IJavaElement.PACKAGE_FRAGMENT_ROOT:
-				case IJavaElement.JAVA_PROJECT:
-					return new IJavaElement[] { elem };
-				case IJavaElement.PACKAGE_FRAGMENT:
+				case IJavaScriptElement.INITIALIZER:
+				case IJavaScriptElement.METHOD:
+				case IJavaScriptElement.FIELD:
+				case IJavaScriptElement.TYPE:
+				case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
+				case IJavaScriptElement.JAVA_PROJECT:
+					return new IJavaScriptElement[] { elem };
+				case IJavaScriptElement.PACKAGE_FRAGMENT:
 					if (((IPackageFragment)elem).containsJavaResources())
-						return new IJavaElement[] {elem};
+						return new IJavaScriptElement[] {elem};
 					break;
-				case IJavaElement.PACKAGE_DECLARATION:
-					return new IJavaElement[] { elem.getAncestor(IJavaElement.PACKAGE_FRAGMENT) };
-				case IJavaElement.IMPORT_DECLARATION:	
+				case IJavaScriptElement.PACKAGE_DECLARATION:
+					return new IJavaScriptElement[] { elem.getAncestor(IJavaScriptElement.PACKAGE_FRAGMENT) };
+				case IJavaScriptElement.IMPORT_DECLARATION:	
 					IImportDeclaration decl= (IImportDeclaration) elem;
 					if (decl.isOnDemand()) {
 						elem= JavaModelUtil.findTypeContainer(elem.getJavaProject(), Signature.getQualifier(elem.getElementName()));
@@ -159,12 +159,12 @@ public class OpenTypeHierarchyUtil {
 					}
 					if (elem == null)
 						return null;
-					return new IJavaElement[] {elem};
+					return new IJavaScriptElement[] {elem};
 					
-				case IJavaElement.CLASS_FILE:
-					return new IJavaElement[] { ((IClassFile)input).getType() };				
-				case IJavaElement.COMPILATION_UNIT: {
-					ICompilationUnit cu= (ICompilationUnit) elem.getAncestor(IJavaElement.COMPILATION_UNIT);
+				case IJavaScriptElement.CLASS_FILE:
+					return new IJavaScriptElement[] { ((IClassFile)input).getType() };				
+				case IJavaScriptElement.COMPILATION_UNIT: {
+					IJavaScriptUnit cu= (IJavaScriptUnit) elem.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
 					if (cu != null) {
 						IType[] types= cu.getTypes();
 						if (types.length > 0) {
@@ -175,7 +175,7 @@ public class OpenTypeHierarchyUtil {
 				}					
 				default:
 			}
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			JavaPlugin.log(e);
 		}
 		return null;	

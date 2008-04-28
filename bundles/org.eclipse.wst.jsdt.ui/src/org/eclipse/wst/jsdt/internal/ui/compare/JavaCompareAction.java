@@ -26,10 +26,10 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.ISourceRange;
 import org.eclipse.wst.jsdt.core.ISourceReference;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
@@ -96,13 +96,13 @@ public class JavaCompareAction implements IActionDelegate {
 		
 		try {
 			left= getExtendedSource(fLeft);
-		} catch (JavaModelException ex) {
+		} catch (JavaScriptModelException ex) {
 			JavaPlugin.log(ex);
 		}
 		
 		try {
 			right= getExtendedSource(fRight);
-		} catch (JavaModelException ex) {
+		} catch (JavaScriptModelException ex) {
 			JavaPlugin.log(ex);
 		}
 		
@@ -150,11 +150,11 @@ public class JavaCompareAction implements IActionDelegate {
 		return false;
 	}
 
-	private String getExtendedSource(ISourceReference ref) throws JavaModelException {
+	private String getExtendedSource(ISourceReference ref) throws JavaScriptModelException {
 		
 		// get parent
-		if (ref instanceof IJavaElement) {
-			IJavaElement parent= ((IJavaElement) ref).getParent();
+		if (ref instanceof IJavaScriptElement) {
+			IJavaScriptElement parent= ((IJavaScriptElement) ref).getParent();
 			if (parent instanceof ISourceReference) {
 				ISourceReference sr= (ISourceReference) parent;
 				String parentContent= sr.getSource();

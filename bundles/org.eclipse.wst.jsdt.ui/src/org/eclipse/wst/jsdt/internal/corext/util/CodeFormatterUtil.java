@@ -23,8 +23,8 @@ import org.eclipse.text.edits.InsertEdit;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
-import org.eclipse.wst.jsdt.core.IJavaProject;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.ToolFactory;
 import org.eclipse.wst.jsdt.core.dom.ASTNode;
 import org.eclipse.wst.jsdt.core.dom.BodyDeclaration;
@@ -46,8 +46,8 @@ public class CodeFormatterUtil {
 	 *        <code>null</code> if the workspace default should be used
 	 * @return the indent string
 	 */
-	public static String createIndentString(int indentationUnits, IJavaProject project) {
-		Map options= project != null ? project.getOptions(true) : JavaCore.getOptions();		
+	public static String createIndentString(int indentationUnits, IJavaScriptProject project) {
+		Map options= project != null ? project.getOptions(true) : JavaScriptCore.getOptions();		
 		return ToolFactory.createCodeFormatter(options).createIndentationString(indentationUnits);
 	} 
 		
@@ -59,7 +59,7 @@ public class CodeFormatterUtil {
 	 *        and the workspace default should be used
 	 * @return The tab width
 	 */
-	public static int getTabWidth(IJavaProject project) {
+	public static int getTabWidth(IJavaScriptProject project) {
 		/*
 		 * If the tab-char is SPACE, FORMATTER_INDENTATION_SIZE is not used
 		 * by the core formatter.
@@ -67,7 +67,7 @@ public class CodeFormatterUtil {
 		 * that case.
 		 */
 		String key;
-		if (JavaCore.SPACE.equals(getCoreOption(project, DefaultCodeFormatterConstants.FORMATTER_TAB_CHAR)))
+		if (JavaScriptCore.SPACE.equals(getCoreOption(project, DefaultCodeFormatterConstants.FORMATTER_TAB_CHAR)))
 			key= DefaultCodeFormatterConstants.FORMATTER_INDENTATION_SIZE;
 		else
 			key= DefaultCodeFormatterConstants.FORMATTER_TAB_SIZE;
@@ -83,7 +83,7 @@ public class CodeFormatterUtil {
 	 * @return the indent width
 	 * @since 3.1
 	 */
-	public static int getIndentWidth(IJavaProject project) {
+	public static int getIndentWidth(IJavaScriptProject project) {
 		String key;
 		if (DefaultCodeFormatterConstants.MIXED.equals(getCoreOption(project, DefaultCodeFormatterConstants.FORMATTER_TAB_CHAR)))
 			key= DefaultCodeFormatterConstants.FORMATTER_INDENTATION_SIZE;
@@ -103,9 +103,9 @@ public class CodeFormatterUtil {
 	 * @return the value of the preference
 	 * @since 3.1
 	 */
-	private static String getCoreOption(IJavaProject project, String key) {
+	private static String getCoreOption(IJavaScriptProject project, String key) {
 		if (project == null)
-			return JavaCore.getOption(key);
+			return JavaScriptCore.getOption(key);
 		return project.getOption(key, true);
 	}
 
@@ -121,7 +121,7 @@ public class CodeFormatterUtil {
 	 * @return the value of the preference
 	 * @since 3.1
 	 */
-	private static int getCoreOption(IJavaProject project, String key, int def) {
+	private static int getCoreOption(IJavaScriptProject project, String key, int def) {
 		try {
 			return Integer.parseInt(getCoreOption(project, key));
 		} catch (NumberFormatException e) {
@@ -138,7 +138,7 @@ public class CodeFormatterUtil {
 		return format(kind, string, 0, string.length(), indentationLevel, positions, lineSeparator, options);
 	}
 	
-	public static String format(int kind, String string, int indentationLevel, int[] positions, String lineSeparator, IJavaProject project) {
+	public static String format(int kind, String string, int indentationLevel, int[] positions, String lineSeparator, IJavaScriptProject project) {
 		Map options= project != null ? project.getOptions(true) : null;
 		return format(kind, string, 0, string.length(), indentationLevel, positions, lineSeparator, options);
 	}

@@ -21,7 +21,7 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.dom.AST;
 import org.eclipse.wst.jsdt.core.dom.ASTNode;
 import org.eclipse.wst.jsdt.core.dom.Assignment;
@@ -46,8 +46,8 @@ import org.eclipse.wst.jsdt.core.dom.IVariableBinding;
 import org.eclipse.wst.jsdt.core.dom.IfStatement;
 import org.eclipse.wst.jsdt.core.dom.InfixExpression;
 import org.eclipse.wst.jsdt.core.dom.InstanceofExpression;
-import org.eclipse.wst.jsdt.core.dom.MethodDeclaration;
-import org.eclipse.wst.jsdt.core.dom.MethodInvocation;
+import org.eclipse.wst.jsdt.core.dom.FunctionDeclaration;
+import org.eclipse.wst.jsdt.core.dom.FunctionInvocation;
 import org.eclipse.wst.jsdt.core.dom.Name;
 import org.eclipse.wst.jsdt.core.dom.ParenthesizedExpression;
 import org.eclipse.wst.jsdt.core.dom.PostfixExpression;
@@ -197,7 +197,7 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor {
 			return false;
 		}
 		// method should return 'void'
-		MethodDeclaration coveringMetod = ASTResolving.findParentMethodDeclaration(covering);
+		FunctionDeclaration coveringMetod = ASTResolving.findParentMethodDeclaration(covering);
 		if (coveringMetod == null) {
 			return false;
 		}
@@ -639,7 +639,7 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor {
 		if (expression instanceof Assignment) {
 			return 14;
 		}
-		if (expression instanceof MethodInvocation) {
+		if (expression instanceof FunctionInvocation) {
 			return 2;
 		}
 		return -1;
@@ -1400,7 +1400,7 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor {
 		//
 		AST ast= expression.getAST();
 		ASTRewrite rewrite= ASTRewrite.create(ast);
-		ICompilationUnit cu= context.getCompilationUnit();
+		IJavaScriptUnit cu= context.getCompilationUnit();
 		// prepare correction proposal
 		String label= CorrectionMessages.AdvancedQuickAssistProcessor_castAndAssign;
 		Image image= JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_LOCAL);
@@ -1462,7 +1462,7 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor {
 		
 		return true;
 	}
-	private static String[] suggestLocalVariableNames(ICompilationUnit cu, ITypeBinding binding) {
+	private static String[] suggestLocalVariableNames(IJavaScriptUnit cu, ITypeBinding binding) {
 		return StubUtility.getVariableNameSuggestions(StubUtility.LOCAL, cu.getJavaProject(), binding, null, null);
 	}
 
@@ -1573,7 +1573,7 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor {
 		if (thenStatement instanceof ReturnStatement && elseStatement instanceof ReturnStatement) {
 			thenExpression= ((ReturnStatement) thenStatement).getExpression();
 			elseExpression= ((ReturnStatement) elseStatement).getExpression();
-			MethodDeclaration declaration= ASTResolving.findParentMethodDeclaration(node);
+			FunctionDeclaration declaration= ASTResolving.findParentMethodDeclaration(node);
 			if (declaration == null || declaration.isConstructor()) {
 				return false;
 			}
@@ -1780,7 +1780,7 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor {
 			return true;
 		}
 		// find linked nodes
-		final MethodDeclaration method= ASTResolving.findParentMethodDeclaration(covering);
+		final FunctionDeclaration method= ASTResolving.findParentMethodDeclaration(covering);
 		SimpleName[] linkedNodes= LinkedNodeFinder.findByBinding(method, variableBinding);
 		//
 		final ASTRewrite rewrite= ASTRewrite.create(ast);
@@ -1987,7 +1987,7 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor {
 				|| locationInParent == DoStatement.EXPRESSION_PROPERTY 
 				|| locationInParent == ReturnStatement.EXPRESSION_PROPERTY 
 				|| locationInParent == ForStatement.EXPRESSION_PROPERTY 
-				|| locationInParent == MethodInvocation.ARGUMENTS_PROPERTY 
+				|| locationInParent == FunctionInvocation.ARGUMENTS_PROPERTY 
 				|| locationInParent == ConstructorInvocation.ARGUMENTS_PROPERTY 
 				|| locationInParent == SuperMethodInvocation.ARGUMENTS_PROPERTY 
 				|| locationInParent == EnumConstantDeclaration.ARGUMENTS_PROPERTY 

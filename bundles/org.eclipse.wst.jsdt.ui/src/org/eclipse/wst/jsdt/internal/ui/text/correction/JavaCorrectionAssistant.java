@@ -37,8 +37,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.ASTProvider;
 import org.eclipse.wst.jsdt.ui.JavaUI;
@@ -238,9 +238,9 @@ public class JavaCorrectionAssistant extends QuickAssistAssistant {
 	}
 
 	private static void ensureUpdatedAnnotations(ITextEditor editor) {
-		Object inputElement= editor.getEditorInput().getAdapter(IJavaElement.class);
-		if (inputElement instanceof ICompilationUnit) {
-			JavaPlugin.getDefault().getASTProvider().getAST((ICompilationUnit) inputElement, ASTProvider.WAIT_ACTIVE_ONLY, null);
+		Object inputElement= editor.getEditorInput().getAdapter(IJavaScriptElement.class);
+		if (inputElement instanceof IJavaScriptUnit) {
+			JavaPlugin.getDefault().getASTProvider().getAST((IJavaScriptUnit) inputElement, ASTProvider.WAIT_ACTIVE_ONLY, null);
 		}
 	}
 

@@ -26,8 +26,8 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.wst.jsdt.core.IClassFile;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IType;
@@ -107,8 +107,8 @@ public class TypesView extends JavaBrowsingPart {
 	 * @return	<true> if the given element is a valid element
 	 */
 	protected boolean isValidElement(Object element) {
-		if (element instanceof ICompilationUnit)
-			return super.isValidElement(((ICompilationUnit)element).getParent());
+		if (element instanceof IJavaScriptUnit)
+			return super.isValidElement(((IJavaScriptUnit)element).getParent());
 		else if (element instanceof IType) {
 			IType type= (IType)element;
 			return type.getDeclaringType() == null && isValidElement(type.getCompilationUnit());
@@ -122,23 +122,23 @@ public class TypesView extends JavaBrowsingPart {
 	 * @param je	the Java element which has the focus
 	 * @return the element to select
 	 */
-	protected IJavaElement findElementToSelect(IJavaElement je) {
+	protected IJavaScriptElement findElementToSelect(IJavaScriptElement je) {
 		if (je == null)
 			return null;
 
 		switch (je.getElementType()) {
-			case IJavaElement.TYPE:
+			case IJavaScriptElement.TYPE:
 				IType type= ((IType)je).getDeclaringType();
 				if (type == null)
 					type= (IType)je;
 				return type;
-			case IJavaElement.COMPILATION_UNIT:
-				return getTypeForCU((ICompilationUnit)je);
-			case IJavaElement.CLASS_FILE:
+			case IJavaScriptElement.COMPILATION_UNIT:
+				return getTypeForCU((IJavaScriptUnit)je);
+			case IJavaScriptElement.CLASS_FILE:
 				return findElementToSelect(((IClassFile)je).getType());
-			case IJavaElement.IMPORT_CONTAINER:
-			case IJavaElement.IMPORT_DECLARATION:
-			case IJavaElement.PACKAGE_DECLARATION:
+			case IJavaScriptElement.IMPORT_CONTAINER:
+			case IJavaScriptElement.IMPORT_DECLARATION:
+			case IJavaScriptElement.PACKAGE_DECLARATION:
 				return findElementToSelect(je.getParent());
 			default:
 				if (je instanceof IMember)

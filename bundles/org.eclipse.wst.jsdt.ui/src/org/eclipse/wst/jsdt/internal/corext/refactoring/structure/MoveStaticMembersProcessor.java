@@ -47,16 +47,16 @@ import org.eclipse.ltk.core.refactoring.participants.SharableParticipants;
 import org.eclipse.text.edits.TextEdit;
 import org.eclipse.text.edits.TextEditGroup;
 import org.eclipse.wst.jsdt.core.Flags;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IField;
 import org.eclipse.wst.jsdt.core.IInitializer;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IMember;
-import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.ISourceRange;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.dom.ASTNode;
 import org.eclipse.wst.jsdt.core.dom.ASTVisitor;
 import org.eclipse.wst.jsdt.core.dom.AbstractTypeDeclaration;
@@ -65,10 +65,10 @@ import org.eclipse.wst.jsdt.core.dom.BodyDeclaration;
 import org.eclipse.wst.jsdt.core.dom.EnumDeclaration;
 import org.eclipse.wst.jsdt.core.dom.FieldDeclaration;
 import org.eclipse.wst.jsdt.core.dom.IBinding;
-import org.eclipse.wst.jsdt.core.dom.IMethodBinding;
+import org.eclipse.wst.jsdt.core.dom.IFunctionBinding;
 import org.eclipse.wst.jsdt.core.dom.ITypeBinding;
 import org.eclipse.wst.jsdt.core.dom.IVariableBinding;
-import org.eclipse.wst.jsdt.core.dom.MethodDeclaration;
+import org.eclipse.wst.jsdt.core.dom.FunctionDeclaration;
 import org.eclipse.wst.jsdt.core.dom.Modifier;
 import org.eclipse.wst.jsdt.core.dom.SimpleName;
 import org.eclipse.wst.jsdt.core.dom.TypeDeclaration;
@@ -79,7 +79,7 @@ import org.eclipse.wst.jsdt.core.dom.rewrite.ListRewrite;
 import org.eclipse.wst.jsdt.core.refactoring.IJavaRefactorings;
 import org.eclipse.wst.jsdt.core.refactoring.descriptors.JavaRefactoringDescriptor;
 import org.eclipse.wst.jsdt.core.refactoring.descriptors.MoveStaticMembersDescriptor;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchConstants;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchConstants;
 import org.eclipse.wst.jsdt.core.search.SearchMatch;
 import org.eclipse.wst.jsdt.core.search.SearchPattern;
 import org.eclipse.wst.jsdt.internal.corext.codemanipulation.CodeGenerationSettings;
@@ -227,14 +227,14 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 				if (isDelegateCreationAvailable(fMembersToMove[i]))
 					return true;
 			}
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			return false;
 		}
 		return false;
 	}
 
-	private boolean isDelegateCreationAvailable(IMember member) throws JavaModelException {
-		if (member instanceof IMethod)
+	private boolean isDelegateCreationAvailable(IMember member) throws JavaScriptModelException {
+		if (member instanceof IFunction)
 			return true; 
 		if (member instanceof IField && RefactoringAvailabilityTester.isDelegateCreationAvailable(((IField)member)))
 			return true; 
@@ -265,10 +265,10 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 		return fDestinationType;
 	}
 
-	public void setDestinationTypeFullyQualifiedName(String fullyQualifiedTypeName) throws JavaModelException {
+	public void setDestinationTypeFullyQualifiedName(String fullyQualifiedTypeName) throws JavaScriptModelException {
 		Assert.isNotNull(fullyQualifiedTypeName);
 		fDestinationType= resolveType(fullyQualifiedTypeName);
-		//workaround for bug 36032: IJavaProject#findType(..) doesn't find secondary type
+		//workaround for bug 36032: IJavaScriptProject#findType(..) doesn't find secondary type
 		fDestinationTypeName= fullyQualifiedTypeName;
 	}
 	
@@ -281,7 +281,7 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 		return  fMembersToMove[0].getDeclaringType(); //index safe - checked in areAllMoveable()
 	}
 	
-	private IType resolveType(String qualifiedTypeName) throws JavaModelException{
+	private IType resolveType(String qualifiedTypeName) throws JavaScriptModelException{
 		IType type= getDeclaringType().getJavaProject().findType(qualifiedTypeName);
 		if (type == null)
 			type= getDeclaringType().getJavaProject().findType(getDeclaringType().getPackageFragment().getElementName(), qualifiedTypeName);
@@ -389,14 +389,14 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 				result.add(resource);
 		}
 		for (Iterator iter= modifiedCus.iterator(); iter.hasNext();) {
-			ICompilationUnit unit= (ICompilationUnit)iter.next();
+			IJavaScriptUnit unit= (IJavaScriptUnit)iter.next();
 			if (unit.getResource() != null)
 				result.add(unit.getResource());
 		}
 		return (IFile[]) result.toArray(new IFile[result.size()]);
 	}
 
-	private RefactoringStatus checkDestinationType() throws JavaModelException {			
+	private RefactoringStatus checkDestinationType() throws JavaScriptModelException {			
 		if (fDestinationType == null){
 			String message= Messages.format(RefactoringCoreMessages.MoveMembersRefactoring_not_found, fDestinationTypeName);
 			return RefactoringStatus.createFatalErrorStatus(message);
@@ -437,7 +437,7 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 		return result;	
 	}
 	
-	private RefactoringStatus checkDestinationInsideTypeToMove() throws JavaModelException {
+	private RefactoringStatus checkDestinationInsideTypeToMove() throws JavaScriptModelException {
 		RefactoringStatus result= new RefactoringStatus();
 		for (int i= 0; i < fMembersToMove.length; i++) {
 			if (! (fMembersToMove[i] instanceof IType))
@@ -455,7 +455,7 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 		return result;
 	}
 
-	private RefactoringStatus checkFieldsForInterface() throws JavaModelException {
+	private RefactoringStatus checkFieldsForInterface() throws JavaScriptModelException {
 		//could be more clever and make field final if it is only written once...
 		RefactoringStatus result= new RefactoringStatus();
 		for (int i= 0; i < fMembersToMove.length; i++) {
@@ -467,10 +467,10 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 		return result;
 	}
 
-	private boolean canMoveToInterface(IMember member) throws JavaModelException {
+	private boolean canMoveToInterface(IMember member) throws JavaScriptModelException {
 		int flags= member.getFlags();
 		switch (member.getElementType()) {
-			case IJavaElement.FIELD:
+			case IJavaScriptElement.FIELD:
 				if (!(Flags.isPublic(flags) && Flags.isStatic(flags) && Flags.isFinal(flags)))
 					return false;
 				if (Flags.isEnum(flags))
@@ -479,7 +479,7 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 				if (declaration != null)
 					return declaration.getInitializer() != null;
 
-			case IJavaElement.TYPE: {
+			case IJavaScriptElement.TYPE: {
 				IType type= (IType) member;
 				if (type.isInterface() && !Checks.isTopLevel(type))
 					return true;
@@ -490,10 +490,10 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 		}
 	}
 
-	private RefactoringStatus checkMovedMemberAvailability(IMember memberToMove, IProgressMonitor pm) throws JavaModelException{
+	private RefactoringStatus checkMovedMemberAvailability(IMember memberToMove, IProgressMonitor pm) throws JavaScriptModelException{
 		RefactoringStatus result= new RefactoringStatus();
 		if (memberToMove instanceof IType) { // recursively check accessibility of member type's members
-			IJavaElement[] typeMembers= ((IType) memberToMove).getChildren();
+			IJavaScriptElement[] typeMembers= ((IType) memberToMove).getChildren();
 			pm.beginTask(RefactoringCoreMessages.MoveMembersRefactoring_checking, typeMembers.length + 1); 
 			for (int i= 0; i < typeMembers.length; i++) {
 				if (typeMembers[i] instanceof IInitializer)
@@ -514,7 +514,7 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 		return result;
 	}
 	
-	private IType[] getTypesNotSeeingMovedMember(IMember member, IProgressMonitor pm, RefactoringStatus status) throws JavaModelException {
+	private IType[] getTypesNotSeeingMovedMember(IMember member, IProgressMonitor pm, RefactoringStatus status) throws JavaScriptModelException {
 		if (JdtFlags.isPublic(member) && JdtFlags.isPublic(fDestinationType))
 			return new IType[0];
 
@@ -524,8 +524,8 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 			SearchMatch[] searchResults= references[i].getSearchResults();
 			for (int k= 0; k < searchResults.length; k++) {
 				SearchMatch searchResult= searchResults[k];
-				IJavaElement element= SearchUtils.getEnclosingJavaElement(searchResult);
-				IType type= (IType) element.getAncestor(IJavaElement.TYPE);
+				IJavaScriptElement element= SearchUtils.getEnclosingJavaElement(searchResult);
+				IType type= (IType) element.getAncestor(IJavaScriptElement.TYPE);
 				if (type != null //reference can e.g. be an import declaration
 						&& ! blindAccessorTypes.contains(type)
 						&& ! isWithinMemberToMove(searchResult)
@@ -551,7 +551,7 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 		IType declaringType= moved ? getDestinationType() : getDeclaringType();
 		String message;
 		switch (member.getElementType()){
-			case IJavaElement.FIELD: {
+			case IJavaScriptElement.FIELD: {
 				if (moved)
 					message= Messages.format(RefactoringCoreMessages.MoveMembersRefactoring_moved_field, 
 								new String[]{JavaElementUtil.createFieldSignature((IField)member), 
@@ -563,20 +563,20 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 									JavaModelUtil.getFullyQualifiedName(accessingType)});
 				return message;
 			}			
-			case IJavaElement.METHOD: {
+			case IJavaScriptElement.METHOD: {
 				if (moved)
 					message= Messages.format(RefactoringCoreMessages.MoveMembersRefactoring_moved_method, 
-								new String[]{JavaElementUtil.createMethodSignature((IMethod)member),
+								new String[]{JavaElementUtil.createMethodSignature((IFunction)member),
 									JavaModelUtil.getFullyQualifiedName(accessingType),
 									JavaModelUtil.getFullyQualifiedName(declaringType)});
 				else				 
 					message= Messages.format(RefactoringCoreMessages.MoveMembersRefactoring_accessed_method, 
-								new String[]{JavaElementUtil.createMethodSignature((IMethod)member),
+								new String[]{JavaElementUtil.createMethodSignature((IFunction)member),
 									JavaModelUtil.getFullyQualifiedName(accessingType)});
 								 
 				return message;		
 			}			
-			case IJavaElement.TYPE:{
+			case IJavaScriptElement.TYPE:{
 				if (moved)
 					message= Messages.format(RefactoringCoreMessages.MoveMembersRefactoring_moved_type, 
 								new String[]{JavaModelUtil.getFullyQualifiedName(((IType)member)), 
@@ -594,8 +594,8 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 		}
 	}
 
-	private static SearchResultGroup[] getReferences(IMember member, IProgressMonitor monitor, RefactoringStatus status) throws JavaModelException {
-		final RefactoringSearchEngine2 engine= new RefactoringSearchEngine2(SearchPattern.createPattern(member, IJavaSearchConstants.REFERENCES, SearchUtils.GENERICS_AGNOSTIC_MATCH_RULE));
+	private static SearchResultGroup[] getReferences(IMember member, IProgressMonitor monitor, RefactoringStatus status) throws JavaScriptModelException {
+		final RefactoringSearchEngine2 engine= new RefactoringSearchEngine2(SearchPattern.createPattern(member, IJavaScriptSearchConstants.REFERENCES, SearchUtils.GENERICS_AGNOSTIC_MATCH_RULE));
 		engine.setFiltering(true, true);
 		engine.setScope(RefactoringScopeFactory.create(member));
 		engine.setStatus(status);
@@ -603,7 +603,7 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 		return (SearchResultGroup[]) engine.getResults();
 	}
 
-	private static boolean isVisibleFrom(IMember member, IType newMemberDeclaringType, IType accessingType) throws JavaModelException{
+	private static boolean isVisibleFrom(IMember member, IType newMemberDeclaringType, IType accessingType) throws JavaScriptModelException{
 		int memberVisibility= JdtFlags.getVisibilityCode(newMemberDeclaringType);
 			
 		IType declaringType= newMemberDeclaringType.getDeclaringType();
@@ -643,8 +643,8 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 		return false;
 	}
 
-	private boolean isWithinMemberToMove(SearchMatch result) throws JavaModelException {
-		ICompilationUnit referenceCU= SearchUtils.getCompilationUnit(result);
+	private boolean isWithinMemberToMove(SearchMatch result) throws JavaScriptModelException {
+		IJavaScriptUnit referenceCU= SearchUtils.getCompilationUnit(result);
 		if (! referenceCU.equals(fSource.getCu()))
 			return false;
 		int referenceStart= result.getOffset();
@@ -656,16 +656,16 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 		return false;
 	}
 
-	private RefactoringStatus checkNativeMovedMethods(IProgressMonitor pm) throws JavaModelException{
+	private RefactoringStatus checkNativeMovedMethods(IProgressMonitor pm) throws JavaScriptModelException{
 		pm.beginTask(RefactoringCoreMessages.MoveMembersRefactoring_checking, fMembersToMove.length); 
 		RefactoringStatus result= new RefactoringStatus();
 		for (int i= 0; i < fMembersToMove.length; i++) {
-			if (fMembersToMove[i].getElementType() != IJavaElement.METHOD)
+			if (fMembersToMove[i].getElementType() != IJavaScriptElement.METHOD)
 				continue;
 			if (! JdtFlags.isNative(fMembersToMove[i]))
 				continue;
 			String message= Messages.format(RefactoringCoreMessages.MoveMembersRefactoring_native, 
-				JavaElementUtil.createMethodSignature((IMethod)fMembersToMove[i]));
+				JavaElementUtil.createMethodSignature((IFunction)fMembersToMove[i]));
 			result.addWarning(message, JavaStatusContext.create(fMembersToMove[i]));
 			pm.worked(1);
 		}
@@ -682,7 +682,7 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 		monitor.beginTask(RefactoringCoreMessages.MoveMembersRefactoring_creating, 5);
 		final IMember[] members= getMembersToMove();
 		String project= null;
-		final IJavaProject javaProject= getDeclaringType().getJavaProject();
+		final IJavaScriptProject javaProject= getDeclaringType().getJavaProject();
 		if (javaProject != null)
 			project= javaProject.getElementName();
 		String header= null;
@@ -695,7 +695,7 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 		try {
 			if (declaring.isLocal() || declaring.isAnonymous())
 				flags|= JavaRefactoringDescriptor.JAR_SOURCE_ATTACHMENT;
-		} catch (JavaModelException exception) {
+		} catch (JavaScriptModelException exception) {
 			JavaPlugin.log(exception);
 		}
 		final String description= members.length == 1 ? Messages.format(RefactoringCoreMessages.MoveStaticMembersProcessor_description_descriptor_short_multi, members[0].getElementName()) : RefactoringCoreMessages.MoveMembersRefactoring_move_members;
@@ -765,19 +765,19 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 				return;
 
 			final RefactoringSearchEngine2 engine= new RefactoringSearchEngine2();
-			engine.setPattern(fMembersToMove, IJavaSearchConstants.ALL_OCCURRENCES);
+			engine.setPattern(fMembersToMove, IJavaScriptSearchConstants.ALL_OCCURRENCES);
 			engine.setGranularity(RefactoringSearchEngine2.GRANULARITY_COMPILATION_UNIT);
 			engine.setFiltering(true, true);
 			engine.setScope(RefactoringScopeFactory.create(fMembersToMove));
 			engine.setStatus(status);
 			engine.searchPattern(new NullProgressMonitor());
-			ICompilationUnit[] units= engine.getAffectedCompilationUnits();
+			IJavaScriptUnit[] units= engine.getAffectedCompilationUnits();
 			modifiedCus.addAll(Arrays.asList(units));
 			final MemberVisibilityAdjustor adjustor= new MemberVisibilityAdjustor(fDestinationType, fDestinationType);
 			sub= new SubProgressMonitor(monitor, 1);
 			sub.beginTask(RefactoringCoreMessages.MoveMembersRefactoring_creating, units.length);
 			for (int index= 0; index < units.length; index++) {
-				ICompilationUnit unit= units[index];
+				IJavaScriptUnit unit= units[index];
 				CompilationUnitRewrite rewrite= getCuRewrite(unit);
 				adjustor.setRewrites(Collections.singletonMap(unit, rewrite));
 				adjustor.setAdjustments(adjustments);
@@ -805,7 +805,7 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 		}
 	}
 	
-	private CompilationUnitRewrite getCuRewrite(ICompilationUnit unit) {
+	private CompilationUnitRewrite getCuRewrite(IJavaScriptUnit unit) {
 		if (fSource.getCu().equals(unit))
 			return fSource;
 		if (fTarget != null && fTarget.getCu().equals(unit))
@@ -813,7 +813,7 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 		return new CompilationUnitRewrite(unit);
 	}
 	
-	private ITypeBinding getDestinationBinding() throws JavaModelException {
+	private ITypeBinding getDestinationBinding() throws JavaScriptModelException {
 		ASTNode node= NodeFinder.perform(fTarget.getRoot(), fDestinationType.getNameRange());
 		if (!(node instanceof SimpleName))
 			return null;
@@ -823,7 +823,7 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 		return (ITypeBinding)binding;
 	}
 	
-	private IBinding[] getMemberBindings() throws JavaModelException {
+	private IBinding[] getMemberBindings() throws JavaScriptModelException {
 		IBinding[] result= new IBinding[fMembersToMove.length];
 		for (int i= 0; i < fMembersToMove.length; i++) {
 			IMember member= fMembersToMove[i];
@@ -845,9 +845,9 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 				ITypeBinding binding= type.resolveBinding();
 				if (binding != null)
 					exclude.add(binding);
-			} else if (declaration instanceof MethodDeclaration) {
-				MethodDeclaration method= (MethodDeclaration) declaration;
-				IMethodBinding binding= method.resolveBinding();
+			} else if (declaration instanceof FunctionDeclaration) {
+				FunctionDeclaration method= (FunctionDeclaration) declaration;
+				IFunctionBinding binding= method.resolveBinding();
 				if (binding != null)
 					exclude.add(binding);
 			} else if (declaration instanceof FieldDeclaration) {
@@ -930,7 +930,7 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 			boolean addedDelegate= false;
 			
 			if (fDelegateUpdating) {
-				if (declaration instanceof MethodDeclaration) {
+				if (declaration instanceof FunctionDeclaration) {
 
 					DelegateMethodCreator creator= new DelegateMethodCreator();
 					creator.setDeclaration(declaration);
@@ -941,7 +941,7 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 					creator.prepareDelegate();
 					creator.createEdit();
 
-					removeImportsOf= ((MethodDeclaration) declaration).getBody();
+					removeImportsOf= ((FunctionDeclaration) declaration).getBody();
 					addedDelegate= true;
 				}
 				if (declaration instanceof FieldDeclaration) {
@@ -991,7 +991,7 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 		return result;
 	}
 	
-	private BodyDeclaration[] getASTMembers(RefactoringStatus status) throws JavaModelException {
+	private BodyDeclaration[] getASTMembers(RefactoringStatus status) throws JavaScriptModelException {
 		BodyDeclaration[] result= new BodyDeclaration[fMembersToMove.length];
 		for (int i= 0; i < fMembersToMove.length; i++) {
 			IMember member= fMembersToMove[i];
@@ -1023,8 +1023,8 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 			final JavaRefactoringArguments extended= (JavaRefactoringArguments) arguments;
 			String handle= extended.getAttribute(JDTRefactoringDescriptor.ATTRIBUTE_INPUT);
 			if (handle != null) {
-				final IJavaElement element= JDTRefactoringDescriptor.handleToElement(extended.getProject(), handle, false);
-				if (element == null || !element.exists() || element.getElementType() != IJavaElement.TYPE)
+				final IJavaScriptElement element= JDTRefactoringDescriptor.handleToElement(extended.getProject(), handle, false);
+				if (element == null || !element.exists() || element.getElementType() != IJavaScriptElement.TYPE)
 					return ScriptableRefactoring.createInputFatalStatus(element, getRefactoring().getName(), IJavaRefactorings.MOVE_STATIC_MEMBERS);
 				else {
 					fDestinationType= (IType) element;
@@ -1047,7 +1047,7 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 			String attribute= JDTRefactoringDescriptor.ATTRIBUTE_ELEMENT + count;
 			final RefactoringStatus status= new RefactoringStatus();
 			while ((handle= extended.getAttribute(attribute)) != null) {
-				final IJavaElement element= JDTRefactoringDescriptor.handleToElement(extended.getProject(), handle, false);
+				final IJavaScriptElement element= JDTRefactoringDescriptor.handleToElement(extended.getProject(), handle, false);
 				if (element == null || !element.exists())
 					status.merge(ScriptableRefactoring.createInputWarningStatus(element, getRefactoring().getName(), IJavaRefactorings.MOVE_STATIC_MEMBERS));
 				else
@@ -1058,7 +1058,7 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 			fMembersToMove= (IMember[]) elements.toArray(new IMember[elements.size()]);
 			if (elements.isEmpty())
 				return ScriptableRefactoring.createInputFatalStatus(null, getRefactoring().getName(), IJavaRefactorings.MOVE_STATIC_MEMBERS);
-			IJavaProject project= null;
+			IJavaScriptProject project= null;
 			if (fMembersToMove.length > 0)
 				project= fMembersToMove[0].getJavaProject();
 			fPreferences= JavaPreferencesSettings.getCodeGenerationSettings(project);

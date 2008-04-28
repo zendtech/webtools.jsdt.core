@@ -13,7 +13,7 @@ package org.eclipse.wst.jsdt.internal.ui.typehierarchy;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.JavaElementImageProvider;
@@ -25,9 +25,9 @@ import org.eclipse.wst.jsdt.ui.JavaElementLabels;
 public class HistoryAction extends Action {
 
 	private TypeHierarchyViewPart fViewPart;
-	private IJavaElement fElement;
+	private IJavaScriptElement fElement;
 	
-	public HistoryAction(TypeHierarchyViewPart viewPart, IJavaElement element) {
+	public HistoryAction(TypeHierarchyViewPart viewPart, IJavaScriptElement element) {
         super("", AS_RADIO_BUTTON); //$NON-NLS-1$
 		fViewPart= viewPart;
 		fElement= element;		
@@ -41,7 +41,7 @@ public class HistoryAction extends Action {
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IJavaHelpContextIds.HISTORY_ACTION);
 	}
 	
-	private ImageDescriptor getImageDescriptor(IJavaElement elem) {
+	private ImageDescriptor getImageDescriptor(IJavaScriptElement elem) {
 		JavaElementImageProvider imageProvider= new JavaElementImageProvider();
 		ImageDescriptor desc= imageProvider.getBaseImageDescriptor(elem, 0);
 		imageProvider.dispose();

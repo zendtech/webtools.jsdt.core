@@ -25,8 +25,8 @@ import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.search.ui.ISearchResult;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.search.ui.text.Match;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchConstants;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchConstants;
 import org.eclipse.wst.jsdt.core.search.SearchEngine;
 import org.eclipse.wst.jsdt.core.search.SearchParticipant;
 import org.eclipse.wst.jsdt.core.search.SearchPattern;
@@ -61,7 +61,7 @@ public class JavaSearchQuery implements ISearchQuery {
 		private JavaSearchResult fSearchResult;
 		public void reportMatch(Match match) {
 			IMatchPresentation participant= fParticipant.getUIParticipant();
-			if (participant == null || match.getElement() instanceof IJavaElement || match.getElement() instanceof IResource) {
+			if (participant == null || match.getElement() instanceof IJavaScriptElement || match.getElement() instanceof IResource) {
 				fSearchResult.addMatch(match);
 			} else {
 				fSearchResult.addMatch(match, participant);
@@ -108,7 +108,7 @@ public class JavaSearchQuery implements ISearchQuery {
 			String stringPattern;
 			
 			if (fPatternData instanceof ElementQuerySpecification) {
-				IJavaElement element= ((ElementQuerySpecification) fPatternData).getElement();
+				IJavaScriptElement element= ((ElementQuerySpecification) fPatternData).getElement();
 				stringPattern= JavaElementLabels.getElementLabel(element, JavaElementLabels.ALL_DEFAULT);
 				if (!element.exists()) {
 					return new Status(IStatus.ERROR, JavaPlugin.getPluginId(), 0, Messages.format(SearchMessages.JavaSearchQuery_error_element_does_not_exist, stringPattern), null);  
@@ -186,17 +186,17 @@ public class JavaSearchQuery implements ISearchQuery {
 		if (nMatches == 1) {
 			String[] args= { getSearchPatternDescription(), fPatternData.getScopeDescription() };
 			switch (fPatternData.getLimitTo()) {
-				case IJavaSearchConstants.IMPLEMENTORS:
+				case IJavaScriptSearchConstants.IMPLEMENTORS:
 					return Messages.format(SearchMessages.JavaSearchOperation_singularImplementorsPostfix, args); 
-				case IJavaSearchConstants.DECLARATIONS:
+				case IJavaScriptSearchConstants.DECLARATIONS:
 					return Messages.format(SearchMessages.JavaSearchOperation_singularDeclarationsPostfix, args); 
-				case IJavaSearchConstants.REFERENCES:
+				case IJavaScriptSearchConstants.REFERENCES:
 					return Messages.format(SearchMessages.JavaSearchOperation_singularReferencesPostfix, args); 
-				case IJavaSearchConstants.ALL_OCCURRENCES:
+				case IJavaScriptSearchConstants.ALL_OCCURRENCES:
 					return Messages.format(SearchMessages.JavaSearchOperation_singularOccurrencesPostfix, args); 
-				case IJavaSearchConstants.READ_ACCESSES:
+				case IJavaScriptSearchConstants.READ_ACCESSES:
 					return Messages.format(SearchMessages.JavaSearchOperation_singularReadReferencesPostfix, args); 
-				case IJavaSearchConstants.WRITE_ACCESSES:
+				case IJavaScriptSearchConstants.WRITE_ACCESSES:
 					return Messages.format(SearchMessages.JavaSearchOperation_singularWriteReferencesPostfix, args); 
 				default:
 					return Messages.format(SearchMessages.JavaSearchOperation_singularOccurrencesPostfix, args); 
@@ -204,17 +204,17 @@ public class JavaSearchQuery implements ISearchQuery {
 		} else {
 			Object[] args= { getSearchPatternDescription(), new Integer(nMatches), fPatternData.getScopeDescription() };
 			switch (fPatternData.getLimitTo()) {
-				case IJavaSearchConstants.IMPLEMENTORS:
+				case IJavaScriptSearchConstants.IMPLEMENTORS:
 					return Messages.format(SearchMessages.JavaSearchOperation_pluralImplementorsPostfix, args); 
-				case IJavaSearchConstants.DECLARATIONS:
+				case IJavaScriptSearchConstants.DECLARATIONS:
 					return Messages.format(SearchMessages.JavaSearchOperation_pluralDeclarationsPostfix, args); 
-				case IJavaSearchConstants.REFERENCES:
+				case IJavaScriptSearchConstants.REFERENCES:
 					return Messages.format(SearchMessages.JavaSearchOperation_pluralReferencesPostfix, args); 
-				case IJavaSearchConstants.ALL_OCCURRENCES:
+				case IJavaScriptSearchConstants.ALL_OCCURRENCES:
 					return Messages.format(SearchMessages.JavaSearchOperation_pluralOccurrencesPostfix, args); 
-				case IJavaSearchConstants.READ_ACCESSES:
+				case IJavaScriptSearchConstants.READ_ACCESSES:
 					return Messages.format(SearchMessages.JavaSearchOperation_pluralReadReferencesPostfix, args); 
-				case IJavaSearchConstants.WRITE_ACCESSES:
+				case IJavaScriptSearchConstants.WRITE_ACCESSES:
 					return Messages.format(SearchMessages.JavaSearchOperation_pluralWriteReferencesPostfix, args); 
 				default:
 					return Messages.format(SearchMessages.JavaSearchOperation_pluralOccurrencesPostfix, args); 
@@ -224,7 +224,7 @@ public class JavaSearchQuery implements ISearchQuery {
 	
 	private String getSearchPatternDescription() {
 		if (fPatternData instanceof ElementQuerySpecification) {
-			IJavaElement element= ((ElementQuerySpecification) fPatternData).getElement();
+			IJavaScriptElement element= ((ElementQuerySpecification) fPatternData).getElement();
 			return JavaElementLabels.getElementLabel(element, JavaElementLabels.ALL_DEFAULT
 					| JavaElementLabels.ALL_FULLY_QUALIFIED | JavaElementLabels.USE_RESOLVED);
 		} 
@@ -232,7 +232,7 @@ public class JavaSearchQuery implements ISearchQuery {
 	}
 
 	ImageDescriptor getImageDescriptor() {
-		if (fPatternData.getLimitTo() == IJavaSearchConstants.IMPLEMENTORS || fPatternData.getLimitTo() == IJavaSearchConstants.DECLARATIONS)
+		if (fPatternData.getLimitTo() == IJavaScriptSearchConstants.IMPLEMENTORS || fPatternData.getLimitTo() == IJavaScriptSearchConstants.DECLARATIONS)
 			return JavaPluginImages.DESC_OBJS_SEARCH_DECL;
 		else
 			return JavaPluginImages.DESC_OBJS_SEARCH_REF;

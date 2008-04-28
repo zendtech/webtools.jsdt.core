@@ -69,9 +69,9 @@ import org.eclipse.ui.part.ResourceTransfer;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IMethod;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchScope;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IFunction;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.internal.corext.callhierarchy.CallHierarchy;
 import org.eclipse.wst.jsdt.internal.corext.callhierarchy.CallLocation;
 import org.eclipse.wst.jsdt.internal.corext.callhierarchy.MethodWrapper;
@@ -150,7 +150,7 @@ public class CallHierarchyViewPart extends ViewPart implements ICallHierarchyVie
     private MethodWrapper fCalleeRoot;
     private MethodWrapper fCallerRoot;
     private IMemento fMemento;
-    private IMethod fShownMethod;
+    private IFunction fShownMethod;
     private CallHierarchySelectionProvider fSelectionProviderMediator;
     private List fMethodHistory;
     private LocationViewer fLocationViewer;
@@ -188,7 +188,7 @@ public class CallHierarchyViewPart extends ViewPart implements ICallHierarchyVie
     /**
      * Sets the history entries
      */
-    public void setHistoryEntries(IMethod[] elems) {
+    public void setHistoryEntries(IFunction[] elems) {
         fMethodHistory.clear();
 
         for (int i = 0; i < elems.length; i++) {
@@ -201,19 +201,19 @@ public class CallHierarchyViewPart extends ViewPart implements ICallHierarchyVie
     /**
      * Gets all history entries.
      */
-    public IMethod[] getHistoryEntries() {
+    public IFunction[] getHistoryEntries() {
         if (fMethodHistory.size() > 0) {
             updateHistoryEntries();
         }
 
-        return (IMethod[]) fMethodHistory.toArray(new IMethod[fMethodHistory.size()]);
+        return (IFunction[]) fMethodHistory.toArray(new IFunction[fMethodHistory.size()]);
     }
 
     /**
      * Method setMethod.
      * @param method
      */
-    public void setMethod(IMethod method) {
+    public void setMethod(IFunction method) {
         if (method == null) {
             showPage(PAGE_EMPTY);
 
@@ -228,7 +228,7 @@ public class CallHierarchyViewPart extends ViewPart implements ICallHierarchyVie
         refresh();
     }
 
-    public IMethod getMethod() {
+    public IFunction getMethod() {
         return fShownMethod;
     }
 
@@ -295,7 +295,7 @@ public class CallHierarchyViewPart extends ViewPart implements ICallHierarchyVie
         }
     }
 
-    public IJavaSearchScope getSearchScope() {
+    public IJavaScriptSearchScope getSearchScope() {
         return fSearchScopeActions.getSearchScope();
     }
 
@@ -550,7 +550,7 @@ public class CallHierarchyViewPart extends ViewPart implements ICallHierarchyVie
     /**
      * Goes to the selected entry, without updating the order of history entries.
      */
-    public void gotoHistoryEntry(IMethod entry) {
+    public void gotoHistoryEntry(IFunction entry) {
         if (fMethodHistory.contains(entry)) {
             setMethod(entry);
         }
@@ -646,13 +646,13 @@ public class CallHierarchyViewPart extends ViewPart implements ICallHierarchyVie
                 EditorUtility.revealInEditor(editorPart,
                     ((MethodWrapper) elem).getMember());
             }
-        } else if (elem instanceof IJavaElement) {
+        } else if (elem instanceof IJavaScriptElement) {
             IEditorPart editorPart = EditorUtility.isOpenInEditor(elem);
 
             if (editorPart != null) {
                 //            getSite().getPage().removePartListener(fPartListener);
                 getSite().getPage().bringToTop(editorPart);
-                EditorUtility.revealInEditor(editorPart, (IJavaElement) elem);
+                EditorUtility.revealInEditor(editorPart, (IJavaScriptElement) elem);
 
                 //            getSite().getPage().addPartListener(fPartListener);
             }
@@ -738,7 +738,7 @@ public class CallHierarchyViewPart extends ViewPart implements ICallHierarchyVie
     /**
      * Adds the entry if new. Inserted at the beginning of the history entries list.
      */
-    private void addHistoryEntry(IJavaElement entry) {
+    private void addHistoryEntry(IJavaScriptElement entry) {
         if (fMethodHistory.contains(entry)) {
             fMethodHistory.remove(entry);
         }
@@ -882,7 +882,7 @@ public class CallHierarchyViewPart extends ViewPart implements ICallHierarchyVie
 
     private void updateHistoryEntries() {
         for (int i = fMethodHistory.size() - 1; i >= 0; i--) {
-            IMethod method = (IMethod) fMethodHistory.get(i);
+            IFunction method = (IFunction) fMethodHistory.get(i);
 
             if (!method.exists()) {
                 fMethodHistory.remove(i);

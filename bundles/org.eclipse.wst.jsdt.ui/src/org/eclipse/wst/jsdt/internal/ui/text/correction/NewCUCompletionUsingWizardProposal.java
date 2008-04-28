@@ -23,15 +23,15 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.dom.AST;
 import org.eclipse.wst.jsdt.core.dom.ASTNode;
 import org.eclipse.wst.jsdt.core.dom.CatchClause;
 import org.eclipse.wst.jsdt.core.dom.ITypeBinding;
-import org.eclipse.wst.jsdt.core.dom.MethodDeclaration;
+import org.eclipse.wst.jsdt.core.dom.FunctionDeclaration;
 import org.eclipse.wst.jsdt.core.dom.Name;
 import org.eclipse.wst.jsdt.core.dom.ParameterizedType;
 import org.eclipse.wst.jsdt.core.dom.rewrite.ImportRewrite;
@@ -69,15 +69,15 @@ public class NewCUCompletionUsingWizardProposal extends ChangeCorrectionProposal
 	public static final int K_ANNOTATION= 4;
 
 	private Name fNode;
-	private ICompilationUnit fCompilationUnit;
+	private IJavaScriptUnit fCompilationUnit;
 	private int fTypeKind;
-	private IJavaElement fTypeContainer; // IType or IPackageFragment
+	private IJavaScriptElement fTypeContainer; // IType or IPackageFragment
 	private String fTypeNameWithParameters;
 	private IType fCreatedType;
 
 	private boolean fShowDialog;
 
-	public NewCUCompletionUsingWizardProposal(ICompilationUnit cu, Name node, int typeKind, IJavaElement typeContainer, int severity) {
+	public NewCUCompletionUsingWizardProposal(IJavaScriptUnit cu, Name node, int typeKind, IJavaScriptElement typeContainer, int severity) {
 		super("", null, severity, null); //$NON-NLS-1$
 
 		fCompilationUnit= cu;
@@ -221,8 +221,8 @@ public class NewCUCompletionUsingWizardProposal extends ChangeCorrectionProposal
 		}
 		
 		if (createdType != null) {
-			IJavaElement container= createdType.getParent();
-			if (container instanceof ICompilationUnit) {
+			IJavaScriptElement container= createdType.getParent();
+			if (container instanceof IJavaScriptUnit) {
 				container= container.getParent();
 			}
 			if (!container.equals(fTypeContainer)) {
@@ -313,7 +313,7 @@ public class NewCUCompletionUsingWizardProposal extends ChangeCorrectionProposal
 		ASTNode parent= node.getParent();
 		switch (parent.getNodeType()) {
 			case ASTNode.METHOD_DECLARATION:
-				if (node.getLocationInParent() == MethodDeclaration.THROWN_EXCEPTIONS_PROPERTY) {
+				if (node.getLocationInParent() == FunctionDeclaration.THROWN_EXCEPTIONS_PROPERTY) {
 					return ast.resolveWellKnownType("java.lang.Exception"); //$NON-NLS-1$
 				}
 				break;

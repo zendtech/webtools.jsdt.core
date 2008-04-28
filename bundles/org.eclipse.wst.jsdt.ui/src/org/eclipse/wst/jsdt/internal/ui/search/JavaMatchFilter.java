@@ -18,15 +18,15 @@ import org.eclipse.search.ui.text.Match;
 import org.eclipse.search.ui.text.MatchFilter;
 import org.eclipse.wst.jsdt.core.IField;
 import org.eclipse.wst.jsdt.core.IImportDeclaration;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.ILocalVariable;
 import org.eclipse.wst.jsdt.core.IMember;
-import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.ITypeParameter;
-import org.eclipse.wst.jsdt.core.JavaModelException;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchConstants;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchConstants;
 import org.eclipse.wst.jsdt.core.search.SearchMatch;
 import org.eclipse.wst.jsdt.core.search.SearchPattern;
 import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
@@ -203,12 +203,12 @@ class ImportFilter extends JavaMatchFilter {
 		QuerySpecification spec= query.getSpecification();
 		if (spec instanceof ElementQuerySpecification) {
 			ElementQuerySpecification elementSpec= (ElementQuerySpecification) spec;
-			IJavaElement element= elementSpec.getElement();
+			IJavaScriptElement element= elementSpec.getElement();
 			return element instanceof IType || element instanceof IPackageFragment;
 		} else if (spec instanceof PatternQuerySpecification) {
 			PatternQuerySpecification patternSpec= (PatternQuerySpecification) spec;
 			int searchFor= patternSpec.getSearchFor();
-			return searchFor == IJavaSearchConstants.TYPE || searchFor == IJavaSearchConstants.PACKAGE;
+			return searchFor == IJavaScriptSearchConstants.TYPE || searchFor == IJavaScriptSearchConstants.PACKAGE;
 		}
 		return false;
 	}
@@ -223,11 +223,11 @@ abstract class VariableFilter extends JavaMatchFilter {
 		QuerySpecification spec= query.getSpecification();
 		if (spec instanceof ElementQuerySpecification) {
 			ElementQuerySpecification elementSpec= (ElementQuerySpecification) spec;
-			IJavaElement element= elementSpec.getElement();
+			IJavaScriptElement element= elementSpec.getElement();
 			return element instanceof IField || element instanceof ILocalVariable;
 		} else if (spec instanceof PatternQuerySpecification) {
 			PatternQuerySpecification patternSpec= (PatternQuerySpecification) spec;
-			return patternSpec.getSearchFor() == IJavaSearchConstants.FIELD;
+			return patternSpec.getSearchFor() == IJavaScriptSearchConstants.FIELD;
 		}
 		return false;
 	}
@@ -311,14 +311,14 @@ class PolymorphicFilter extends JavaMatchFilter {
     public boolean isApplicable(JavaSearchQuery query) {
         QuerySpecification spec= query.getSpecification();
         switch (spec.getLimitTo()) {
-			case IJavaSearchConstants.REFERENCES:
-			case IJavaSearchConstants.ALL_OCCURRENCES:
+			case IJavaScriptSearchConstants.REFERENCES:
+			case IJavaScriptSearchConstants.ALL_OCCURRENCES:
                 if (spec instanceof ElementQuerySpecification) {
                     ElementQuerySpecification elementSpec= (ElementQuerySpecification) spec;
-                    return elementSpec.getElement() instanceof IMethod;
+                    return elementSpec.getElement() instanceof IFunction;
                 } else if (spec instanceof PatternQuerySpecification) {
                     PatternQuerySpecification patternSpec= (PatternQuerySpecification) spec;
-                    return patternSpec.getSearchFor() == IJavaSearchConstants.METHOD;
+                    return patternSpec.getSearchFor() == IJavaScriptSearchConstants.METHOD;
                 }
         }
         return false;
@@ -339,10 +339,10 @@ abstract class GenericTypeFilter extends JavaMatchFilter {
 			try {
 				if (element instanceof IType) {
 					typeParameters= ((IType)element).getTypeParameters();
-				} else if (element instanceof IMethod) {
-					typeParameters= ((IMethod)element).getTypeParameters();
+				} else if (element instanceof IFunction) {
+					typeParameters= ((IFunction)element).getTypeParameters();
 				}
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				return false;
 			}
 			return typeParameters != null && typeParameters.length > 0;
@@ -399,7 +399,7 @@ class NonPublicFilter extends ModifierFilter {
 		if (element instanceof IMember) {
 			try {
 				return ! JdtFlags.isPublic((IMember) element);
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				JavaPlugin.log(e);
 			}
 		}
@@ -425,7 +425,7 @@ class StaticFilter extends ModifierFilter {
 		if (element instanceof IMember) {
 			try {
 				return JdtFlags.isStatic((IMember) element);
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				JavaPlugin.log(e);
 			}
 		}
@@ -451,7 +451,7 @@ class NonStaticFilter extends ModifierFilter {
 		if (element instanceof IMember) {
 			try {
 				return ! JdtFlags.isStatic((IMember) element);
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				JavaPlugin.log(e);
 			}
 		}
@@ -477,7 +477,7 @@ class DeprecatedFilter extends ModifierFilter {
 		if (element instanceof IMember) {
 			try {
 				return JdtFlags.isDeprecated((IMember) element);
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				JavaPlugin.log(e);
 			}
 		}
@@ -503,7 +503,7 @@ class NonDeprecatedFilter extends ModifierFilter {
 		if (element instanceof IMember) {
 			try {
 				return !JdtFlags.isDeprecated((IMember) element);
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				JavaPlugin.log(e);
 			}
 		}

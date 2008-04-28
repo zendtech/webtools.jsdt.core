@@ -18,7 +18,7 @@ import java.util.HashSet;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.ITypeHierarchy;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 
 public class JavaImplementorFinder implements IImplementorFinder {
@@ -35,7 +35,7 @@ public class JavaImplementorFinder implements IImplementorFinder {
             HashSet result = new HashSet(Arrays.asList(implementingTypes));
 
             return result;
-        } catch (JavaModelException e) {
+        } catch (JavaScriptModelException e) {
             JavaPlugin.log(e);
         }
 
@@ -55,7 +55,7 @@ public class JavaImplementorFinder implements IImplementorFinder {
             HashSet result = new HashSet(Arrays.asList(interfaces));
 
             return result;
-        } catch (JavaModelException e) {
+        } catch (JavaScriptModelException e) {
             JavaPlugin.log(e);
         }
 

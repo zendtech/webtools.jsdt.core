@@ -30,12 +30,12 @@ import org.eclipse.ltk.core.refactoring.TextChange;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.TextEdit;
 import org.eclipse.text.edits.TextEditGroup;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.dom.AST;
 import org.eclipse.wst.jsdt.core.dom.ASTNode;
 import org.eclipse.wst.jsdt.core.dom.ASTVisitor;
 import org.eclipse.wst.jsdt.core.dom.AbstractTypeDeclaration;
-import org.eclipse.wst.jsdt.core.dom.CompilationUnit;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
 import org.eclipse.wst.jsdt.core.dom.FieldDeclaration;
 import org.eclipse.wst.jsdt.core.dom.Modifier;
 import org.eclipse.wst.jsdt.core.dom.TypeDeclaration;
@@ -54,14 +54,14 @@ import com.ibm.icu.text.Collator;
 
 public class AccessorClassModifier {
 
-	private CompilationUnit fRoot;
+	private JavaScriptUnit fRoot;
 	private AST fAst;
 	private ASTRewrite fASTRewrite;
 	private ListRewrite fListRewrite;
-	private ICompilationUnit fCU;
+	private IJavaScriptUnit fCU;
 	private List fFields;
 
-	private AccessorClassModifier(ICompilationUnit cu) throws CoreException {
+	private AccessorClassModifier(IJavaScriptUnit cu) throws CoreException {
 
 		fCU= cu;
 		
@@ -127,7 +127,7 @@ public class AccessorClassModifier {
 		return fASTRewrite.rewriteAST(document, fCU.getJavaProject().getOptions(true));
 	}
 
-	public static Change create(ICompilationUnit cu, NLSSubstitution[] substitutions) throws CoreException {
+	public static Change create(IJavaScriptUnit cu, NLSSubstitution[] substitutions) throws CoreException {
 		
 		Map newKeyToSubstMap= NLSPropertyFileModifier.getNewKeyToSubstitutionMap(substitutions);
 		Map oldKeyToSubstMap= NLSPropertyFileModifier.getOldKeyToSubstitutionMap(substitutions);

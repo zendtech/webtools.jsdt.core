@@ -14,7 +14,7 @@ package org.eclipse.wst.jsdt.internal.corext.callhierarchy;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.core.IType;
 
@@ -67,7 +67,7 @@ class CallSearchResultCollector {
     }
 
     private IType getTypeOfElement(IMember element) {
-        if (element.getElementType() == IJavaElement.TYPE) {
+        if (element.getElementType() == IJavaScriptElement.TYPE) {
             return (IType) element;
         }
 

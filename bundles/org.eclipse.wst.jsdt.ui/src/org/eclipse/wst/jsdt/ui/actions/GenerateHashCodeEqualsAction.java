@@ -31,17 +31,17 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.jsdt.core.IClassFile;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.core.IOpenable;
 import org.eclipse.wst.jsdt.core.ISourceReference;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.dom.AST;
 import org.eclipse.wst.jsdt.core.dom.AbstractTypeDeclaration;
-import org.eclipse.wst.jsdt.core.dom.CompilationUnit;
-import org.eclipse.wst.jsdt.core.dom.IMethodBinding;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
+import org.eclipse.wst.jsdt.core.dom.IFunctionBinding;
 import org.eclipse.wst.jsdt.core.dom.ITypeBinding;
 import org.eclipse.wst.jsdt.core.dom.IVariableBinding;
 import org.eclipse.wst.jsdt.core.dom.Modifier;
@@ -93,7 +93,7 @@ public final class GenerateHashCodeEqualsAction extends SelectionDispatchAction 
 
 	private CompilationUnitEditor fEditor;
 
-	private CompilationUnit fUnit;
+	private JavaScriptUnit fUnit;
 
 	private ITypeBinding fTypeBinding;
 
@@ -146,17 +146,17 @@ public final class GenerateHashCodeEqualsAction extends SelectionDispatchAction 
 	 * @param selection the selection to test
 	 * @return <code>true</code> if it can be enabled, <code>false</code>
 	 *         otherwise
-	 * @throws JavaModelException if the kind of the selection cannot be
+	 * @throws JavaScriptModelException if the kind of the selection cannot be
 	 *             determined
 	 */
-	private boolean canEnable(final IStructuredSelection selection) throws JavaModelException {
+	private boolean canEnable(final IStructuredSelection selection) throws JavaScriptModelException {
 		if (selection.size() == 1) {
 			final Object element= selection.getFirstElement();
 			if (element instanceof IType) {
 				final IType type= (IType) element;
 				return type.getCompilationUnit() != null && type.isClass();
 			}
-			if (element instanceof ICompilationUnit)
+			if (element instanceof IJavaScriptUnit)
 				return true;
 		}
 		return false;
@@ -167,16 +167,16 @@ public final class GenerateHashCodeEqualsAction extends SelectionDispatchAction 
 	 * 
 	 * @param selection the selection
 	 * @return a single selected type, or <code>null</code>
-	 * @throws JavaModelException if the kind of the selection cannot be
+	 * @throws JavaScriptModelException if the kind of the selection cannot be
 	 *             determined
 	 */
-	private IType getSelectedType(final IStructuredSelection selection) throws JavaModelException {
+	private IType getSelectedType(final IStructuredSelection selection) throws JavaScriptModelException {
 		if (selection.size() == 1 && selection.getFirstElement() instanceof IType) {
 			final IType type= (IType) selection.getFirstElement();
 			if (type.getCompilationUnit() != null && type.isClass())
 				return type;
-		} else if (selection.getFirstElement() instanceof ICompilationUnit) {
-			final ICompilationUnit unit= (ICompilationUnit) selection.getFirstElement();
+		} else if (selection.getFirstElement() instanceof IJavaScriptUnit) {
+			final IJavaScriptUnit unit= (IJavaScriptUnit) selection.getFirstElement();
 			final IType type= unit.findPrimaryType();
 			if (type != null && type.isClass())
 				return type;
@@ -360,19 +360,19 @@ public final class GenerateHashCodeEqualsAction extends SelectionDispatchAction 
 		notifyResult(dialogResult == Window.OK);
 	}
 	
-	private static RefactoringStatusContext createRefactoringStatusContext(IJavaElement element) {
+	private static RefactoringStatusContext createRefactoringStatusContext(IJavaScriptElement element) {
 		if (element instanceof IMember) {
 			return JavaStatusContext.create((IMember) element);
 		}
 		if (element instanceof ISourceReference) {
 			IOpenable openable= element.getOpenable();
 			try {
-				if (openable instanceof ICompilationUnit) {
-					return JavaStatusContext.create((ICompilationUnit) openable, ((ISourceReference) element).getSourceRange());
+				if (openable instanceof IJavaScriptUnit) {
+					return JavaStatusContext.create((IJavaScriptUnit) openable, ((ISourceReference) element).getSourceRange());
 				} else if (openable instanceof IClassFile) {
 					return JavaStatusContext.create((IClassFile) openable, ((ISourceReference) element).getSourceRange());
 				}
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				// ignore
 			}
 		}
@@ -422,7 +422,7 @@ public final class GenerateHashCodeEqualsAction extends SelectionDispatchAction 
 			someType= someType.getErasure();
 		}
 		
-		IMethodBinding[] declaredMethods= someType.getDeclaredMethods();
+		IFunctionBinding[] declaredMethods= someType.getDeclaredMethods();
 
 		for (int i= 0; i < declaredMethods.length; i++) {
 			if (declaredMethods[i].getName().equals(METHODNAME_EQUALS)) {
@@ -445,7 +445,7 @@ public final class GenerateHashCodeEqualsAction extends SelectionDispatchAction 
 		return info;
 	}
 
-	private void initialize(IType type) throws JavaModelException {
+	private void initialize(IType type) throws JavaScriptModelException {
 		RefactoringASTParser parser= new RefactoringASTParser(AST.JLS3);
 		fUnit= parser.parse(type.getCompilationUnit(), true);
 		fTypeBinding= null;
@@ -464,7 +464,7 @@ public final class GenerateHashCodeEqualsAction extends SelectionDispatchAction 
 	public void selectionChanged(IStructuredSelection selection) {
 		try {
 			setEnabled(canEnable(selection));
-		} catch (JavaModelException exception) {
+		} catch (JavaScriptModelException exception) {
 			if (JavaModelUtil.isExceptionToBeLogged(exception))
 				JavaPlugin.log(exception);
 			setEnabled(false);

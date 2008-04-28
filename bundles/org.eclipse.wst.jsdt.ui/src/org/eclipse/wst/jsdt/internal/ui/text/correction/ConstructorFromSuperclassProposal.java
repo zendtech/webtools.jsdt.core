@@ -15,15 +15,15 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.dom.AST;
 import org.eclipse.wst.jsdt.core.dom.ASTNode;
 import org.eclipse.wst.jsdt.core.dom.Block;
-import org.eclipse.wst.jsdt.core.dom.CompilationUnit;
-import org.eclipse.wst.jsdt.core.dom.IMethodBinding;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
+import org.eclipse.wst.jsdt.core.dom.IFunctionBinding;
 import org.eclipse.wst.jsdt.core.dom.ITypeBinding;
-import org.eclipse.wst.jsdt.core.dom.Javadoc;
-import org.eclipse.wst.jsdt.core.dom.MethodDeclaration;
+import org.eclipse.wst.jsdt.core.dom.JSdoc;
+import org.eclipse.wst.jsdt.core.dom.FunctionDeclaration;
 import org.eclipse.wst.jsdt.core.dom.Modifier;
 import org.eclipse.wst.jsdt.core.dom.Name;
 import org.eclipse.wst.jsdt.core.dom.SingleVariableDeclaration;
@@ -46,9 +46,9 @@ import org.eclipse.wst.jsdt.ui.JavaElementImageDescriptor;
 public class ConstructorFromSuperclassProposal extends LinkedCorrectionProposal {
 
 	private TypeDeclaration fTypeNode;
-	private IMethodBinding fSuperConstructor;
+	private IFunctionBinding fSuperConstructor;
 
-	public ConstructorFromSuperclassProposal(ICompilationUnit cu, TypeDeclaration typeNode, IMethodBinding superConstructor, int relevance) {
+	public ConstructorFromSuperclassProposal(IJavaScriptUnit cu, TypeDeclaration typeNode, IFunctionBinding superConstructor, int relevance) {
 		super("", cu, null, relevance, null); //$NON-NLS-1$
 		fTypeNode= typeNode;
 		fSuperConstructor= superConstructor;
@@ -91,14 +91,14 @@ public class ConstructorFromSuperclassProposal extends LinkedCorrectionProposal 
 
 		ASTRewrite rewrite= ASTRewrite.create(ast);
 		
-		createImportRewrite((CompilationUnit) fTypeNode.getRoot());
+		createImportRewrite((JavaScriptUnit) fTypeNode.getRoot());
 		
 		CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(getCompilationUnit().getJavaProject());
 		if (!settings.createComments) {
 			settings= null;
 		}
 
-		MethodDeclaration newMethodDecl= createNewMethodDeclaration(ast, fSuperConstructor, rewrite, settings);
+		FunctionDeclaration newMethodDecl= createNewMethodDeclaration(ast, fSuperConstructor, rewrite, settings);
 		rewrite.getListRewrite(fTypeNode, TypeDeclaration.BODY_DECLARATIONS_PROPERTY).insertFirst(newMethodDecl, null);
 
 		addLinkedRanges(rewrite, newMethodDecl);
@@ -106,7 +106,7 @@ public class ConstructorFromSuperclassProposal extends LinkedCorrectionProposal 
 		return rewrite;
 	}
 
-	private void addLinkedRanges(ASTRewrite rewrite, MethodDeclaration newStub) {
+	private void addLinkedRanges(ASTRewrite rewrite, FunctionDeclaration newStub) {
 		List parameters= newStub.parameters();
 		for (int i= 0; i < parameters.size(); i++) {
 			SingleVariableDeclaration curr= (SingleVariableDeclaration) parameters.get(i);
@@ -116,9 +116,9 @@ public class ConstructorFromSuperclassProposal extends LinkedCorrectionProposal 
 		}
 	}
 
-	private MethodDeclaration createNewMethodDeclaration(AST ast, IMethodBinding binding, ASTRewrite rewrite, CodeGenerationSettings commentSettings) throws CoreException {
+	private FunctionDeclaration createNewMethodDeclaration(AST ast, IFunctionBinding binding, ASTRewrite rewrite, CodeGenerationSettings commentSettings) throws CoreException {
 		String name= fTypeNode.getName().getIdentifier();
-		MethodDeclaration decl= ast.newMethodDeclaration();
+		FunctionDeclaration decl= ast.newFunctionDeclaration();
 		decl.setConstructor(true);
 		decl.setName(ast.newSimpleName(name));
 		Block body= ast.newBlock();
@@ -175,7 +175,7 @@ public class ConstructorFromSuperclassProposal extends LinkedCorrectionProposal 
 		if (commentSettings != null) {
 			String string= CodeGeneration.getMethodComment(getCompilationUnit(), name, decl, null, String.valueOf('\n'));
 			if (string != null) {
-				Javadoc javadoc= (Javadoc) rewrite.createStringPlaceholder(string, ASTNode.JAVADOC);
+				JSdoc javadoc= (JSdoc) rewrite.createStringPlaceholder(string, ASTNode.JAVADOC);
 				decl.setJavadoc(javadoc);
 			}
 		}
@@ -228,7 +228,7 @@ public class ConstructorFromSuperclassProposal extends LinkedCorrectionProposal 
 	}
 
 
-	private String[] getArgumentNames(IMethodBinding binding) {
+	private String[] getArgumentNames(IFunctionBinding binding) {
 		if (binding == null) {
 			return new String[0];
 		}

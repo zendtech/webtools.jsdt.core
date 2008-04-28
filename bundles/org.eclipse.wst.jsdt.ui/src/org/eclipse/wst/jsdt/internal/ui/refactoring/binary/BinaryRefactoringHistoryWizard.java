@@ -44,15 +44,15 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatusEntry;
 import org.eclipse.ltk.core.refactoring.history.RefactoringHistory;
 import org.eclipse.ltk.core.refactoring.participants.RefactoringArguments;
 import org.eclipse.ltk.ui.refactoring.history.RefactoringHistoryWizard;
-import org.eclipse.wst.jsdt.core.IClasspathEntry;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaModel;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IIncludePathEntry;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptModel;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.refactoring.descriptors.JavaRefactoringDescriptor;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.JDTRefactoringContribution;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.JDTRefactoringDescriptor;
@@ -95,14 +95,14 @@ public abstract class BinaryRefactoringHistoryWizard extends RefactoringHistoryW
 	 */
 	private static void addExclusionPatterns(final List entries, final IPath path) {
 		for (int index= 0; index < entries.size(); index++) {
-			final IClasspathEntry entry= (IClasspathEntry) entries.get(index);
-			if (entry.getEntryKind() == IClasspathEntry.CPE_SOURCE && entry.getPath().isPrefixOf(path)) {
+			final IIncludePathEntry entry= (IIncludePathEntry) entries.get(index);
+			if (entry.getEntryKind() == IIncludePathEntry.CPE_SOURCE && entry.getPath().isPrefixOf(path)) {
 				final IPath[] patterns= entry.getExclusionPatterns();
 				if (!JavaModelUtil.isExcludedPath(path, patterns)) {
 					final IPath[] filters= new IPath[patterns.length + 1];
 					System.arraycopy(patterns, 0, filters, 0, patterns.length);
 					filters[patterns.length]= path.removeFirstSegments(entry.getPath().segmentCount()).addTrailingSeparator();
-					entries.set(index, JavaCore.newSourceEntry(entry.getPath(), filters, entry.getOutputLocation()));
+					entries.set(index, JavaScriptCore.newSourceEntry(entry.getPath(), filters, entry.getOutputLocation()));
 				}
 			}
 		}
@@ -124,12 +124,12 @@ public abstract class BinaryRefactoringHistoryWizard extends RefactoringHistoryW
 			monitor.beginTask(RefactoringMessages.JarImportWizard_prepare_import, 100);
 			final IWorkspaceRoot workspace= ResourcesPlugin.getWorkspace().getRoot();
 			if (workspace != null) {
-				final IJavaModel model= JavaCore.create(workspace);
+				final IJavaScriptModel model= JavaScriptCore.create(workspace);
 				if (model != null) {
 					try {
 						final URI uri= getLocationURI(root.getRawClasspathEntry());
 						if (uri != null) {
-							final IJavaProject[] projects= model.getJavaProjects();
+							final IJavaScriptProject[] projects= model.getJavaProjects();
 							final IProgressMonitor subMonitor= new SubProgressMonitor(monitor, 100, SubProgressMonitor.SUPPRESS_SUBTASK_LABEL);
 							try {
 								subMonitor.beginTask(RefactoringMessages.JarImportWizard_prepare_import, projects.length * 100);
@@ -141,8 +141,8 @@ public abstract class BinaryRefactoringHistoryWizard extends RefactoringHistoryW
 										for (int offset= 0; offset < roots.length; offset++) {
 											final IPackageFragmentRoot current= roots[offset];
 											if (!current.equals(root) && current.getKind() == IPackageFragmentRoot.K_BINARY) {
-												final IClasspathEntry entry= current.getRawClasspathEntry();
-												if (entry.getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
+												final IIncludePathEntry entry= current.getRawClasspathEntry();
+												if (entry.getEntryKind() == IIncludePathEntry.CPE_LIBRARY) {
 													final URI location= getLocationURI(entry);
 													if (uri.equals(location))
 														status.addFatalError(Messages.format(RefactoringMessages.JarImportWizard_error_shared_jar, new String[] { current.getJavaProject().getElementName() }));
@@ -185,11 +185,11 @@ public abstract class BinaryRefactoringHistoryWizard extends RefactoringHistoryW
 	 * @throws CoreException
 	 *             if an error occurs while configuring the class path
 	 */
-	private static void configureClasspath(final IJavaProject project, final IPackageFragmentRoot root, final IFolder folder, final IProgressMonitor monitor) throws IllegalStateException, CoreException {
+	private static void configureClasspath(final IJavaScriptProject project, final IPackageFragmentRoot root, final IFolder folder, final IProgressMonitor monitor) throws IllegalStateException, CoreException {
 		try {
 			monitor.beginTask(RefactoringMessages.JarImportWizard_prepare_import, 200);
-			final IClasspathEntry entry= root.getRawClasspathEntry();
-			final IClasspathEntry[] entries= project.getRawClasspath();
+			final IIncludePathEntry entry= root.getRawClasspathEntry();
+			final IIncludePathEntry[] entries= project.getRawClasspath();
 			final List list= new ArrayList();
 			list.addAll(Arrays.asList(entries));
 			final IFileStore store= EFS.getLocalFileSystem().getStore(JavaPlugin.getDefault().getStateLocation().append(STUB_FOLDER).append(project.getElementName()));
@@ -200,9 +200,9 @@ public abstract class BinaryRefactoringHistoryWizard extends RefactoringHistoryW
 			addExclusionPatterns(list, folder.getFullPath());
 			for (int index= 0; index < entries.length; index++) {
 				if (entries[index].equals(entry))
-					list.add(index, JavaCore.newSourceEntry(folder.getFullPath()));
+					list.add(index, JavaScriptCore.newSourceEntry(folder.getFullPath()));
 			}
-			project.setRawClasspath((IClasspathEntry[]) list.toArray(new IClasspathEntry[list.size()]), false, new SubProgressMonitor(monitor, 100, SubProgressMonitor.SUPPRESS_SUBTASK_LABEL));
+			project.setRawClasspath((IIncludePathEntry[]) list.toArray(new IIncludePathEntry[list.size()]), false, new SubProgressMonitor(monitor, 100, SubProgressMonitor.SUPPRESS_SUBTASK_LABEL));
 		} finally {
 			monitor.done();
 		}
@@ -215,10 +215,10 @@ public abstract class BinaryRefactoringHistoryWizard extends RefactoringHistoryW
 	 *            the classpath entry
 	 * @return the location URI
 	 */
-	public static URI getLocationURI(final IClasspathEntry entry) {
+	public static URI getLocationURI(final IIncludePathEntry entry) {
 		IPath path= null;
-		if (entry.getEntryKind() == IClasspathEntry.CPE_VARIABLE)
-			path= JavaCore.getResolvedVariablePath(entry.getPath());
+		if (entry.getEntryKind() == IIncludePathEntry.CPE_VARIABLE)
+			path= JavaScriptCore.getResolvedVariablePath(entry.getPath());
 		else
 			path= entry.getPath();
 		final IWorkspaceRoot root= ResourcesPlugin.getWorkspace().getRoot();
@@ -243,7 +243,7 @@ public abstract class BinaryRefactoringHistoryWizard extends RefactoringHistoryW
 	protected IScriptableRefactoring fCurrentRefactoring= null;
 
 	/** The java project or <code>null</code> */
-	protected IJavaProject fJavaProject= null;
+	protected IJavaScriptProject fJavaProject= null;
 
 	/**
 	 * The packages which already have been processed (element type:
@@ -303,7 +303,7 @@ public abstract class BinaryRefactoringHistoryWizard extends RefactoringHistoryW
 					if (!status.hasFatalError()) {
 						status.merge(checkSourceAttachmentRefactorings(new SubProgressMonitor(monitor, 20, SubProgressMonitor.SUPPRESS_SUBTASK_LABEL)));
 						if (!status.hasFatalError()) {
-							final IJavaProject project= root.getJavaProject();
+							final IJavaScriptProject project= root.getJavaProject();
 							if (project != null) {
 								final IFolder folder= project.getProject().getFolder(SOURCE_FOLDER + String.valueOf(System.currentTimeMillis()));
 								try {
@@ -365,7 +365,7 @@ public abstract class BinaryRefactoringHistoryWizard extends RefactoringHistoryW
 		if (root != null) {
 			try {
 				return root.getSourceAttachmentPath() != null;
-			} catch (JavaModelException exception) {
+			} catch (JavaScriptModelException exception) {
 				JavaPlugin.log(exception);
 			}
 		}
@@ -418,12 +418,12 @@ public abstract class BinaryRefactoringHistoryWizard extends RefactoringHistoryW
 			if (root != null && fSourceFolder != null && fJavaProject != null) {
 				try {
 					final SubProgressMonitor subMonitor= new SubProgressMonitor(monitor, 40, SubProgressMonitor.SUPPRESS_SUBTASK_LABEL);
-					final IJavaElement[] elements= root.getChildren();
+					final IJavaScriptElement[] elements= root.getChildren();
 					final List list= new ArrayList(elements.length);
 					try {
 						subMonitor.beginTask(RefactoringMessages.JarImportWizard_prepare_import, elements.length);
 						for (int index= 0; index < elements.length; index++) {
-							final IJavaElement element= elements[index];
+							final IJavaScriptElement element= elements[index];
 							if (!fProcessedFragments.contains(element) && !element.getElementName().equals(META_INF_FRAGMENT))
 								list.add(element);
 							subMonitor.worked(1);
@@ -538,7 +538,7 @@ public abstract class BinaryRefactoringHistoryWizard extends RefactoringHistoryW
 	 * @throws CoreException
 	 *             if an error occurs while deconfiguring the classpath
 	 */
-	protected boolean deconfigureClasspath(IClasspathEntry[] entries, IProgressMonitor monitor) throws CoreException {
+	protected boolean deconfigureClasspath(IIncludePathEntry[] entries, IProgressMonitor monitor) throws CoreException {
 		return false;
 	}
 
@@ -554,7 +554,7 @@ public abstract class BinaryRefactoringHistoryWizard extends RefactoringHistoryW
 		try {
 			monitor.beginTask(RefactoringMessages.JarImportWizard_cleanup_import, 300);
 			if (fJavaProject != null) {
-				final IClasspathEntry[] entries= fJavaProject.readRawClasspath();
+				final IIncludePathEntry[] entries= fJavaProject.readRawClasspath();
 				final boolean changed= deconfigureClasspath(entries, new SubProgressMonitor(monitor, 100, SubProgressMonitor.SUPPRESS_SUBTASK_LABEL));
 				final RefactoringHistory history= getRefactoringHistory();
 				final boolean valid= history != null && !history.isEmpty();
@@ -611,22 +611,22 @@ public abstract class BinaryRefactoringHistoryWizard extends RefactoringHistoryW
 	 */
 	private String getTransformedHandle(final String project, final String handle) {
 		if (fSourceFolder != null) {
-			final IJavaElement target= JavaCore.create(fSourceFolder);
+			final IJavaScriptElement target= JavaScriptCore.create(fSourceFolder);
 			if (target instanceof IPackageFragmentRoot) {
 				final IPackageFragmentRoot extended= (IPackageFragmentRoot) target;
 				String sourceIdentifier= null;
-				final IJavaElement element= JDTRefactoringDescriptor.handleToElement(project, handle, false);
+				final IJavaScriptElement element= JDTRefactoringDescriptor.handleToElement(project, handle, false);
 				if (element != null) {
-					final IPackageFragmentRoot root= (IPackageFragmentRoot) element.getAncestor(IJavaElement.PACKAGE_FRAGMENT_ROOT);
+					final IPackageFragmentRoot root= (IPackageFragmentRoot) element.getAncestor(IJavaScriptElement.PACKAGE_FRAGMENT_ROOT);
 					if (root != null)
 						sourceIdentifier= root.getHandleIdentifier();
 					else {
-						final IJavaProject javaProject= element.getJavaProject();
+						final IJavaScriptProject javaProject= element.getJavaProject();
 						if (javaProject != null)
 							sourceIdentifier= javaProject.getHandleIdentifier();
 					}
 					if (sourceIdentifier != null) {
-						final IJavaElement result= JavaCore.create(extended.getHandleIdentifier() + element.getHandleIdentifier().substring(sourceIdentifier.length()));
+						final IJavaScriptElement result= JavaScriptCore.create(extended.getHandleIdentifier() + element.getHandleIdentifier().substring(sourceIdentifier.length()));
 						if (result != null)
 							return JDTRefactoringDescriptor.elementToHandle(project, result);
 					}
@@ -718,7 +718,7 @@ public abstract class BinaryRefactoringHistoryWizard extends RefactoringHistoryW
 			final RefactoringStatusContext context= entry.getContext();
 			if (context instanceof JavaStatusContext) {
 				final JavaStatusContext extended= (JavaStatusContext) context;
-				final ICompilationUnit unit= extended.getCompilationUnit();
+				final IJavaScriptUnit unit= extended.getCompilationUnit();
 				if (unit != null) {
 					final IResource resource= unit.getResource();
 					if (resource != null && source.isPrefixOf(resource.getFullPath()))

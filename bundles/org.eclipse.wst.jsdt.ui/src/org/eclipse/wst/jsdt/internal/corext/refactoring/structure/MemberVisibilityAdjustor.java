@@ -24,22 +24,22 @@ import org.eclipse.ltk.core.refactoring.GroupCategorySet;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.RefactoringStatusEntry;
 import org.eclipse.wst.jsdt.core.Flags;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IField;
 import org.eclipse.wst.jsdt.core.IInitializer;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IMember;
-import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.ITypeHierarchy;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.WorkingCopyOwner;
 import org.eclipse.wst.jsdt.core.dom.ASTNode;
 import org.eclipse.wst.jsdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.wst.jsdt.core.dom.BodyDeclaration;
-import org.eclipse.wst.jsdt.core.dom.CompilationUnit;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
 import org.eclipse.wst.jsdt.core.dom.FieldDeclaration;
 import org.eclipse.wst.jsdt.core.dom.IExtendedModifier;
 import org.eclipse.wst.jsdt.core.dom.Modifier;
@@ -49,8 +49,8 @@ import org.eclipse.wst.jsdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.wst.jsdt.core.dom.Modifier.ModifierKeyword;
 import org.eclipse.wst.jsdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.wst.jsdt.core.dom.rewrite.ListRewrite;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchConstants;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchScope;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchConstants;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.core.search.SearchMatch;
 import org.eclipse.wst.jsdt.core.search.SearchPattern;
 import org.eclipse.wst.jsdt.internal.corext.dom.ModifierRewrite;
@@ -154,9 +154,9 @@ public final class MemberVisibilityAdjustor {
 		 * @param root the root of the AST used in the rewrite
 		 * @param group the text edit group description to use, or <code>null</code>
 		 * @param status the refactoring status, or <code>null</code>
-		 * @throws JavaModelException if an error occurs
+		 * @throws JavaScriptModelException if an error occurs
 		 */
-		protected final void rewriteVisibility(final MemberVisibilityAdjustor adjustor, final ASTRewrite rewrite, final CompilationUnit root, final CategorizedTextEditGroup group, final RefactoringStatus status) throws JavaModelException {
+		protected final void rewriteVisibility(final MemberVisibilityAdjustor adjustor, final ASTRewrite rewrite, final JavaScriptUnit root, final CategorizedTextEditGroup group, final RefactoringStatus status) throws JavaScriptModelException {
 			Assert.isNotNull(adjustor);
 			Assert.isNotNull(rewrite);
 			Assert.isNotNull(root);
@@ -205,7 +205,7 @@ public final class MemberVisibilityAdjustor {
 		/*
 		 * @see org.eclipse.wst.jsdt.internal.corext.refactoring.structure.MemberVisibilityAdjustor.IVisibilityAdjustment#rewriteVisibility(org.eclipse.wst.jsdt.internal.corext.refactoring.structure.MemberVisibilityAdjustor, org.eclipse.core.runtime.IProgressMonitor)
 		 */
-		public void rewriteVisibility(final MemberVisibilityAdjustor adjustor, final IProgressMonitor monitor) throws JavaModelException {
+		public void rewriteVisibility(final MemberVisibilityAdjustor adjustor, final IProgressMonitor monitor) throws JavaScriptModelException {
 			Assert.isNotNull(adjustor);
 			Assert.isNotNull(monitor);
 			try {
@@ -244,9 +244,9 @@ public final class MemberVisibilityAdjustor {
 		 * 
 		 * @param adjustor the java element visibility adjustor
 		 * @param monitor the progress monitor to use
-		 * @throws JavaModelException if an error occurs
+		 * @throws JavaScriptModelException if an error occurs
 		 */
-		public void rewriteVisibility(MemberVisibilityAdjustor adjustor, IProgressMonitor monitor) throws JavaModelException;
+		public void rewriteVisibility(MemberVisibilityAdjustor adjustor, IProgressMonitor monitor) throws JavaScriptModelException;
 	}
 
 	/** Description of an outgoing member visibility adjustment */
@@ -266,7 +266,7 @@ public final class MemberVisibilityAdjustor {
 		/*
 		 * @see org.eclipse.wst.jsdt.internal.corext.refactoring.structure.MemberVisibilityAdjustor.IVisibilityAdjustment#rewriteVisibility(org.eclipse.wst.jsdt.internal.corext.refactoring.structure.MemberVisibilityAdjustor, org.eclipse.core.runtime.IProgressMonitor)
 		 */
-		public void rewriteVisibility(final MemberVisibilityAdjustor adjustor, final IProgressMonitor monitor) throws JavaModelException {
+		public void rewriteVisibility(final MemberVisibilityAdjustor adjustor, final IProgressMonitor monitor) throws JavaScriptModelException {
 			Assert.isNotNull(adjustor);
 			Assert.isNotNull(monitor);
 			try {
@@ -289,7 +289,7 @@ public final class MemberVisibilityAdjustor {
 	 * @param element the element to get the label for
 	 * @return the label for the element
 	 */
-	public static String getLabel(final IJavaElement element) {
+	public static String getLabel(final IJavaScriptElement element) {
 		Assert.isNotNull(element);
 		return JavaElementLabels.getElementLabel(element, JavaElementLabels.ALL_FULLY_QUALIFIED | JavaElementLabels.ALL_DEFAULT);
 	}
@@ -319,10 +319,10 @@ public final class MemberVisibilityAdjustor {
 	 * @return the string for the member
 	 */
 	public static String getMessage(final IMember member) {
-		Assert.isTrue(member instanceof IType || member instanceof IMethod || member instanceof IField);
+		Assert.isTrue(member instanceof IType || member instanceof IFunction || member instanceof IField);
 		if (member instanceof IType)
 			return RefactoringCoreMessages.MemberVisibilityAdjustor_change_visibility_type_warning;
-		else if (member instanceof IMethod)
+		else if (member instanceof IFunction)
 			return RefactoringCoreMessages.MemberVisibilityAdjustor_change_visibility_method_warning;
 		else
 			return RefactoringCoreMessages.MemberVisibilityAdjustor_change_visibility_field_warning;
@@ -456,7 +456,7 @@ public final class MemberVisibilityAdjustor {
 	private final IMember fReferenced;
 
 	/** The referencing java element */
-	private final IJavaElement fReferencing;
+	private final IJavaScriptElement fReferencing;
 
 	/** The AST rewrite to use for reference visibility adjustments, or <code>null</code> to use a compilation unit rewrite */
 	private ASTRewrite fRewrite= null;
@@ -465,10 +465,10 @@ public final class MemberVisibilityAdjustor {
 	private Map fRewrites= new HashMap(3);
 
 	/** The root node of the AST rewrite for reference visibility adjustments, or <code>null</code> to use a compilation unit rewrite */
-	private CompilationUnit fRoot= null;
+	private JavaScriptUnit fRoot= null;
 
 	/** The incoming search scope */
-	private IJavaSearchScope fScope;
+	private IJavaScriptSearchScope fScope;
 
 	/** The status of the visibility adjustment */
 	private RefactoringStatus fStatus= new RefactoringStatus();
@@ -488,10 +488,10 @@ public final class MemberVisibilityAdjustor {
 	 * @param referencing the referencing element used to compute the visibility
 	 * @param referenced the referenced member which causes the visibility changes
 	 */
-	public MemberVisibilityAdjustor(final IJavaElement referencing, final IMember referenced) {
+	public MemberVisibilityAdjustor(final IJavaScriptElement referencing, final IMember referenced) {
 		Assert.isTrue(!(referenced instanceof IInitializer));
-		Assert.isTrue(referencing instanceof ICompilationUnit || referencing instanceof IType || referencing instanceof IPackageFragment);
-		fScope= RefactoringScopeFactory.createReferencedScope(new IJavaElement[] { referenced}, IJavaSearchScope.REFERENCED_PROJECTS | IJavaSearchScope.SOURCES | IJavaSearchScope.APPLICATION_LIBRARIES);
+		Assert.isTrue(referencing instanceof IJavaScriptUnit || referencing instanceof IType || referencing instanceof IPackageFragment);
+		fScope= RefactoringScopeFactory.createReferencedScope(new IJavaScriptElement[] { referenced}, IJavaScriptSearchScope.REFERENCED_PROJECTS | IJavaScriptSearchScope.SOURCES | IJavaScriptSearchScope.APPLICATION_LIBRARIES);
 		fReferencing= referencing;
 		fReferenced= referenced;
 	}
@@ -502,9 +502,9 @@ public final class MemberVisibilityAdjustor {
 	 * @param element the "source" point from which to calculate the visibility
 	 * @param referencedMovedElement the moved element which may be adjusted in visibility
 	 * @param monitor the progress monitor to use
-	 * @throws JavaModelException if the visibility adjustment could not be computed
+	 * @throws JavaScriptModelException if the visibility adjustment could not be computed
 	 */
-	private void adjustIncomingVisibility(final IJavaElement element, IMember referencedMovedElement, final IProgressMonitor monitor) throws JavaModelException {
+	private void adjustIncomingVisibility(final IJavaScriptElement element, IMember referencedMovedElement, final IProgressMonitor monitor) throws JavaScriptModelException {
 		final ModifierKeyword threshold= getVisibilityThreshold(element, referencedMovedElement, monitor);
 		int flags= referencedMovedElement.getFlags();
 		IType declaring= referencedMovedElement.getDeclaringType();
@@ -519,13 +519,13 @@ public final class MemberVisibilityAdjustor {
 	 * outside. Those may need to have their visibility adjusted.
 	 * @param member 
 	 * @param monitor 
-	 * @throws JavaModelException 
+	 * @throws JavaScriptModelException 
 	 */
-	private void adjustMemberVisibility(final IMember member, final IProgressMonitor monitor) throws JavaModelException {
+	private void adjustMemberVisibility(final IMember member, final IProgressMonitor monitor) throws JavaScriptModelException {
 
 		if (member instanceof IType) {
 			// recursively check accessibility of member type's members
-			final IJavaElement[] typeMembers= ((IType) member).getChildren();
+			final IJavaScriptElement[] typeMembers= ((IType) member).getChildren();
 			for (int i= 0; i < typeMembers.length; i++) {
 				if (! (typeMembers[i] instanceof IInitializer))
 					adjustMemberVisibility((IMember) typeMembers[i], monitor);
@@ -539,7 +539,7 @@ public final class MemberVisibilityAdjustor {
 		for (int i= 0; i < references.length; i++) {
 			final SearchMatch[] searchResults= references[i].getSearchResults();
 			for (int k= 0; k < searchResults.length; k++) {
-				final IJavaElement referenceToMember= (IJavaElement) searchResults[k].getElement();
+				final IJavaScriptElement referenceToMember= (IJavaScriptElement) searchResults[k].getElement();
 				if (fAdjustments.get(member) == null && referenceToMember instanceof IMember && !isInsideMovedMember(referenceToMember)) {
 					// check whether the member is still visible from the
 					// destination. As we are moving a type, the destination is
@@ -555,8 +555,8 @@ public final class MemberVisibilityAdjustor {
 	 * @param element the element
 	 * @return <code>true</code> if it is inside, <code>false</code> otherwise
 	 */
-	private boolean isInsideMovedMember(final IJavaElement element) {
-		IJavaElement current= element;
+	private boolean isInsideMovedMember(final IJavaScriptElement element) {
+		IJavaScriptElement current= element;
 		while ((current= current.getParent()) != null)
 			if (current.equals(fReferenced))
 				return true;
@@ -568,10 +568,10 @@ public final class MemberVisibilityAdjustor {
 	 * @param member the member
 	 * @param monitor the progress monitor to use
 	 * @return the search result groups
-	 * @throws JavaModelException if an error occurs during search
+	 * @throws JavaScriptModelException if an error occurs during search
 	 */
-	private SearchResultGroup[] findReferences(final IMember member, final IProgressMonitor monitor) throws JavaModelException {
-		final RefactoringSearchEngine2 engine= new RefactoringSearchEngine2(SearchPattern.createPattern(member, IJavaSearchConstants.REFERENCES, SearchUtils.GENERICS_AGNOSTIC_MATCH_RULE));
+	private SearchResultGroup[] findReferences(final IMember member, final IProgressMonitor monitor) throws JavaScriptModelException {
+		final RefactoringSearchEngine2 engine= new RefactoringSearchEngine2(SearchPattern.createPattern(member, IJavaScriptSearchConstants.REFERENCES, SearchUtils.GENERICS_AGNOSTIC_MATCH_RULE));
 		engine.setOwner(fOwner);
 		engine.setFiltering(true, true);
 		engine.setScope(RefactoringScopeFactory.create(member));
@@ -591,9 +591,9 @@ public final class MemberVisibilityAdjustor {
 	 * 
 	 * @param groups the search result groups representing the references
 	 * @param monitor the progress monitor to use
-	 * @throws JavaModelException if the java elements could not be accessed
+	 * @throws JavaScriptModelException if the java elements could not be accessed
 	 */
-	private void adjustIncomingVisibility(final SearchResultGroup[] groups, final IProgressMonitor monitor) throws JavaModelException {
+	private void adjustIncomingVisibility(final SearchResultGroup[] groups, final IProgressMonitor monitor) throws JavaScriptModelException {
 		try {
 			monitor.beginTask("", groups.length); //$NON-NLS-1$
 			monitor.setTaskName(RefactoringCoreMessages.MemberVisibilityAdjustor_checking);
@@ -625,9 +625,9 @@ public final class MemberVisibilityAdjustor {
 	 * 
 	 * @param field the referenced field to adjust
 	 * @param threshold the visibility threshold, or <code>null</code> for default visibility
-	 * @throws JavaModelException if an error occurs
+	 * @throws JavaScriptModelException if an error occurs
 	 */
-	private void adjustOutgoingVisibility(final IField field, final ModifierKeyword threshold) throws JavaModelException {
+	private void adjustOutgoingVisibility(final IField field, final ModifierKeyword threshold) throws JavaScriptModelException {
 		Assert.isTrue(!field.isBinary() && !field.isReadOnly());
 		//bug 100555 (moving inner class to top level class; taking private fields with you)
 		final IType declaring= field.getDeclaringType();
@@ -642,9 +642,9 @@ public final class MemberVisibilityAdjustor {
 	 * @param member the member where to adjust the visibility
 	 * @param threshold the visibility keyword representing the required visibility, or <code>null</code> for default visibility
 	 * @param template the message template to use
-	 * @throws JavaModelException if an error occurs
+	 * @throws JavaScriptModelException if an error occurs
 	 */
-	private void adjustOutgoingVisibility(final IMember member, final ModifierKeyword threshold, final String template) throws JavaModelException {
+	private void adjustOutgoingVisibility(final IMember member, final ModifierKeyword threshold, final String template) throws JavaScriptModelException {
 		Assert.isTrue(!member.isBinary() && !member.isReadOnly());
 		boolean adjust= true;
 		final IType declaring= member.getDeclaringType();
@@ -659,9 +659,9 @@ public final class MemberVisibilityAdjustor {
 	 * 
 	 * @param match the search match representing the element declaration
 	 * @param monitor the progress monitor to use
-	 * @throws JavaModelException if the visibility could not be determined
+	 * @throws JavaScriptModelException if the visibility could not be determined
 	 */
-	private void adjustOutgoingVisibility(final SearchMatch match, final IProgressMonitor monitor) throws JavaModelException {
+	private void adjustOutgoingVisibility(final SearchMatch match, final IProgressMonitor monitor) throws JavaScriptModelException {
 		final Object element= match.getElement();
 		if (element instanceof IMember) {
 			final IMember member= (IMember) element;
@@ -671,11 +671,11 @@ public final class MemberVisibilityAdjustor {
 		}
 	}
 
-	private void adjustOutgoingVisibilityChain(final IMember member, final IProgressMonitor monitor) throws JavaModelException {
+	private void adjustOutgoingVisibilityChain(final IMember member, final IProgressMonitor monitor) throws JavaScriptModelException {
 
 		if (!Modifier.isPublic(member.getFlags())) {
 			final ModifierKeyword threshold= computeOutgoingVisibilityThreshold(fReferencing, member, monitor);
-			if (member instanceof IMethod) {
+			if (member instanceof IFunction) {
 				adjustOutgoingVisibility(member, threshold, RefactoringCoreMessages.MemberVisibilityAdjustor_change_visibility_method_warning);
 			} else if (member instanceof IField) {
 				adjustOutgoingVisibility((IField) member, threshold);
@@ -693,19 +693,19 @@ public final class MemberVisibilityAdjustor {
 	 * 
 	 * @param groups the search result groups representing the references
 	 * @param monitor the progress monitor to us
-	 * @throws JavaModelException if the visibility could not be determined
+	 * @throws JavaScriptModelException if the visibility could not be determined
 	 */
-	private void adjustOutgoingVisibility(final SearchResultGroup[] groups, final IProgressMonitor monitor) throws JavaModelException {
+	private void adjustOutgoingVisibility(final SearchResultGroup[] groups, final IProgressMonitor monitor) throws JavaScriptModelException {
 		try {
 			monitor.beginTask("", groups.length); //$NON-NLS-1$
 			monitor.setTaskName(RefactoringCoreMessages.MemberVisibilityAdjustor_checking);
-			IJavaElement element= null;
+			IJavaScriptElement element= null;
 			SearchMatch[] matches= null;
 			SearchResultGroup group= null;
 			for (int index= 0; index < groups.length; index++) {
 				group= groups[index];
-				element= JavaCore.create(group.getResource());
-				if (element instanceof ICompilationUnit) {
+				element= JavaScriptCore.create(group.getResource());
+				if (element instanceof IJavaScriptUnit) {
 					matches= group.getSearchResults();
 					for (int offset= 0; offset < matches.length; offset++)
 						adjustOutgoingVisibility(matches[offset], new SubProgressMonitor(monitor, 1));
@@ -727,13 +727,13 @@ public final class MemberVisibilityAdjustor {
 	 * Adjusts the visibilities of the referenced and referencing elements.
 	 * 
 	 * @param monitor the progress monitor to use
-	 * @throws JavaModelException if an error occurs during search
+	 * @throws JavaScriptModelException if an error occurs during search
 	 */
-	public final void adjustVisibility(final IProgressMonitor monitor) throws JavaModelException {
+	public final void adjustVisibility(final IProgressMonitor monitor) throws JavaScriptModelException {
 		try {
 			monitor.beginTask("", 7); //$NON-NLS-1$
 			monitor.setTaskName(RefactoringCoreMessages.MemberVisibilityAdjustor_checking);
-			final RefactoringSearchEngine2 engine= new RefactoringSearchEngine2(SearchPattern.createPattern(fReferenced, IJavaSearchConstants.REFERENCES, SearchUtils.GENERICS_AGNOSTIC_MATCH_RULE));
+			final RefactoringSearchEngine2 engine= new RefactoringSearchEngine2(SearchPattern.createPattern(fReferenced, IJavaScriptSearchConstants.REFERENCES, SearchUtils.GENERICS_AGNOSTIC_MATCH_RULE));
 			engine.setScope(fScope);
 			engine.setStatus(fStatus);
 			engine.setOwner(fOwner);
@@ -775,9 +775,9 @@ public final class MemberVisibilityAdjustor {
 	 * @param referenced the referenced element
 	 * @param monitor the progress monitor to use
 	 * @return the visibility keyword corresponding to the threshold, or <code>null</code> for default visibility
-	 * @throws JavaModelException if the java elements could not be accessed
+	 * @throws JavaScriptModelException if the java elements could not be accessed
 	 */
-	public ModifierKeyword getVisibilityThreshold(final IJavaElement referencing, final IMember referenced, final IProgressMonitor monitor) throws JavaModelException {
+	public ModifierKeyword getVisibilityThreshold(final IJavaScriptElement referencing, final IMember referenced, final IProgressMonitor monitor) throws JavaScriptModelException {
 		Assert.isTrue(!(referencing instanceof IInitializer));
 		Assert.isTrue(!(referenced instanceof IInitializer));
 		ModifierKeyword keyword= ModifierKeyword.PUBLIC_KEYWORD;
@@ -787,16 +787,16 @@ public final class MemberVisibilityAdjustor {
 			final int referencingType= referencing.getElementType();
 			final int referencedType= referenced.getElementType();
 			switch (referencedType) {
-				case IJavaElement.TYPE: {
+				case IJavaScriptElement.TYPE: {
 					final IType typeReferenced= (IType) referenced;
-					final ICompilationUnit referencedUnit= typeReferenced.getCompilationUnit();
+					final IJavaScriptUnit referencedUnit= typeReferenced.getCompilationUnit();
 					switch (referencingType) {
-						case IJavaElement.TYPE: {
+						case IJavaScriptElement.TYPE: {
 							keyword= thresholdTypeToType((IType) referencing, typeReferenced, monitor);
 							break;
 						}
-						case IJavaElement.FIELD:
-						case IJavaElement.METHOD: {
+						case IJavaScriptElement.FIELD:
+						case IJavaScriptElement.METHOD: {
 							final IMember member= (IMember) referencing;
 							if (typeReferenced.equals(member.getDeclaringType()))
 								keyword= ModifierKeyword.PRIVATE_KEYWORD;
@@ -806,7 +806,7 @@ public final class MemberVisibilityAdjustor {
 								keyword= null;
 							break;
 						}
-						case IJavaElement.PACKAGE_FRAGMENT: {
+						case IJavaScriptElement.PACKAGE_FRAGMENT: {
 							final IPackageFragment fragment= (IPackageFragment) referencing;
 							if (typeReferenced.getPackageFragment().equals(fragment))
 								keyword= null;
@@ -817,16 +817,16 @@ public final class MemberVisibilityAdjustor {
 					}
 					break;
 				}
-				case IJavaElement.FIELD: {
+				case IJavaScriptElement.FIELD: {
 					final IField fieldReferenced= (IField) referenced;
-					final ICompilationUnit referencedUnit= fieldReferenced.getCompilationUnit();
+					final IJavaScriptUnit referencedUnit= fieldReferenced.getCompilationUnit();
 					switch (referencingType) {
-						case IJavaElement.TYPE: {
+						case IJavaScriptElement.TYPE: {
 							keyword= thresholdTypeToField((IType) referencing, fieldReferenced, monitor);
 							break;
 						}
-						case IJavaElement.FIELD:
-						case IJavaElement.METHOD: {
+						case IJavaScriptElement.FIELD:
+						case IJavaScriptElement.METHOD: {
 							final IMember member= (IMember) referencing;
 							if (fieldReferenced.getDeclaringType().equals(member.getDeclaringType()))
 								keyword= ModifierKeyword.PRIVATE_KEYWORD;
@@ -836,7 +836,7 @@ public final class MemberVisibilityAdjustor {
 								keyword= null;
 							break;
 						}
-						case IJavaElement.PACKAGE_FRAGMENT: {
+						case IJavaScriptElement.PACKAGE_FRAGMENT: {
 							final IPackageFragment fragment= (IPackageFragment) referencing;
 							if (fieldReferenced.getDeclaringType().getPackageFragment().equals(fragment))
 								keyword= null;
@@ -847,16 +847,16 @@ public final class MemberVisibilityAdjustor {
 					}
 					break;
 				}
-				case IJavaElement.METHOD: {
-					final IMethod methodReferenced= (IMethod) referenced;
-					final ICompilationUnit referencedUnit= methodReferenced.getCompilationUnit();
+				case IJavaScriptElement.METHOD: {
+					final IFunction methodReferenced= (IFunction) referenced;
+					final IJavaScriptUnit referencedUnit= methodReferenced.getCompilationUnit();
 					switch (referencingType) {
-						case IJavaElement.TYPE: {
+						case IJavaScriptElement.TYPE: {
 							keyword= thresholdTypeToMethod((IType) referencing, methodReferenced, monitor);
 							break;
 						}
-						case IJavaElement.FIELD: 
-						case IJavaElement.METHOD: {
+						case IJavaScriptElement.FIELD: 
+						case IJavaScriptElement.METHOD: {
 							final IMember member= (IMember) referencing;
 							if (methodReferenced.getDeclaringType().equals(member.getDeclaringType()))
 								keyword= ModifierKeyword.PRIVATE_KEYWORD;
@@ -866,7 +866,7 @@ public final class MemberVisibilityAdjustor {
 								keyword= null;
 							break;
 						}
-						case IJavaElement.PACKAGE_FRAGMENT: {
+						case IJavaScriptElement.PACKAGE_FRAGMENT: {
 							final IPackageFragment fragment= (IPackageFragment) referencing;
 							if (methodReferenced.getDeclaringType().getPackageFragment().equals(fragment))
 								keyword= null;
@@ -893,11 +893,11 @@ public final class MemberVisibilityAdjustor {
 	 * @param referenced the referenced element
 	 * @param monitor the progress monitor to use
 	 * @return the visibility keyword corresponding to the threshold, or <code>null</code> for default visibility
-	 * @throws JavaModelException if the java elements could not be accessed
+	 * @throws JavaScriptModelException if the java elements could not be accessed
 	 */
-	private ModifierKeyword computeOutgoingVisibilityThreshold(final IJavaElement referencing, final IMember referenced, final IProgressMonitor monitor) throws JavaModelException {
-		Assert.isTrue(referencing instanceof ICompilationUnit || referencing instanceof IType || referencing instanceof IPackageFragment);
-		Assert.isTrue(referenced instanceof IType || referenced instanceof IField || referenced instanceof IMethod);
+	private ModifierKeyword computeOutgoingVisibilityThreshold(final IJavaScriptElement referencing, final IMember referenced, final IProgressMonitor monitor) throws JavaScriptModelException {
+		Assert.isTrue(referencing instanceof IJavaScriptUnit || referencing instanceof IType || referencing instanceof IPackageFragment);
+		Assert.isTrue(referenced instanceof IType || referenced instanceof IField || referenced instanceof IFunction);
 		ModifierKeyword keyword= ModifierKeyword.PUBLIC_KEYWORD;
 		try {
 			monitor.beginTask("", 1); //$NON-NLS-1$
@@ -905,23 +905,23 @@ public final class MemberVisibilityAdjustor {
 			final int referencingType= referencing.getElementType();
 			final int referencedType= referenced.getElementType();
 			switch (referencedType) {
-				case IJavaElement.TYPE: {
+				case IJavaScriptElement.TYPE: {
 					final IType typeReferenced= (IType) referenced;
 					switch (referencingType) {
-						case IJavaElement.COMPILATION_UNIT: {
-							final ICompilationUnit unit= (ICompilationUnit) referencing;
-							final ICompilationUnit referencedUnit= typeReferenced.getCompilationUnit();
+						case IJavaScriptElement.COMPILATION_UNIT: {
+							final IJavaScriptUnit unit= (IJavaScriptUnit) referencing;
+							final IJavaScriptUnit referencedUnit= typeReferenced.getCompilationUnit();
 							if (referencedUnit != null && referencedUnit.equals(unit))
 								keyword= ModifierKeyword.PRIVATE_KEYWORD;
 							else if (referencedUnit != null && referencedUnit.getParent().equals(unit.getParent()))
 								keyword= null;
 							break;
 						}
-						case IJavaElement.TYPE: {
+						case IJavaScriptElement.TYPE: {
 							keyword= thresholdTypeToType((IType) referencing, typeReferenced, monitor);
 							break;
 						}
-						case IJavaElement.PACKAGE_FRAGMENT: {
+						case IJavaScriptElement.PACKAGE_FRAGMENT: {
 							final IPackageFragment fragment= (IPackageFragment) referencing;
 							if (typeReferenced.getPackageFragment().equals(fragment))
 								keyword= null;
@@ -932,23 +932,23 @@ public final class MemberVisibilityAdjustor {
 					}
 					break;
 				}
-				case IJavaElement.FIELD: {
+				case IJavaScriptElement.FIELD: {
 					final IField fieldReferenced= (IField) referenced;
-					final ICompilationUnit referencedUnit= fieldReferenced.getCompilationUnit();
+					final IJavaScriptUnit referencedUnit= fieldReferenced.getCompilationUnit();
 					switch (referencingType) {
-						case IJavaElement.COMPILATION_UNIT: {
-							final ICompilationUnit unit= (ICompilationUnit) referencing;
+						case IJavaScriptElement.COMPILATION_UNIT: {
+							final IJavaScriptUnit unit= (IJavaScriptUnit) referencing;
 							if (referencedUnit != null && referencedUnit.equals(unit))
 								keyword= ModifierKeyword.PRIVATE_KEYWORD;
 							else if (referencedUnit != null && referencedUnit.getParent().equals(unit.getParent()))
 								keyword= null;
 							break;
 						}
-						case IJavaElement.TYPE: {
+						case IJavaScriptElement.TYPE: {
 							keyword= thresholdTypeToField((IType) referencing, fieldReferenced, monitor);
 							break;
 						}
-						case IJavaElement.PACKAGE_FRAGMENT: {
+						case IJavaScriptElement.PACKAGE_FRAGMENT: {
 							final IPackageFragment fragment= (IPackageFragment) referencing;
 							if (fieldReferenced.getDeclaringType().getPackageFragment().equals(fragment))
 								keyword= null;
@@ -959,23 +959,23 @@ public final class MemberVisibilityAdjustor {
 					}
 					break;
 				}
-				case IJavaElement.METHOD: {
-					final IMethod methodReferenced= (IMethod) referenced;
-					final ICompilationUnit referencedUnit= methodReferenced.getCompilationUnit();
+				case IJavaScriptElement.METHOD: {
+					final IFunction methodReferenced= (IFunction) referenced;
+					final IJavaScriptUnit referencedUnit= methodReferenced.getCompilationUnit();
 					switch (referencingType) {
-						case IJavaElement.COMPILATION_UNIT: {
-							final ICompilationUnit unit= (ICompilationUnit) referencing;
+						case IJavaScriptElement.COMPILATION_UNIT: {
+							final IJavaScriptUnit unit= (IJavaScriptUnit) referencing;
 							if (referencedUnit != null && referencedUnit.equals(unit))
 								keyword= ModifierKeyword.PRIVATE_KEYWORD;
 							else if (referencedUnit != null && referencedUnit.getParent().equals(unit.getParent()))
 								keyword= null;
 							break;
 						}
-						case IJavaElement.TYPE: {
+						case IJavaScriptElement.TYPE: {
 							keyword= thresholdTypeToMethod((IType) referencing, methodReferenced, monitor);
 							break;
 						}
-						case IJavaElement.PACKAGE_FRAGMENT: {
+						case IJavaScriptElement.PACKAGE_FRAGMENT: {
 							final IPackageFragment fragment= (IPackageFragment) referencing;
 							if (methodReferenced.getDeclaringType().getPackageFragment().equals(fragment))
 								keyword= null;
@@ -1010,7 +1010,7 @@ public final class MemberVisibilityAdjustor {
 	 * @param unit the compilation unit to get the rewrite for
 	 * @return the rewrite for the compilation unit
 	 */
-	private CompilationUnitRewrite getCompilationUnitRewrite(final ICompilationUnit unit) {
+	private CompilationUnitRewrite getCompilationUnitRewrite(final IJavaScriptUnit unit) {
 		CompilationUnitRewrite rewrite= (CompilationUnitRewrite) fRewrites.get(unit);
 		if (rewrite == null) {
 			if (fOwner == null)
@@ -1027,9 +1027,9 @@ public final class MemberVisibilityAdjustor {
 	 * @param type the type to get the hierarchy for
 	 * @param monitor the progress monitor to use
 	 * @return the type hierarchy
-	 * @throws JavaModelException if the type hierarchy could not be created
+	 * @throws JavaScriptModelException if the type hierarchy could not be created
 	 */
-	private ITypeHierarchy getTypeHierarchy(final IType type, final IProgressMonitor monitor) throws JavaModelException {
+	private ITypeHierarchy getTypeHierarchy(final IType type, final IProgressMonitor monitor) throws JavaScriptModelException {
 		ITypeHierarchy hierarchy= null;
 		try {
 			monitor.beginTask("", 1); //$NON-NLS-1$
@@ -1068,9 +1068,9 @@ public final class MemberVisibilityAdjustor {
 	 * 
 	 * @param unit the compilation unit to rewrite the adjustments
 	 * @param monitor the progress monitor to use
-	 * @throws JavaModelException if an error occurs during search
+	 * @throws JavaScriptModelException if an error occurs during search
 	 */
-	public final void rewriteVisibility(final ICompilationUnit unit, final IProgressMonitor monitor) throws JavaModelException {
+	public final void rewriteVisibility(final IJavaScriptUnit unit, final IProgressMonitor monitor) throws JavaScriptModelException {
 		try {
 			monitor.beginTask("", fAdjustments.keySet().size()); //$NON-NLS-1$
 			monitor.setTaskName(RefactoringCoreMessages.MemberVisibilityAdjustor_adjusting);
@@ -1094,9 +1094,9 @@ public final class MemberVisibilityAdjustor {
 	 * Rewrites the computed adjustments.
 	 * 
 	 * @param monitor the progress monitor to use
-	 * @throws JavaModelException if an error occurs during search
+	 * @throws JavaScriptModelException if an error occurs during search
 	 */
-	public final void rewriteVisibility(final IProgressMonitor monitor) throws JavaModelException {
+	public final void rewriteVisibility(final IProgressMonitor monitor) throws JavaScriptModelException {
 		try {
 			monitor.beginTask("", fAdjustments.keySet().size()); //$NON-NLS-1$
 			monitor.setTaskName(RefactoringCoreMessages.MemberVisibilityAdjustor_adjusting);
@@ -1169,14 +1169,14 @@ public final class MemberVisibilityAdjustor {
 	 * @param rewrite the AST rewrite to set
 	 * @param root the root of the AST used in the rewrite
 	 */
-	public final void setRewrite(final ASTRewrite rewrite, final CompilationUnit root) {
+	public final void setRewrite(final ASTRewrite rewrite, final JavaScriptUnit root) {
 		Assert.isTrue(rewrite == null || root != null);
 		fRewrite= rewrite;
 		fRoot= root;
 	}
 
 	/**
-	 * Sets the compilation unit rewrites used by this adjustor (element type: Map <ICompilationUnit, CompilationUnitRewrite>).
+	 * Sets the compilation unit rewrites used by this adjustor (element type: Map <IJavaScriptUnit, CompilationUnitRewrite>).
 	 * <p>
 	 * This method must be called before calling {@link MemberVisibilityAdjustor#adjustVisibility(IProgressMonitor)}. The default is to use no existing rewrites.
 	 * 
@@ -1194,7 +1194,7 @@ public final class MemberVisibilityAdjustor {
 	 * 
 	 * @param scope the search scope to set
 	 */
-	public final void setScope(final IJavaSearchScope scope) {
+	public final void setScope(final IJavaScriptSearchScope scope) {
 		Assert.isNotNull(scope);
 		fScope= scope;
 	}
@@ -1241,11 +1241,11 @@ public final class MemberVisibilityAdjustor {
 	 * @param referenced the referenced field
 	 * @param monitor the progress monitor to use
 	 * @return the visibility keyword corresponding to the threshold, or <code>null</code> for default visibility
-	 * @throws JavaModelException if the java elements could not be accessed
+	 * @throws JavaScriptModelException if the java elements could not be accessed
 	 */
-	private ModifierKeyword thresholdTypeToField(final IType referencing, final IField referenced, final IProgressMonitor monitor) throws JavaModelException {
+	private ModifierKeyword thresholdTypeToField(final IType referencing, final IField referenced, final IProgressMonitor monitor) throws JavaScriptModelException {
 		ModifierKeyword keyword= ModifierKeyword.PUBLIC_KEYWORD;
-		final ICompilationUnit referencedUnit= referenced.getCompilationUnit();
+		final IJavaScriptUnit referencedUnit= referenced.getCompilationUnit();
 		if (referenced.getDeclaringType().equals(referencing))
 			keyword= ModifierKeyword.PRIVATE_KEYWORD;
 		else {
@@ -1260,7 +1260,7 @@ public final class MemberVisibilityAdjustor {
 				}
 			}
 		}
-		final ICompilationUnit typeUnit= referencing.getCompilationUnit();
+		final IJavaScriptUnit typeUnit= referencing.getCompilationUnit();
 		if (referencedUnit != null && referencedUnit.equals(typeUnit))
 			keyword= ModifierKeyword.PRIVATE_KEYWORD;
 		else if (referencedUnit != null && typeUnit != null && referencedUnit.getParent().equals(typeUnit.getParent()))
@@ -1275,10 +1275,10 @@ public final class MemberVisibilityAdjustor {
 	 * @param referenced the referenced method
 	 * @param monitor the progress monitor to use
 	 * @return the visibility keyword corresponding to the threshold, or <code>null</code> for default visibility
-	 * @throws JavaModelException if the java elements could not be accessed
+	 * @throws JavaScriptModelException if the java elements could not be accessed
 	 */
-	private ModifierKeyword thresholdTypeToMethod(final IType referencing, final IMethod referenced, final IProgressMonitor monitor) throws JavaModelException {
-		final ICompilationUnit referencedUnit= referenced.getCompilationUnit();
+	private ModifierKeyword thresholdTypeToMethod(final IType referencing, final IFunction referenced, final IProgressMonitor monitor) throws JavaScriptModelException {
+		final IJavaScriptUnit referencedUnit= referenced.getCompilationUnit();
 		ModifierKeyword keyword= ModifierKeyword.PUBLIC_KEYWORD;
 		if (referenced.getDeclaringType().equals(referencing))
 			keyword= ModifierKeyword.PRIVATE_KEYWORD;
@@ -1294,7 +1294,7 @@ public final class MemberVisibilityAdjustor {
 				}
 			}
 		}
-		final ICompilationUnit typeUnit= referencing.getCompilationUnit();
+		final IJavaScriptUnit typeUnit= referencing.getCompilationUnit();
 		if (referencedUnit != null && referencedUnit.equals(typeUnit)) {
 			if (referenced.getDeclaringType().getDeclaringType() != null)
 				keyword= null;
@@ -1312,11 +1312,11 @@ public final class MemberVisibilityAdjustor {
 	 * @param referenced the referenced type
 	 * @param monitor the progress monitor to use
 	 * @return the visibility keyword corresponding to the threshold, or <code>null</code> for default visibility
-	 * @throws JavaModelException if the java elements could not be accessed
+	 * @throws JavaScriptModelException if the java elements could not be accessed
 	 */
-	private ModifierKeyword thresholdTypeToType(final IType referencing, final IType referenced, final IProgressMonitor monitor) throws JavaModelException {
+	private ModifierKeyword thresholdTypeToType(final IType referencing, final IType referenced, final IProgressMonitor monitor) throws JavaScriptModelException {
 		ModifierKeyword keyword= ModifierKeyword.PUBLIC_KEYWORD;
-		final ICompilationUnit referencedUnit= referenced.getCompilationUnit();
+		final IJavaScriptUnit referencedUnit= referenced.getCompilationUnit();
 		if (referencing.equals(referenced.getDeclaringType()))
 			keyword= ModifierKeyword.PRIVATE_KEYWORD;
 		else {
@@ -1331,7 +1331,7 @@ public final class MemberVisibilityAdjustor {
 				}
 			}
 		}
-		final ICompilationUnit typeUnit= referencing.getCompilationUnit();
+		final IJavaScriptUnit typeUnit= referencing.getCompilationUnit();
 		if (referencedUnit != null && referencedUnit.equals(typeUnit)) {
 			if (referenced.getDeclaringType() != null)
 				keyword= null;

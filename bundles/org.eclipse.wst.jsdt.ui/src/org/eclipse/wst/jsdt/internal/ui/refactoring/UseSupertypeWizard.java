@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.ITypeHierarchy;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.structure.UseSuperTypeProcessor;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.structure.UseSuperTypeRefactoring;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
@@ -92,7 +92,7 @@ public class UseSupertypeWizard extends RefactoringWizard{
 						IType found= type.getJavaProject().findType("java.lang.Object"); //$NON-NLS-1$
 						result.add(found);
 					}
-				} catch (JavaModelException exception) {
+				} catch (JavaScriptModelException exception) {
 					JavaPlugin.log(exception);
 				}
 				return result;
@@ -212,7 +212,7 @@ public class UseSupertypeWizard extends RefactoringWizard{
 						final int kind2= type2.isInterface() ? 1 : 0;
 						if (kind1 - kind2 != 0)
 							return kind1 - kind2;
-					} catch (JavaModelException exception) {
+					} catch (JavaScriptModelException exception) {
 						JavaPlugin.log(exception);
 					}
 					return getComparator().compare(type1.getElementName(), type2.getElementName());
@@ -233,7 +233,7 @@ public class UseSupertypeWizard extends RefactoringWizard{
 			});
 			try {
 				fTreeViewer.setInput(SuperTypeHierarchyCache.getTypeHierarchy(getUseSupertypeProcessor().getSubType()));
-			} catch (JavaModelException exception) {
+			} catch (JavaScriptModelException exception) {
 				JavaPlugin.log(exception);
 			}
 			fTreeViewer.expandAll();

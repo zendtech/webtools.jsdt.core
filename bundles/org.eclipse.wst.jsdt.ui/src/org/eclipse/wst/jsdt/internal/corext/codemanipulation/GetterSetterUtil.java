@@ -13,10 +13,10 @@ package org.eclipse.wst.jsdt.internal.corext.codemanipulation;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.jsdt.core.Flags;
 import org.eclipse.wst.jsdt.core.IField;
-import org.eclipse.wst.jsdt.core.IJavaProject;
-import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.NamingConventions;
 import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.core.dom.IVariableBinding;
@@ -32,47 +32,47 @@ public class GetterSetterUtil {
 	private GetterSetterUtil(){
 	}
 	
-	public static String getGetterName(IField field, String[] excludedNames) throws JavaModelException {
+	public static String getGetterName(IField field, String[] excludedNames) throws JavaScriptModelException {
 		boolean useIs= StubUtility.useIsForBooleanGetters(field.getJavaProject());
 		return getGetterName(field, excludedNames, useIs);
 	}
 	
-	private static String getGetterName(IField field, String[] excludedNames, boolean useIsForBoolGetters) throws JavaModelException {
+	private static String getGetterName(IField field, String[] excludedNames, boolean useIsForBoolGetters) throws JavaScriptModelException {
 		if (excludedNames == null) {
 			excludedNames= EMPTY;
 		}
 		return getGetterName(field.getJavaProject(), field.getElementName(), field.getFlags(), useIsForBoolGetters && JavaModelUtil.isBoolean(field), excludedNames);
 	}
 	
-	public static String getGetterName(IVariableBinding variableType, IJavaProject project, String[] excludedNames, boolean isBoolean) {
+	public static String getGetterName(IVariableBinding variableType, IJavaScriptProject project, String[] excludedNames, boolean isBoolean) {
 		boolean useIs= StubUtility.useIsForBooleanGetters(project) && isBoolean;
 		return getGetterName(project, variableType.getName(), variableType.getModifiers(), useIs, excludedNames);
 	}
 	
-	public static String getGetterName(IJavaProject project, String fieldName, int flags, boolean isBoolean, String[] excludedNames){
+	public static String getGetterName(IJavaScriptProject project, String fieldName, int flags, boolean isBoolean, String[] excludedNames){
 		return NamingConventions.suggestGetterName(project, fieldName, flags, isBoolean, excludedNames);	
 	}
 
-	public static String getSetterName(IVariableBinding variableType, IJavaProject project, String[] excludedNames, boolean isBoolean) {
+	public static String getSetterName(IVariableBinding variableType, IJavaScriptProject project, String[] excludedNames, boolean isBoolean) {
 		return getSetterName(project, variableType.getName(), variableType.getModifiers(), isBoolean, excludedNames);
 	}
 	
-	public static String getSetterName(IJavaProject project, String fieldName, int flags, boolean isBoolean, String[] excludedNames){
+	public static String getSetterName(IJavaScriptProject project, String fieldName, int flags, boolean isBoolean, String[] excludedNames){
 		return NamingConventions.suggestSetterName(project, fieldName, flags, isBoolean, excludedNames);	
 	}
 
-	public static String getSetterName(IField field, String[] excludedNames) throws JavaModelException {
+	public static String getSetterName(IField field, String[] excludedNames) throws JavaScriptModelException {
 		if (excludedNames == null) {
 			excludedNames= EMPTY;
 		}		
 		return NamingConventions.suggestSetterName(field.getJavaProject(), field.getElementName(), field.getFlags(), JavaModelUtil.isBoolean(field), excludedNames);
 	}	
 
-	public static IMethod getGetter(IField field) throws JavaModelException{
+	public static IFunction getGetter(IField field) throws JavaScriptModelException{
 		if (field.getDeclaringType()==null)
 			return null;
 		String getterName= getGetterName(field, EMPTY, true);
-		IMethod primaryCandidate= JavaModelUtil.findMethod(getterName, new String[0], false, field.getDeclaringType());
+		IFunction primaryCandidate= JavaModelUtil.findMethod(getterName, new String[0], false, field.getDeclaringType());
 		if (! JavaModelUtil.isBoolean(field) || (primaryCandidate != null && primaryCandidate.exists()))
 			return primaryCandidate;
 		//bug 30906 describes why we need to look for other alternatives here (try with get... for booleans)
@@ -80,7 +80,7 @@ public class GetterSetterUtil {
 		return JavaModelUtil.findMethod(secondCandidateName, new String[0], false, field.getDeclaringType());
 	}
 	
-	public static IMethod getSetter(IField field) throws JavaModelException{
+	public static IFunction getSetter(IField field) throws JavaScriptModelException{
 		if (field.getDeclaringType()==null)
 			return null;
 		String[] args= new String[] { field.getTypeSignature() };	
@@ -105,7 +105,7 @@ public class GetterSetterUtil {
 		String returnSig= field.getTypeSignature();
 		String typeName= Signature.toString(returnSig);
 		
-		IJavaProject project= field.getJavaProject();
+		IJavaScriptProject project= field.getJavaProject();
 
 		String accessorName = NamingConventions.removePrefixAndSuffixForFieldName(project, fieldName, field.getFlags());
 		String argname= StubUtility.suggestArgumentName(project, accessorName, EMPTY);

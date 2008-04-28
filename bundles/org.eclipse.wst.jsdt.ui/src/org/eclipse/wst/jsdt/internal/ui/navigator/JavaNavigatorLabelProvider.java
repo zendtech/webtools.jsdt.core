@@ -22,7 +22,7 @@ import org.eclipse.ui.IMemento;
 import org.eclipse.ui.navigator.ICommonContentExtensionSite;
 import org.eclipse.ui.navigator.ICommonLabelProvider;
 import org.eclipse.ui.navigator.IExtensionStateModel;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.internal.ui.navigator.IExtensionStateConstants.Values;
 import org.eclipse.wst.jsdt.internal.ui.packageview.PackageExplorerContentProvider;
 import org.eclipse.wst.jsdt.internal.ui.packageview.PackageExplorerLabelProvider;
@@ -150,15 +150,15 @@ public class JavaNavigatorLabelProvider implements ICommonLabelProvider {
 	// Taken from StatusBarUpdater
 
 	private String formatMessage(Object element) {
-		if (element instanceof IJavaElement) {
-			return formatJavaElementMessage((IJavaElement) element);
+		if (element instanceof IJavaScriptElement) {
+			return formatJavaElementMessage((IJavaScriptElement) element);
 		} else if (element instanceof IResource) {
 			return formatResourceMessage((IResource) element);
 		}
 		return ""; //$NON-NLS-1$
 	}
 
-	private String formatJavaElementMessage(IJavaElement element) {
+	private String formatJavaElementMessage(IJavaScriptElement element) {
 		return JavaElementLabels.getElementLabel(element, LABEL_FLAGS);
 	}
 

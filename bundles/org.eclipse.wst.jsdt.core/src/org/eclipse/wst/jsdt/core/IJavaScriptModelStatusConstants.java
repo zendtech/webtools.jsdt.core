@@ -20,10 +20,10 @@ package org.eclipse.wst.jsdt.core;
  * or extended.
  * </p>
  *
- * @see IJavaModelStatus
+ * @see IJavaScriptModelStatus
  * @see org.eclipse.core.runtime.IStatus#getCode()
  */
-public interface IJavaModelStatusConstants {
+public interface IJavaScriptModelStatusConstants {
 
 	/**
 	 * Status constant indicating that a container path was resolved
@@ -78,7 +78,7 @@ public interface IJavaModelStatusConstants {
 	 * supplied do not exist.
 	 * The element(s) can be retrieved using <code>getElements</code> on the status object.
 	 *
-	 * @see IJavaModelStatus#isDoesNotExist()
+	 * @see IJavaScriptModelStatus#isDoesNotExist()
 	 */
 	public static final int ELEMENT_DOES_NOT_EXIST = 969;
 
@@ -219,29 +219,29 @@ public interface IJavaModelStatusConstants {
 	/**
 	 * Status indicating that a Java element could not be created because
 	 * the underlying resource is invalid.
-	 * @see JavaCore
+	 * @see JavaScriptCore
 	 */
 	 public static final int INVALID_RESOURCE = 995;
 
 	/**
 	 * Status indicating that a Java element could not be created because
 	 * the underlying resource is not of an appropriate type.
-	 * @see JavaCore
+	 * @see JavaScriptCore
 	 */
 	 public static final int INVALID_RESOURCE_TYPE = 996;
 
 	/**
 	 * Status indicating that a Java element could not be created because
 	 * the project owning underlying resource does not have the Java nature.
-	 * @see JavaCore
+	 * @see JavaScriptCore
 	 */
 	 public static final int INVALID_PROJECT = 997;
 
 	/**
-	 * Status indicating that the package declaration in a <code>ICompilationUnit</code>
+	 * Status indicating that the package declaration in a <code>IJavaScriptUnit</code>
 	 * does not correspond to the <code>IPackageFragment</code> it belongs to.
 	 * The <code>getString</code> method of the associated status object
-	 * gives the name of the package in which the <code>ICompilationUnit</code> is
+	 * gives the name of the package in which the <code>IJavaScriptUnit</code> is
 	 * declared.
 	 */
 	 public static final int INVALID_PACKAGE = 998;
@@ -270,7 +270,7 @@ public interface IJavaModelStatusConstants {
 	 * Status constant indicating that an inclusion or an exclusion pattern got specified
 	 * on a classpath source entry, though it was explicitely disabled
 	 * according to its project preference settings.
-	 * @see org.eclipse.wst.jsdt.core.IJavaProject#getOptions(boolean)
+	 * @see org.eclipse.wst.jsdt.core.IJavaScriptProject#getOptions(boolean)
 	 * @since 2.1
 	 */
 	public static final int DISABLED_CP_EXCLUSION_PATTERNS = 1002;
@@ -279,7 +279,7 @@ public interface IJavaModelStatusConstants {
 	 * Status constant indicating that a specific output location got associated
 	 * with a source entry, though it was explicitely disabled according to its project
 	 * preference settings.
-	 * @see org.eclipse.wst.jsdt.core.IJavaProject#getOptions(boolean)
+	 * @see org.eclipse.wst.jsdt.core.IJavaScriptProject#getOptions(boolean)
 	 * @since 2.1
 	 */
 	public static final int DISABLED_CP_MULTIPLE_OUTPUT_LOCATIONS = 1003;

@@ -34,8 +34,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.SelectionStatusDialog;
-import org.eclipse.wst.jsdt.core.IJavaModel;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.IJavaScriptModel;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusInfo;
 import org.eclipse.wst.jsdt.ui.JavaElementComparator;
@@ -122,7 +122,7 @@ public class ProjectSelectionDialog extends SelectionStatusDialog {
 		checkbox.setSelection(doFilter);
 		updateFilter(doFilter);
 		
-		IJavaModel input= JavaCore.create(ResourcesPlugin.getWorkspace().getRoot());
+		IJavaScriptModel input= JavaScriptCore.create(ResourcesPlugin.getWorkspace().getRoot());
 		fTableViewer.setInput(input);
 		
 		doSelectionChanged(new Object[0]);

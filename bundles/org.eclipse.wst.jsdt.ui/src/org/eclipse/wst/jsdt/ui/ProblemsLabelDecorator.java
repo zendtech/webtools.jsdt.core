@@ -33,11 +33,11 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.MarkerAnnotation;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.ISourceRange;
 import org.eclipse.wst.jsdt.core.ISourceReference;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.IProblemChangedListener;
@@ -163,29 +163,29 @@ public class ProblemsLabelDecorator implements ILabelDecorator, ILightweightLabe
 	 */
 	protected int computeAdornmentFlags(Object obj) {
 		try {
-			if (obj instanceof IJavaElement) {
-				IJavaElement element= (IJavaElement) obj;
+			if (obj instanceof IJavaScriptElement) {
+				IJavaScriptElement element= (IJavaScriptElement) obj;
 				int type= element.getElementType();
 				switch (type) {
-					case IJavaElement.JAVA_MODEL:
-					case IJavaElement.JAVA_PROJECT:
-					case IJavaElement.PACKAGE_FRAGMENT_ROOT:
+					case IJavaScriptElement.JAVA_MODEL:
+					case IJavaScriptElement.JAVA_PROJECT:
+					case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
 						return getErrorTicksFromMarkers(element.getResource(), IResource.DEPTH_INFINITE, null);
-					case IJavaElement.PACKAGE_FRAGMENT:
-					case IJavaElement.COMPILATION_UNIT:
-					case IJavaElement.CLASS_FILE:
+					case IJavaScriptElement.PACKAGE_FRAGMENT:
+					case IJavaScriptElement.COMPILATION_UNIT:
+					case IJavaScriptElement.CLASS_FILE:
 						return getErrorTicksFromMarkers(element.getResource(), IResource.DEPTH_ONE, null);
-					case IJavaElement.PACKAGE_DECLARATION:
-					case IJavaElement.IMPORT_DECLARATION:
-					case IJavaElement.IMPORT_CONTAINER:
-					case IJavaElement.TYPE:
-					case IJavaElement.INITIALIZER:
-					case IJavaElement.METHOD:
-					case IJavaElement.FIELD:
-					case IJavaElement.LOCAL_VARIABLE:
-						ICompilationUnit cu= (ICompilationUnit) element.getAncestor(IJavaElement.COMPILATION_UNIT);
+					case IJavaScriptElement.PACKAGE_DECLARATION:
+					case IJavaScriptElement.IMPORT_DECLARATION:
+					case IJavaScriptElement.IMPORT_CONTAINER:
+					case IJavaScriptElement.TYPE:
+					case IJavaScriptElement.INITIALIZER:
+					case IJavaScriptElement.METHOD:
+					case IJavaScriptElement.FIELD:
+					case IJavaScriptElement.LOCAL_VARIABLE:
+						IJavaScriptUnit cu= (IJavaScriptUnit) element.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
 						if (cu != null) {
-							ISourceReference ref= (type == IJavaElement.COMPILATION_UNIT) ? null : (ISourceReference) element;
+							ISourceReference ref= (type == IJavaScriptElement.COMPILATION_UNIT) ? null : (ISourceReference) element;
 							// The assumption is that only source elements in compilation unit can have markers
 							IAnnotationModel model= isInJavaAnnotationModel(cu);
 							int result= 0;
@@ -205,8 +205,8 @@ public class ProblemsLabelDecorator implements ILabelDecorator, ILightweightLabe
 				return getErrorTicksFromMarkers((IResource) obj, IResource.DEPTH_INFINITE, null);
 			}
 		} catch (CoreException e) {
-			if (e instanceof JavaModelException) {
-				if (((JavaModelException) e).isDoesNotExist()) {
+			if (e instanceof JavaScriptModelException) {
+				if (((JavaScriptModelException) e).isDoesNotExist()) {
 					return 0;
 				}
 			}
@@ -256,7 +256,7 @@ public class ProblemsLabelDecorator implements ILabelDecorator, ILightweightLabe
 		return false;
 	}
 	
-	private IAnnotationModel isInJavaAnnotationModel(ICompilationUnit original) {
+	private IAnnotationModel isInJavaAnnotationModel(IJavaScriptUnit original) {
 		if (original.isWorkingCopy()) {
 			FileEditorInput editorInput= new FileEditorInput((IFile) original.getResource());
 			return JavaPlugin.getDefault().getCompilationUnitDocumentProvider().getAnnotationModel(editorInput);
@@ -302,7 +302,7 @@ public class ProblemsLabelDecorator implements ILabelDecorator, ILightweightLabe
 	/**
 	 * Tests if a position is inside the source range of an element.
 	 * @param pos Position to be tested.
-	 * @param sourceElement Source element (must be a IJavaElement)
+	 * @param sourceElement Source element (must be a IJavaScriptElement)
 	 * @return boolean Return <code>true</code> if position is located inside the source element.
 	 * @throws CoreException Exception thrown if element range could not be accessed.
 	 * 

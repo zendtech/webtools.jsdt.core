@@ -21,10 +21,10 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringAvailabilityTester;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringExecutionStarter;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
@@ -41,7 +41,7 @@ import org.eclipse.wst.jsdt.ui.actions.SelectionDispatchAction;
  * <p>
  * Action is applicable to selections containing elements of type
  * <code>IType</code> (top-level types only), <code>IField</code> and
- * <code>IMethod</code>.
+ * <code>IFunction</code>.
  * </p>
  * <p>
  * This class may be instantiated; it is not intended to be subclassed.
@@ -75,7 +75,7 @@ public class ExtractSuperClassAction extends SelectionDispatchAction {
 				final IType type= RefactoringAvailabilityTester.getSingleSelectedType(selection);
 				if (type != null)
 					return new IType[] {type};
-			} catch (JavaModelException exception) {
+			} catch (JavaScriptModelException exception) {
 				JavaPlugin.log(exception);
 			}
 		}
@@ -118,8 +118,8 @@ public class ExtractSuperClassAction extends SelectionDispatchAction {
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IJavaHelpContextIds.EXTRACT_SUPERTYPE_ACTION);
 	}
 
-	private IMember getSelectedMemberFromEditor() throws JavaModelException {
-		final IJavaElement element= SelectionConverter.resolveEnclosingElement(fEditor, (ITextSelection) fEditor.getSelectionProvider().getSelection());
+	private IMember getSelectedMemberFromEditor() throws JavaScriptModelException {
+		final IJavaScriptElement element= SelectionConverter.resolveEnclosingElement(fEditor, (ITextSelection) fEditor.getSelectionProvider().getSelection());
 		if (element == null || !(element instanceof IMember))
 			return null;
 		return (IMember) element;
@@ -133,7 +133,7 @@ public class ExtractSuperClassAction extends SelectionDispatchAction {
 			final IMember[] members= getSelectedMembers(selection);
 			if (RefactoringAvailabilityTester.isExtractSupertypeAvailable(members) && ActionUtil.isEditable(getShell(), members[0]))
 				RefactoringExecutionStarter.startExtractSupertypeRefactoring(members, getShell());
-		} catch (final JavaModelException exception) {
+		} catch (final JavaScriptModelException exception) {
 			ExceptionHandler.handle(exception, RefactoringMessages.OpenRefactoringWizardAction_refactoring, RefactoringMessages.OpenRefactoringWizardAction_exception);
 		}
 	}
@@ -152,7 +152,7 @@ public class ExtractSuperClassAction extends SelectionDispatchAction {
 			} else {
 				MessageDialog.openInformation(getShell(), RefactoringMessages.OpenRefactoringWizardAction_unavailable, RefactoringMessages.ExtractSuperTypeAction_unavailable);
 			}
-		} catch (JavaModelException exception) {
+		} catch (JavaScriptModelException exception) {
 			ExceptionHandler.handle(exception, RefactoringMessages.OpenRefactoringWizardAction_refactoring, RefactoringMessages.OpenRefactoringWizardAction_exception);
 		}
 	}
@@ -163,7 +163,7 @@ public class ExtractSuperClassAction extends SelectionDispatchAction {
 	public void selectionChanged(final IStructuredSelection selection) {
 		try {
 			setEnabled(RefactoringAvailabilityTester.isExtractSupertypeAvailable(selection));
-		} catch (JavaModelException exception) {
+		} catch (JavaScriptModelException exception) {
 			// http://bugs.eclipse.org/bugs/show_bug.cgi?id=19253
 			if (!(exception.getException() instanceof CharConversionException) && JavaModelUtil.isExceptionToBeLogged(exception))
 				JavaPlugin.log(exception);
@@ -184,7 +184,7 @@ public class ExtractSuperClassAction extends SelectionDispatchAction {
 	public void selectionChanged(final JavaTextSelection selection) {
 		try {
 			setEnabled(RefactoringAvailabilityTester.isExtractSupertypeAvailable(selection));
-		} catch (JavaModelException event) {
+		} catch (JavaScriptModelException event) {
 			setEnabled(false);
 		}
 	}

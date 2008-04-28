@@ -441,7 +441,7 @@ public final class CompletionProposal extends InternalCompletionProposal {
 	 * @see #getKind()
 	 * @since 3.2
 	 */
-	public static final int JAVADOC_FIELD_REF = 14;
+	public static final int JSDOC_FIELD_REF = 14;
 
 	/**
 	 * Completion is a link reference to a method in a javadoc text.
@@ -470,7 +470,7 @@ public final class CompletionProposal extends InternalCompletionProposal {
 	 * @see #getKind()
 	 * @since 3.2
 	 */
-	public static final int JAVADOC_METHOD_REF = 15;
+	public static final int JSDOC_METHOD_REF = 15;
 
 	/**
 	 * Completion is a link reference to a type in a javadoc text.
@@ -500,7 +500,7 @@ public final class CompletionProposal extends InternalCompletionProposal {
 	 * @see #getKind()
 	 * @since 3.2
 	 */
-	public static final int JAVADOC_TYPE_REF = 16;
+	public static final int JSDOC_TYPE_REF = 16;
 
 	/**
 	 * Completion is a value reference to a static field in a javadoc text.
@@ -531,7 +531,7 @@ public final class CompletionProposal extends InternalCompletionProposal {
 	 * @see #getKind()
 	 * @since 3.2
 	 */
-	public static final int JAVADOC_VALUE_REF = 17;
+	public static final int JSDOC_VALUE_REF = 17;
 
 	/**
 	 * Completion is a method argument or a class/method type parameter
@@ -566,7 +566,7 @@ public final class CompletionProposal extends InternalCompletionProposal {
 	 * @see #getKind()
 	 * @since 3.2
 	 */
-	public static final int JAVADOC_PARAM_REF = 18;
+	public static final int JSDOC_PARAM_REF = 18;
 
 	/**
 	 * Completion is a javadoc block tag.
@@ -597,7 +597,7 @@ public final class CompletionProposal extends InternalCompletionProposal {
 	 * @see #getKind()
 	 * @since 3.2
 	 */
-	public static final int JAVADOC_BLOCK_TAG = 19;
+	public static final int JSDOC_BLOCK_TAG = 19;
 
 	/**
 	 * Completion is a javadoc inline tag.
@@ -628,7 +628,7 @@ public final class CompletionProposal extends InternalCompletionProposal {
 	 * @see #getKind()
 	 * @since 3.2
 	 */
-	public static final int JAVADOC_INLINE_TAG = 20;
+	public static final int JSDOC_INLINE_TAG = 20;
 
 	/**
 	 * Completion is an import of reference to a static field.
@@ -1261,7 +1261,7 @@ public final class CompletionProposal extends InternalCompletionProposal {
 	 * </p>
 	 *
 	 * @return a key, or <code>null</code> if none
-	 * @see org.eclipse.wst.jsdt.core.dom.ASTParser#createASTs(ICompilationUnit[], String[], org.eclipse.wst.jsdt.core.dom.ASTRequestor, IProgressMonitor)
+	 * @see org.eclipse.wst.jsdt.core.dom.ASTParser#createASTs(IJavaScriptUnit[], String[], org.eclipse.wst.jsdt.core.dom.ASTRequestor, IProgressMonitor)
      * @since 3.1
 	 */
 	public char[] getDeclarationKey() {
@@ -1420,7 +1420,7 @@ public final class CompletionProposal extends InternalCompletionProposal {
 	 * </p>
 	 *
 	 * @return the key, or <code>null</code> if none
-	 * @see org.eclipse.wst.jsdt.core.dom.ASTParser#createASTs(ICompilationUnit[], String[], org.eclipse.wst.jsdt.core.dom.ASTRequestor, IProgressMonitor)
+	 * @see org.eclipse.wst.jsdt.core.dom.ASTParser#createASTs(IJavaScriptUnit[], String[], org.eclipse.wst.jsdt.core.dom.ASTRequestor, IProgressMonitor)
      * @since 3.1
 	 */
 	public char[] getKey() {
@@ -1996,26 +1996,26 @@ public final class CompletionProposal extends InternalCompletionProposal {
 			case CompletionProposal.ANNOTATION_ATTRIBUTE_REF :
 				buffer.append("ANNOTATION_ATTRIBUTE_REF"); //$NON-NLS-1$
 				break;
-			case CompletionProposal.JAVADOC_BLOCK_TAG :
-				buffer.append("JAVADOC_BLOCK_TAG"); //$NON-NLS-1$
+			case CompletionProposal.JSDOC_BLOCK_TAG :
+				buffer.append("JSDOC_BLOCK_TAG"); //$NON-NLS-1$
 				break;
-			case CompletionProposal.JAVADOC_INLINE_TAG :
-				buffer.append("JAVADOC_INLINE_TAG"); //$NON-NLS-1$
+			case CompletionProposal.JSDOC_INLINE_TAG :
+				buffer.append("JSDOC_INLINE_TAG"); //$NON-NLS-1$
 				break;
-			case CompletionProposal.JAVADOC_FIELD_REF:
-				buffer.append("JAVADOC_FIELD_REF"); //$NON-NLS-1$
+			case CompletionProposal.JSDOC_FIELD_REF:
+				buffer.append("JSDOC_FIELD_REF"); //$NON-NLS-1$
 				break;
-			case CompletionProposal.JAVADOC_METHOD_REF :
-				buffer.append("JAVADOC_METHOD_REF"); //$NON-NLS-1$
+			case CompletionProposal.JSDOC_METHOD_REF :
+				buffer.append("JSDOC_METHOD_REF"); //$NON-NLS-1$
 				break;
-			case CompletionProposal.JAVADOC_TYPE_REF :
-				buffer.append("JAVADOC_TYPE_REF"); //$NON-NLS-1$
+			case CompletionProposal.JSDOC_TYPE_REF :
+				buffer.append("JSDOC_TYPE_REF"); //$NON-NLS-1$
 				break;
-			case CompletionProposal.JAVADOC_PARAM_REF :
-				buffer.append("JAVADOC_PARAM_REF"); //$NON-NLS-1$
+			case CompletionProposal.JSDOC_PARAM_REF :
+				buffer.append("JSDOC_PARAM_REF"); //$NON-NLS-1$
 				break;
-			case CompletionProposal.JAVADOC_VALUE_REF :
-				buffer.append("JAVADOC_VALUE_REF"); //$NON-NLS-1$
+			case CompletionProposal.JSDOC_VALUE_REF :
+				buffer.append("JSDOC_VALUE_REF"); //$NON-NLS-1$
 				break;
 			case CompletionProposal.FIELD_IMPORT :
 				buffer.append("FIELD_IMPORT"); //$NON-NLS-1$

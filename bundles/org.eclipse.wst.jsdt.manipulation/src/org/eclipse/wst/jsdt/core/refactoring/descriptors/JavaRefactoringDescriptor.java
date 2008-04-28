@@ -31,10 +31,10 @@ import org.eclipse.ltk.core.refactoring.RefactoringCore;
 import org.eclipse.ltk.core.refactoring.RefactoringDescriptor;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaProject;
-import org.eclipse.wst.jsdt.core.IMethod;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.IFunction;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.WorkingCopyOwner;
 
 import org.eclipse.wst.jsdt.internal.core.manipulation.JavaManipulationPlugin;
@@ -166,9 +166,9 @@ public abstract class JavaRefactoringDescriptor extends RefactoringDescriptor {
 	 *            the element
 	 * @return a corresponding input handle
 	 */
-	protected static String elementToHandle(final String project, final IJavaElement element) {
+	protected static String elementToHandle(final String project, final IJavaScriptElement element) {
 		final String handle= element.getHandleIdentifier();
-		if (project != null && !(element instanceof IJavaProject)) {
+		if (project != null && !(element instanceof IJavaScriptProject)) {
 			final String id= element.getJavaProject().getHandleIdentifier();
 			return handle.substring(id.length());
 		}
@@ -185,7 +185,7 @@ public abstract class JavaRefactoringDescriptor extends RefactoringDescriptor {
 	 * @return the corresponding java element, or <code>null</code> if no such
 	 *         element exists
 	 */
-	protected static IJavaElement handleToElement(final String project, final String handle) {
+	protected static IJavaScriptElement handleToElement(final String project, final String handle) {
 		return handleToElement(project, handle, true);
 	}
 
@@ -202,7 +202,7 @@ public abstract class JavaRefactoringDescriptor extends RefactoringDescriptor {
 	 * @return the corresponding java element, or <code>null</code> if no such
 	 *         element exists
 	 */
-	protected static IJavaElement handleToElement(final String project, final String handle, final boolean check) {
+	protected static IJavaScriptElement handleToElement(final String project, final String handle, final boolean check) {
 		return handleToElement(null, project, handle, check);
 	}
 
@@ -221,24 +221,24 @@ public abstract class JavaRefactoringDescriptor extends RefactoringDescriptor {
 	 * @return the corresponding java element, or <code>null</code> if no such
 	 *         element exists
 	 */
-	protected static IJavaElement handleToElement(final WorkingCopyOwner owner, final String project, final String handle, final boolean check) {
-		IJavaElement element= null;
+	protected static IJavaScriptElement handleToElement(final WorkingCopyOwner owner, final String project, final String handle, final boolean check) {
+		IJavaScriptElement element= null;
 		if (owner != null)
-			element= JavaCore.create(handle, owner);
+			element= JavaScriptCore.create(handle, owner);
 		else
-			element= JavaCore.create(handle);
+			element= JavaScriptCore.create(handle);
 		if (element == null && project != null) {
-			final IJavaProject javaProject= JavaCore.create(ResourcesPlugin.getWorkspace().getRoot()).getJavaProject(project);
+			final IJavaScriptProject javaProject= JavaScriptCore.create(ResourcesPlugin.getWorkspace().getRoot()).getJavaProject(project);
 			final String identifier= javaProject.getHandleIdentifier();
 			if (owner != null)
-				element= JavaCore.create(identifier + handle, owner);
+				element= JavaScriptCore.create(identifier + handle, owner);
 			else
-				element= JavaCore.create(identifier + handle);
+				element= JavaScriptCore.create(identifier + handle);
 		}
-		if (check && element instanceof IMethod) {
-			final IMethod method= (IMethod) element;
-			final IMethod[] methods= (method.getDeclaringType()!=null) ? method.getDeclaringType().findMethods(method)
-					: new IMethod[]{ method.getCompilationUnit().getMethod(method.getElementName(), method.getParameterTypes())};
+		if (check && element instanceof IFunction) {
+			final IFunction method= (IFunction) element;
+			final IFunction[] methods= (method.getDeclaringType()!=null) ? method.getDeclaringType().findMethods(method)
+					: new IFunction[]{ method.getCompilationUnit().getMethod(method.getElementName(), method.getParameterTypes())};
 			if (methods != null && methods.length > 0)
 				element= methods[0];
 		}

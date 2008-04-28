@@ -27,15 +27,15 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.keys.KeySequence;
 import org.eclipse.ui.keys.SWTKeySupport;
 import org.eclipse.wst.jsdt.core.IClassFile;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IImportDeclaration;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IMember;
-import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.ITypeHierarchy;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
@@ -63,7 +63,7 @@ public class HierarchyInformationControl extends AbstractInformationControl {
 	private Object[] fOtherExpandedElements;
 	private TypeHierarchyContentProvider fOtherContentProvider;
 	
-	private IMethod fFocus; // method to filter for or null if type hierarchy
+	private IFunction fFocus; // method to filter for or null if type hierarchy
 	private boolean fDoFilter;
 	
 	private MethodOverrideTester fMethodOverrideTester;
@@ -160,15 +160,15 @@ public class HierarchyInformationControl extends AbstractInformationControl {
 		}
 		
 		try {
-			IMethod method= findMethod(fFocus, type);
+			IFunction method= findMethod(fFocus, type);
 			if (method != null) {
 				// check visibility
-				IPackageFragment pack= (IPackageFragment) fFocus.getAncestor(IJavaElement.PACKAGE_FRAGMENT);
+				IPackageFragment pack= (IPackageFragment) fFocus.getAncestor(IJavaScriptElement.PACKAGE_FRAGMENT);
 				if (JavaModelUtil.isVisibleInHierarchy(method, pack)) {
 					return true;
 				}
 			}
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			// ignore
 			JavaPlugin.log(e);
 		}
@@ -176,7 +176,7 @@ public class HierarchyInformationControl extends AbstractInformationControl {
 		
 	}
 	
-	private IMethod findMethod(IMethod filterMethod, IType typeToFindIn) throws JavaModelException {
+	private IFunction findMethod(IFunction filterMethod, IType typeToFindIn) throws JavaScriptModelException {
 		IType filterType= filterMethod.getDeclaringType();
 		ITypeHierarchy hierarchy= fLifeCycle.getHierarchy();
 		
@@ -198,46 +198,46 @@ public class HierarchyInformationControl extends AbstractInformationControl {
 	 * {@inheritDoc}
 	 */
 	public void setInput(Object information) {
-		if (!(information instanceof IJavaElement)) {
+		if (!(information instanceof IJavaScriptElement)) {
 			inputChanged(null, null);
 			return;
 		}
-		IJavaElement input= null;
-		IMethod locked= null;
+		IJavaScriptElement input= null;
+		IFunction locked= null;
 		try {
-			IJavaElement elem= (IJavaElement) information;
-			if (elem.getElementType() == IJavaElement.LOCAL_VARIABLE) {
+			IJavaScriptElement elem= (IJavaScriptElement) information;
+			if (elem.getElementType() == IJavaScriptElement.LOCAL_VARIABLE) {
 				elem= elem.getParent();
 			}
 			
 			switch (elem.getElementType()) {
-				case IJavaElement.JAVA_PROJECT :
-				case IJavaElement.PACKAGE_FRAGMENT_ROOT :
-				case IJavaElement.PACKAGE_FRAGMENT :
-				case IJavaElement.TYPE :
+				case IJavaScriptElement.JAVA_PROJECT :
+				case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT :
+				case IJavaScriptElement.PACKAGE_FRAGMENT :
+				case IJavaScriptElement.TYPE :
 					input= elem;
 					break;
-				case IJavaElement.COMPILATION_UNIT :
-					input= ((ICompilationUnit) elem).findPrimaryType();
+				case IJavaScriptElement.COMPILATION_UNIT :
+					input= ((IJavaScriptUnit) elem).findPrimaryType();
 					break;
-				case IJavaElement.CLASS_FILE :
+				case IJavaScriptElement.CLASS_FILE :
 					input= ((IClassFile) elem).getType();
 					break;
-				case IJavaElement.METHOD :
-					IMethod method= (IMethod) elem;
+				case IJavaScriptElement.METHOD :
+					IFunction method= (IFunction) elem;
 					if (!method.isConstructor()) {
 						locked= method;				
 					}
 					input= method.getDeclaringType();
 					break;
-				case IJavaElement.FIELD :
-				case IJavaElement.INITIALIZER :
+				case IJavaScriptElement.FIELD :
+				case IJavaScriptElement.INITIALIZER :
 					input= ((IMember) elem).getDeclaringType();
 					break;
-				case IJavaElement.PACKAGE_DECLARATION :
+				case IJavaScriptElement.PACKAGE_DECLARATION :
 					input= elem.getParent().getParent();
 					break;
-				case IJavaElement.IMPORT_DECLARATION :
+				case IJavaScriptElement.IMPORT_DECLARATION :
 					IImportDeclaration decl= (IImportDeclaration) elem;
 					if (decl.isOnDemand()) {
 						input= JavaModelUtil.findTypeContainer(decl.getJavaProject(), Signature.getQualifier(decl.getElementName()));
@@ -249,7 +249,7 @@ public class HierarchyInformationControl extends AbstractInformationControl {
 					JavaPlugin.logErrorMessage("Element unsupported by the hierarchy: " + elem.getClass()); //$NON-NLS-1$
 					input= null;
 			}
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			JavaPlugin.log(e);
 		}
 		
@@ -322,8 +322,8 @@ public class HierarchyInformationControl extends AbstractInformationControl {
 	}
 	
 	
-	private String getHeaderLabel(IJavaElement input) {
-		if (input instanceof IMethod) {
+	private String getHeaderLabel(IJavaScriptElement input) {
+		if (input instanceof IFunction) {
 			String[] args= { input.getParent().getElementName(), JavaElementLabels.getElementLabel(input, JavaElementLabels.ALL_DEFAULT) };
 			return Messages.format(TypeHierarchyMessages.HierarchyInformationControl_methodhierarchy_label, args); 
 		} else if (input != null) {
@@ -363,7 +363,7 @@ public class HierarchyInformationControl extends AbstractInformationControl {
 			IType type= (IType) selectedElement;
 			try {
 				return findMethod(fFocus, type);
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				JavaPlugin.log(e);
 			}
 		}

@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.jsdt.core.Flags;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.code.ExtractConstantRefactoring;
 import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
@@ -231,7 +231,7 @@ public class ExtractConstantWizard extends RefactoringWizard {
 			try {
 				if (fLabel != null)
 					fLabel.setText(RefactoringMessages.ExtractConstantInputPage_signature_preview + getExtractConstantRefactoring().getConstantSignaturePreview()); 
-			} catch(JavaModelException e) {
+			} catch(JavaScriptModelException e) {
 				ExceptionHandler.handle(e, RefactoringMessages.ExtractTempInputPage_extract_local, RefactoringMessages.ExtractConstantInputPage_exception); 
 			}
 		}
@@ -248,7 +248,7 @@ public class ExtractConstantWizard extends RefactoringWizard {
 					return RefactoringStatus.createInfoStatus(fOriginalMessage);
 				else 
 					return result;
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				JavaPlugin.log(e);
 				return RefactoringStatus.createFatalErrorStatus(RefactoringMessages.ExtractConstantInputPage_Internal_Error); 
 			}

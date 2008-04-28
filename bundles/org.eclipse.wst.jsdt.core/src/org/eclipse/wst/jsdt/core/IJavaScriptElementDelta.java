@@ -11,7 +11,7 @@
 package org.eclipse.wst.jsdt.core;
 
 import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.wst.jsdt.core.dom.CompilationUnit;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
 
 /**
  * A Java element delta describes changes in Java element between two discrete
@@ -39,7 +39,7 @@ import org.eclipse.wst.jsdt.core.dom.CompilationUnit;
  * has changed position in the project's classpath. This flag is only valid if the element is an
  * {@link IPackageFragmentRoot}.</li>
  * <li>{@link #F_CLOSED} - The underlying {@link org.eclipse.core.resources.IProject}
- * has been closed. This flag is only valid if the element is an {@link IJavaProject}.</li>
+ * has been closed. This flag is only valid if the element is an {@link IJavaScriptProject}.</li>
  * <li>{@link #F_CONTENT} - The contents of the element have been altered.  This flag
  * is only valid for elements which correspond to files.</li>
  *<li>{@link #F_FINE_GRAINED} - The delta is a fine-grained delta, that is, an analysis down
@@ -47,7 +47,7 @@ import org.eclipse.wst.jsdt.core.dom.CompilationUnit;
  * <li>{@link #F_MODIFIERS} - The modifiers on the element have changed in some way.
  * This flag is only valid if the element is an {@link IMember}.</li>
  * <li>{@link #F_OPENED} - The underlying {@link org.eclipse.core.resources.IProject}
- * has been opened. This flag is only valid if the element is an {@link IJavaProject}.</li>
+ * has been opened. This flag is only valid if the element is an {@link IJavaScriptProject}.</li>
  * <li>{@link #F_REMOVED_FROM_CLASSPATH} - A classpath entry corresponding to the element
  * has been removed from the project's classpath. This flag is only valid if the element is an
  * {@link IPackageFragmentRoot}.</li>
@@ -81,10 +81,10 @@ import org.eclipse.wst.jsdt.core.dom.CompilationUnit;
  * The {@link #F_ADDED_TO_CLASSPATH}, {@link #F_REMOVED_FROM_CLASSPATH} and
  * {@link #F_CLASSPATH_REORDER} flags are triggered by changes to a project's classpath. They do not mean that
  * the underlying resource was added, removed or changed. For example, if a project P already contains a folder src, then
- * adding a classpath entry with the 'P/src' path to the project's classpath will result in an {@link IJavaElementDelta}
+ * adding a classpath entry with the 'P/src' path to the project's classpath will result in an {@link IJavaScriptElementDelta}
  * with the {@link #F_ADDED_TO_CLASSPATH} flag for the {@link IPackageFragmentRoot} P/src.
  * On the contrary, if a resource is physically added, removed or changed and this resource corresponds to a classpath
- * entry of the project, then an {@link IJavaElementDelta} with the {@link #ADDED},
+ * entry of the project, then an {@link IJavaScriptElementDelta} with the {@link #ADDED},
  * {@link #REMOVED}, or {@link #CHANGED} kind will be fired.
  * </p>
  * <p>
@@ -92,18 +92,18 @@ import org.eclipse.wst.jsdt.core.dom.CompilationUnit;
  * both {@link #F_SOURCEATTACHED} and {@link #F_SOURCEDETACHED}.
  * </p>
  * <p>
- * No assumptions should be made on whether the java element delta tree is rooted at the {@link IJavaModel}
+ * No assumptions should be made on whether the java element delta tree is rooted at the {@link IJavaScriptModel}
  * level or not.
  * </p>
  * <p>
- * {@link IJavaElementDelta} object are not valid outside the dynamic scope
+ * {@link IJavaScriptElementDelta} object are not valid outside the dynamic scope
  * of the notification.
  * </p>
  * <p>
  * This interface is not intended to be implemented by clients.
  * </p>
  */
-public interface IJavaElementDelta {
+public interface IJavaScriptElementDelta {
 
 	/**
 	 * Status constant indicating that the element has been added.
@@ -184,13 +184,13 @@ public interface IJavaElementDelta {
 
 	/**
 	 * Change flag indicating that the underlying {@link org.eclipse.core.resources.IProject} has been
-	 * opened. This flag is only valid if the element is an {@link IJavaProject}.
+	 * opened. This flag is only valid if the element is an {@link IJavaScriptProject}.
 	 */
 	public int F_OPENED = 0x000200;
 
 	/**
 	 * Change flag indicating that the underlying {@link org.eclipse.core.resources.IProject} has been
-	 * closed. This flag is only valid if the element is an {@link IJavaProject}.
+	 * closed. This flag is only valid if the element is an {@link IJavaScriptProject}.
 	 */
 	public int F_CLOSED = 0x000400;
 
@@ -242,7 +242,7 @@ public interface IJavaElementDelta {
 	/**
 	 * Change flag indicating that a compilation unit has become a primary working copy, or that a
 	 * primary working copy has reverted to a compilation unit.
-	 * This flag is only valid if the element is an {@link ICompilationUnit}.
+	 * This flag is only valid if the element is an {@link IJavaScriptUnit}.
 	 *
 	 * @since 3.0
 	 */
@@ -250,7 +250,7 @@ public interface IJavaElementDelta {
 
 	/**
 	 * Change flag indicating that the raw classpath (or the output folder) of a project has changed.
-	 * This flag is only valid if the element is an {@link IJavaProject}.
+	 * This flag is only valid if the element is an {@link IJavaScriptProject}.
 	 *
 	 * @since 3.0
 	 */
@@ -258,7 +258,7 @@ public interface IJavaElementDelta {
 
 	/**
 	 * Change flag indicating that the resource of a primary compilation unit has changed.
-	 * This flag is only valid if the element is a primary {@link ICompilationUnit}.
+	 * This flag is only valid if the element is a primary {@link IJavaScriptUnit}.
 	 *
 	 * @since 3.0
 	 */
@@ -267,7 +267,7 @@ public interface IJavaElementDelta {
 	/**
 	 * Change flag indicating that a reconcile operation has affected the compilation unit AST created in a
 	 * previous reconcile operation. Use {@link #getCompilationUnitAST()} to retrieve the AST (if any is available).
-	 * This flag is only valid if the element is an {@link ICompilationUnit} in working copy mode.
+	 * This flag is only valid if the element is an {@link IJavaScriptUnit} in working copy mode.
 	 *
 	 * @since 3.2
 	 */
@@ -285,47 +285,47 @@ public interface IJavaElementDelta {
 	 * Returns deltas for the children that have been added.
 	 * @return deltas for the children that have been added
 	 */
-	public IJavaElementDelta[] getAddedChildren();
+	public IJavaScriptElementDelta[] getAddedChildren();
 
 	/**
 	 * Returns deltas for the affected (added, removed, or changed) children.
 	 * @return deltas for the affected (added, removed, or changed) children
 	 */
-	public IJavaElementDelta[] getAffectedChildren();
+	public IJavaScriptElementDelta[] getAffectedChildren();
 
 	/**
 	 * Returns the compilation unit AST created by the last reconcile operation on this delta's element.
 	 * This returns a non-null value if and only if:
 	 * <ul>
 	 * <li>the last reconcile operation on this working copy requested an AST</li>
-	 * <li>this delta's element is an {@link ICompilationUnit} in working copy mode</li>
+	 * <li>this delta's element is an {@link IJavaScriptUnit} in working copy mode</li>
 	 * <li>the delta comes from a {@link ElementChangedEvent#POST_RECONCILE} event
 	 * </ul>
 	 *
 	 * @return the AST created during the last reconcile operation
-	 * @see ICompilationUnit#reconcile(int, boolean, WorkingCopyOwner, org.eclipse.core.runtime.IProgressMonitor)
+	 * @see IJavaScriptUnit#reconcile(int, boolean, WorkingCopyOwner, org.eclipse.core.runtime.IProgressMonitor)
 	 * @see #F_AST_AFFECTED
 	 * @since 3.2
 	 */
-	public CompilationUnit getCompilationUnitAST();
+	public JavaScriptUnit getCompilationUnitAST();
 
 	/**
 	 * Returns deltas for the children which have changed.
 	 * @return deltas for the children which have changed
 	 */
-	public IJavaElementDelta[] getChangedChildren();
+	public IJavaScriptElementDelta[] getChangedChildren();
 
 	/**
 	 * Returns the element that this delta describes a change to.
 	 * @return the element that this delta describes a change to
 	 */
-	public IJavaElement getElement();
+	public IJavaScriptElement getElement();
 
 	/**
 	 * Returns flags that describe how an element has changed.
 	 * Such flags should be tested using the <code>&</code> operand. For example:
 	 * <pre>
-	 * if ((delta.getFlags() & IJavaElementDelta.F_CONTENT) != 0) {
+	 * if ((delta.getFlags() & IJavaScriptElementDelta.F_CONTENT) != 0) {
 	 * 	// the delta indicates a content change
 	 * }
 	 * </pre>
@@ -351,7 +351,7 @@ public interface IJavaElementDelta {
 	 * to its current location, or <code>null</code> if the
 	 * {@link #F_MOVED_FROM} change flag is not set
 	 */
-	public IJavaElement getMovedFromElement();
+	public IJavaScriptElement getMovedFromElement();
 
 	/**
 	 * Returns an element describing this element in its new location,
@@ -362,14 +362,14 @@ public interface IJavaElementDelta {
 	 * or <code>null</code> if the {@link #F_MOVED_TO} change
 	 * flag is not set
 	 */
-	public IJavaElement getMovedToElement();
+	public IJavaScriptElement getMovedToElement();
 
 	/**
 	 * Returns deltas for the children which have been removed.
 	 *
 	 * @return deltas for the children which have been removed
 	 */
-	public IJavaElementDelta[] getRemovedChildren();
+	public IJavaScriptElementDelta[] getRemovedChildren();
 
 	/**
 	 * Returns the collection of resource deltas.

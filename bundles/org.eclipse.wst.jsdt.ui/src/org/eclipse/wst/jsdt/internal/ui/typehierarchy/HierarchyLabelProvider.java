@@ -21,8 +21,8 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.wst.jsdt.core.Flags;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.ITypeHierarchy;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
@@ -101,13 +101,13 @@ public class HierarchyLabelProvider extends AppearanceAwareLabelProvider {
 			return true;
 		}
 		
-		IJavaElement input= fHierarchy.getInputElement();
-		if (input == null || input.getElementType() == IJavaElement.TYPE) {
+		IJavaScriptElement input= fHierarchy.getInputElement();
+		if (input == null || input.getElementType() == IJavaScriptElement.TYPE) {
 			return false;
 		}
 			
-		IJavaElement parent= type.getAncestor(input.getElementType());
-		if (input.getElementType() == IJavaElement.PACKAGE_FRAGMENT) {
+		IJavaScriptElement parent= type.getAncestor(input.getElementType());
+		if (input.getElementType() == IJavaScriptElement.PACKAGE_FRAGMENT) {
 			if (parent == null || parent.getElementName().equals(input.getElementName())) {
 				return false;
 			}
@@ -170,7 +170,7 @@ public class HierarchyLabelProvider extends AppearanceAwareLabelProvider {
 	 * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
 	 */
 	public Color getForeground(Object element) {
-		if (element instanceof IMethod) {
+		if (element instanceof IFunction) {
 			if (fSpecialColor == null) {
 				fSpecialColor= Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE);
 			}

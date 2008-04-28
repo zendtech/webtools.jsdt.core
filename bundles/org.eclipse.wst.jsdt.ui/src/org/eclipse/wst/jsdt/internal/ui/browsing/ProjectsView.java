@@ -26,11 +26,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.IShowInTargetList;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaModel;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptModel;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.ColoredViewersManager;
@@ -117,7 +117,7 @@ public class ProjectsView extends JavaBrowsingPart {
 	}
 
 	protected void setInitialInput() {
-		IJavaElement root= JavaCore.create(JavaPlugin.getWorkspace().getRoot());
+		IJavaScriptElement root= JavaScriptCore.create(JavaPlugin.getWorkspace().getRoot());
 		getViewer().setInput(root);
 		updateTitle();
 	}
@@ -130,7 +130,7 @@ public class ProjectsView extends JavaBrowsingPart {
 	 * @return	<true> if the given element is a valid input
 	 */
 	protected boolean isValidInput(Object element) {
-		return element instanceof IJavaModel;
+		return element instanceof IJavaScriptModel;
 	}
 
 	/**
@@ -141,7 +141,7 @@ public class ProjectsView extends JavaBrowsingPart {
 	 * @return	<true> if the given element is a valid element
 	 */
 	protected boolean isValidElement(Object element) {
-		return element instanceof IJavaProject || element instanceof IPackageFragmentRoot;
+		return element instanceof IJavaScriptProject || element instanceof IPackageFragmentRoot;
 	}
 
 	/**
@@ -150,16 +150,16 @@ public class ProjectsView extends JavaBrowsingPart {
 	 * @param je	the Java element which has the focus
 	 * @return the element to select
 	 */
-	protected IJavaElement findElementToSelect(IJavaElement je) {
+	protected IJavaScriptElement findElementToSelect(IJavaScriptElement je) {
 		if (je == null)
 			return null;
 
 		switch (je.getElementType()) {
-			case IJavaElement.JAVA_MODEL :
+			case IJavaScriptElement.JAVA_MODEL :
 				return null;
-			case IJavaElement.JAVA_PROJECT:
+			case IJavaScriptElement.JAVA_PROJECT:
 				return je;
-			case IJavaElement.PACKAGE_FRAGMENT_ROOT:
+			case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
 				if (je.getElementName().equals(IPackageFragmentRoot.DEFAULT_PACKAGEROOT_PATH))
 					return je.getParent();
 				else

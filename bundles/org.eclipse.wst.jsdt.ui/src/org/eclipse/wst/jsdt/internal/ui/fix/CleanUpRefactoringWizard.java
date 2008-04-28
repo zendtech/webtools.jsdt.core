@@ -51,8 +51,8 @@ import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.dialogs.PreferencesUtil;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.internal.corext.fix.CleanUpConstants;
 import org.eclipse.wst.jsdt.internal.corext.fix.CleanUpPreferenceUtil;
 import org.eclipse.wst.jsdt.internal.corext.fix.CleanUpRefactoring;
@@ -101,7 +101,7 @@ public class CleanUpRefactoringWizard extends RefactoringWizard {
 		 */
 		public String getColumnText(Object element, int columnIndex) {
 			if (columnIndex == 0) {
-				return ((IJavaProject)element).getProject().getName();
+				return ((IJavaScriptProject)element).getProject().getName();
 			} else if (columnIndex == 1) {
 				
 				if (fProfileIdsTable == null)
@@ -117,7 +117,7 @@ public class CleanUpRefactoringWizard extends RefactoringWizard {
 	    			workbenchProfileId= CleanUpConstants.DEFAULT_PROFILE;
 	    		}
 	    		
-				return getProjectProfileName((IJavaProject)element, fProfileIdsTable, workbenchProfileId);
+				return getProjectProfileName((IJavaScriptProject)element, fProfileIdsTable, workbenchProfileId);
 			}
 			return null;
 		}
@@ -134,7 +134,7 @@ public class CleanUpRefactoringWizard extends RefactoringWizard {
     		return profileIdsTable;
         }
 
-		private String getProjectProfileName(final IJavaProject project, Hashtable profileIdsTable, String workbenchProfileId) {
+		private String getProjectProfileName(final IJavaScriptProject project, Hashtable profileIdsTable, String workbenchProfileId) {
 			ProjectScope projectScope= new ProjectScope(project.getProject());
 	        IEclipsePreferences node= projectScope.getNode(JavaUI.ID_PLUGIN);
 	        String id= node.get(CleanUpConstants.CLEANUP_PROFILE, null);
@@ -180,7 +180,7 @@ public class CleanUpRefactoringWizard extends RefactoringWizard {
 	        }
 	        
 	        private void openPropertyDialog(ListDialogField field) {
-	            IJavaProject project= (IJavaProject)field.getSelectedElements().get(0);
+	            IJavaScriptProject project= (IJavaScriptProject)field.getSelectedElements().get(0);
 	        	PreferencesUtil.createPropertyDialogOn(fShell, project, CleanUpPreferencePage.PROP_ID, null, null).open();
 	        	List selectedElements= field.getSelectedElements();
 	        	fProvider.reset();
@@ -208,8 +208,8 @@ public class CleanUpRefactoringWizard extends RefactoringWizard {
 		public CleanUpConfigurationPage(CleanUpRefactoring refactoring) {
 			super(MultiFixMessages.CleanUpRefactoringWizard_CleanUpConfigurationPage_title);
 			fCleanUpRefactoring= refactoring;
-			ICompilationUnit[] cus= fCleanUpRefactoring.getCompilationUnits();
-			IJavaProject[] projects= fCleanUpRefactoring.getProjects();
+			IJavaScriptUnit[] cus= fCleanUpRefactoring.getCompilationUnits();
+			IJavaScriptProject[] projects= fCleanUpRefactoring.getProjects();
 			if (cus.length == 1) {
 				setMessage(MultiFixMessages.CleanUpRefactoringWizard_CleaningUp11_Title);
 			} else if (projects.length == 1) {

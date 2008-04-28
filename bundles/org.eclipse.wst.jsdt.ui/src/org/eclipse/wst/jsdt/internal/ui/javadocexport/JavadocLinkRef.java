@@ -16,25 +16,25 @@ import java.net.URL;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.wst.jsdt.core.IClasspathEntry;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IIncludePathEntry;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.BuildPathSupport;
 import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.CPListElement;
 import org.eclipse.wst.jsdt.ui.JavaUI;
 
 
 public class JavadocLinkRef {
-	private final IJavaProject fProject;
+	private final IJavaScriptProject fProject;
 	private final IPath fContainerPath;
-	private IClasspathEntry fClasspathEntry;
+	private IIncludePathEntry fClasspathEntry;
 	
-	public JavadocLinkRef(IPath containerPath, IClasspathEntry classpathEntry, IJavaProject project) {
+	public JavadocLinkRef(IPath containerPath, IIncludePathEntry classpathEntry, IJavaScriptProject project) {
 		fContainerPath= containerPath;
 		fProject= project;
 		fClasspathEntry= classpathEntry;
 	}
 	
-	public JavadocLinkRef(IJavaProject project) {
+	public JavadocLinkRef(IJavaScriptProject project) {
 		this(null, null, project);
 	}
 	

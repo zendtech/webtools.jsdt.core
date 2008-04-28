@@ -35,15 +35,15 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.core.IParent;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.dom.ASTNode;
 import org.eclipse.wst.jsdt.core.dom.AnnotationTypeDeclaration;
 import org.eclipse.wst.jsdt.core.dom.BodyDeclaration;
-import org.eclipse.wst.jsdt.core.dom.CompilationUnit;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
 import org.eclipse.wst.jsdt.core.dom.EnumDeclaration;
 import org.eclipse.wst.jsdt.core.dom.FieldDeclaration;
 import org.eclipse.wst.jsdt.core.dom.ImportDeclaration;
@@ -74,7 +74,7 @@ class JavaAddElementFromHistoryImpl extends JavaHistoryActionImpl {
 		String errorMessage= CompareMessages.AddFromHistory_internalErrorMessage; 
 		Shell shell= getShell();
 		
-		ICompilationUnit cu= null;
+		IJavaScriptUnit cu= null;
 		IParent parent= null;
 		IMember input= null;
 		
@@ -100,8 +100,8 @@ class JavaAddElementFromHistoryImpl extends JavaHistoryActionImpl {
 			} else {
 				if (selection instanceof IStructuredSelection) {
 					Object o= ((IStructuredSelection)selection).getFirstElement();
-					if (o instanceof ICompilationUnit) {
-						cu= (ICompilationUnit) o;
+					if (o instanceof IJavaScriptUnit) {
+						cu= (IJavaScriptUnit) o;
 						parent= cu;
 					}
 				}
@@ -148,11 +148,11 @@ class JavaAddElementFromHistoryImpl extends JavaHistoryActionImpl {
 			if (selected == null)
 				return;	// user cancel
 								
-			ICompilationUnit cu2= cu;
+			IJavaScriptUnit cu2= cu;
 			if (parent instanceof IMember)
 				cu2= ((IMember)parent).getCompilationUnit();
 			
-			CompilationUnit root= parsePartialCompilationUnit(cu2);
+			JavaScriptUnit root= parsePartialCompilationUnit(cu2);
 			ASTRewrite rewriter= ASTRewrite.create(root.getAST());
 			
 			ITypedElement[] results= d.getSelection();
@@ -167,16 +167,16 @@ class JavaAddElementFromHistoryImpl extends JavaHistoryActionImpl {
 				
 				// now determine where to put the new node
 				if (newNode instanceof PackageDeclaration) {
-				    rewriter.set(root, CompilationUnit.PACKAGE_PROPERTY, newNode, null);
+				    rewriter.set(root, JavaScriptUnit.PACKAGE_PROPERTY, newNode, null);
 				    
 				} else if (newNode instanceof ImportDeclaration) {
-					ListRewrite lw= rewriter.getListRewrite(root, CompilationUnit.IMPORTS_PROPERTY);
+					ListRewrite lw= rewriter.getListRewrite(root, JavaScriptUnit.IMPORTS_PROPERTY);
 					lw.insertFirst(newNode, null);
 					
 				} else {	// class, interface, enum, annotation, method, field
 					
-					if (parent instanceof ICompilationUnit) {	// top level
-						ListRewrite lw= rewriter.getListRewrite(root, CompilationUnit.TYPES_PROPERTY);
+					if (parent instanceof IJavaScriptUnit) {	// top level
+						ListRewrite lw= rewriter.getListRewrite(root, JavaScriptUnit.TYPES_PROPERTY);
 						int index= ASTNodes.getInsertionIndex((BodyDeclaration)newNode, root.types());
 						lw.insertAt(newNode, index, null);
 						
@@ -201,7 +201,7 @@ class JavaAddElementFromHistoryImpl extends JavaHistoryActionImpl {
 			}
 			
 			Map options= null;
-			IJavaProject javaProject= cu2.getJavaProject();
+			IJavaScriptProject javaProject= cu2.getJavaProject();
 			if (javaProject != null)
 				options= javaProject.getOptions(true);
 			applyChanges(rewriter, document, textFileBuffer, shell, inEditor, options);
@@ -235,7 +235,7 @@ class JavaAddElementFromHistoryImpl extends JavaHistoryActionImpl {
 	 * @return a ASTNode or null
 	 * @throws CoreException
 	 */
-	private ASTNode createASTNode(ASTRewrite rewriter, ITypedElement element, String delimiter, IJavaProject project) throws CoreException {
+	private ASTNode createASTNode(ASTRewrite rewriter, ITypedElement element, String delimiter, IJavaScriptProject project) throws CoreException {
 		if (element instanceof IStreamContentAccessor) {
 			String content= JavaCompareUtilities.readString((IStreamContentAccessor)element);
 			if (content != null) {
@@ -299,7 +299,7 @@ class JavaAddElementFromHistoryImpl extends JavaHistoryActionImpl {
 		if (selection.isEmpty()) {
 			JavaEditor editor= getEditor();
 			if (editor != null) {
-				// we check whether editor shows CompilationUnit
+				// we check whether editor shows JavaScriptUnit
 				IEditorInput editorInput= editor.getEditorInput();
 				IWorkingCopyManager manager= JavaPlugin.getDefault().getWorkingCopyManager();
 				return manager.getWorkingCopy(editorInput) != null;
@@ -309,7 +309,7 @@ class JavaAddElementFromHistoryImpl extends JavaHistoryActionImpl {
 		
 		if (selection instanceof IStructuredSelection) {
 			Object o= ((IStructuredSelection)selection).getFirstElement();
-			if (o instanceof ICompilationUnit)
+			if (o instanceof IJavaScriptUnit)
 				return true;
 		}
 		

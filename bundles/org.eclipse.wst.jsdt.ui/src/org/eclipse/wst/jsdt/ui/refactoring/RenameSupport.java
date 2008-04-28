@@ -22,11 +22,11 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.RenameProcessor;
 import org.eclipse.ltk.core.refactoring.participants.RenameRefactoring;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IField;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.ILocalVariable;
-import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.IType;
@@ -154,7 +154,7 @@ public class RenameSupport {
 
 	/**
 	 * Executes the rename refactoring without showing a dialog to gather
-	 * additional user input (for example the new name of the <tt>IJavaElement</tt>).
+	 * additional user input (for example the new name of the <tt>IJavaScriptElement</tt>).
 	 * Only an error dialog is shown (if necessary) to present the result
 	 * of the refactoring's full precondition checking.
 	 * <p>
@@ -269,9 +269,9 @@ public class RenameSupport {
 	}
 
 	/**
-	 * Creates a new rename support for the given {@link IJavaProject}.
+	 * Creates a new rename support for the given {@link IJavaScriptProject}.
 	 * 
-	 * @param project the {@link IJavaProject} to be renamed.
+	 * @param project the {@link IJavaScriptProject} to be renamed.
 	 * @param newName the project's new name. <code>null</code> is a valid
 	 * value indicating that no new name is provided.
 	 * @param flags flags controlling additional parameters. Valid flags are
@@ -280,7 +280,7 @@ public class RenameSupport {
 	 * @throws CoreException if an unexpected error occurred while creating
 	 * the {@link RenameSupport}.
 	 */
-	public static RenameSupport create(IJavaProject project, String newName, int flags) throws CoreException {
+	public static RenameSupport create(IJavaScriptProject project, String newName, int flags) throws CoreException {
 		JavaRenameProcessor processor= new RenameJavaProjectProcessor(project);
 		return new RenameSupport(processor, newName, flags);
 	}
@@ -319,9 +319,9 @@ public class RenameSupport {
 	}
 	
 	/**
-	 * Creates a new rename support for the given {@link ICompilationUnit}.
+	 * Creates a new rename support for the given {@link IJavaScriptUnit}.
 	 * 
-	 * @param unit the {@link ICompilationUnit} to be renamed.
+	 * @param unit the {@link IJavaScriptUnit} to be renamed.
 	 * @param newName the compilation unit's new name. <code>null</code> is a
 	 * valid value indicating that no new name is provided.
 	 * @param flags flags controlling additional parameters. Valid flags are
@@ -331,7 +331,7 @@ public class RenameSupport {
 	 * @throws CoreException if an unexpected error occurred while creating
 	 * the {@link RenameSupport}.
 	 */
-	public static RenameSupport create(ICompilationUnit unit, String newName, int flags) throws CoreException {
+	public static RenameSupport create(IJavaScriptUnit unit, String newName, int flags) throws CoreException {
 		JavaRenameProcessor processor= new RenameCompilationUnitProcessor(unit);
 		return new RenameSupport(processor, newName, flags);
 	}
@@ -355,9 +355,9 @@ public class RenameSupport {
 	}
 	
 	/**
-	 * Creates a new rename support for the given {@link IMethod}.
+	 * Creates a new rename support for the given {@link IFunction}.
 	 * 
-	 * @param method the {@link IMethod} to be renamed.
+	 * @param method the {@link IFunction} to be renamed.
 	 * @param newName the method's new name. <code>null</code> is a valid value
 	 * indicating that no new name is provided.
 	 * @param flags flags controlling additional parameters. Valid flags are
@@ -366,7 +366,7 @@ public class RenameSupport {
 	 * @throws CoreException if an unexpected error occurred while creating
 	 * the {@link RenameSupport}.
 	 */
-	public static RenameSupport create(IMethod method, String newName, int flags) throws CoreException {
+	public static RenameSupport create(IFunction method, String newName, int flags) throws CoreException {
 		JavaRenameProcessor processor;
 		if (MethodChecks.isVirtual(method)) {
 			processor= new RenameVirtualMethodProcessor(method);

@@ -35,7 +35,7 @@ import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.dialogs.FilteredList;
 import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.texteditor.IUpdate;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.search.TypeNameMatch;
 import org.eclipse.wst.jsdt.internal.corext.codemanipulation.AddImportsOperation;
 import org.eclipse.wst.jsdt.internal.corext.codemanipulation.AddImportsOperation.IChooseImportQuery;
@@ -95,7 +95,7 @@ public class AddImportOnSelectionAction extends Action implements IUpdate {
 		setEnabled(fEditor != null && getCompilationUnit() != null);
 	}
 
-	private ICompilationUnit getCompilationUnit () {
+	private IJavaScriptUnit getCompilationUnit () {
 		if (fEditor == null) {
 			return null;
 		}
@@ -107,7 +107,7 @@ public class AddImportOnSelectionAction extends Action implements IUpdate {
 	 * @see org.eclipse.jface.action.IAction#run()
 	 */
 	public void run() {
-		final ICompilationUnit cu= getCompilationUnit();
+		final IJavaScriptUnit cu= getCompilationUnit();
 		if (cu == null || fEditor == null)
 			return;
 		if (!ElementValidator.checkValidateEdit(cu, getShell(), JavaEditorMessages.AddImportOnSelection_error_title))

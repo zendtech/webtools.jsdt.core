@@ -35,8 +35,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.jsdt.core.Flags;
 import org.eclipse.wst.jsdt.core.IField;
-import org.eclipse.wst.jsdt.core.IMethod;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.IFunction;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.sef.SelfEncapsulateFieldRefactoring;
 import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
@@ -294,13 +294,13 @@ public class SelfEncapsulateFieldInputPage extends UserInputWizardPage {
 		int select= 0;
 		combo.add(RefactoringMessages.SelfEncapsulateFieldInputPage_first_method); 
 		try {
-			IMethod[] methods= field.getDeclaringType().getMethods();
+			IFunction[] methods= field.getDeclaringType().getMethods();
 			for (int i= 0; i < methods.length; i++) {
 				combo.add(JavaElementLabels.getElementLabel(methods[i], JavaElementLabels.M_PARAMETER_TYPES));
 			}
 			if (methods.length > 0)
 				select= methods.length;
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			// Fall through
 		}
 		combo.select(select);
@@ -327,7 +327,7 @@ public class SelfEncapsulateFieldInputPage extends UserInputWizardPage {
 	private boolean needsSetter() {
 		try {
 			return !JdtFlags.isFinal(fRefactoring.getField());
-		} catch(JavaModelException e) {
+		} catch(JavaScriptModelException e) {
 			return true;
 		}
 	}

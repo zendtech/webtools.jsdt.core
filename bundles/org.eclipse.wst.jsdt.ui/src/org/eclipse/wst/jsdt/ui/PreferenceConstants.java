@@ -24,9 +24,9 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
-import org.eclipse.wst.jsdt.core.IClasspathEntry;
-import org.eclipse.wst.jsdt.core.IJavaProject;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.IIncludePathEntry;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.corext.fix.CleanUpConstants;
 import org.eclipse.wst.jsdt.internal.ui.IJavaThemeConstants;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
@@ -193,7 +193,7 @@ public class PreferenceConstants {
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
-	 * @deprecated Use JavaCore preference store (key JavaCore.
+	 * @deprecated Use JavaScriptCore preference store (key JavaScriptCore.
 	 * CODEASSIST_FIELD_PREFIXES and CODEASSIST_STATIC_FIELD_PREFIXES)
 	 */	
 	public static final String CODEGEN_USE_GETTERSETTER_PREFIX= "org.eclipse.wst.jsdt.ui.gettersetter.prefix.enable";//$NON-NLS-1$
@@ -205,7 +205,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>: comma separated list of prefixed
 	 * </p>
 	 * 
-	 * @deprecated Use JavaCore preference store (key JavaCore.
+	 * @deprecated Use JavaScriptCore preference store (key JavaScriptCore.
 	 * CODEASSIST_FIELD_PREFIXES and CODEASSIST_STATIC_FIELD_PREFIXES)
 	 */	
 	public static final String CODEGEN_GETTERSETTER_PREFIX= "org.eclipse.wst.jsdt.ui.gettersetter.prefix.list";//$NON-NLS-1$
@@ -215,7 +215,7 @@ public class PreferenceConstants {
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
-	 * @deprecated Use JavaCore preference store (key JavaCore.
+	 * @deprecated Use JavaScriptCore preference store (key JavaScriptCore.
 	 * CODEASSIST_FIELD_PREFIXES and CODEASSIST_STATIC_FIELD_PREFIXES)
 	 */	
 	public static final String CODEGEN_USE_GETTERSETTER_SUFFIX= "org.eclipse.wst.jsdt.ui.gettersetter.suffix.enable";//$NON-NLS-1$
@@ -226,7 +226,7 @@ public class PreferenceConstants {
 	 * <p>
 	 * Value is of type <code>String</code>: comma separated list of suffixes
 	 * </p>
-	 * @deprecated Use setting from JavaCore preference store (key JavaCore.
+	 * @deprecated Use setting from JavaScriptCore preference store (key JavaScriptCore.
 	 * CODEASSIST_FIELD_SUFFIXES and CODEASSIST_STATIC_FIELD_SUFFIXES)
 	 */	
 	public static final String CODEGEN_GETTERSETTER_SUFFIX= "org.eclipse.wst.jsdt.ui.gettersetter.suffix.list"; //$NON-NLS-1$
@@ -465,7 +465,7 @@ public class PreferenceConstants {
 
 	/**
 	 * A named preference that holds a list of possible JRE libraries used by the New Java Project wizard. A library 
-	 * consists of a description and an arbitrary number of <code>IClasspathEntry</code>s, that will represent the 
+	 * consists of a description and an arbitrary number of <code>IIncludePathEntry</code>s, that will represent the 
 	 * JRE on the new project's class path. 
 	 * <p>
 	 * Value is of type <code>String</code>: a semicolon separated list of encoded JRE libraries. 
@@ -477,7 +477,7 @@ public class PreferenceConstants {
 	 * </p>
 	 * 
 	 * @see #NEWPROJECT_JRELIBRARY_INDEX
-	 * @see #encodeJRELibrary(String, IClasspathEntry[])
+	 * @see #encodeJRELibrary(String, IIncludePathEntry[])
 	 * @see #decodeJRELibraryDescription(String)
 	 * @see #decodeJRELibraryClasspathEntries(String)
 	 */
@@ -3565,7 +3565,7 @@ public class PreferenceConstants {
 		if (store.getBoolean(PreferenceConstants.CODEGEN_USE_GETTERSETTER_PREFIX)) {
 			String prefix= store.getString(PreferenceConstants.CODEGEN_GETTERSETTER_PREFIX);
 			if (prefix.length() > 0) {
-				JavaCore.getPlugin().getPluginPreferences().setValue(JavaCore.CODEASSIST_FIELD_PREFIXES, prefix);
+				JavaScriptCore.getPlugin().getPluginPreferences().setValue(JavaScriptCore.CODEASSIST_FIELD_PREFIXES, prefix);
 				store.setToDefault(PreferenceConstants.CODEGEN_USE_GETTERSETTER_PREFIX);
 				store.setToDefault(PreferenceConstants.CODEGEN_GETTERSETTER_PREFIX);
 			}
@@ -3573,7 +3573,7 @@ public class PreferenceConstants {
 		if (store.getBoolean(PreferenceConstants.CODEGEN_USE_GETTERSETTER_SUFFIX)) {
 			String suffix= store.getString(PreferenceConstants.CODEGEN_GETTERSETTER_SUFFIX);
 			if (suffix.length() > 0) {
-				JavaCore.getPlugin().getPluginPreferences().setValue(JavaCore.CODEASSIST_FIELD_SUFFIXES, suffix);
+				JavaScriptCore.getPlugin().getPluginPreferences().setValue(JavaScriptCore.CODEASSIST_FIELD_SUFFIXES, suffix);
 				store.setToDefault(PreferenceConstants.CODEGEN_USE_GETTERSETTER_SUFFIX);
 				store.setToDefault(PreferenceConstants.CODEGEN_GETTERSETTER_SUFFIX);
 			}
@@ -3927,7 +3927,7 @@ public class PreferenceConstants {
 	 * 
 	 * @return the encoded string.
 	*/
-	public static String encodeJRELibrary(String description, IClasspathEntry[] entries) {
+	public static String encodeJRELibrary(String description, IIncludePathEntry[] entries) {
 		return NewJavaProjectPreferencePage.encodeJRELibrary(description, entries);
 	}
 	
@@ -3936,7 +3936,7 @@ public class PreferenceConstants {
 	 * @param encodedLibrary the encoded library
 	 * @return the description of an encoded JRE library
 	 * 
-	 * @see #encodeJRELibrary(String, IClasspathEntry[])
+	 * @see #encodeJRELibrary(String, IIncludePathEntry[])
 	 */
 	public static String decodeJRELibraryDescription(String encodedLibrary) {
 		return NewJavaProjectPreferencePage.decodeJRELibraryDescription(encodedLibrary);
@@ -3947,9 +3947,9 @@ public class PreferenceConstants {
 	 * @param encodedLibrary the encoded library
 	 * @return the array of classpath entries of an encoded JRE library.
 	 * 
-	 * @see #encodeJRELibrary(String, IClasspathEntry[])
+	 * @see #encodeJRELibrary(String, IIncludePathEntry[])
 	 */
-	public static IClasspathEntry[] decodeJRELibraryClasspathEntries(String encodedLibrary) {
+	public static IIncludePathEntry[] decodeJRELibraryClasspathEntries(String encodedLibrary) {
 		return NewJavaProjectPreferencePage.decodeJRELibraryClasspathEntries(encodedLibrary);
 	}
 	
@@ -3963,7 +3963,7 @@ public class PreferenceConstants {
 	 * @see #NEWPROJECT_JRELIBRARY_LIST
 	 * @see #NEWPROJECT_JRELIBRARY_INDEX
 	 */
-	public static IClasspathEntry[] getDefaultJRELibrary() {
+	public static IIncludePathEntry[] getDefaultJRELibrary() {
 		return NewJavaProjectPreferencePage.getDefaultJRELibrary();
 	}
 
@@ -3976,7 +3976,7 @@ public class PreferenceConstants {
 	 * @return Returns the current value for the string.
 	 * @since 3.1
 	 */
-	public static String getPreference(String key, IJavaProject project) {
+	public static String getPreference(String key, IJavaScriptProject project) {
 		String val;
 		if (project != null) {
 			val= new ProjectScope(project.getProject()).getNode(JavaUI.ID_PLUGIN).get(key, null);

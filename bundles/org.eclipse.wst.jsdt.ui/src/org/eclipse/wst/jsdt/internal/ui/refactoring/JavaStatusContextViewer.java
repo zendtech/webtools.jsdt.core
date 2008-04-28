@@ -27,11 +27,11 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.wst.jsdt.core.IClassFile;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.ISourceRange;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.base.JavaStatusContext;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.base.JavaStringStatusContext;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
@@ -64,8 +64,8 @@ public class JavaStatusContextViewer extends TextStatusContextViewer {
 
 	private IPackageFragmentRoot getPackageFragmentRoot(IClassFile file) {
 
-		IJavaElement element= file.getParent();
-		while (element != null && element.getElementType() != IJavaElement.PACKAGE_FRAGMENT_ROOT)
+		IJavaScriptElement element= file.getParent();
+		while (element != null && element.getElementType() != IJavaScriptElement.PACKAGE_FRAGMENT_ROOT)
 			element= element.getParent();
 
 		return (IPackageFragmentRoot) element;
@@ -83,11 +83,11 @@ public class JavaStatusContextViewer extends TextStatusContextViewer {
 					document= new Document(Messages.format(RefactoringMessages.JavaStatusContextViewer_no_source_found0, getPackageFragmentRoot(file).getElementName()));
 				updateTitle(file);
 			} else {
-				ICompilationUnit cunit= jsc.getCompilationUnit();
+				IJavaScriptUnit cunit= jsc.getCompilationUnit();
 				if (cunit.isWorkingCopy()) {
 					try {
 						document= newJavaDocument(cunit.getSource());
-					} catch (JavaModelException e) {
+					} catch (JavaScriptModelException e) {
 						// document is null which is a valid input.
 					}
 				} else {

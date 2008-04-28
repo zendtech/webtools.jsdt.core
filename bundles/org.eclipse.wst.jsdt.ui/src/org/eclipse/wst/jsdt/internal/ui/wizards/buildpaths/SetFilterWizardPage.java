@@ -32,8 +32,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.jsdt.core.IJavaModelStatus;
-import org.eclipse.wst.jsdt.core.JavaConventions;
+import org.eclipse.wst.jsdt.core.IJavaScriptModelStatus;
+import org.eclipse.wst.jsdt.core.JavaScriptConventions;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
@@ -200,7 +200,7 @@ public class SetFilterWizardPage extends NewElementWizardPage {
 		
 //		fCurrElement.setAttribute(CPListElement.INCLUSION, getInclusionPattern());
 //		fCurrElement.setAttribute(CPListElement.EXCLUSION, getExclusionPattern());
-		IJavaModelStatus status= JavaConventions.validateClasspath(fCurrElement.getJavaProject(), CPListElement.convertToClasspathEntries(fExistingEntries), fOutputLocation);
+		IJavaScriptModelStatus status= JavaScriptConventions.validateClasspath(fCurrElement.getJavaProject(), CPListElement.convertToClasspathEntries(fExistingEntries), fOutputLocation);
 		if (!status.isOK()) {
 			StatusInfo statusInfo= new StatusInfo();
 			statusInfo.setError(status.getMessage());

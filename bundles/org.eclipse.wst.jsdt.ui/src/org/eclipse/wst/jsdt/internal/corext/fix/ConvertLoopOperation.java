@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.text.edits.TextEditGroup;
-import org.eclipse.wst.jsdt.core.dom.CompilationUnit;
+import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
 import org.eclipse.wst.jsdt.core.dom.ForStatement;
 import org.eclipse.wst.jsdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.wst.jsdt.core.dom.Statement;
@@ -74,7 +74,7 @@ public abstract class ConvertLoopOperation extends AbstractLinkedFixRewriteOpera
 		final List results= new ArrayList();
 		
 		ForStatement forStatement= getForStatement();
-		CompilationUnit root= (CompilationUnit)forStatement.getRoot();
+		JavaScriptUnit root= (JavaScriptUnit)forStatement.getRoot();
 		
 		Collection variableNames= new ScopeAnalyzer(root).getUsedVariableNames(forStatement.getStartPosition(), forStatement.getLength());
 		results.addAll(variableNames);

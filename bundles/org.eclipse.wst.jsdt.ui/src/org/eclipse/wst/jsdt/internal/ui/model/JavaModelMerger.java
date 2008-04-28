@@ -18,10 +18,10 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.mapping.ModelProvider;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.ltk.ui.refactoring.model.AbstractResourceMappingMerger;
-import org.eclipse.wst.jsdt.core.IJavaModel;
-import org.eclipse.wst.jsdt.core.IJavaProject;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.IJavaScriptModel;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 
 /**
@@ -65,11 +65,11 @@ public final class JavaModelMerger extends AbstractResourceMappingMerger {
 	private void getDependentProjects(final Set set, final IProject project) {
 		Assert.isNotNull(set);
 		Assert.isNotNull(project);
-		final IJavaModel model= JavaCore.create(ResourcesPlugin.getWorkspace().getRoot());
+		final IJavaScriptModel model= JavaScriptCore.create(ResourcesPlugin.getWorkspace().getRoot());
 		if (model != null) {
 			try {
 				final String name= project.getName();
-				final IJavaProject[] projects= model.getJavaProjects();
+				final IJavaScriptProject[] projects= model.getJavaProjects();
 				for (int index= 0; index < projects.length; index++) {
 					final String[] names= projects[index].getRequiredProjectNames();
 					for (int offset= 0; offset < names.length; offset++) {
@@ -77,7 +77,7 @@ public final class JavaModelMerger extends AbstractResourceMappingMerger {
 							set.add(projects[index].getProject());
 					}
 				}
-			} catch (JavaModelException exception) {
+			} catch (JavaScriptModelException exception) {
 				JavaPlugin.log(exception);
 			}
 		}

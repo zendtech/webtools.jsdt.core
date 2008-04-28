@@ -33,8 +33,8 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.dom.Modifier;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.ParameterInfo;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.StubTypeContext;
@@ -121,13 +121,13 @@ public class ChangeSignatureWizard extends RefactoringWizard {
 				update(false);
 				setControl(composite);
 				Dialog.applyDialogFont(composite);
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				ExceptionHandler.handle(e, RefactoringMessages.ChangeSignatureInputPage_Change_Signature, RefactoringMessages.ChangeSignatureInputPage_Internal_Error); 
 			}
 			PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IJavaHelpContextIds.MODIFY_PARAMETERS_WIZARD_PAGE);
 		}
 
-		private void createHeadControls(Composite parent) throws JavaModelException {
+		private void createHeadControls(Composite parent) throws JavaScriptModelException {
 			//must create controls column-wise to get mnemonics working:
 			Composite composite= new Composite(parent, SWT.NONE);
 			composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -135,14 +135,14 @@ public class ChangeSignatureWizard extends RefactoringWizard {
 			layout.marginHeight= 0;
 			layout.marginWidth= 0;
 			composite.setLayout(layout);
-			if(JavaCore.IS_ECMASCRIPT4) { 
+			if(JavaScriptCore.IS_ECMASCRIPT4) { 
 				createAccessControl(composite);
 				createReturnTypeControl(composite);
 			}
 			createNameControl(composite);
 		}
 
-		private void createAccessControl(Composite parent) throws JavaModelException {
+		private void createAccessControl(Composite parent) throws JavaScriptModelException {
 			Composite access= new Composite(parent, SWT.NONE);
 			GridLayout layout= new GridLayout();
 			layout.marginHeight= 0;
@@ -264,7 +264,7 @@ public class ChangeSignatureWizard extends RefactoringWizard {
 			TabItem item= new TabItem(folder, SWT.NONE);
 			item.setText(RefactoringMessages.ChangeSignatureInputPage_parameters); 
 			item.setControl(createParameterTableControl(folder));
-			if(JavaCore.IS_ECMASCRIPT4) { 
+			if(JavaScriptCore.IS_ECMASCRIPT4) { 
 				TabItem itemEx= new TabItem(folder, SWT.NONE);
 				itemEx.setText(RefactoringMessages.ChangeSignatureInputPage_exceptions); 
 				itemEx.setControl(createExceptionsTableControl(folder));
@@ -376,7 +376,7 @@ public class ChangeSignatureWizard extends RefactoringWizard {
 					setErrorMessage(null);	
 					setPageComplete(true);
 				}	
-			} catch (JavaModelException e){
+			} catch (JavaScriptModelException e){
 				setErrorMessage(RefactoringMessages.ChangeSignatureInputPage_Internal_Error); 
 				setPageComplete(false);
 				JavaPlugin.log(e);
@@ -388,7 +388,7 @@ public class ChangeSignatureWizard extends RefactoringWizard {
 				int top= fSignaturePreview.getTextWidget().getTopPixel();
 				fSignaturePreviewDocument.set(getChangeMethodSignatureRefactoring().getNewMethodSignature()); 
 				fSignaturePreview.getTextWidget().setTopPixel(top);
-			} catch (JavaModelException e){
+			} catch (JavaScriptModelException e){
 				ExceptionHandler.handle(e, RefactoringMessages.ChangeSignatureRefactoring_modify_Parameters, RefactoringMessages.ChangeSignatureInputPage_exception); 
 			}	
 		}

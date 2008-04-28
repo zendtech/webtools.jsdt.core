@@ -19,8 +19,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.SelectionDialog;
 import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
-import org.eclipse.wst.jsdt.core.JavaModelException;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchScope;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.core.search.SearchEngine;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
@@ -48,13 +48,13 @@ class GotoPackageAction extends Action {
 			Object[] res= dialog.getResult();
 			if (res != null && res.length == 1) 
 				gotoPackage((IPackageFragment)res[0]); 
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 		}
 	}
 	
-	private SelectionDialog createAllPackagesDialog(Shell shell) throws JavaModelException{
+	private SelectionDialog createAllPackagesDialog(Shell shell) throws JavaScriptModelException{
 		IProgressService progressService= PlatformUI.getWorkbench().getProgressService();
-		IJavaSearchScope scope= SearchEngine.createWorkspaceScope();
+		IJavaScriptSearchScope scope= SearchEngine.createWorkspaceScope();
 		int flag= PackageSelectionDialog.F_HIDE_EMPTY_INNER;
 		PackageSelectionDialog dialog= new PackageSelectionDialog(shell, progressService, flag, scope);
 		dialog.setFilter(""); //$NON-NLS-1$

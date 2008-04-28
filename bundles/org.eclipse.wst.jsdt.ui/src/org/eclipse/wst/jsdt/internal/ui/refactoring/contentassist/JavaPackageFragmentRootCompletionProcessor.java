@@ -24,10 +24,10 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.text.java.JavaCompletionProposal;
@@ -128,7 +128,7 @@ public class JavaPackageFragmentRootCompletionProcessor implements IContentAssis
 		ArrayList proposals= new ArrayList();
 		String prefix= input.substring(0, documentOffset);
 		try {
-			IJavaElement[] packageFragments= fPackageFragmentRoot.getChildren();
+			IJavaScriptElement[] packageFragments= fPackageFragmentRoot.getChildren();
 			for (int i= 0; i < packageFragments.length; i++) {
 				IPackageFragment pack= (IPackageFragment) packageFragments[i];
 				String packName= pack.getElementName();
@@ -138,7 +138,7 @@ public class JavaPackageFragmentRootCompletionProcessor implements IContentAssis
 				JavaCompletionProposal proposal= new JavaCompletionProposal(packName, 0, input.length(), image, packName, 0);
 				proposals.add(proposal);
 			}
-		} catch (JavaModelException e) {
+		} catch (JavaScriptModelException e) {
 			JavaPlugin.log(e);
 		}
 		return (ICompletionProposal[]) proposals.toArray(new ICompletionProposal[proposals.size()]);

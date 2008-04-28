@@ -63,9 +63,9 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.jsdt.core.IField;
 import org.eclipse.wst.jsdt.core.IMember;
-import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.structure.HierarchyProcessor;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.structure.IMemberActionInfo;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.structure.PullUpRefactoring;
@@ -130,17 +130,17 @@ public class PullUpMemberPage extends UserInputWizardPage {
 		private final IMember fMember;
 
 		public MemberActionInfo(final IMember member, final int action) {
-			Assert.isTrue((member instanceof IMethod) || (member instanceof IField) || (member instanceof IType));
+			Assert.isTrue((member instanceof IFunction) || (member instanceof IField) || (member instanceof IType));
 			assertAction(member, action);
 			fMember= member;
 			fAction= action;
 		}
 
 		private void assertAction(final IMember member, final int action) {
-			if (member instanceof IMethod) {
+			if (member instanceof IFunction) {
 				try {
 					Assert.isTrue(action != DECLARE_ABSTRACT_ACTION || !JdtFlags.isStatic(member));
-				} catch (JavaModelException e) {
+				} catch (JavaScriptModelException e) {
 					JavaPlugin.log(e);
 				}
 				Assert.isTrue(action == NO_ACTION || action == DECLARE_ABSTRACT_ACTION || action == PULL_UP_ACTION);
@@ -193,10 +193,10 @@ public class PullUpMemberPage extends UserInputWizardPage {
 				return false;
 			if (!isMethodInfo())
 				return false;
-			final IMethod method= (IMethod) fMember;
+			final IFunction method= (IFunction) fMember;
 			try {
 				return !JdtFlags.isStatic(method);
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				JavaPlugin.log(e);
 				return false;
 			}
@@ -207,7 +207,7 @@ public class PullUpMemberPage extends UserInputWizardPage {
 		}
 
 		public boolean isMethodInfo() {
-			return getMember() instanceof IMethod;
+			return getMember() instanceof IFunction;
 		}
 
 		public boolean isTypeInfo() {
@@ -370,7 +370,7 @@ public class PullUpMemberPage extends UserInputWizardPage {
 				public void run(final IProgressMonitor pm) throws InvocationTargetException {
 					try {
 						checkPullUp(getPullUpRefactoring().getPullUpProcessor().getAdditionalRequiredMembersToPullUp(pm), true);
-					} catch (JavaModelException e) {
+					} catch (JavaScriptModelException e) {
 						throw new InvocationTargetException(e);
 					} finally {
 						pm.done();
@@ -635,7 +635,7 @@ public class PullUpMemberPage extends UserInputWizardPage {
 		fReplaceButton.setSelection(getPullUpRefactoring().getPullUpProcessor().isReplace());
 	}
 
-	private void createSuperTypeCombo(final IProgressMonitor pm, final Composite parent) throws JavaModelException {
+	private void createSuperTypeCombo(final IProgressMonitor pm, final Composite parent) throws JavaScriptModelException {
 		final Label label= new Label(parent, SWT.NONE);
 		label.setText(RefactoringMessages.PullUpInputPage1_Select_destination);
 		label.setLayoutData(new GridData());
@@ -659,7 +659,7 @@ public class PullUpMemberPage extends UserInputWizardPage {
 				public void run(final IProgressMonitor monitor) throws InvocationTargetException {
 					try {
 						createSuperTypeCombo(monitor, parent);
-					} catch (JavaModelException exception) {
+					} catch (JavaScriptModelException exception) {
 						throw new InvocationTargetException(exception);
 					} finally {
 						monitor.done();
@@ -789,7 +789,7 @@ public class PullUpMemberPage extends UserInputWizardPage {
 		return (IMember[]) result.toArray(new IMember[result.size()]);
 	}
 
-	private IMethod[] getMethodsForAction(final int action) {
+	private IFunction[] getMethodsForAction(final int action) {
 		final MemberActionInfo[] infos= getTableInput();
 		final List list= new ArrayList(infos.length);
 		for (int index= 0; index < infos.length; index++) {
@@ -797,7 +797,7 @@ public class PullUpMemberPage extends UserInputWizardPage {
 				list.add(infos[index].getMember());
 			}
 		}
-		return (IMethod[]) list.toArray(new IMethod[list.size()]);
+		return (IFunction[]) list.toArray(new IFunction[list.size()]);
 	}
 
 	public IWizardPage getNextPage() {
@@ -809,7 +809,7 @@ public class PullUpMemberPage extends UserInputWizardPage {
 	        final IType destination= getDestinationType();
 	        if (destination != null && destination.isInterface())
 	        	return computeSuccessorPage();
-        } catch (JavaModelException exception) {
+        } catch (JavaScriptModelException exception) {
 	        JavaPlugin.log(exception);
         }
 		return super.getNextPage();

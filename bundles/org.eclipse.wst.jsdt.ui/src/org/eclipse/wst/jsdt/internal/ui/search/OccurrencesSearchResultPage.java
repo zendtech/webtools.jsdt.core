@@ -20,8 +20,8 @@ import org.eclipse.search.ui.text.Match;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.ui.JavaUI;
 
 
@@ -38,7 +38,7 @@ public class OccurrencesSearchResultPage extends AbstractTextSearchViewPage {
 	 */
 	protected void showMatch(Match match, int currentOffset, int currentLength, boolean activate) throws PartInitException {
 		JavaElementLine element= (JavaElementLine) match.getElement();
-		IJavaElement javaElement= element.getJavaElement();
+		IJavaScriptElement javaElement= element.getJavaElement();
 		try {
 			IEditorPart editor= JavaUI.openInEditor(javaElement, activate, false);
 			if (editor instanceof ITextEditor) {
@@ -47,7 +47,7 @@ public class OccurrencesSearchResultPage extends AbstractTextSearchViewPage {
 			}
 		} catch (PartInitException e1) {
 			return;
-		} catch (JavaModelException e1) {
+		} catch (JavaScriptModelException e1) {
 			return;
 		}
 

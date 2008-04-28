@@ -33,13 +33,13 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.text.edits.MalformedTreeException;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.dom.AST;
 import org.eclipse.wst.jsdt.core.dom.ASTNode;
 import org.eclipse.wst.jsdt.core.dom.ASTParser;
 import org.eclipse.wst.jsdt.core.dom.Block;
-import org.eclipse.wst.jsdt.core.dom.MethodDeclaration;
+import org.eclipse.wst.jsdt.core.dom.FunctionDeclaration;
 import org.eclipse.wst.jsdt.core.dom.Statement;
 import org.eclipse.wst.jsdt.internal.corext.dom.ASTNodes;
 import org.eclipse.wst.jsdt.internal.corext.dom.GenericVisitor;
@@ -58,7 +58,7 @@ public class SurroundWithTemplateProposal extends TemplateProposal {
 		private static final String $_LINE_SELECTION= "${" + GlobalTemplateVariables.LineSelection.NAME + "}"; //$NON-NLS-1$ //$NON-NLS-2$
 		
 		private final Template fTemplate;
-		private final IJavaProject fCurrentProject;
+		private final IJavaScriptProject fCurrentProject;
 		private ASTNode fTemplateNode;
 		
 		public SurroundWithTemplate(IInvocationContext context, Statement[] selectedNodes, Template template) {
@@ -111,7 +111,7 @@ public class SurroundWithTemplateProposal extends TemplateProposal {
 				}
 			});
 			
-			if (fTemplateNode != null && ASTNodes.getParent(fTemplateNode, MethodDeclaration.class) != null) {
+			if (fTemplateNode != null && ASTNodes.getParent(fTemplateNode, FunctionDeclaration.class) != null) {
 				return true;
 			}
 			
@@ -122,14 +122,14 @@ public class SurroundWithTemplateProposal extends TemplateProposal {
 
 
 	private final IRegion fRegion;
-	private final ICompilationUnit fCompilationUnit;
+	private final IJavaScriptUnit fCompilationUnit;
 	private final CompilationUnitContext fContext;
 	private final Template fTemplate;
 	private final Statement[] fSelectedStatements;
 	private TemplateProposal fProposal;
 	private IRegion fSelectedRegion;
 
-	public SurroundWithTemplateProposal(ICompilationUnit compilationUnit, Template template, CompilationUnitContext context, IRegion region, Image image, Statement[] selectedStatements) {
+	public SurroundWithTemplateProposal(IJavaScriptUnit compilationUnit, Template template, CompilationUnitContext context, IRegion region, Image image, Statement[] selectedStatements) {
 		super(template, context, region, image);
 		fCompilationUnit= compilationUnit;
 		fTemplate= template;

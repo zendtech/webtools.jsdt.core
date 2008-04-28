@@ -12,7 +12,7 @@ package org.eclipse.wst.jsdt.internal.ui.wizards;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.ui.wizards.NewPackageWizardPage;
@@ -59,7 +59,7 @@ public class NewPackageCreationWizard extends NewElementWizard {
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.jsdt.internal.ui.wizards.NewElementWizard#getCreatedElement()
 	 */
-	public IJavaElement getCreatedElement() {
+	public IJavaScriptElement getCreatedElement() {
 		return fPage.getNewPackageFragment();
 	}	
 	

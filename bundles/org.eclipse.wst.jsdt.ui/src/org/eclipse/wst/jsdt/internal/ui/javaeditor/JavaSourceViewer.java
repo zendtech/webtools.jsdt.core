@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.ui.text.SmartBackspaceManager;
 import org.eclipse.wst.jsdt.internal.ui.text.comment.CommentFormattingContext;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
@@ -141,7 +141,7 @@ public class JavaSourceViewer extends ProjectionViewer implements IPropertyChang
 		// it's ok to use instance preferences here as subclasses replace
 		// with project dependent versions (see CompilationUnitEditor.AdaptedSourceViewer)
 		IFormattingContext context= new CommentFormattingContext();
-		Map map= new HashMap(JavaCore.getOptions());
+		Map map= new HashMap(JavaScriptCore.getOptions());
 		context.setProperty(FormattingContextProperties.CONTEXT_PREFERENCES, map);
 
 		return context;

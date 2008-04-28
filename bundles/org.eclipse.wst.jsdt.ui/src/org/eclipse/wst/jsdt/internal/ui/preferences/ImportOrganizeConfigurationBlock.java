@@ -32,8 +32,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
-import org.eclipse.wst.jsdt.core.JavaConventions;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.JavaScriptConventions;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusInfo;
@@ -309,7 +309,7 @@ public class ImportOrganizeConfigurationBlock extends OptionsConfigurationBlock 
 			String curr= properties.getProperty(String.valueOf(i));
 			if (curr != null) {
 				ImportOrderEntry entry= ImportOrderEntry.fromSerialized(curr);
-				if (!JavaConventions.validatePackageName(entry.name, JavaCore.VERSION_1_3, JavaCore.VERSION_1_5).matches(IStatus.ERROR)) {
+				if (!JavaScriptConventions.validatePackageName(entry.name, JavaScriptCore.VERSION_1_3, JavaScriptCore.VERSION_1_5).matches(IStatus.ERROR)) {
 					res.add(entry);
 				} else {
 					return null;

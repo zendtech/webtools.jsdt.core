@@ -107,7 +107,7 @@ import java.util.Map;
  * Compilation units created by <code>ASTParser</code> from a
  * source document can be serialized after arbitrary modifications
  * with minimal loss of original formatting. See
- * {@link CompilationUnit#recordModifications()} for details.
+ * {@link JavaScriptUnit#recordModifications()} for details.
  * See also {@link org.eclipse.wst.jsdt.core.dom.rewrite.ASTRewrite} for
  * an alternative way to describe and serialize changes to a
  * read-only AST.
@@ -254,8 +254,8 @@ public abstract class ASTNode {
 
 	/**
 	 * Node type constant indicating a node of type
-	 * <code>CompilationUnit</code>.
-	 * @see CompilationUnit
+	 * <code>JavaScriptUnit</code>.
+	 * @see JavaScriptUnit
 	 */
 	public static final int COMPILATION_UNIT = 15;
 
@@ -353,7 +353,7 @@ public abstract class ASTNode {
 	/**
 	 * Node type constant indicating a node of type
 	 * <code>Javadoc</code>.
-	 * @see Javadoc
+	 * @see JSdoc
 	 */
 	public static final int JAVADOC = 29;
 
@@ -366,15 +366,15 @@ public abstract class ASTNode {
 
 	/**
 	 * Node type constant indicating a node of type
-	 * <code>MethodDeclaration</code>.
-	 * @see MethodDeclaration
+	 * <code>FunctionDeclaration</code>.
+	 * @see FunctionDeclaration
 	 */
 	public static final int METHOD_DECLARATION = 31;
 
 	/**
 	 * Node type constant indicating a node of type
-	 * <code>MethodInvocation</code>.
-	 * @see MethodInvocation
+	 * <code>FunctionInvocation</code>.
+	 * @see FunctionInvocation
 	 */
 	public static final int METHOD_INVOCATION = 32;
 
@@ -623,16 +623,16 @@ public abstract class ASTNode {
 
 	/**
 	 * Node type constant indicating a node of type
-	 * <code>MethodRef</code>.
-	 * @see MethodRef
+	 * <code>FunctionRef</code>.
+	 * @see FunctionRef
 	 * @since 3.0
 	 */
 	public static final int METHOD_REF = 68;
 
 	/**
 	 * Node type constant indicating a node of type
-	 * <code>MethodRefParameter</code>.
-	 * @see MethodRefParameter
+	 * <code>FunctionRefParameter</code>.
+	 * @see FunctionRefParameter
 	 * @since 3.0
 	 */
 	public static final int METHOD_REF_PARAMETER = 69;
@@ -812,7 +812,7 @@ public abstract class ASTNode {
 			case CLASS_INSTANCE_CREATION :
 				return ClassInstanceCreation.class;
 			case COMPILATION_UNIT :
-				return CompilationUnit.class;
+				return JavaScriptUnit.class;
 			case CONDITIONAL_EXPRESSION :
 				return ConditionalExpression.class;
 			case CONSTRUCTOR_INVOCATION :
@@ -850,7 +850,7 @@ public abstract class ASTNode {
 			case INSTANCEOF_EXPRESSION :
 				return InstanceofExpression.class;
 			case JAVADOC :
-				return Javadoc.class;
+				return JSdoc.class;
 			case LABELED_STATEMENT :
 				return LabeledStatement.class;
 			case LINE_COMMENT :
@@ -862,13 +862,13 @@ public abstract class ASTNode {
 			case MEMBER_VALUE_PAIR :
 				return MemberValuePair.class;
 			case METHOD_DECLARATION :
-				return MethodDeclaration.class;
+				return FunctionDeclaration.class;
 			case METHOD_INVOCATION :
-				return MethodInvocation.class;
+				return FunctionInvocation.class;
 			case METHOD_REF :
-				return MethodRef.class;
+				return FunctionRef.class;
 			case METHOD_REF_PARAMETER :
-				return MethodRefParameter.class;
+				return FunctionRefParameter.class;
 			case MODIFIER :
 				return Modifier.class;
 			case NORMAL_ANNOTATION :
