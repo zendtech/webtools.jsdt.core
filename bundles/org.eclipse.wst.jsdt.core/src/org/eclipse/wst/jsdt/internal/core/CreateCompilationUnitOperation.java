@@ -140,7 +140,7 @@ protected void executeOperation() throws JavaScriptModelException {
  * @see CreateElementInCUOperation#getCompilationUnit()
  */
 protected IJavaScriptUnit getCompilationUnit() {
-	return ((IPackageFragment)getParentElement()).getCompilationUnit(fName);
+	return ((IPackageFragment)getParentElement()).getJavaScriptUnit(fName);
 }
 protected ISchedulingRule getSchedulingRule() {
 	IResource resource  = getCompilationUnit().getResource();
@@ -164,7 +164,7 @@ public IJavaScriptModelStatus verify() {
 	if (getParentElement() == null) {
 		return new JavaModelStatus(IJavaScriptModelStatusConstants.NO_ELEMENTS_TO_PROCESS);
 	}
-	IJavaScriptProject project = getParentElement().getJavaProject();
+	IJavaScriptProject project = getParentElement().getJavaScriptProject();
 	if (JavaScriptConventions.validateCompilationUnitName(fName, project.getOption(JavaScriptCore.COMPILER_SOURCE, true), project.getOption(JavaScriptCore.COMPILER_COMPLIANCE, true)).getSeverity() == IStatus.ERROR) {
 		return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_NAME, fName);
 	}

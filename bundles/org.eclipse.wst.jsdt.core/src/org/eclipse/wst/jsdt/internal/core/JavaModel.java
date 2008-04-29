@@ -102,7 +102,7 @@ public boolean contains(IResource resource) {
 	// file or folder
 	IJavaScriptProject[] projects;
 	try {
-		projects = this.getJavaProjects();
+		projects = this.getJavaScriptProjects();
 	} catch (JavaScriptModelException e) {
 		return false;
 	}
@@ -167,7 +167,7 @@ public IJavaScriptElement getHandleFromMemento(String token, MementoTokenizer me
 		case JEM_JAVAPROJECT:
 			if (!memento.hasMoreTokens()) return this;
 			String projectName = memento.nextToken();
-			JavaElement project = (JavaElement)getJavaProject(projectName);
+			JavaElement project = (JavaElement)getJavaScriptProject(projectName);
 			return project.getHandleFromMemento(memento, owner);
 	}
 	return null;
@@ -189,7 +189,7 @@ protected char getHandleMementoDelimiter(){
 /**
  * @see IJavaScriptModel
  */
-public IJavaScriptProject getJavaProject(String projectName) {
+public IJavaScriptProject getJavaScriptProject(String projectName) {
 	return new JavaProject(ResourcesPlugin.getWorkspace().getRoot().getProject(projectName), this);
 }
 /**
@@ -215,7 +215,7 @@ public IJavaScriptProject getJavaProject(IResource resource) {
 /**
  * @see IJavaScriptModel
  */
-public IJavaScriptProject[] getJavaProjects() throws JavaScriptModelException {
+public IJavaScriptProject[] getJavaScriptProjects() throws JavaScriptModelException {
 	ArrayList list = getChildrenOfType(JAVA_PROJECT);
 	IJavaScriptProject[] array= new IJavaScriptProject[list.size()];
 	list.toArray(array);
@@ -225,7 +225,7 @@ public IJavaScriptProject[] getJavaProjects() throws JavaScriptModelException {
 /**
  * @see IJavaScriptModel
  */
-public Object[] getNonJavaResources() throws JavaScriptModelException {
+public Object[] getNonJavaScriptResources() throws JavaScriptModelException {
 		return ((JavaModelInfo) getElementInfo()).getNonJavaResources();
 }
 

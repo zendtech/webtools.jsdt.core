@@ -255,7 +255,7 @@ public class DeleteWizard extends RefactoringWizard {
 			if (!JavaElementUtil.isDefaultPackage(firstElement))
 				return false;
 			IPackageFragment defaultPackage= (IPackageFragment)firstElement;
-			IJavaScriptUnit[] cus= defaultPackage.getCompilationUnits();
+			IJavaScriptUnit[] cus= defaultPackage.getJavaScriptUnits();
 			for (int i= 0; i < cus.length; i++) {
 				if (isLinkedResource(cus[i]))
 					return true;

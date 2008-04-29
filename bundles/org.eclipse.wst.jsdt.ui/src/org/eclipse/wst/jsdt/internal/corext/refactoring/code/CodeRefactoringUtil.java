@@ -56,7 +56,7 @@ public class CodeRefactoringUtil {
 			ITextFileBuffer buffer= FileBuffers.getTextFileBufferManager().getTextFileBuffer(fullPath, LocationKind.IFILE);
 			try {
 				IRegion region= buffer.getDocument().getLineInformationOfOffset(node.getStartPosition());
-				return Strings.computeIndentUnits(buffer.getDocument().get(region.getOffset(), region.getLength()), unit.getJavaProject());
+				return Strings.computeIndentUnits(buffer.getDocument().get(region.getOffset(), region.getLength()), unit.getJavaScriptProject());
 			} catch (BadLocationException exception) {
 				JavaPlugin.log(exception);
 			}

@@ -122,7 +122,7 @@ public IJavaScriptModelStatus verify() {
 	if (!status.isOK()) {
 		return status;
 	}
-	IJavaScriptProject project = getParentElement().getJavaProject();
+	IJavaScriptProject project = getParentElement().getJavaScriptProject();
 	if (JavaScriptConventions.validatePackageName(this.name, project.getOption(JavaScriptCore.COMPILER_SOURCE, true), project.getOption(JavaScriptCore.COMPILER_COMPLIANCE, true)).getSeverity() == IStatus.ERROR) {
 		return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_NAME, this.name);
 	}

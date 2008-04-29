@@ -157,7 +157,7 @@ public class SelfEncapsulateFieldRefactoring extends ScriptableRefactoring {
 	private void initialize(IField field) throws JavaScriptModelException {
 		fGetterName= GetterSetterUtil.getGetterName(field, null);
 		fSetterName= GetterSetterUtil.getSetterName(field, null);
-		fArgName= NamingConventions.removePrefixAndSuffixForFieldName(field.getJavaProject(), field.getElementName(), field.getFlags());
+		fArgName= NamingConventions.removePrefixAndSuffixForFieldName(field.getJavaScriptProject(), field.getElementName(), field.getFlags());
 		checkArgName();
 	}
 	
@@ -220,7 +220,7 @@ public class SelfEncapsulateFieldRefactoring extends ScriptableRefactoring {
 		result.merge(Checks.checkAvailability(fField));
 		if (result.hasFatalError())
 			return result;
-		fRoot= new RefactoringASTParser(AST.JLS3).parse(fField.getCompilationUnit(), true, pm);
+		fRoot= new RefactoringASTParser(AST.JLS3).parse(fField.getJavaScriptUnit(), true, pm);
 		ISourceRange sourceRange= fField.getNameRange();
 		ASTNode node= NodeFinder.perform(fRoot, sourceRange.getOffset(), sourceRange.getLength());
 		if (node == null) {
@@ -341,7 +341,7 @@ public class SelfEncapsulateFieldRefactoring extends ScriptableRefactoring {
 		ITypeBinding declaringClass= 
 			((AbstractTypeDeclaration)ASTNodes.getParent(fFieldDeclaration, AbstractTypeDeclaration.class)).resolveBinding();
 		List ownerDescriptions= new ArrayList();
-		IJavaScriptUnit owner= fField.getCompilationUnit();
+		IJavaScriptUnit owner= fField.getJavaScriptUnit();
 		fImportRewrite= StubUtility.createImportRewrite(fRoot, true);
 		
 		for (int i= 0; i < affectedCUs.length; i++) {
@@ -405,7 +405,7 @@ public class SelfEncapsulateFieldRefactoring extends ScriptableRefactoring {
 	public Change createChange(IProgressMonitor pm) throws CoreException {
 		final Map arguments= new HashMap();
 		String project= null;
-		IJavaScriptProject javaProject= fField.getJavaProject();
+		IJavaScriptProject javaProject= fField.getJavaScriptProject();
 		if (javaProject != null)
 			project= javaProject.getElementName();
 		int flags= JavaRefactoringDescriptor.JAR_MIGRATION | JavaRefactoringDescriptor.JAR_REFACTORING | RefactoringDescriptor.STRUCTURAL_CHANGE | RefactoringDescriptor.MULTI_CHANGE;
@@ -542,7 +542,7 @@ public class SelfEncapsulateFieldRefactoring extends ScriptableRefactoring {
 		List members= ASTNodes.getBodyDeclarations(decl.getParent());
 		for (Iterator iter= members.iterator(); iter.hasNext();) {
 			BodyDeclaration element= (BodyDeclaration)iter.next();
-			if (element.getNodeType() == ASTNode.METHOD_DECLARATION) {
+			if (element.getNodeType() == ASTNode.FUNCTION_DECLARATION) {
 				if (fInsertionIndex == -1) {
 					break;
 				} else if (fInsertionIndex == numberOfMethods) {
@@ -626,12 +626,12 @@ public class SelfEncapsulateFieldRefactoring extends ScriptableRefactoring {
 		
 		if (fGenerateJavadoc) {
 			String string= CodeGeneration.getSetterComment(
-				fField.getCompilationUnit() , getTypeName(field.getParent()), fSetterName, 
+				fField.getJavaScriptUnit() , getTypeName(field.getParent()), fSetterName, 
 				fField.getElementName(), ASTNodes.asString(type), fArgName, 
-				NamingConventions.removePrefixAndSuffixForFieldName(fField.getJavaProject(), fField.getElementName(), fField.getFlags()),
+				NamingConventions.removePrefixAndSuffixForFieldName(fField.getJavaScriptProject(), fField.getElementName(), fField.getFlags()),
 				lineDelimiter);
 			if (string != null) {
-				JSdoc javadoc= (JSdoc)fRewriter.createStringPlaceholder(string, ASTNode.JAVADOC);
+				JSdoc javadoc= (JSdoc)fRewriter.createStringPlaceholder(string, ASTNode.JSDOC);
 				result.setJavadoc(javadoc);
 			}
 		}
@@ -653,12 +653,12 @@ public class SelfEncapsulateFieldRefactoring extends ScriptableRefactoring {
 		block.statements().add(rs);
 		if (fGenerateJavadoc) {
 			String string= CodeGeneration.getGetterComment(
-				fField.getCompilationUnit() , getTypeName(field.getParent()), fGetterName,
+				fField.getJavaScriptUnit() , getTypeName(field.getParent()), fGetterName,
 				fField.getElementName(), ASTNodes.asString(type), 
-				NamingConventions.removePrefixAndSuffixForFieldName(fField.getJavaProject(), fField.getElementName(), fField.getFlags()),
+				NamingConventions.removePrefixAndSuffixForFieldName(fField.getJavaScriptProject(), fField.getElementName(), fField.getFlags()),
 				lineDelimiter);
 			if (string != null) {
-				JSdoc javadoc= (JSdoc)fRewriter.createStringPlaceholder(string, ASTNode.JAVADOC);
+				JSdoc javadoc= (JSdoc)fRewriter.createStringPlaceholder(string, ASTNode.JSDOC);
 				result.setJavadoc(javadoc);
 			}
 		}
@@ -703,7 +703,7 @@ public class SelfEncapsulateFieldRefactoring extends ScriptableRefactoring {
 			isStatic= JdtFlags.isStatic(fField);
 		} catch(JavaScriptModelException e) {
 		}
-		IJavaScriptProject project= fField.getJavaProject();
+		IJavaScriptProject project= fField.getJavaScriptProject();
 		String sourceLevel= project.getOption(JavaScriptCore.COMPILER_SOURCE, true);
 		String compliance= project.getOption(JavaScriptCore.COMPILER_COMPLIANCE, true);
 		

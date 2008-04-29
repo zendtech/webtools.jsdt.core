@@ -174,7 +174,7 @@ public abstract class MultiOperation extends JavaModelOperation {
 						// resize
 						System.arraycopy(errors, 0, (errors = new IJavaScriptModelStatus[errorsCounter*2]), 0, errorsCounter);
 					}
-					errors[errorsCounter++] = jme.getJavaModelStatus();
+					errors[errorsCounter++] = jme.getJavaScriptModelStatus();
 				} finally {
 					worked(1);
 				}
@@ -277,7 +277,7 @@ public abstract class MultiOperation extends JavaModelOperation {
 	protected void verifyRenaming(IJavaScriptElement element) throws JavaScriptModelException {
 		String newName = getNewNameFor(element);
 		boolean isValid = true;
-	    IJavaScriptProject project = element.getJavaProject();
+	    IJavaScriptProject project = element.getJavaScriptProject();
 	    String sourceLevel = project.getOption(JavaScriptCore.COMPILER_SOURCE, true);
 	    String complianceLevel = project.getOption(JavaScriptCore.COMPILER_COMPLIANCE, true);
 		switch (element.getElementType()) {

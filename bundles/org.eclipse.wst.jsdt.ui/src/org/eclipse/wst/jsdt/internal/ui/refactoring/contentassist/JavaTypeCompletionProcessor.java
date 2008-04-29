@@ -74,14 +74,14 @@ public class JavaTypeCompletionProcessor extends CUPositionCompletionProcessor {
 		} else {
 			String before= "public class " + DUMMY_CLASS_NAME + " { ";  //$NON-NLS-1$//$NON-NLS-2$
 			String after= " }"; //$NON-NLS-1$
-			setCompletionContext(packageFragment.getCompilationUnit(DUMMY_CU_NAME), before, after);
+			setCompletionContext(packageFragment.getJavaScriptUnit(DUMMY_CU_NAME), before, after);
 		}
 	}
 	
 	public void setExtendsCompletionContext(IJavaScriptElement javaElement) {
 		if (javaElement instanceof IPackageFragment) {
 			IPackageFragment packageFragment= (IPackageFragment) javaElement;
-			IJavaScriptUnit cu= packageFragment.getCompilationUnit(DUMMY_CU_NAME);
+			IJavaScriptUnit cu= packageFragment.getJavaScriptUnit(DUMMY_CU_NAME);
 			setCompletionContext(cu, "public class " + DUMMY_CLASS_NAME + " extends ", " {}"); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 		} else if (javaElement instanceof IType) {
 			// pattern: public class OuterType { public class Type extends /*caret*/  {} }
@@ -95,7 +95,7 @@ public class JavaTypeCompletionProcessor extends CUPositionCompletionProcessor {
 				after+= "}"; //$NON-NLS-1$
 				parent= type.getParent();
 			}
-			IJavaScriptUnit cu= type.getCompilationUnit();
+			IJavaScriptUnit cu= type.getJavaScriptUnit();
 			setCompletionContext(cu, before, after);
 		} else {
 			setCompletionContext(null, null, null);

@@ -215,7 +215,7 @@ public final class MemberVisibilityAdjustor {
 					if (adjustor.fRewrite != null && adjustor.fRoot != null)
 						rewriteVisibility(adjustor, adjustor.fRewrite, adjustor.fRoot, null, fRefactoringStatus);
 					else {
-						final CompilationUnitRewrite rewrite= adjustor.getCompilationUnitRewrite(fMember.getCompilationUnit());
+						final CompilationUnitRewrite rewrite= adjustor.getCompilationUnitRewrite(fMember.getJavaScriptUnit());
 						rewriteVisibility(adjustor, rewrite.getASTRewrite(), rewrite.getRoot(), rewrite.createCategorizedGroupDescription(Messages.format(RefactoringCoreMessages.MemberVisibilityAdjustor_change_visibility, getLabel(getKeyword())), SET_VISIBILITY_ADJUSTMENTS), fRefactoringStatus);
 					}
 				} else if (fRefactoringStatus != null)
@@ -273,7 +273,7 @@ public final class MemberVisibilityAdjustor {
 				monitor.beginTask("", 1); //$NON-NLS-1$
 				monitor.setTaskName(RefactoringCoreMessages.MemberVisibilityAdjustor_adjusting);
 				if (fNeedsRewriting) {
-					final CompilationUnitRewrite rewrite= adjustor.getCompilationUnitRewrite(fMember.getCompilationUnit());
+					final CompilationUnitRewrite rewrite= adjustor.getCompilationUnitRewrite(fMember.getJavaScriptUnit());
 					rewriteVisibility(adjustor, rewrite.getASTRewrite(), rewrite.getRoot(), rewrite.createCategorizedGroupDescription(Messages.format(RefactoringCoreMessages.MemberVisibilityAdjustor_change_visibility, getLabel(getKeyword())), SET_VISIBILITY_ADJUSTMENTS), fRefactoringStatus);
 				}
 				monitor.worked(1);
@@ -789,7 +789,7 @@ public final class MemberVisibilityAdjustor {
 			switch (referencedType) {
 				case IJavaScriptElement.TYPE: {
 					final IType typeReferenced= (IType) referenced;
-					final IJavaScriptUnit referencedUnit= typeReferenced.getCompilationUnit();
+					final IJavaScriptUnit referencedUnit= typeReferenced.getJavaScriptUnit();
 					switch (referencingType) {
 						case IJavaScriptElement.TYPE: {
 							keyword= thresholdTypeToType((IType) referencing, typeReferenced, monitor);
@@ -800,7 +800,7 @@ public final class MemberVisibilityAdjustor {
 							final IMember member= (IMember) referencing;
 							if (typeReferenced.equals(member.getDeclaringType()))
 								keyword= ModifierKeyword.PRIVATE_KEYWORD;
-							else if (referencedUnit != null && referencedUnit.equals(member.getCompilationUnit()))
+							else if (referencedUnit != null && referencedUnit.equals(member.getJavaScriptUnit()))
 								keyword= ModifierKeyword.PRIVATE_KEYWORD;
 							else if (typeReferenced.getPackageFragment().equals(member.getDeclaringType().getPackageFragment()))
 								keyword= null;
@@ -819,7 +819,7 @@ public final class MemberVisibilityAdjustor {
 				}
 				case IJavaScriptElement.FIELD: {
 					final IField fieldReferenced= (IField) referenced;
-					final IJavaScriptUnit referencedUnit= fieldReferenced.getCompilationUnit();
+					final IJavaScriptUnit referencedUnit= fieldReferenced.getJavaScriptUnit();
 					switch (referencingType) {
 						case IJavaScriptElement.TYPE: {
 							keyword= thresholdTypeToField((IType) referencing, fieldReferenced, monitor);
@@ -830,7 +830,7 @@ public final class MemberVisibilityAdjustor {
 							final IMember member= (IMember) referencing;
 							if (fieldReferenced.getDeclaringType().equals(member.getDeclaringType()))
 								keyword= ModifierKeyword.PRIVATE_KEYWORD;
-							else if (referencedUnit != null && referencedUnit.equals(member.getCompilationUnit()))
+							else if (referencedUnit != null && referencedUnit.equals(member.getJavaScriptUnit()))
 								keyword= ModifierKeyword.PRIVATE_KEYWORD;
 							else if (fieldReferenced.getDeclaringType().getPackageFragment().equals(member.getDeclaringType().getPackageFragment()))
 								keyword= null;
@@ -849,7 +849,7 @@ public final class MemberVisibilityAdjustor {
 				}
 				case IJavaScriptElement.METHOD: {
 					final IFunction methodReferenced= (IFunction) referenced;
-					final IJavaScriptUnit referencedUnit= methodReferenced.getCompilationUnit();
+					final IJavaScriptUnit referencedUnit= methodReferenced.getJavaScriptUnit();
 					switch (referencingType) {
 						case IJavaScriptElement.TYPE: {
 							keyword= thresholdTypeToMethod((IType) referencing, methodReferenced, monitor);
@@ -860,7 +860,7 @@ public final class MemberVisibilityAdjustor {
 							final IMember member= (IMember) referencing;
 							if (methodReferenced.getDeclaringType().equals(member.getDeclaringType()))
 								keyword= ModifierKeyword.PRIVATE_KEYWORD;
-							else if (referencedUnit != null && referencedUnit.equals(member.getCompilationUnit()))
+							else if (referencedUnit != null && referencedUnit.equals(member.getJavaScriptUnit()))
 								keyword= ModifierKeyword.PRIVATE_KEYWORD;
 							else if (methodReferenced.getDeclaringType().getPackageFragment().equals(member.getDeclaringType().getPackageFragment()))
 								keyword= null;
@@ -910,7 +910,7 @@ public final class MemberVisibilityAdjustor {
 					switch (referencingType) {
 						case IJavaScriptElement.COMPILATION_UNIT: {
 							final IJavaScriptUnit unit= (IJavaScriptUnit) referencing;
-							final IJavaScriptUnit referencedUnit= typeReferenced.getCompilationUnit();
+							final IJavaScriptUnit referencedUnit= typeReferenced.getJavaScriptUnit();
 							if (referencedUnit != null && referencedUnit.equals(unit))
 								keyword= ModifierKeyword.PRIVATE_KEYWORD;
 							else if (referencedUnit != null && referencedUnit.getParent().equals(unit.getParent()))
@@ -934,7 +934,7 @@ public final class MemberVisibilityAdjustor {
 				}
 				case IJavaScriptElement.FIELD: {
 					final IField fieldReferenced= (IField) referenced;
-					final IJavaScriptUnit referencedUnit= fieldReferenced.getCompilationUnit();
+					final IJavaScriptUnit referencedUnit= fieldReferenced.getJavaScriptUnit();
 					switch (referencingType) {
 						case IJavaScriptElement.COMPILATION_UNIT: {
 							final IJavaScriptUnit unit= (IJavaScriptUnit) referencing;
@@ -961,7 +961,7 @@ public final class MemberVisibilityAdjustor {
 				}
 				case IJavaScriptElement.METHOD: {
 					final IFunction methodReferenced= (IFunction) referenced;
-					final IJavaScriptUnit referencedUnit= methodReferenced.getCompilationUnit();
+					final IJavaScriptUnit referencedUnit= methodReferenced.getJavaScriptUnit();
 					switch (referencingType) {
 						case IJavaScriptElement.COMPILATION_UNIT: {
 							final IJavaScriptUnit unit= (IJavaScriptUnit) referencing;
@@ -1078,7 +1078,7 @@ public final class MemberVisibilityAdjustor {
 			IVisibilityAdjustment adjustment= null;
 			for (final Iterator iterator= fAdjustments.keySet().iterator(); iterator.hasNext();) {
 				member= (IMember) iterator.next();
-				if (unit.equals(member.getCompilationUnit())) {
+				if (unit.equals(member.getJavaScriptUnit())) {
 					adjustment= (IVisibilityAdjustment) fAdjustments.get(member);
 					if (adjustment != null)
 						adjustment.rewriteVisibility(this, new SubProgressMonitor(monitor, 1));
@@ -1245,7 +1245,7 @@ public final class MemberVisibilityAdjustor {
 	 */
 	private ModifierKeyword thresholdTypeToField(final IType referencing, final IField referenced, final IProgressMonitor monitor) throws JavaScriptModelException {
 		ModifierKeyword keyword= ModifierKeyword.PUBLIC_KEYWORD;
-		final IJavaScriptUnit referencedUnit= referenced.getCompilationUnit();
+		final IJavaScriptUnit referencedUnit= referenced.getJavaScriptUnit();
 		if (referenced.getDeclaringType().equals(referencing))
 			keyword= ModifierKeyword.PRIVATE_KEYWORD;
 		else {
@@ -1260,7 +1260,7 @@ public final class MemberVisibilityAdjustor {
 				}
 			}
 		}
-		final IJavaScriptUnit typeUnit= referencing.getCompilationUnit();
+		final IJavaScriptUnit typeUnit= referencing.getJavaScriptUnit();
 		if (referencedUnit != null && referencedUnit.equals(typeUnit))
 			keyword= ModifierKeyword.PRIVATE_KEYWORD;
 		else if (referencedUnit != null && typeUnit != null && referencedUnit.getParent().equals(typeUnit.getParent()))
@@ -1278,7 +1278,7 @@ public final class MemberVisibilityAdjustor {
 	 * @throws JavaScriptModelException if the java elements could not be accessed
 	 */
 	private ModifierKeyword thresholdTypeToMethod(final IType referencing, final IFunction referenced, final IProgressMonitor monitor) throws JavaScriptModelException {
-		final IJavaScriptUnit referencedUnit= referenced.getCompilationUnit();
+		final IJavaScriptUnit referencedUnit= referenced.getJavaScriptUnit();
 		ModifierKeyword keyword= ModifierKeyword.PUBLIC_KEYWORD;
 		if (referenced.getDeclaringType().equals(referencing))
 			keyword= ModifierKeyword.PRIVATE_KEYWORD;
@@ -1294,7 +1294,7 @@ public final class MemberVisibilityAdjustor {
 				}
 			}
 		}
-		final IJavaScriptUnit typeUnit= referencing.getCompilationUnit();
+		final IJavaScriptUnit typeUnit= referencing.getJavaScriptUnit();
 		if (referencedUnit != null && referencedUnit.equals(typeUnit)) {
 			if (referenced.getDeclaringType().getDeclaringType() != null)
 				keyword= null;
@@ -1316,7 +1316,7 @@ public final class MemberVisibilityAdjustor {
 	 */
 	private ModifierKeyword thresholdTypeToType(final IType referencing, final IType referenced, final IProgressMonitor monitor) throws JavaScriptModelException {
 		ModifierKeyword keyword= ModifierKeyword.PUBLIC_KEYWORD;
-		final IJavaScriptUnit referencedUnit= referenced.getCompilationUnit();
+		final IJavaScriptUnit referencedUnit= referenced.getJavaScriptUnit();
 		if (referencing.equals(referenced.getDeclaringType()))
 			keyword= ModifierKeyword.PRIVATE_KEYWORD;
 		else {
@@ -1331,7 +1331,7 @@ public final class MemberVisibilityAdjustor {
 				}
 			}
 		}
-		final IJavaScriptUnit typeUnit= referencing.getCompilationUnit();
+		final IJavaScriptUnit typeUnit= referencing.getJavaScriptUnit();
 		if (referencedUnit != null && referencedUnit.equals(typeUnit)) {
 			if (referenced.getDeclaringType() != null)
 				keyword= null;

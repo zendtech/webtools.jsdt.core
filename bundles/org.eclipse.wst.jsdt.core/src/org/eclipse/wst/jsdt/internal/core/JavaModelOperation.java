@@ -206,7 +206,7 @@ public abstract class JavaModelOperation implements IWorkspaceRunnable, IProgres
 			// note that the last delta's AST always takes precedence over the existing delta's AST
 			// since it is the result of the last reconcile operation
 			if ((delta.getFlags() & IJavaScriptElementDelta.F_AST_AFFECTED) != 0) {
-				previousDelta.changedAST(delta.getCompilationUnitAST());
+				previousDelta.changedAST(delta.getJavaScriptUnitAST());
 			}
 
 		} else {
@@ -436,7 +436,7 @@ public abstract class JavaModelOperation implements IWorkspaceRunnable, IProgres
 	 */
 	protected IJavaScriptUnit getCompilationUnitFor(IJavaScriptElement element) {
 
-		return ((JavaElement)element).getCompilationUnit();
+		return ((JavaElement)element).getJavaScriptUnit();
 	}
 	/*
 	 * Returns the stack of operations running in the current thread.
@@ -484,7 +484,7 @@ public abstract class JavaModelOperation implements IWorkspaceRunnable, IProgres
 	}
 	protected IPath[] getNestedFolders(IPackageFragmentRoot root) throws JavaScriptModelException {
 		IPath rootPath = root.getPath();
-		IIncludePathEntry[] classpath = root.getJavaProject().getRawClasspath();
+		IIncludePathEntry[] classpath = root.getJavaScriptProject().getRawIncludepath();
 		int length = classpath.length;
 		IPath[] result = new IPath[length];
 		int index = 0;
@@ -767,7 +767,7 @@ public abstract class JavaModelOperation implements IWorkspaceRunnable, IProgres
 					switch (element.getElementType()) {
 						case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
 						case IJavaScriptElement.PACKAGE_FRAGMENT:
-							deltaProcessor.projectCachesToReset.add(element.getJavaProject());
+							deltaProcessor.projectCachesToReset.add(element.getJavaScriptProject());
 							break;
 					}
 				}

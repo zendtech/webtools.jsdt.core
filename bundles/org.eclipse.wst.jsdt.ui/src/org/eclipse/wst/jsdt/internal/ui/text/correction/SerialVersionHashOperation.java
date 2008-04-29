@@ -196,7 +196,7 @@ public final class SerialVersionHashOperation extends AbstractSerialVersionOpera
 		long serialVersionID= SERIAL_VALUE;
 		try {
 			monitor.beginTask(CorrectionMessages.SerialVersionHashProposal_computing_id, 200);
-			final IJavaScriptProject project= fCompilationUnit.getJavaProject();
+			final IJavaScriptProject project= fCompilationUnit.getJavaScriptProject();
 			final IPath path= fCompilationUnit.getResource().getFullPath();
 			try {
 				FileBuffers.getTextFileBufferManager().connect(path, LocationKind.IFILE, new SubProgressMonitor(monitor, 10));

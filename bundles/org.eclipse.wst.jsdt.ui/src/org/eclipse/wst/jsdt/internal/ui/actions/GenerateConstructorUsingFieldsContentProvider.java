@@ -44,7 +44,7 @@ public class GenerateConstructorUsingFieldsContentProvider implements ITreeConte
 
 	public GenerateConstructorUsingFieldsContentProvider(IType type, List fields, List selected) throws JavaScriptModelException {
 		RefactoringASTParser parser= new RefactoringASTParser(AST.JLS3);
-		fUnit= parser.parse(type.getCompilationUnit(), true);
+		fUnit= parser.parse(type.getJavaScriptUnit(), true);
 		fType= ASTNodes.getTypeBinding(fUnit, type);
 		if (fType != null) {
 			IField field= null;

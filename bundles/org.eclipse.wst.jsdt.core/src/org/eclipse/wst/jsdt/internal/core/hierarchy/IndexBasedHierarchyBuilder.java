@@ -189,10 +189,10 @@ private void buildForProject(JavaProject project, ArrayList potentialSubtypes, o
 		});
 
 		IType focusType = this.getType();
-		boolean inProjectOfFocusType = focusType != null && focusType.getJavaProject().equals(project);
+		boolean inProjectOfFocusType = focusType != null && focusType.getJavaScriptProject().equals(project);
 		org.eclipse.wst.jsdt.core.IJavaScriptUnit[] unitsToLookInside = null;
 		if (inProjectOfFocusType) {
-			org.eclipse.wst.jsdt.core.IJavaScriptUnit unitToLookInside = focusType.getCompilationUnit();
+			org.eclipse.wst.jsdt.core.IJavaScriptUnit unitToLookInside = focusType.getJavaScriptUnit();
 			if (unitToLookInside != null) {
 				int wcLength = workingCopies == null ? 0 : workingCopies.length;
 				if (wcLength == 0) {
@@ -232,7 +232,7 @@ private void buildForProject(JavaProject project, ArrayList potentialSubtypes, o
 				if (declaringMember.isBinary()) {
 					openable = (Openable)declaringMember.getClassFile();
 				} else {
-					openable = (Openable)declaringMember.getCompilationUnit();
+					openable = (Openable)declaringMember.getJavaScriptUnit();
 				}
 				localTypes = new HashSet();
 				localTypes.add(openable.getPath().toString());
@@ -271,7 +271,7 @@ private void buildFromPotentialSubtypes(String[] allPotentialSubTypes, HashSet l
 	// inject the compilation unit of the focus type (so that types in
 	// this cu have special visibility permission (this is also usefull
 	// when the cu is a working copy)
-	Openable focusCU = (Openable)focusType.getCompilationUnit();
+	Openable focusCU = (Openable)focusType.getJavaScriptUnit();
 	String focusPath = null;
 	if (focusCU != null) {
 		focusPath = focusCU.getPath().toString();
@@ -314,7 +314,7 @@ private void buildFromPotentialSubtypes(String[] allPotentialSubTypes, HashSet l
 					if (handle == null) continue; // match is outside classpath
 				}
 
-				IJavaScriptProject project = handle.getJavaProject();
+				IJavaScriptProject project = handle.getJavaScriptProject();
 				if (currentProject == null) {
 					currentProject = project;
 					potentialSubtypes = new ArrayList(5);
@@ -335,11 +335,11 @@ private void buildFromPotentialSubtypes(String[] allPotentialSubTypes, HashSet l
 		try {
 			if (currentProject == null) {
 				// case of no potential subtypes
-				currentProject = focusType.getJavaProject();
+				currentProject = focusType.getJavaScriptProject();
 				if (focusType.isBinary()) {
 					potentialSubtypes.add(focusType.getClassFile());
 				} else {
-					potentialSubtypes.add(focusType.getCompilationUnit());
+					potentialSubtypes.add(focusType.getJavaScriptUnit());
 				}
 			}
 			this.buildForProject((JavaProject)currentProject, potentialSubtypes, workingCopies, localTypes, monitor);
@@ -350,12 +350,12 @@ private void buildFromPotentialSubtypes(String[] allPotentialSubTypes, HashSet l
 		// Compute hierarchy of focus type if not already done (case of a type with potential subtypes that are not real subtypes)
 		if (!this.hierarchy.contains(focusType)) {
 			try {
-				currentProject = focusType.getJavaProject();
+				currentProject = focusType.getJavaScriptProject();
 				potentialSubtypes = new ArrayList();
 				if (focusType.isBinary()) {
 					potentialSubtypes.add(focusType.getClassFile());
 				} else {
-					potentialSubtypes.add(focusType.getCompilationUnit());
+					potentialSubtypes.add(focusType.getJavaScriptUnit());
 				}
 				this.buildForProject((JavaProject)currentProject, potentialSubtypes, workingCopies, localTypes, monitor);
 			} catch (JavaScriptModelException e) {

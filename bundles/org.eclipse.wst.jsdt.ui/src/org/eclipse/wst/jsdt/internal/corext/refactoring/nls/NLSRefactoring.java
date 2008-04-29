@@ -374,7 +374,7 @@ public class NLSRefactoring extends Refactoring {
 	}
 
 	private IJavaScriptUnit getAccessorCu() {
-		return fAccessorClassPackage.getCompilationUnit(getAccessorCUName());
+		return fAccessorClassPackage.getJavaScriptUnit(getAccessorCUName());
 	}
 
 	private boolean willModifySource() {
@@ -484,7 +484,7 @@ public class NLSRefactoring extends Refactoring {
 	 */
 	public boolean detectIsEclipseNLS() {
 		if (getAccessorClassPackage() != null) {
-			IJavaScriptUnit accessorCU= getAccessorClassPackage().getCompilationUnit(getAccessorCUName());
+			IJavaScriptUnit accessorCU= getAccessorClassPackage().getJavaScriptUnit(getAccessorCUName());
 			IType type= accessorCU.getType(getAccessorClassName());
 			if (type.exists()) {
 				try {

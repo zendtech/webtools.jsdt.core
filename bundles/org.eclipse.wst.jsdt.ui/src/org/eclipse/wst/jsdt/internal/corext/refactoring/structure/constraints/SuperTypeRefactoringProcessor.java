@@ -269,7 +269,7 @@ public abstract class SuperTypeRefactoringProcessor extends RefactoringProcessor
 		try {
 			monitor.beginTask("", 100); //$NON-NLS-1$
 			monitor.setTaskName(RefactoringCoreMessages.ExtractInterfaceProcessor_creating);
-			final String delimiter= StubUtility.getLineDelimiterUsed(subType.getJavaProject());
+			final String delimiter= StubUtility.getLineDelimiterUsed(subType.getJavaScriptProject());
 			if (JdtFlags.isPublic(subType)) {
 				buffer.append(JdtFlags.VISIBILITY_STRING_PUBLIC);
 				buffer.append(" "); //$NON-NLS-1$
@@ -291,7 +291,7 @@ public abstract class SuperTypeRefactoringProcessor extends RefactoringProcessor
 			final AbstractTypeDeclaration targetDeclaration= (AbstractTypeDeclaration) unit.types().get(0);
 			createTypeParameters(targetRewrite, subType, sourceDeclaration, targetDeclaration);
 			createMemberDeclarations(sourceRewrite, targetRewrite, targetDeclaration);
-			final TextEdit edit= targetRewrite.rewriteAST(document, subType.getJavaProject().getOptions(true));
+			final TextEdit edit= targetRewrite.rewriteAST(document, subType.getJavaScriptProject().getOptions(true));
 			try {
 				edit.apply(document, TextEdit.UPDATE_REGIONS);
 			} catch (MalformedTreeException exception) {
@@ -379,7 +379,7 @@ public abstract class SuperTypeRefactoringProcessor extends RefactoringProcessor
 			for (final Iterator iterator= ((TypeDeclaration) sourceDeclaration).typeParameters().iterator(); iterator.hasNext();) {
 				parameter= (TypeParameter) iterator.next();
 				rewrite.insertLast(ASTNode.copySubtree(targetRewrite.getAST(), parameter), null);
-				ImportRewriteUtil.collectImports(subType.getJavaProject(), sourceDeclaration, fTypeBindings, fStaticBindings, false);
+				ImportRewriteUtil.collectImports(subType.getJavaScriptProject(), sourceDeclaration, fTypeBindings, fStaticBindings, false);
 			}
 		}
 	}
@@ -417,7 +417,7 @@ public abstract class SuperTypeRefactoringProcessor extends RefactoringProcessor
 		try {
 			monitor.beginTask("", 100); //$NON-NLS-1$
 			monitor.setTaskName(RefactoringCoreMessages.ExtractInterfaceProcessor_creating);
-			final String delimiter= StubUtility.getLineDelimiterUsed(subType.getJavaProject());
+			final String delimiter= StubUtility.getLineDelimiterUsed(subType.getJavaScriptProject());
 			String typeComment= null;
 			String fileComment= null;
 			if (fSettings.createComments) {
@@ -441,7 +441,7 @@ public abstract class SuperTypeRefactoringProcessor extends RefactoringProcessor
 				source= buffer.toString();
 			}
 			final IDocument document= new Document(source);
-			final TextEdit edit= CodeFormatterUtil.format2(CodeFormatter.K_COMPILATION_UNIT, source, 0, delimiter, copy.getJavaProject().getOptions(true));
+			final TextEdit edit= CodeFormatterUtil.format2(CodeFormatter.K_JAVASCRIPT_UNIT, source, 0, delimiter, copy.getJavaScriptProject().getOptions(true));
 			if (edit != null) {
 				try {
 					edit.apply(document, TextEdit.UPDATE_REGIONS);
@@ -483,7 +483,7 @@ public abstract class SuperTypeRefactoringProcessor extends RefactoringProcessor
 		Assert.isNotNull(content);
 		final IPackageFragment fragment= (IPackageFragment) unit.getParent();
 		final StringBuffer buffer= new StringBuffer();
-		final String delimiter= StubUtility.getLineDelimiterUsed(unit.getJavaProject());
+		final String delimiter= StubUtility.getLineDelimiterUsed(unit.getJavaScriptProject());
 		if (!fragment.isDefaultPackage()) {
 			buffer.append("package " + fragment.getElementName() + ";"); //$NON-NLS-1$ //$NON-NLS-2$
 			buffer.append(delimiter);
@@ -551,7 +551,7 @@ public abstract class SuperTypeRefactoringProcessor extends RefactoringProcessor
 		IJavaScriptProject project= null;
 		for (int index= 0; index < nodes.length; index++) {
 			node= nodes[index];
-			project= RefactoringASTParser.getCompilationUnit(node).getJavaProject();
+			project= RefactoringASTParser.getCompilationUnit(node).getJavaScriptProject();
 			if (project != null) {
 				final List fields= getReferencingFields(node, project);
 				for (int offset= 0; offset < fields.size(); offset++) {
@@ -561,7 +561,7 @@ public abstract class SuperTypeRefactoringProcessor extends RefactoringProcessor
 						set= new HashSet();
 						units.put(project, set);
 					}
-					final IJavaScriptUnit unit= field.getCompilationUnit();
+					final IJavaScriptUnit unit= field.getJavaScriptUnit();
 					if (unit != null)
 						set.add(unit);
 				}
@@ -587,7 +587,7 @@ public abstract class SuperTypeRefactoringProcessor extends RefactoringProcessor
 		IJavaScriptProject project= null;
 		for (int index= 0; index < nodes.length; index++) {
 			node= nodes[index];
-			project= RefactoringASTParser.getCompilationUnit(node).getJavaProject();
+			project= RefactoringASTParser.getCompilationUnit(node).getJavaScriptProject();
 			if (project != null) {
 				method= getReferencingMethod(node);
 				if (method != null) {
@@ -596,7 +596,7 @@ public abstract class SuperTypeRefactoringProcessor extends RefactoringProcessor
 						set= new HashSet();
 						units.put(project, set);
 					}
-					final IJavaScriptUnit unit= method.getCompilationUnit();
+					final IJavaScriptUnit unit= method.getJavaScriptUnit();
 					if (unit != null)
 						set.add(unit);
 				}
@@ -1018,7 +1018,7 @@ public abstract class SuperTypeRefactoringProcessor extends RefactoringProcessor
 				IJavaScriptUnit current= null;
 				for (final Iterator iterator= units.iterator(); iterator.hasNext();) {
 					current= (IJavaScriptUnit) iterator.next();
-					project= current.getJavaProject();
+					project= current.getJavaScriptProject();
 					collection= (Collection) projects.get(project);
 					if (collection == null) {
 						collection= new ArrayList();
@@ -1168,7 +1168,7 @@ public abstract class SuperTypeRefactoringProcessor extends RefactoringProcessor
 							for (int index= 0; index < matches.length; index++) {
 								element= matches[index].getElement();
 								if (element instanceof IMember) {
-									current= ((IMember) element).getCompilationUnit();
+									current= ((IMember) element).getJavaScriptUnit();
 									if (current != null)
 										groups.put(current, group);
 								}
@@ -1197,7 +1197,7 @@ public abstract class SuperTypeRefactoringProcessor extends RefactoringProcessor
 								for (int index= 0; index < matches.length; index++) {
 									element= matches[index].getElement();
 									if (element instanceof IMember) {
-										current= ((IMember) element).getCompilationUnit();
+										current= ((IMember) element).getJavaScriptUnit();
 										if (current != null)
 											units.add(current);
 									}

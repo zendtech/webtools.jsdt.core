@@ -235,7 +235,7 @@ public class MembersView extends JavaBrowsingPart implements IPropertyChangeList
 	 * @return	the closest Java element used as input for this part, or <code>null</code>
 	 */
 	protected IJavaScriptElement findInputForJavaElement(IJavaScriptElement je) {
-		if (je == null || !je.exists() || (je.getJavaProject() != null && !je.getJavaProject().isOnClasspath(je)))
+		if (je == null || !je.exists() || (je.getJavaScriptProject() != null && !je.getJavaScriptProject().isOnIncludepath(je)))
 			return null;
 
 		switch (je.getElementType()) {

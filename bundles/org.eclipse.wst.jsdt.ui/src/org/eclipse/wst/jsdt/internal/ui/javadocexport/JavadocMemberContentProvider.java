@@ -57,7 +57,7 @@ public class JavadocMemberContentProvider implements ITreeContentProvider {
 	public Object[] getElements(Object inputElement) {
 		try {
 			if (inputElement instanceof IPackageFragment) {
-				IJavaScriptUnit[] cu= ((IPackageFragment) inputElement).getCompilationUnits();
+				IJavaScriptUnit[] cu= ((IPackageFragment) inputElement).getJavaScriptUnits();
 				return cu;
 			}
 		} catch (JavaScriptModelException e) {

@@ -183,7 +183,7 @@ public class JavaElementContentProvider extends StandardJavaElementContentProvid
 			
 		if (isClassPathChange(delta)) {
 			 // throw the towel and do a full refresh of the affected java project. 
-			postRefresh(element.getJavaProject());
+			postRefresh(element.getJavaScriptProject());
 		}
 		
 		if (delta.getResourceDeltas() != null) {
@@ -220,10 +220,10 @@ public class JavaElementContentProvider extends StandardJavaElementContentProvid
 	}
 
 	private boolean isOnClassPath(IJavaScriptUnit element) {
-		IJavaScriptProject project= element.getJavaProject();
+		IJavaScriptProject project= element.getJavaScriptProject();
 		if (project == null || !project.exists())
 			return false;
-		return project.isOnClasspath(element);
+		return project.isOnIncludepath(element);
 	}
 
 	

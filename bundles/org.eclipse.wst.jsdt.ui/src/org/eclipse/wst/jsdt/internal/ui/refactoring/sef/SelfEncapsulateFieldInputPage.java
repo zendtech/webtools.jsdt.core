@@ -196,7 +196,7 @@ public class SelfEncapsulateFieldInputPage extends UserInputWizardPage {
 		fSettings= getDialogSettings().getSection(SelfEncapsulateFieldWizard.DIALOG_SETTING_SECTION);
 		if (fSettings == null) {
 			fSettings= getDialogSettings().addNewSection(SelfEncapsulateFieldWizard.DIALOG_SETTING_SECTION);
-			fSettings.put(GENERATE_JAVADOC, JavaPreferencesSettings.getCodeGenerationSettings(fRefactoring.getField().getJavaProject()).createComments);
+			fSettings.put(GENERATE_JAVADOC, JavaPreferencesSettings.getCodeGenerationSettings(fRefactoring.getField().getJavaScriptProject()).createComments);
 		}
 		fRefactoring.setGenerateJavadoc(fSettings.getBoolean(GENERATE_JAVADOC));
 	}	
@@ -294,7 +294,7 @@ public class SelfEncapsulateFieldInputPage extends UserInputWizardPage {
 		int select= 0;
 		combo.add(RefactoringMessages.SelfEncapsulateFieldInputPage_first_method); 
 		try {
-			IFunction[] methods= field.getDeclaringType().getMethods();
+			IFunction[] methods= field.getDeclaringType().getFunctions();
 			for (int i= 0; i < methods.length; i++) {
 				combo.add(JavaElementLabels.getElementLabel(methods[i], JavaElementLabels.M_PARAMETER_TYPES));
 			}

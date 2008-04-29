@@ -89,12 +89,12 @@ public class SetVariablesOperation extends ChangeClasspathOperation {
 			if (isCanceled())
 				return;
 
-			IJavaScriptProject[] projects = model.getJavaProjects();
+			IJavaScriptProject[] projects = model.getJavaScriptProjects();
 			nextProject : for (int i = 0, projectLength = projects.length; i < projectLength; i++){
 				JavaProject project = (JavaProject) projects[i];
 
 				// check to see if any of the modified variables is present on the classpath
-				IIncludePathEntry[] classpath = project.getRawClasspath();
+				IIncludePathEntry[] classpath = project.getRawIncludepath();
 				for (int j = 0, cpLength = classpath.length; j < cpLength; j++){
 
 					IIncludePathEntry entry = classpath[j];

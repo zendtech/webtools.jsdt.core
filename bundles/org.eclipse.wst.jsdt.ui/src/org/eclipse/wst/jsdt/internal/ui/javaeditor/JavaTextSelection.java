@@ -134,7 +134,7 @@ public class JavaTextSelection extends TextSelection {
 			while (node != null) {
 				int nodeType= node.getNodeType();
 				if (nodeType == ASTNode.BLOCK && node.getParent() instanceof BodyDeclaration) {
-					fInMethodBody= node.getParent().getNodeType() == ASTNode.METHOD_DECLARATION;
+					fInMethodBody= node.getParent().getNodeType() == ASTNode.FUNCTION_DECLARATION;
 					break;
 				} else if (nodeType == ASTNode.ANONYMOUS_CLASS_DECLARATION) {
 					fInMethodBody= false;

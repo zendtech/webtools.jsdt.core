@@ -41,7 +41,7 @@ public class ResourceLocator implements IResourceLocator {
 		if (element instanceof IJavaScriptElement) {
 			resource= ((IJavaScriptElement) element).getResource();
 			if (resource == null)
-				resource= ((IJavaScriptElement) element).getJavaProject().getProject();
+				resource= ((IJavaScriptElement) element).getJavaScriptProject().getProject();
 		}
 		return resource;
 	}

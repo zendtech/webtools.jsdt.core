@@ -281,7 +281,7 @@ public final class JavaDeleteProcessor extends DeleteProcessor implements IScrip
 			if (element instanceof IJavaScriptUnit) {
 				checkDirtyCompilationUnit(result, (IJavaScriptUnit)element);	
 			} else if (element instanceof IPackageFragment) {
-				IJavaScriptUnit[] units= ((IPackageFragment)element).getCompilationUnits();
+				IJavaScriptUnit[] units= ((IPackageFragment)element).getJavaScriptUnits();
 				for (int u = 0; u < units.length; u++) {
 					checkDirtyCompilationUnit(result, units[u]);
 				}
@@ -535,7 +535,7 @@ public final class JavaDeleteProcessor extends DeleteProcessor implements IScrip
 				continue;
 			IPackageFragmentRoot root= (IPackageFragmentRoot)element;
 			ArrayList referencingProjects= new ArrayList(Arrays.asList(JavaElementUtil.getReferencingProjects(root)));
-			referencingProjects.remove(root.getJavaProject());
+			referencingProjects.remove(root.getJavaScriptProject());
 			if (skipDeletingReferencedRoot(query, root, referencingProjects))
 				rootsToSkip.add(root);
 		}
@@ -631,7 +631,7 @@ public final class JavaDeleteProcessor extends DeleteProcessor implements IScrip
 		for (int index= 0; index < fElements.length; index++) {
 			IProject project= null;
 			if (fElements[index] instanceof IJavaScriptElement)
-				project= ((IJavaScriptElement) fElements[index]).getJavaProject().getProject();
+				project= ((IJavaScriptElement) fElements[index]).getJavaScriptProject().getProject();
 			else if (fElements[index] instanceof IResource)
 				project= ((IResource) fElements[index]).getProject();
 			if (project != null) {

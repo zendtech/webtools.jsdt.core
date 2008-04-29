@@ -41,7 +41,14 @@ public class BasicBrowserLibraryJsGlobalScopeContainerInitializer extends JsGlob
 		return new BasicLibLocation();
 	}
 
+	/**
+	 * @deprecated Use {@link #getIncludepathEntries()} instead
+	 */
 	public IIncludePathEntry[] getClasspathEntries() {
+		return getIncludepathEntries();
+	}
+
+	public IIncludePathEntry[] getIncludepathEntries() {
 		LibraryLocation libLocation =  getLibraryLocation();
 		char[][] filesInLibs = libLocation.getLibraryFileNames();
 		IIncludePathEntry[] entries = new IIncludePathEntry[filesInLibs.length];

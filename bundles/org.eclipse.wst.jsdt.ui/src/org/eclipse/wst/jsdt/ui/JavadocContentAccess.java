@@ -79,7 +79,7 @@ public class JavadocContentAccess {
 			return null; // no source attachment found
 		}
 		
-		ISourceRange javadocRange= member.getJavadocRange();
+		ISourceRange javadocRange= member.getJSdocRange();
 		if (javadocRange != null) {
 			JavaDocCommentReader reader= new JavaDocCommentReader(buf, javadocRange.getOffset(), javadocRange.getOffset() + javadocRange.getLength() - 1);
 			if (!containsOnlyInheritDoc(reader, javadocRange.getLength())) {

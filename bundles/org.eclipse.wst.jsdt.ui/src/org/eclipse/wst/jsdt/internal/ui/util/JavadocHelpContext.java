@@ -118,7 +118,7 @@ public class JavadocHelpContext implements IContext2 {
 					if (root != null) {
 						url= JavaUI.getJavadocBaseLocation(element);
 						if (root.getKind() == IPackageFragmentRoot.K_SOURCE) {
-							element= element.getJavaProject();
+							element= element.getJavaScriptProject();
 						} else {
 							element= root;
 						}

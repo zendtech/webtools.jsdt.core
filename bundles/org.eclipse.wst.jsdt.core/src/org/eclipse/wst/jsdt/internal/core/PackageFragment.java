@@ -83,7 +83,7 @@ protected boolean buildStructure(OpenableElementInfo info, IProgressMonitor pm, 
 		IResource[] members = ((IContainer) underlyingResource).members();
 		int length = members.length;
 		if (length > 0) {
-			IJavaScriptProject project = getJavaProject();
+			IJavaScriptProject project = getJavaScriptProject();
 			String sourceLevel = project.getOption(JavaScriptCore.COMPILER_SOURCE, true);
 			String complianceLevel = project.getOption(JavaScriptCore.COMPILER_COMPLIANCE, true);
 			for (int i = 0; i < length; i++) {
@@ -107,7 +107,7 @@ protected boolean buildStructure(OpenableElementInfo info, IProgressMonitor pm, 
 
 	if (kind == IPackageFragmentRoot.K_SOURCE) {
 		// add primary compilation units
-		IJavaScriptUnit[] primaryCompilationUnits = getCompilationUnits(DefaultWorkingCopyOwner.PRIMARY);
+		IJavaScriptUnit[] primaryCompilationUnits = getJavaScriptUnits(DefaultWorkingCopyOwner.PRIMARY);
 		for (int i = 0, length = primaryCompilationUnits.length; i < length; i++) {
 			IJavaScriptUnit primary = primaryCompilationUnits[i];
 			vChildren.add(primary);
@@ -143,7 +143,7 @@ public void copy(IJavaScriptElement container, IJavaScriptElement sibling, Strin
 	if (rename != null) {
 		renamings= new String[] {rename};
 	}
-	getJavaModel().copy(elements, containers, siblings, renamings, force, monitor);
+	getJavaScriptModel().copy(elements, containers, siblings, renamings, force, monitor);
 }
 /**
  * @see IPackageFragment
@@ -164,7 +164,7 @@ protected Object createElementInfo() {
  */
 public void delete(boolean force, IProgressMonitor monitor) throws JavaScriptModelException {
 	IJavaScriptElement[] elements = new IJavaScriptElement[] {this};
-	getJavaModel().delete(elements, force, monitor);
+	getJavaScriptModel().delete(elements, force, monitor);
 }
 public boolean equals(Object o) {
 	if (this == o) return true;
@@ -217,7 +217,7 @@ public IClassFile[] getClassFiles() throws JavaScriptModelException {
 	return array;
 }
 /**
- * @see IPackageFragment#getCompilationUnit(String)
+ * @see IPackageFragment#getJavaScriptUnit(String)
  * @exception IllegalArgumentException if the name does not end with ".js"
  */
 public IJavaScriptUnit getCompilationUnit(String cuName, String superTypeName) {
@@ -244,13 +244,26 @@ public IJavaScriptUnit getCompilationUnit(String cuName, String superTypeName) {
 	return new CompilationUnit(this, cuName,superTypeName, DefaultWorkingCopyOwner.PRIMARY);
 }
 
+/**
+ * @deprecated Use {@link #getJavaScriptUnit(String)} instead
+ */
 public IJavaScriptUnit getCompilationUnit(String cuName) {
+	return getJavaScriptUnit(cuName);
+}
+public IJavaScriptUnit getJavaScriptUnit(String cuName) {
 	return getCompilationUnit(cuName,null);
 }
 /**
  * @see IPackageFragment#getCompilationUnits()
+ * @deprecated Use {@link #getJavaScriptUnits()} instead
  */
 public IJavaScriptUnit[] getCompilationUnits() throws JavaScriptModelException {
+	return getJavaScriptUnits();
+}
+/**
+ * @see IPackageFragment#getJavaScriptUnits()
+ */
+public IJavaScriptUnit[] getJavaScriptUnits() throws JavaScriptModelException {
 	if (getKind() == IPackageFragmentRoot.K_BINARY) {
 		return NO_COMPILATION_UNITS;
 	}
@@ -262,8 +275,15 @@ public IJavaScriptUnit[] getCompilationUnits() throws JavaScriptModelException {
 }
 /**
  * @see IPackageFragment#getCompilationUnits(WorkingCopyOwner)
+ * @deprecated Use {@link #getJavaScriptUnits(WorkingCopyOwner)} instead
  */
 public IJavaScriptUnit[] getCompilationUnits(WorkingCopyOwner owner) {
+	return getJavaScriptUnits(owner);
+}
+/**
+ * @see IPackageFragment#getJavaScriptUnits(WorkingCopyOwner)
+ */
+public IJavaScriptUnit[] getJavaScriptUnits(WorkingCopyOwner owner) {
 	IJavaScriptUnit[] workingCopies = JavaModelManager.getJavaModelManager().getWorkingCopies(owner, false/*don't add primary*/);
 	if (workingCopies == null) return JavaModelManager.NO_WORKING_COPY;
 	int length = workingCopies.length;
@@ -324,7 +344,7 @@ public int getKind() throws JavaScriptModelException {
 /**
  * Returns an array of non-java resources contained in the receiver.
  */
-public Object[] getNonJavaResources() throws JavaScriptModelException {
+public Object[] getNonJavaScriptResources() throws JavaScriptModelException {
 	if (this.isDefaultPackage()) {
 		// We don't want to show non java resources of the default package (see PR #1G58NB8)
 		return JavaElementInfo.NO_NON_JAVA_RESOURCES;
@@ -444,7 +464,7 @@ public void move(IJavaScriptElement container, IJavaScriptElement sibling, Strin
 	if (rename != null) {
 		renamings= new String[] {rename};
 	}
-	getJavaModel().move(elements, containers, siblings, renamings, force, monitor);
+	getJavaScriptModel().move(elements, containers, siblings, renamings, force, monitor);
 }
 /**
  * @see org.eclipse.wst.jsdt.core.ISourceManipulation#rename(String, boolean, IProgressMonitor)
@@ -456,7 +476,7 @@ public void rename(String newName, boolean force, IProgressMonitor monitor) thro
 	IJavaScriptElement[] elements= new IJavaScriptElement[] {this};
 	IJavaScriptElement[] dests= new IJavaScriptElement[] {this.getParent()};
 	String[] renamings= new String[] {newName};
-	getJavaModel().rename(elements, dests, renamings, force, monitor);
+	getJavaScriptModel().rename(elements, dests, renamings, force, monitor);
 }
 /**
  * Debugging purposes
@@ -488,7 +508,7 @@ protected void toStringInfo(int tab, StringBuffer buffer, Object info, boolean s
  * @see IJavaScriptElement#getAttachedJavadoc(IProgressMonitor)
  */
 public String getAttachedJavadoc(IProgressMonitor monitor) throws JavaScriptModelException {
-	PerProjectInfo projectInfo = JavaModelManager.getJavaModelManager().getPerProjectInfoCheckExistence(this.getJavaProject().getProject());
+	PerProjectInfo projectInfo = JavaModelManager.getJavaModelManager().getPerProjectInfoCheckExistence(this.getJavaScriptProject().getProject());
 	String cachedJavadoc = null;
 	synchronized (projectInfo.javadocCache) {
 		cachedJavadoc = (String) projectInfo.javadocCache.get(this);
@@ -511,7 +531,7 @@ public String getAttachedJavadoc(IProgressMonitor monitor) throws JavaScriptMode
 	if (monitor != null && monitor.isCanceled()) throw new OperationCanceledException();
 	final String contents = getURLContents(String.valueOf(pathBuffer));
 	if (monitor != null && monitor.isCanceled()) throw new OperationCanceledException();
-	if (contents == null) throw new JavaScriptModelException(new JavaModelStatus(IJavaScriptModelStatusConstants.CANNOT_RETRIEVE_ATTACHED_JAVADOC, this));
+	if (contents == null) throw new JavaScriptModelException(new JavaModelStatus(IJavaScriptModelStatusConstants.CANNOT_RETRIEVE_ATTACHED_JSDOC, this));
 	synchronized (projectInfo.javadocCache) {
 		projectInfo.javadocCache.put(this, contents);
 	}

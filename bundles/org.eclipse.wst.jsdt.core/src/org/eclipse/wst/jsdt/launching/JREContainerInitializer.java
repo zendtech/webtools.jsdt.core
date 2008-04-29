@@ -224,7 +224,7 @@ public class JREContainerInitializer extends JsGlobalScopeContainerInitializer {
 //					IIncludePathAttribute[] extraAttributes = entry.getExtraAttributes();
 //					for (int j = 0; j < extraAttributes.length; j++) {
 //						IIncludePathAttribute attribute = extraAttributes[j];
-//						if (attribute.getName().equals(IIncludePathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME)) {
+//						if (attribute.getName().equals(IIncludePathAttribute.JSDOC_LOCATION_ATTRIBUTE_NAME)) {
 //							String url = attribute.getValue();
 //							if (url != null && url.trim().length() > 0) {
 //								try {

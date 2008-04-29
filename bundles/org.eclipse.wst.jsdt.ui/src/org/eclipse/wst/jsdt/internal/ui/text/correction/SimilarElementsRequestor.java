@@ -59,7 +59,7 @@ public class SimilarElementsRequestor extends CompletionRequestor {
 //			} else {
 				pos= name.getStartPosition() + 1; // first letter must be included, other
 		//	}
-			JSdoc javadoc=  (JSdoc) ASTNodes.getParent(name, ASTNode.JAVADOC);
+			JSdoc javadoc=  (JSdoc) ASTNodes.getParent(name, ASTNode.JSDOC);
 			if (javadoc != null) {
 				preparedCU= createPreparedCU(cu, javadoc, name.getStartPosition());
 				cu= preparedCU;

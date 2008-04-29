@@ -89,14 +89,14 @@ import org.eclipse.wst.jsdt.internal.corext.dom.GenericVisitor;
 			if (first.getParent() == null)
 				return false;
 			ASTNode candidate= first.getParent().getParent();
-			if (candidate == null || candidate.getNodeType() != ASTNode.METHOD_DECLARATION)
+			if (candidate == null || candidate.getNodeType() != ASTNode.FUNCTION_DECLARATION)
 				return false;
 			FunctionDeclaration method= (FunctionDeclaration)candidate;
 			return method.getBody().statements().size() == fNodes.size();
 		}
 		public FunctionDeclaration getEnclosingMethod() {
 			ASTNode first= (ASTNode)fNodes.get(0);
-			return (FunctionDeclaration)ASTNodes.getParent(first, ASTNode.METHOD_DECLARATION);
+			return (FunctionDeclaration)ASTNodes.getParent(first, ASTNode.FUNCTION_DECLARATION);
 		}
 	}
 	

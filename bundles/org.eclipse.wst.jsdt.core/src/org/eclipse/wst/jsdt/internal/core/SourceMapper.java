@@ -368,7 +368,7 @@ public class SourceMapper
 
 		if (root.isArchive()) {
 			JarPackageFragmentRoot jarPackageFragmentRoot = (JarPackageFragmentRoot) root;
-			IJavaScriptProject project = jarPackageFragmentRoot.getJavaProject();
+			IJavaScriptProject project = jarPackageFragmentRoot.getJavaScriptProject();
 			String sourceLevel = null;
 			String complianceLevel = null;
 			JavaModelManager manager = JavaModelManager.getJavaModelManager();
@@ -764,7 +764,7 @@ public class SourceMapper
 			}
 			this.methodParameterNames[typeDepth] = methodInfo.parameterNames;
 
-			IFunction method = currentType.getMethod(
+			IFunction method = currentType.getFunction(
 					this.memberName[typeDepth],
 					convertTypeNamesToSigs(this.methodParameterTypes[typeDepth]));
 
@@ -854,7 +854,7 @@ public class SourceMapper
 				new SourceRange(
 					this.memberDeclarationStart[typeDepth],
 					declarationEnd - this.memberDeclarationStart[typeDepth] + 1);
-			IFunction method = currentType.getMethod(
+			IFunction method = currentType.getFunction(
 					this.memberName[typeDepth],
 					convertTypeNamesToSigs(this.methodParameterTypes[typeDepth]));
 			setSourceRange(
@@ -1134,7 +1134,7 @@ public class SourceMapper
 		}
 
 		IJavaScriptElement[] result = new IJavaScriptElement[2];
-		result[0] = ((IType) method.getParent()).getMethod(
+		result[0] = ((IType) method.getParent()).getFunction(
 			method.getElementName(),
 			unqualifiedParameterTypes);
 		if(hasDollar) {
@@ -1284,7 +1284,7 @@ public class SourceMapper
 			boolean doFullParse = hasToRetrieveSourceRangesForLocalClass(fullName);
 			parser = new SourceElementParser(this, factory, new CompilerOptions(this.options), doFullParse, true/*optimize string literals*/);
 			parser.javadocParser.checkDocComment = false; // disable javadoc parsing
-			IJavaScriptElement javaElement = this.binaryType.getCompilationUnit();
+			IJavaScriptElement javaElement = this.binaryType.getJavaScriptUnit();
 			if (javaElement == null) javaElement = this.binaryType.getParent();
 			parser.parseCompilationUnit(
 				new BasicCompilationUnit(contents, null, this.binaryType.sourceFileName(info), javaElement),

@@ -86,8 +86,8 @@ class CallerMethodWrapper extends MethodWrapper {
 		if (! JdtFlags.isPrivate(member))
 			return defaultSearchScope;
 		
-		if (member.getCompilationUnit() != null) {
-			return SearchEngine.createJavaSearchScope(new IJavaScriptElement[] { member.getCompilationUnit() });
+		if (member.getJavaScriptUnit() != null) {
+			return SearchEngine.createJavaSearchScope(new IJavaScriptElement[] { member.getJavaScriptUnit() });
 		} else if (member.getClassFile() != null) {
 			// member could be called from an inner class-> search
 			// package fragment (see also bug 109053):

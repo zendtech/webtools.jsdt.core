@@ -235,11 +235,11 @@ public class ConvertAnonymousToNestedRefactoring extends ScriptableRefactoring {
     }
     
     private boolean useThisForFieldAccess() {
-    	return StubUtility.useThisForFieldAccess(fCu.getJavaProject());
+    	return StubUtility.useThisForFieldAccess(fCu.getJavaScriptProject());
     }
     
     private boolean doAddComments() {
-    	return StubUtility.doAddComments(fCu.getJavaProject());
+    	return StubUtility.doAddComments(fCu.getJavaScriptProject());
     }
     
     public RefactoringStatus checkInitialConditions(IProgressMonitor pm) throws CoreException {
@@ -503,7 +503,7 @@ public class ConvertAnonymousToNestedRefactoring extends ScriptableRefactoring {
 		final ITypeBinding binding= fAnonymousInnerClassNode.resolveBinding();
 		final String[] labels= new String[] { BindingLabelProvider.getBindingLabel(binding, JavaElementLabels.ALL_FULLY_QUALIFIED), BindingLabelProvider.getBindingLabel(binding.getDeclaringMethod(), JavaElementLabels.ALL_FULLY_QUALIFIED)};
 		final Map arguments= new HashMap();
-		final String projectName= fCu.getJavaProject().getElementName();
+		final String projectName= fCu.getJavaScriptProject().getElementName();
 		final int flags= RefactoringDescriptor.STRUCTURAL_CHANGE | JavaRefactoringDescriptor.JAR_REFACTORING | JavaRefactoringDescriptor.JAR_SOURCE_ATTACHMENT;
 		final String description= RefactoringCoreMessages.ConvertAnonymousToNestedRefactoring_descriptor_description_short;
 		final String header= Messages.format(RefactoringCoreMessages.ConvertAnonymousToNestedRefactoring_descriptor_description, labels);
@@ -615,7 +615,7 @@ public class ConvertAnonymousToNestedRefactoring extends ScriptableRefactoring {
 		}
 		setSuperType(newDeclaration);
 		
-		IJavaScriptProject project= fCu.getJavaProject();
+		IJavaScriptProject project= fCu.getJavaScriptProject();
 		
 		IVariableBinding[] bindings= getUsedLocalVariables();
 		ArrayList fieldNames= new ArrayList();
@@ -652,7 +652,7 @@ public class ConvertAnonymousToNestedRefactoring extends ScriptableRefactoring {
 			}
 			String string= CodeGeneration.getTypeComment(rewrite.getCu(), fClassName, parameterNames, StubUtility.getLineDelimiterUsed(fCu));
 			if (string != null) {
-				JSdoc javadoc= (JSdoc) rewrite.getASTRewrite().createStringPlaceholder(string, ASTNode.JAVADOC);
+				JSdoc javadoc= (JSdoc) rewrite.getASTRewrite().createStringPlaceholder(string, ASTNode.JSDOC);
 				newDeclaration.setJavadoc(javadoc);
 			}
 		}
@@ -735,7 +735,7 @@ public class ConvertAnonymousToNestedRefactoring extends ScriptableRefactoring {
 				try {
 					String string= CodeGeneration.getFieldComment(rewrite.getCu(), varType.getName(), fieldNames[i], StubUtility.getLineDelimiterUsed(fCu));
 					if (string != null) {
-						JSdoc javadoc= (JSdoc) astRewrite.createStringPlaceholder(string, ASTNode.JAVADOC);
+						JSdoc javadoc= (JSdoc) astRewrite.createStringPlaceholder(string, ASTNode.JSDOC);
 						field.setJavadoc(javadoc);
 					}
 				} catch (CoreException exception) {
@@ -799,7 +799,7 @@ public class ConvertAnonymousToNestedRefactoring extends ScriptableRefactoring {
     	if (instanceCreation.arguments().isEmpty() && bindings.length == 0)
 			return null;
 
-    	IJavaScriptProject project= fCu.getJavaProject();
+    	IJavaScriptProject project= fCu.getJavaScriptProject();
         AST ast= rewrite.getAST();
         ImportRewrite importRewrite= rewrite.getImportRewrite();
         ASTRewrite astRewrite= rewrite.getASTRewrite();
@@ -884,7 +884,7 @@ public class ConvertAnonymousToNestedRefactoring extends ScriptableRefactoring {
 				String[] allParamNames= (String[]) newParameterNames.toArray(new String[newParameterNames.size()]);
 				String string= CodeGeneration.getMethodComment(fCu, fClassName, fClassName, allParamNames, new String[0], null, new String[0], null, StubUtility.getLineDelimiterUsed(fCu));
 				if (string != null) {
-					JSdoc javadoc= (JSdoc) astRewrite.createStringPlaceholder(string, ASTNode.JAVADOC);
+					JSdoc javadoc= (JSdoc) astRewrite.createStringPlaceholder(string, ASTNode.JSDOC);
 					newConstructor.setJavadoc(javadoc);
 				}
 			} catch (CoreException exception) {
@@ -1055,7 +1055,7 @@ public class ConvertAnonymousToNestedRefactoring extends ScriptableRefactoring {
                     }
                     break;
                 }
-                case ASTNode.METHOD_DECLARATION:
+                case ASTNode.FUNCTION_DECLARATION:
                 {
                     FunctionDeclaration enclosingMethodDeclaration = (FunctionDeclaration)current;
                     if (Modifier.isStatic(enclosingMethodDeclaration.getModifiers())) {

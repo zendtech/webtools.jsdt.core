@@ -111,7 +111,7 @@ private void createTypeHierarchyBasedOnRegion(HashMap allOpenablesInRegion, IPro
 			if (monitor != null) monitor.beginTask("", length); //$NON-NLS-1$
 			for (int i = 0; i <length; i++) {
 				IJavaScriptElement root = roots[i];
-				IJavaScriptProject javaProject = root.getJavaProject();
+				IJavaScriptProject javaProject = root.getJavaScriptProject();
 				ArrayList openables = (ArrayList) allOpenables.get(javaProject);
 				if (openables == null) {
 					openables = new ArrayList();
@@ -136,7 +136,7 @@ private void createTypeHierarchyBasedOnRegion(HashMap allOpenablesInRegion, IPro
 						if (type.isBinary()) {
 							openables.add(type.getClassFile());
 						} else {
-							openables.add(type.getCompilationUnit());
+							openables.add(type.getJavaScriptUnit());
 						}
 						break;
 					default :
@@ -186,7 +186,7 @@ private void createTypeHierarchyBasedOnRegion(HashMap allOpenablesInRegion, IPro
 			if (kind != 0) {
 				boolean isSourcePackageFragment = (kind == IPackageFragmentRoot.K_SOURCE);
 				if (isSourcePackageFragment) {
-					IJavaScriptUnit[] cus = packFrag.getCompilationUnits();
+					IJavaScriptUnit[] cus = packFrag.getJavaScriptUnits();
 					for (int i = 0, length = cus.length; i < length; i++) {
 						openables.add(cus[i]);
 					}

@@ -77,7 +77,7 @@ public class AccessorClassCreator {
 	private String createAccessorCUSource(IProgressMonitor pm) throws CoreException {
 		IProject project= getFileHandle(fAccessorPath).getProject();
 		String lineDelimiter= StubUtility.getLineDelimiterPreference(project);
-		return CodeFormatterUtil.format(CodeFormatter.K_COMPILATION_UNIT, getUnformattedSource(pm), 0, null, lineDelimiter, fCu.getJavaProject());
+		return CodeFormatterUtil.format(CodeFormatter.K_JAVASCRIPT_UNIT, getUnformattedSource(pm), 0, null, lineDelimiter, fCu.getJavaScriptProject());
 	}
 	
 	private static IFile getFileHandle(IPath filePath) {
@@ -89,10 +89,10 @@ public class AccessorClassCreator {
 	private String getUnformattedSource(IProgressMonitor pm) throws CoreException {
 		IJavaScriptUnit newCu= null;
 		try {
-			newCu= fAccessorPackage.getCompilationUnit(fAccessorPath.lastSegment()).getWorkingCopy(null);
+			newCu= fAccessorPackage.getJavaScriptUnit(fAccessorPath.lastSegment()).getWorkingCopy(null);
 
 			String typeComment= null, fileComment= null;
-			final IJavaScriptProject project= newCu.getJavaProject();
+			final IJavaScriptProject project= newCu.getJavaScriptProject();
 			final String lineDelim= StubUtility.getLineDelimiterUsed(project);
 			if (StubUtility.doAddComments(project)) {
 				typeComment= CodeGeneration.getTypeComment(newCu, fAccessorClassName, lineDelim);

@@ -200,7 +200,7 @@ class TypeBinding implements ITypeBinding {
 		IPackageFragment pkg = getPackageFragment(slashSeparatedFileName, pkgEnd, -1/*no jar separator for .js files*/);
 		if (pkg == null) return null;
 		int start;
-		IJavaScriptUnit cu = pkg.getCompilationUnit(new String(slashSeparatedFileName, start =  pkgEnd+1, slashSeparatedFileName.length - start));
+		IJavaScriptUnit cu = pkg.getJavaScriptUnit(new String(slashSeparatedFileName, start =  pkgEnd+1, slashSeparatedFileName.length - start));
 		if (this.resolver instanceof DefaultBindingResolver) {
 			IJavaScriptUnit workingCopy = cu.findWorkingCopy(((DefaultBindingResolver) this.resolver).workingCopyOwner);
 			if (workingCopy != null)

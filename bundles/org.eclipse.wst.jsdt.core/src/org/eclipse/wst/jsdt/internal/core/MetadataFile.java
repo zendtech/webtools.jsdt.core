@@ -274,11 +274,25 @@ public class MetadataFile extends Openable implements
 		}
 	}
 
+	/**
+	 * @deprecated Use {@link #getFunction(String,String[])} instead
+	 */
 	public IFunction getMethod(String selector, String[] parameterTypeSignatures) {
+		return getFunction(selector, parameterTypeSignatures);
+	}
+
+	public IFunction getFunction(String selector, String[] parameterTypeSignatures) {
 		return new SourceMethod(this, selector, parameterTypeSignatures);
 	}
 
+	/**
+	 * @deprecated Use {@link #getFunctions()} instead
+	 */
 	public IFunction[] getMethods() throws JavaScriptModelException {
+		return getFunctions();
+	}
+
+	public IFunction[] getFunctions() throws JavaScriptModelException {
 		ArrayList list = getChildrenOfType(METHOD);
 		int size;
 		if ((size = list.size()) == 0) {

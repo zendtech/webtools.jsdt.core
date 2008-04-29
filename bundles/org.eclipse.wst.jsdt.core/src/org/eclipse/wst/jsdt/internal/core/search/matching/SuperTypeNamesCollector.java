@@ -159,7 +159,7 @@ public char[][][] collect() throws JavaScriptModelException {
 		// Collect the paths of the cus that are in the hierarchy of the given type
 		this.result = new char[1][][];
 		this.resultIndex = 0;
-		JavaProject javaProject = (JavaProject) this.type.getJavaProject();
+		JavaProject javaProject = (JavaProject) this.type.getJavaScriptProject();
 		this.locator.initialize(javaProject, 0);
 		try {
 			if (this.type.isBinary()) {
@@ -167,7 +167,7 @@ public char[][][] collect() throws JavaScriptModelException {
 				if (binding != null)
 					collectSuperTypeNames(binding);
 			} else {
-				IJavaScriptUnit unit = this.type.getCompilationUnit();
+				IJavaScriptUnit unit = this.type.getJavaScriptUnit();
 				SourceType sourceType = (SourceType) this.type;
 				boolean isTopLevelOrMember = sourceType.getOuterMostLocalContext() == null;
 				CompilationUnitDeclaration parsedUnit = buildBindings(unit, isTopLevelOrMember);
@@ -208,7 +208,7 @@ public char[][][] collect() throws JavaScriptModelException {
 			Openable openable = this.locator.handleFactory.createOpenable(paths[i], this.locator.scope);
 			if (openable == null) continue; // outside classpath
 
-			IJavaScriptProject project = openable.getJavaProject();
+			IJavaScriptProject project = openable.getJavaScriptProject();
 			if (!project.equals(previousProject)) {
 				previousProject = (JavaProject) project;
 				this.locator.initialize(previousProject, 0);

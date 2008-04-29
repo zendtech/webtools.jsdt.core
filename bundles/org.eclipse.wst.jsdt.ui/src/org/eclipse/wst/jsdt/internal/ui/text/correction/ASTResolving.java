@@ -149,7 +149,7 @@ public class ASTResolving {
 				return getParameterTypeBinding(node, superMethodInvocation.arguments(), superMethodBinding);
 			}
 			break;
-		case ASTNode.METHOD_INVOCATION:
+		case ASTNode.FUNCTION_INVOCATION:
 			FunctionInvocation methodInvocation= (FunctionInvocation) parent;
 			IFunctionBinding methodBinding= methodInvocation.resolveMethodBinding();
 			if (methodBinding != null) {
@@ -633,7 +633,7 @@ public class ASTResolving {
 	
 
 	public static JavaScriptUnit findParentCompilationUnit(ASTNode node) {
-		return (JavaScriptUnit) findAncestor(node, ASTNode.COMPILATION_UNIT);
+		return (JavaScriptUnit) findAncestor(node, ASTNode.JAVASCRIPT_UNIT);
 	}
 
 	/**
@@ -691,7 +691,7 @@ public class ASTResolving {
 	 */
 	public static FunctionDeclaration findParentMethodDeclaration(ASTNode node) {
 		while (node != null) {
-			if (node.getNodeType() == ASTNode.METHOD_DECLARATION) {
+			if (node.getNodeType() == ASTNode.FUNCTION_DECLARATION) {
 				return (FunctionDeclaration) node;
 			}
 			if (node instanceof AbstractTypeDeclaration || node instanceof AnonymousClassDeclaration) {
@@ -853,7 +853,7 @@ public class ASTResolving {
 			case ASTNode.ENUM_DECLARATION:
 				kind= SimilarElementsRequestor.INTERFACES;
 				break;
-			case ASTNode.METHOD_DECLARATION:
+			case ASTNode.FUNCTION_DECLARATION:
 				if (node.getLocationInParent() == FunctionDeclaration.THROWN_EXCEPTIONS_PROPERTY) {
 					kind= SimilarElementsRequestor.CLASSES;
 				} else if (node.getLocationInParent() == FunctionDeclaration.RETURN_TYPE2_PROPERTY) {
@@ -915,7 +915,7 @@ public class ASTResolving {
 		}
 		ASTNode node= astRoot.findDeclaringNode(binding.getTypeDeclaration());
 		if (node == null) {
-			IJavaScriptUnit targetCU= Bindings.findCompilationUnit(binding, cu.getJavaProject());
+			IJavaScriptUnit targetCU= Bindings.findCompilationUnit(binding, cu.getJavaScriptProject());
 			if (targetCU != null) {
 				return targetCU;
 			}

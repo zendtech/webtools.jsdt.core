@@ -103,7 +103,7 @@ public class JavaElementInfoPage extends PropertyPage {
 			rootContents.setText(PreferencesMessages.JavaElementInfoPage_classpath_entry_kind); 
 			Label rootContentsType= new Label(composite, SWT.NONE);
 			try {
-				IIncludePathEntry entry= ((IPackageFragmentRoot)element).getRawClasspathEntry();
+				IIncludePathEntry entry= ((IPackageFragmentRoot)element).getRawIncludepathEntry();
 				if (entry != null) {
 					switch (entry.getEntryKind()) {
 						case IIncludePathEntry.CPE_SOURCE:

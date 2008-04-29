@@ -204,7 +204,7 @@ public class ImportOrganizeInputDialog extends StatusDialog {
 					status.setError(PreferencesMessages.ImportOrganizeInputDialog_error_entryExists); 
 				}
 			} else {
-				IStatus val= JavaScriptConventions.validateJavaTypeName(newText, JavaScriptCore.VERSION_1_3, JavaScriptCore.VERSION_1_3);
+				IStatus val= JavaScriptConventions.validateJavaScriptTypeName(newText, JavaScriptCore.VERSION_1_3, JavaScriptCore.VERSION_1_3);
 				if (val.matches(IStatus.ERROR)) {
 					status.setError(PreferencesMessages.ImportOrganizeInputDialog_error_invalidName); 
 				} else {

@@ -46,15 +46,15 @@ public final class LoggedCreateTargetQueries implements ICreateTargetQueries {
 		}
 
 		private void createPackageFragmentRoot(IPackageFragmentRoot root) throws CoreException {
-			final IJavaScriptProject project= root.getJavaProject();
+			final IJavaScriptProject project= root.getJavaScriptProject();
 			if (!project.exists())
 				createJavaProject(project.getProject());
 			final IFolder folder= project.getProject().getFolder(root.getElementName());
 			if (!folder.exists())
 				CoreUtility.createFolder(folder, true, true, new NullProgressMonitor());
-			final List list= Arrays.asList(project.getRawClasspath());
+			final List list= Arrays.asList(project.getRawIncludepath());
 			list.add(JavaScriptCore.newSourceEntry(folder.getFullPath()));
-			project.setRawClasspath((IIncludePathEntry[]) list.toArray(new IIncludePathEntry[list.size()]), new NullProgressMonitor());
+			project.setRawIncludepath((IIncludePathEntry[]) list.toArray(new IIncludePathEntry[list.size()]), new NullProgressMonitor());
 		}
 
 		/**

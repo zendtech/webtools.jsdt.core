@@ -127,7 +127,7 @@ public class CompletionProposalCollector extends CompletionRequestor {
 	 * @param cu the compilation unit that the result collector will operate on
 	 */
 	public CompletionProposalCollector(IJavaScriptUnit cu) {
-		this(cu.getJavaProject(), cu);
+		this(cu.getJavaScriptProject(), cu);
 	}
 
 	/**
@@ -524,9 +524,9 @@ public class CompletionProposalCollector extends CompletionRequestor {
 	 * that do not have a declaring type. The return value is <em>not</em>
 	 * <code>null</code> for proposals of the following kinds:
 	 * <ul>
-	 * <li>METHOD_DECLARATION</li>
+	 * <li>FUNCTION_DECLARATION</li>
 	 * <li>METHOD_NAME_REFERENCE</li>
-	 * <li>METHOD_REF</li>
+	 * <li>FUNCTION_REF</li>
 	 * <li>ANNOTATION_ATTRIBUTE_REF</li>
 	 * <li>POTENTIAL_METHOD_DECLARATION</li>
 	 * <li>ANONYMOUS_CLASS_DECLARATION</li>

@@ -65,14 +65,14 @@ public class NativeLibrariesPropertyPage extends PropertyPage implements IStatus
 			if (elem instanceof IPackageFragmentRoot) {
 				IPackageFragmentRoot root= (IPackageFragmentRoot) elem;
 				
-				IIncludePathEntry entry= root.getRawClasspathEntry();
+				IIncludePathEntry entry= root.getRawIncludepathEntry();
 				if (entry == null) {
 					fIsValidElement= false;
 					setDescription(PreferencesMessages.NativeLibrariesPropertyPage_invalidElementSelection_desription); 
 				} else {
 					if (entry.getEntryKind() == IIncludePathEntry.CPE_CONTAINER) {
 						fContainerPath= entry.getPath();
-						fEntry= handleContainerEntry(fContainerPath, elem.getJavaProject(), root.getPath());
+						fEntry= handleContainerEntry(fContainerPath, elem.getJavaScriptProject(), root.getPath());
 						fIsValidElement= fEntry != null;
 					} else {
 						fContainerPath= null;
@@ -189,7 +189,7 @@ public class NativeLibrariesPropertyPage extends PropertyPage implements IStatus
 		return new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) throws InvocationTargetException {				
 				try {
-					IJavaScriptProject project= elem.getJavaProject();
+					IJavaScriptProject project= elem.getJavaScriptProject();
 					if (elem instanceof IPackageFragmentRoot) {
 						CPListElement cpElem= CPListElement.createFromExisting(entry, project);
 						cpElem.setAttribute(CPListElement.NATIVE_LIB_PATH, nativeLibraryPath);

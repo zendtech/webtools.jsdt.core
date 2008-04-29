@@ -108,7 +108,7 @@ public class AddUnimplementedConstructorsAction extends SelectionDispatchAction 
 	
 		public AddUnimplementedConstructorsContentProvider(IType type) throws JavaScriptModelException {
 			RefactoringASTParser parser= new RefactoringASTParser(AST.JLS3);
-			fUnit= parser.parse(type.getCompilationUnit(), true);
+			fUnit= parser.parse(type.getJavaScriptUnit(), true);
 			AbstractTypeDeclaration declaration= (AbstractTypeDeclaration) ASTNodes.getParent(NodeFinder.perform(fUnit, type.getNameRange()), AbstractTypeDeclaration.class);
 			if (declaration != null) {
 				ITypeBinding binding= declaration.resolveBinding();
@@ -394,7 +394,7 @@ public class AddUnimplementedConstructorsAction extends SelectionDispatchAction 
 	private boolean canEnable(IStructuredSelection selection) throws JavaScriptModelException {
 		if ((selection.size() == 1) && (selection.getFirstElement() instanceof IType)) {
 			IType type= (IType) selection.getFirstElement();
-			return type.getCompilationUnit() != null && !type.isInterface() && !type.isEnum();
+			return type.getJavaScriptUnit() != null && !type.isInterface() && !type.isEnum();
 		}
 
 		if ((selection.size() == 1) && (selection.getFirstElement() instanceof IJavaScriptUnit))
@@ -415,7 +415,7 @@ public class AddUnimplementedConstructorsAction extends SelectionDispatchAction 
 		Object[] elements= selection.toArray();
 		if (elements.length == 1 && (elements[0] instanceof IType)) {
 			IType type= (IType) elements[0];
-			if (type.getCompilationUnit() != null && !type.isInterface() && !type.isEnum()) {
+			if (type.getJavaScriptUnit() != null && !type.isInterface() && !type.isEnum()) {
 				return type;
 			}
 		} else if (elements[0] instanceof IJavaScriptUnit) {
@@ -522,7 +522,7 @@ public class AddUnimplementedConstructorsAction extends SelectionDispatchAction 
 			}
 			IFunctionBinding[] selected= (IFunctionBinding[]) result.toArray(new IFunctionBinding[result.size()]);
 
-			CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(type.getJavaProject());
+			CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(type.getJavaScriptProject());
 			settings.createComments= dialog.getGenerateComment();
 			IEditorPart editor= JavaUI.openInEditor(type, true, false);
 			IRewriteTarget target= editor != null ? (IRewriteTarget) editor.getAdapter(IRewriteTarget.class) : null;

@@ -76,14 +76,14 @@ public void copy(IJavaScriptElement container, IJavaScriptElement sibling, Strin
 	if (rename != null) {
 		renamings= new String[] {rename};
 	}
-	getJavaModel().copy(elements, containers, siblings, renamings, force, monitor);
+	getJavaScriptModel().copy(elements, containers, siblings, renamings, force, monitor);
 }
 /**
  * @see org.eclipse.wst.jsdt.core.ISourceManipulation
  */
 public void delete(boolean force, IProgressMonitor monitor) throws JavaScriptModelException {
 	IJavaScriptElement[] elements = new IJavaScriptElement[] {this};
-	getJavaModel().delete(elements, force, monitor);
+	getJavaScriptModel().delete(elements, force, monitor);
 }
 public boolean equals(Object o) {
 	if (!(o instanceof SourceRefElement)) return false;
@@ -117,8 +117,15 @@ protected void generateInfos(Object info, HashMap newElements, IProgressMonitor 
 }
 /**
  * @see org.eclipse.wst.jsdt.core.IMember
+ * @deprecated Use {@link #getJavaScriptUnit()} instead
  */
 public IJavaScriptUnit getCompilationUnit() {
+	return getJavaScriptUnit();
+}
+/**
+ * @see org.eclipse.wst.jsdt.core.IMember
+ */
+public IJavaScriptUnit getJavaScriptUnit() {
 	return (IJavaScriptUnit) getAncestor(COMPILATION_UNIT);
 }
 /**
@@ -259,7 +266,7 @@ public void move(IJavaScriptElement container, IJavaScriptElement sibling, Strin
 	if (rename != null) {
 		renamings= new String[] {rename};
 	}
-	getJavaModel().move(elements, containers, siblings, renamings, force, monitor);
+	getJavaScriptModel().move(elements, containers, siblings, renamings, force, monitor);
 }
 /**
  * @see org.eclipse.wst.jsdt.core.ISourceManipulation
@@ -274,7 +281,7 @@ public void rename(String newName, boolean force, IProgressMonitor monitor) thro
 	IJavaScriptElement[] elements= new IJavaScriptElement[] {this};
 	IJavaScriptElement[] dests= new IJavaScriptElement[] {this.getParent()};
 	String[] renamings= new String[] {newName};
-	getJavaModel().rename(elements, dests, renamings, force, monitor);
+	getJavaScriptModel().rename(elements, dests, renamings, force, monitor);
 }
 protected void toStringName(StringBuffer buffer) {
 	super.toStringName(buffer);

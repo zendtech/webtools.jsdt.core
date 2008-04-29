@@ -262,7 +262,7 @@ public final class MoveInstanceMethodProcessor extends MoveProcessor implements 
 			fNeededInsertion= createArgumentList(methodDeclaration, invocation.arguments(), new VisibilityAdjustingArgumentFactory(getAst(), fRewrites, fAdjustments));
 			final Block block= getAst().newBlock();
 			block.statements().add(createMethodInvocation(methodDeclaration, invocation));
-			if (!fSourceRewrite.getCu().equals(fTargetType.getCompilationUnit()))
+			if (!fSourceRewrite.getCu().equals(fTargetType.getJavaScriptUnit()))
 				fSourceRewrite.getImportRemover().registerRemovedNode(methodDeclaration.getBody());
 			return block;
 		}
@@ -319,7 +319,7 @@ public final class MoveInstanceMethodProcessor extends MoveProcessor implements 
 				for (final Iterator iterator= fEnclosingTypes.iterator(); iterator.hasNext();) {
 					enclosing= (ITypeBinding) iterator.next();
 					if (Bindings.equals(enclosing, declaring)) {
-						fStatus.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.MoveInstanceMethodProcessor_refers_enclosing_instances, JavaStatusContext.create(fMethod.getCompilationUnit(), node)));
+						fStatus.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.MoveInstanceMethodProcessor_refers_enclosing_instances, JavaStatusContext.create(fMethod.getJavaScriptUnit(), node)));
 						fResult.add(node);
 						break;
 					}
@@ -331,7 +331,7 @@ public final class MoveInstanceMethodProcessor extends MoveProcessor implements 
 		public final boolean visit(final ThisExpression node) {
 			Assert.isNotNull(node);
 			if (node.getQualifier() != null) {
-				fStatus.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.MoveInstanceMethodProcessor_refers_enclosing_instances, JavaStatusContext.create(fMethod.getCompilationUnit(), node)));
+				fStatus.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.MoveInstanceMethodProcessor_refers_enclosing_instances, JavaStatusContext.create(fMethod.getJavaScriptUnit(), node)));
 				fResult.add(node);
 			}
 			return false;
@@ -374,7 +374,7 @@ public final class MoveInstanceMethodProcessor extends MoveProcessor implements 
 				final ITypeBinding type= (ITypeBinding) binding;
 				if (!fBindings.contains(type.getKey()) && type.isTypeVariable()) {
 					fResult.add(node);
-					fStatus.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.MoveInstanceMethodProcessor_no_type_variables, JavaStatusContext.create(fMethod.getCompilationUnit(), node)));
+					fStatus.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.MoveInstanceMethodProcessor_no_type_variables, JavaStatusContext.create(fMethod.getJavaScriptUnit(), node)));
 					return false;
 				}
 			}
@@ -455,7 +455,7 @@ public final class MoveInstanceMethodProcessor extends MoveProcessor implements 
 			fRewrite= rewrite;
 			fDeclaration= sourceDeclaration;
 			fStaticImports.clear();
-			ImportRewriteUtil.collectImports(fMethod.getJavaProject(), sourceDeclaration, new HashSet(), fStaticImports, false);
+			ImportRewriteUtil.collectImports(fMethod.getJavaScriptProject(), sourceDeclaration, new HashSet(), fStaticImports, false);
 		}
 
 		public final void endVisit(final AnonymousClassDeclaration node) {
@@ -816,7 +816,7 @@ public final class MoveInstanceMethodProcessor extends MoveProcessor implements 
 			final Expression expression= node.getExpression();
 			final IFunctionBinding binding= node.resolveMethodBinding();
 			if (binding == null || (!Modifier.isStatic(binding.getModifiers()) && Bindings.equals(binding, fBinding) && (expression == null || expression instanceof ThisExpression))) {
-				fStatus.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.MoveInstanceMethodProcessor_potentially_recursive, JavaStatusContext.create(fMethod.getCompilationUnit(), node)));
+				fStatus.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.MoveInstanceMethodProcessor_potentially_recursive, JavaStatusContext.create(fMethod.getJavaScriptUnit(), node)));
 				fResult.add(node);
 				return false;
 			}
@@ -843,14 +843,14 @@ public final class MoveInstanceMethodProcessor extends MoveProcessor implements 
 
 		public final boolean visit(final SuperFieldAccess node) {
 			Assert.isNotNull(node);
-			fStatus.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.MoveInstanceMethodProcessor_uses_super, JavaStatusContext.create(fMethod.getCompilationUnit(), node)));
+			fStatus.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.MoveInstanceMethodProcessor_uses_super, JavaStatusContext.create(fMethod.getJavaScriptUnit(), node)));
 			fResult.add(node);
 			return false;
 		}
 
 		public final boolean visit(final SuperMethodInvocation node) {
 			Assert.isNotNull(node);
-			fStatus.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.MoveInstanceMethodProcessor_uses_super, JavaStatusContext.create(fMethod.getCompilationUnit(), node)));
+			fStatus.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.MoveInstanceMethodProcessor_uses_super, JavaStatusContext.create(fMethod.getJavaScriptUnit(), node)));
 			fResult.add(node);
 			return false;
 		}
@@ -870,7 +870,7 @@ public final class MoveInstanceMethodProcessor extends MoveProcessor implements 
 			final IFunctionBinding binding= node.resolveMethodBinding();
 			if (binding != null && !JdtFlags.isStatic(binding) && node.getExpression() == null) {
 				fResult.add(node);
-				fStatus.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.MoveInstanceMethodProcessor_this_reference, JavaStatusContext.create(fMethod.getCompilationUnit(), node)));
+				fStatus.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.MoveInstanceMethodProcessor_this_reference, JavaStatusContext.create(fMethod.getJavaScriptUnit(), node)));
 			}
 			return true;
 		}
@@ -879,7 +879,7 @@ public final class MoveInstanceMethodProcessor extends MoveProcessor implements 
 			Assert.isNotNull(node);
 			if (isFieldAccess(node) && !isTargetAccess(node)) {
 				fResult.add(node);
-				fStatus.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.MoveInstanceMethodProcessor_this_reference, JavaStatusContext.create(fMethod.getCompilationUnit(), node)));
+				fStatus.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.MoveInstanceMethodProcessor_this_reference, JavaStatusContext.create(fMethod.getJavaScriptUnit(), node)));
 			}
 			return false;
 		}
@@ -887,7 +887,7 @@ public final class MoveInstanceMethodProcessor extends MoveProcessor implements 
 		public final boolean visit(final ThisExpression node) {
 			Assert.isNotNull(node);
 			fResult.add(node);
-			fStatus.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.MoveInstanceMethodProcessor_this_reference, JavaStatusContext.create(fMethod.getCompilationUnit(), node)));
+			fStatus.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.MoveInstanceMethodProcessor_this_reference, JavaStatusContext.create(fMethod.getJavaScriptUnit(), node)));
 			return false;
 		}
 	}
@@ -932,7 +932,7 @@ public final class MoveInstanceMethodProcessor extends MoveProcessor implements 
 				final IType type= (IType) element;
 				if (!type.isBinary() && !type.isReadOnly() && !Flags.isPublic(type.getFlags())) {
 					boolean same= false;
-					final CompilationUnitRewrite rewrite= getCompilationUnitRewrite(fRewrites, type.getCompilationUnit());
+					final CompilationUnitRewrite rewrite= getCompilationUnitRewrite(fRewrites, type.getJavaScriptUnit());
 					final AbstractTypeDeclaration declaration= ASTNodeSearchUtil.getAbstractTypeDeclarationNode(type, rewrite.getRoot());
 					if (declaration != null) {
 						final ITypeBinding declaring= declaration.resolveBinding();
@@ -941,7 +941,7 @@ public final class MoveInstanceMethodProcessor extends MoveProcessor implements 
 						final Modifier.ModifierKeyword keyword= same ? null : Modifier.ModifierKeyword.PUBLIC_KEYWORD;
 						final String modifier= same ? RefactoringCoreMessages.MemberVisibilityAdjustor_change_visibility_default : RefactoringCoreMessages.MemberVisibilityAdjustor_change_visibility_public;
 						if (MemberVisibilityAdjustor.hasLowerVisibility(binding.getModifiers(), same ? Modifier.NONE : (keyword == null ? Modifier.NONE : keyword.toFlagValue())) && MemberVisibilityAdjustor.needsVisibilityAdjustments(type, keyword, fAdjustments))
-							fAdjustments.put(type, new MemberVisibilityAdjustor.OutgoingMemberVisibilityAdjustment(type, keyword, RefactoringStatus.createWarningStatus(Messages.format(RefactoringCoreMessages.MemberVisibilityAdjustor_change_visibility_type_warning, new String[] { BindingLabelProvider.getBindingLabel(declaration.resolveBinding(), JavaElementLabels.ALL_FULLY_QUALIFIED), modifier }), JavaStatusContext.create(type.getCompilationUnit(), declaration))));
+							fAdjustments.put(type, new MemberVisibilityAdjustor.OutgoingMemberVisibilityAdjustment(type, keyword, RefactoringStatus.createWarningStatus(Messages.format(RefactoringCoreMessages.MemberVisibilityAdjustor_change_visibility_type_warning, new String[] { BindingLabelProvider.getBindingLabel(declaration.resolveBinding(), JavaElementLabels.ALL_FULLY_QUALIFIED), modifier }), JavaStatusContext.create(type.getJavaScriptUnit(), declaration))));
 					}
 				}
 			}
@@ -1152,7 +1152,7 @@ public final class MoveInstanceMethodProcessor extends MoveProcessor implements 
 	protected void checkConflictingMethod(final IProgressMonitor monitor, final RefactoringStatus status) throws JavaScriptModelException {
 		Assert.isNotNull(monitor);
 		Assert.isNotNull(status);
-		final IFunction[] methods= fTargetType.getMethods();
+		final IFunction[] methods= fTargetType.getFunctions();
 		try {
 			monitor.beginTask("", methods.length); //$NON-NLS-1$
 			monitor.setTaskName(RefactoringCoreMessages.MoveInstanceMethodProcessor_checking);
@@ -1232,7 +1232,7 @@ public final class MoveInstanceMethodProcessor extends MoveProcessor implements 
 									status.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.MoveInstanceMethodProcessor_no_binary, JavaStatusContext.create(fMethod)));
 								checkConflictingTarget(new SubProgressMonitor(monitor, 1), status);
 								checkConflictingMethod(new SubProgressMonitor(monitor, 1), status);
-								status.merge(Checks.validateModifiesFiles(computeModifiedFiles(fMethod.getCompilationUnit(), type.getCompilationUnit()), null));
+								status.merge(Checks.validateModifiesFiles(computeModifiedFiles(fMethod.getJavaScriptUnit(), type.getJavaScriptUnit()), null));
 								monitor.worked(1);
 								if (!status.hasFatalError())
 									fChangeManager= createChangeManager(status, new SubProgressMonitor(monitor, 1));
@@ -1663,7 +1663,7 @@ public final class MoveInstanceMethodProcessor extends MoveProcessor implements 
 			list.addAll(Arrays.asList(changes));
 			final Map arguments= new HashMap();
 			String project= null;
-			final IJavaScriptProject javaProject= fMethod.getJavaProject();
+			final IJavaScriptProject javaProject= fMethod.getJavaScriptProject();
 			if (javaProject != null)
 				project= javaProject.getElementName();
 			int flags= JavaRefactoringDescriptor.JAR_REFACTORING | JavaRefactoringDescriptor.JAR_SOURCE_ATTACHMENT | RefactoringDescriptor.STRUCTURAL_CHANGE | RefactoringDescriptor.MULTI_CHANGE;
@@ -1719,7 +1719,7 @@ public final class MoveInstanceMethodProcessor extends MoveProcessor implements 
 			monitor.setTaskName(RefactoringCoreMessages.MoveInstanceMethodProcessor_creating);
 			fSourceRewrite.clearASTAndImportRewrites();
 			final TextChangeManager manager= new TextChangeManager();
-			final CompilationUnitRewrite targetRewrite= fMethod.getCompilationUnit().equals(getTargetType().getCompilationUnit()) ? fSourceRewrite : new CompilationUnitRewrite(getTargetType().getCompilationUnit());
+			final CompilationUnitRewrite targetRewrite= fMethod.getJavaScriptUnit().equals(getTargetType().getJavaScriptUnit()) ? fSourceRewrite : new CompilationUnitRewrite(getTargetType().getJavaScriptUnit());
 			final FunctionDeclaration declaration= ASTNodeSearchUtil.getMethodDeclarationNode(fMethod, fSourceRewrite.getRoot());
 			final SearchResultGroup[] references= computeMethodReferences(new SubProgressMonitor(monitor, 1), status);
 			final Map rewrites= new HashMap(2);
@@ -1734,7 +1734,7 @@ public final class MoveInstanceMethodProcessor extends MoveProcessor implements 
 			adjustor.setRewrites(rewrites);
 			adjustor.setRewrite(sourceRewrite, fSourceRewrite.getRoot());
 			adjustor.adjustVisibility(new SubProgressMonitor(monitor, 1));
-			final IDocument document= new Document(fMethod.getCompilationUnit().getBuffer().getContents());
+			final IDocument document= new Document(fMethod.getJavaScriptUnit().getBuffer().getContents());
 			final boolean target= createMethodCopy(document, declaration, sourceRewrite, rewrites, adjustor.getAdjustments(), status, new SubProgressMonitor(monitor, 1));
 			createMethodJavadocReferences(rewrites, declaration, references, target, status, new SubProgressMonitor(monitor, 1));
 			if (!fSourceRewrite.getCu().equals(targetRewrite.getCu()))
@@ -1744,7 +1744,7 @@ public final class MoveInstanceMethodProcessor extends MoveProcessor implements 
 				removable= createMethodDelegator(rewrites, declaration, references, adjustor.getAdjustments(), target, status, new SubProgressMonitor(monitor, 1));
 				if (fRemove && removable) {
 					fSourceRewrite.getASTRewrite().remove(declaration, fSourceRewrite.createGroupDescription(RefactoringCoreMessages.MoveInstanceMethodProcessor_remove_original_method));
-					if (!fSourceRewrite.getCu().equals(fTargetType.getCompilationUnit()))
+					if (!fSourceRewrite.getCu().equals(fTargetType.getJavaScriptUnit()))
 						fSourceRewrite.getImportRemover().registerRemovedNode(declaration);
 				}
 			}
@@ -1761,7 +1761,7 @@ public final class MoveInstanceMethodProcessor extends MoveProcessor implements 
 			}
 
 			adjustor.rewriteVisibility(new SubProgressMonitor(monitor, 1));
-			sourceRewrite.rewriteAST(document, fMethod.getJavaProject().getOptions(true));
+			sourceRewrite.rewriteAST(document, fMethod.getJavaScriptProject().getOptions(true));
 			createMethodSignature(document, declaration, sourceRewrite, rewrites);
 			IJavaScriptUnit unit= null;
 			CompilationUnitRewrite rewrite= null;
@@ -1932,7 +1932,7 @@ public final class MoveInstanceMethodProcessor extends MoveProcessor implements 
 		Assert.isNotNull(rewrite);
 		Assert.isNotNull(adjustments);
 		Assert.isNotNull(status);
-		final CompilationUnitRewrite rewriter= getCompilationUnitRewrite(rewrites, getTargetType().getCompilationUnit());
+		final CompilationUnitRewrite rewriter= getCompilationUnitRewrite(rewrites, getTargetType().getJavaScriptUnit());
 		final AST ast= rewriter.getRoot().getAST();
 		final AstNodeFinder finder= new AnonymousClassReferenceFinder(declaration);
 		declaration.accept(finder);
@@ -2069,11 +2069,11 @@ public final class MoveInstanceMethodProcessor extends MoveProcessor implements 
 					Assert.isNotNull(argument);
 					if (elements.containsKey(argument.getKey()))
 						return rewrite.createCopyTarget((ASTNode) elements.get(argument.getKey()));
-					return JavadocUtil.createParamTag(argument.getName(), declaration.getAST(), fMethod.getJavaProject());
+					return JavadocUtil.createParamTag(argument.getName(), declaration.getAST(), fMethod.getJavaScriptProject());
 				}
 
 				public final ASTNode getTargetNode() throws JavaScriptModelException {
-					return JavadocUtil.createParamTag(fTargetName, declaration.getAST(), fMethod.getJavaProject());
+					return JavadocUtil.createParamTag(fTargetName, declaration.getAST(), fMethod.getJavaScriptProject());
 				}
 			});
 			final ListRewrite rewriter= rewrite.getListRewrite(comment, JSdoc.TAGS_PROPERTY);
@@ -2112,7 +2112,7 @@ public final class MoveInstanceMethodProcessor extends MoveProcessor implements 
 		Assert.isNotNull(rewrite);
 		final IRegion range= new Region(declaration.getStartPosition(), declaration.getLength());
 		final RangeMarker marker= new RangeMarker(range.getOffset(), range.getLength());
-		final IJavaScriptProject project= fMethod.getJavaProject();
+		final IJavaScriptProject project= fMethod.getJavaScriptProject();
 		final TextEdit[] edits= rewrite.rewriteAST(document, project.getOptions(true)).removeChildren();
 		for (int index= 0; index < edits.length; index++)
 			marker.addChild(edits[index]);
@@ -2158,7 +2158,7 @@ public final class MoveInstanceMethodProcessor extends MoveProcessor implements 
 		Assert.isNotNull(status);
 		Assert.isNotNull(monitor);
 		boolean target= false;
-		final CompilationUnitRewrite rewriter= getCompilationUnitRewrite(rewrites, getTargetType().getCompilationUnit());
+		final CompilationUnitRewrite rewriter= getCompilationUnitRewrite(rewrites, getTargetType().getJavaScriptUnit());
 		try {
 			rewrite.set(declaration, FunctionDeclaration.NAME_PROPERTY, rewrite.getAST().newSimpleName(fMethodName), null);
 			boolean same= false;
@@ -2180,7 +2180,7 @@ public final class MoveInstanceMethodProcessor extends MoveProcessor implements 
 			createMethodComment(rewrite, declaration);
 			createMethodBody(rewriter, rewrite, declaration);
 		} finally {
-			if (fMethod.getCompilationUnit().equals(getTargetType().getCompilationUnit()))
+			if (fMethod.getJavaScriptUnit().equals(getTargetType().getJavaScriptUnit()))
 				rewriter.clearImportRewrites();
 		}
 		return target;
@@ -2302,7 +2302,7 @@ public final class MoveInstanceMethodProcessor extends MoveProcessor implements 
 									result= false;
 							}
 						} else if (element != null) {
-							status.merge(RefactoringStatus.createWarningStatus(Messages.format(RefactoringCoreMessages.MoveInstanceMethodProcessor_inline_binary_project, element.getJavaProject().getElementName())));
+							status.merge(RefactoringStatus.createWarningStatus(Messages.format(RefactoringCoreMessages.MoveInstanceMethodProcessor_inline_binary_project, element.getJavaScriptProject().getElementName())));
 							result= false;
 						} else {
 							status.merge(RefactoringStatus.createWarningStatus(Messages.format(RefactoringCoreMessages.MoveInstanceMethodProcessor_inline_binary_resource, group.getResource().getName())));
@@ -2430,7 +2430,7 @@ public final class MoveInstanceMethodProcessor extends MoveProcessor implements 
 								createMethodJavadocReference(rewrite, declaration, match, target, status);
 						}
 					} else if (element != null) {
-						status.merge(RefactoringStatus.createWarningStatus(Messages.format(RefactoringCoreMessages.MoveInstanceMethodProcessor_javadoc_binary_project, element.getJavaProject().getElementName())));
+						status.merge(RefactoringStatus.createWarningStatus(Messages.format(RefactoringCoreMessages.MoveInstanceMethodProcessor_javadoc_binary_project, element.getJavaScriptProject().getElementName())));
 					} else {
 						status.merge(RefactoringStatus.createWarningStatus(Messages.format(RefactoringCoreMessages.MoveInstanceMethodProcessor_javadoc_binary_resource, group.getResource().getName())));
 					}
@@ -2503,8 +2503,8 @@ public final class MoveInstanceMethodProcessor extends MoveProcessor implements 
 		Assert.isNotNull(rewrite);
 		Assert.isNotNull(rewrites);
 		try {
-			final CompilationUnitRewrite rewriter= getCompilationUnitRewrite(rewrites, getTargetType().getCompilationUnit());
-			final FunctionDeclaration stub= (FunctionDeclaration) rewriter.getASTRewrite().createStringPlaceholder(createMethodContent(document, declaration, rewrite), ASTNode.METHOD_DECLARATION);
+			final CompilationUnitRewrite rewriter= getCompilationUnitRewrite(rewrites, getTargetType().getJavaScriptUnit());
+			final FunctionDeclaration stub= (FunctionDeclaration) rewriter.getASTRewrite().createStringPlaceholder(createMethodContent(document, declaration, rewrite), ASTNode.FUNCTION_DECLARATION);
 			final AbstractTypeDeclaration type= ASTNodeSearchUtil.getAbstractTypeDeclarationNode(getTargetType(), rewriter.getRoot());
 			rewriter.getASTRewrite().getListRewrite(type, type.getBodyDeclarationsProperty()).insertAt(stub, ASTNodes.getInsertionIndex(stub, type.bodyDeclarations()), rewriter.createGroupDescription(RefactoringCoreMessages.MoveInstanceMethodProcessor_add_moved_method));
 		} catch (BadLocationException exception) {
@@ -2751,11 +2751,11 @@ public final class MoveInstanceMethodProcessor extends MoveProcessor implements 
 	 */
 	protected void initialize(final IFunction method) {
 		Assert.isNotNull(method);
-		fSourceRewrite= new CompilationUnitRewrite(fMethod.getCompilationUnit());
+		fSourceRewrite= new CompilationUnitRewrite(fMethod.getJavaScriptUnit());
 		fMethodName= method.getElementName();
 		fTargetName= suggestTargetName();
 		if (fSettings == null)
-			fSettings= JavaPreferencesSettings.getCodeGenerationSettings(fMethod.getJavaProject());
+			fSettings= JavaPreferencesSettings.getCodeGenerationSettings(fMethod.getJavaScriptProject());
 	}
 
 	/**
@@ -2842,7 +2842,7 @@ public final class MoveInstanceMethodProcessor extends MoveProcessor implements 
 	 * @see org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor#isApplicable()
 	 */
 	public final boolean isApplicable() throws CoreException {
-		return fMethod.exists() && !fMethod.isConstructor() && !fMethod.isBinary() && !fMethod.isReadOnly() && fMethod.getCompilationUnit() != null && !JdtFlags.isStatic(fMethod);
+		return fMethod.exists() && !fMethod.isConstructor() && !fMethod.isBinary() && !fMethod.isReadOnly() && fMethod.getJavaScriptUnit() != null && !JdtFlags.isStatic(fMethod);
 	}
 
 	/**
@@ -3045,7 +3045,7 @@ public final class MoveInstanceMethodProcessor extends MoveProcessor implements 
 	protected String suggestTargetName() {
 		try {
 
-			final String[] candidates= StubUtility.getArgumentNameSuggestions(fMethod.getDeclaringType(),fMethod.getCompilationUnit(), computeReservedIdentifiers());
+			final String[] candidates= StubUtility.getArgumentNameSuggestions(fMethod.getDeclaringType(),fMethod.getJavaScriptUnit(), computeReservedIdentifiers());
 			if (candidates.length > 0) {
 				if (candidates[0].indexOf('$') < 0)
 					return candidates[0];

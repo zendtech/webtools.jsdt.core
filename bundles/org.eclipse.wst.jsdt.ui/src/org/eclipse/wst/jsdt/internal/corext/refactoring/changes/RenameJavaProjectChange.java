@@ -99,7 +99,7 @@ public final class RenameJavaProjectChange extends AbstractJavaElementRenameChan
 
 	private void modifyClassPath(IJavaScriptProject referencingProject, IProgressMonitor pm) throws JavaScriptModelException {
 		pm.beginTask("", 1); //$NON-NLS-1$
-		IIncludePathEntry[] oldEntries= referencingProject.getRawClasspath();
+		IIncludePathEntry[] oldEntries= referencingProject.getRawIncludepath();
 		IIncludePathEntry[] newEntries= new IIncludePathEntry[oldEntries.length];
 		for (int i= 0; i < newEntries.length; i++) {
 			if (isOurEntry(oldEntries[i]))
@@ -107,7 +107,7 @@ public final class RenameJavaProjectChange extends AbstractJavaElementRenameChan
 			else
 				newEntries[i]= oldEntries[i];
 		}
-		referencingProject.setRawClasspath(newEntries, pm);
+		referencingProject.setRawIncludepath(newEntries, pm);
 		pm.done();
 	}
 

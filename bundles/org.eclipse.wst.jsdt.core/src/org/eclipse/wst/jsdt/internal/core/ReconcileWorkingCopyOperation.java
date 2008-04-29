@@ -187,7 +187,7 @@ public class ReconcileWorkingCopyOperation extends JavaModelOperation {
 		char[] contents = null;
 		try {
 			// find problems if needed
-			if (JavaProject.hasJavaNature(workingCopy.getJavaProject().getProject())
+			if (JavaProject.hasJavaNature(workingCopy.getJavaScriptProject().getProject())
 					&& (this.reconcileFlags & IJavaScriptUnit.FORCE_PROBLEM_DETECTION) != 0) {
 				this.resolveBindings = this.requestorIsActive;
 				if (this.problems == null)
@@ -208,7 +208,7 @@ public class ReconcileWorkingCopyOperation extends JavaModelOperation {
 			// create AST if needed
 			if (this.astLevel != IJavaScriptUnit.NO_AST
 					&& unit !=null/*unit is null if working copy is consistent && (problem detection not forced || non-Java project) -> don't create AST as per API*/) {
-				Map options = workingCopy.getJavaProject().getOptions(true);
+				Map options = workingCopy.getJavaScriptProject().getOptions(true);
 				// convert AST
 				this.ast =
 					AST.convertCompilationUnit(
@@ -227,7 +227,7 @@ public class ReconcileWorkingCopyOperation extends JavaModelOperation {
 				if (this.progressMonitor != null) this.progressMonitor.worked(1);
 			}
 	    } catch (JavaScriptModelException e) {
-	    	if (JavaProject.hasJavaNature(workingCopy.getJavaProject().getProject()))
+	    	if (JavaProject.hasJavaNature(workingCopy.getJavaScriptProject().getProject()))
 	    		throw e;
 	    	// else JavaProject has lost its nature (or most likely was closed/deleted) while reconciling -> ignore
 	    	// (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=100919)
@@ -242,7 +242,7 @@ public class ReconcileWorkingCopyOperation extends JavaModelOperation {
 	}
 
 	private void notifyParticipants(final CompilationUnit workingCopy) {
-		IJavaScriptProject javaProject = getWorkingCopy().getJavaProject();
+		IJavaScriptProject javaProject = getWorkingCopy().getJavaScriptProject();
 		ValidationParticipant[] participants = JavaModelManager.getJavaModelManager().validationParticipants.getvalidationParticipants(javaProject);
 		if (participants == null) return;
 

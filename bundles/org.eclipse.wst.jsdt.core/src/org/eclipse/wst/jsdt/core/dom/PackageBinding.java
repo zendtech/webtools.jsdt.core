@@ -62,7 +62,7 @@ class PackageBinding implements IPackageBinding {
 				switch(fragType) {
 					case IPackageFragmentRoot.K_SOURCE:
 						String unitName = "package-info.js"; //$NON-NLS-1$
-						IJavaScriptUnit unit = pkgs[i].getCompilationUnit(unitName);
+						IJavaScriptUnit unit = pkgs[i].getJavaScriptUnit(unitName);
 						if (unit != null) {
 							ASTParser p = ASTParser.newParser(AST.JLS3);
 							p.setSource(unit);

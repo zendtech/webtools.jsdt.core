@@ -252,7 +252,7 @@ public class JavaStructureCreator extends StructureCreator {
 			if (resource != null) {
 				IJavaScriptElement element= JavaScriptCore.create(resource);
 				if (element != null) {
-					IJavaScriptProject javaProject= element.getJavaProject();
+					IJavaScriptProject javaProject= element.getJavaScriptProject();
 					if (javaProject != null)
 						compilerOptions= javaProject.getOptions(true);
 				}

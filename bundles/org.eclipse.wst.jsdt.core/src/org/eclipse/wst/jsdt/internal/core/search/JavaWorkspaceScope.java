@@ -78,7 +78,7 @@ public int hashCode() {
 public void initialize(int size) {
 	super.initialize(size);
 	try {
-		IJavaScriptProject[] projects = JavaModelManager.getJavaModelManager().getJavaModel().getJavaProjects();
+		IJavaScriptProject[] projects = JavaModelManager.getJavaModelManager().getJavaModel().getJavaScriptProjects();
 		for (int i = 0, length = projects.length; i < length; i++) {
 			int includeMask = SOURCES | APPLICATION_LIBRARIES | SYSTEM_LIBRARIES;
 			add((JavaProject) projects[i], null, includeMask, new HashSet(length*2, 1), null);

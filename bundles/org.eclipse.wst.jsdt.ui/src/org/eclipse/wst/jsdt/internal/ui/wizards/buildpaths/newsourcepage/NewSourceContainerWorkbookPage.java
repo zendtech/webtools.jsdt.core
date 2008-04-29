@@ -351,7 +351,7 @@ public class NewSourceContainerWorkbookPage extends BuildPathBasePage implements
             entries[i]= entry.getClasspathEntry(); 
         }
         try {
-			fJavaProject.setRawClasspath(entries, null);
+			fJavaProject.setRawIncludepath(entries, null);
         } catch (JavaScriptModelException e) {
             JavaPlugin.log(e);
         }

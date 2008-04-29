@@ -164,7 +164,7 @@ public class Java50Fix extends LinkedFix {
 	
 	private static Java50Fix createFix(JavaScriptUnit compilationUnit, IProblemLocation problem, String annotation, String label) {
 		IJavaScriptUnit cu= (IJavaScriptUnit)compilationUnit.getJavaElement();
-		if (!JavaModelUtil.is50OrHigher(cu.getJavaProject()))
+		if (!JavaModelUtil.is50OrHigher(cu.getJavaScriptProject()))
 			return null;
 		
 		ASTNode selectedNode= problem.getCoveringNode(compilationUnit);
@@ -197,7 +197,7 @@ public class Java50Fix extends LinkedFix {
 			boolean rawTypeReference) {
 		
 		IJavaScriptUnit cu= (IJavaScriptUnit)compilationUnit.getJavaElement();
-		if (!JavaModelUtil.is50OrHigher(cu.getJavaProject()))
+		if (!JavaModelUtil.is50OrHigher(cu.getJavaScriptProject()))
 			return null;
 		
 		if (!addOverrideAnnotation && !addDeprecatedAnnotation && !rawTypeReference)
@@ -233,7 +233,7 @@ public class Java50Fix extends LinkedFix {
 			boolean rawTypeReferences) {
 		
 		IJavaScriptUnit cu= (IJavaScriptUnit)compilationUnit.getJavaElement();
-		if (!JavaModelUtil.is50OrHigher(cu.getJavaProject()))
+		if (!JavaModelUtil.is50OrHigher(cu.getJavaScriptProject()))
 			return null;
 		
 		if (!addOverrideAnnotation && !addDeprecatedAnnotation && !rawTypeReferences)

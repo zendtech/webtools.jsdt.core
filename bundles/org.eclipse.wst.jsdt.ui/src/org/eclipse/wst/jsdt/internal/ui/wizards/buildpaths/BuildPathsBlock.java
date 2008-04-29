@@ -310,7 +310,7 @@ public class BuildPathsBlock {
 //				outputLocation=  fCurrJProject.readOutputLocation();
 //			}
 			if (classpathEntries == null) {
-				classpathEntries=  fCurrJProject.readRawClasspath();
+				classpathEntries=  fCurrJProject.readRawIncludepath();
 			}
 		}
 ////		if (outputLocation == null) {
@@ -1017,7 +1017,7 @@ public class BuildPathsBlock {
 
 			//javaProject.setRawClasspath(classpath, outputLocation, new SubProgressMonitor(monitor, 2));
 			
-			javaProject.setRawClasspath(classpath, projPath, new SubProgressMonitor(monitor, 2));
+			javaProject.setRawIncludepath(classpath, projPath, new SubProgressMonitor(monitor, 2));
 		} finally {
 			monitor.done();
 		}

@@ -111,11 +111,11 @@ public class DialogPackageExplorer implements IMenuListener, ISelectionProvider,
         public Object[] getChildren(Object element) {
             Object[] children= super.getChildren(element);
             if (((element instanceof IPackageFragmentRoot && !((IPackageFragmentRoot)element).isArchive()) || 
-                    (element instanceof IJavaScriptProject && fCurrJProject.isOnClasspath(fCurrJProject))) && fShowOutputFolders) {
+                    (element instanceof IJavaScriptProject && fCurrJProject.isOnIncludepath(fCurrJProject))) && fShowOutputFolders) {
                 try {
                     IIncludePathEntry entry;
                     if (element instanceof IPackageFragmentRoot)
-                        entry= ((IPackageFragmentRoot) element).getRawClasspathEntry();
+                        entry= ((IPackageFragmentRoot) element).getRawIncludepathEntry();
                     else
                         entry= ClasspathModifier.getClasspathEntryFor(fCurrJProject.getPath(), fCurrJProject, IIncludePathEntry.CPE_SOURCE);
                     CPListElement parent= CPListElement.createFromExisting(entry, fCurrJProject);                    
@@ -155,7 +155,7 @@ public class DialogPackageExplorer implements IMenuListener, ISelectionProvider,
                 if (element instanceof IPackageFragmentRoot) {
                     IPackageFragmentRoot root= (IPackageFragmentRoot)element;
                     if (root.exists() && ClasspathModifier.filtersSet(root)) {
-                        IIncludePathEntry entry= root.getRawClasspathEntry();
+                        IIncludePathEntry entry= root.getRawIncludepathEntry();
                         int excluded= entry.getExclusionPatterns().length;
                         if (excluded == 1)
                             return Messages.format(NewWizardMessages.DialogPackageExplorer_LabelProvider_SingleExcluded, text); 
@@ -165,10 +165,10 @@ public class DialogPackageExplorer implements IMenuListener, ISelectionProvider,
                 }
                 if (element instanceof IJavaScriptProject) {
                     IJavaScriptProject project= (IJavaScriptProject)element;
-                    if (project.exists() && project.isOnClasspath(project)) {
+                    if (project.exists() && project.isOnIncludepath(project)) {
                         IPackageFragmentRoot root= project.findPackageFragmentRoot(project.getPath());
                         if (ClasspathModifier.filtersSet(root)) {
-                            IIncludePathEntry entry= root.getRawClasspathEntry();
+                            IIncludePathEntry entry= root.getRawIncludepathEntry();
                             int excluded= entry.getExclusionPatterns().length;
                             if (excluded == 1)
                                 return Messages.format(NewWizardMessages.DialogPackageExplorer_LabelProvider_SingleExcluded, text); 
@@ -200,7 +200,7 @@ public class DialogPackageExplorer implements IMenuListener, ISelectionProvider,
                 }
                 if (element instanceof IJavaScriptProject) {
                     IJavaScriptProject project= (IJavaScriptProject)element;
-                    if (project.exists() && project.isOnClasspath(project)) {
+                    if (project.exists() && project.isOnIncludepath(project)) {
                         IPackageFragmentRoot root= project.findPackageFragmentRoot(project.getPath());
                         if (root != null && ClasspathModifier.filtersSet(root))
                             return getBlueColor();
@@ -268,7 +268,7 @@ public class DialogPackageExplorer implements IMenuListener, ISelectionProvider,
                     if (file.getName().equals(JavaProject.CLASSPATH_FILENAME) || file.getName().equals(".project")) //$NON-NLS-1$//$NON-NLS-2$
                         return false;
                 } else if (element instanceof IPackageFragmentRoot) {
-                    IIncludePathEntry cpe= ((IPackageFragmentRoot)element).getRawClasspathEntry();
+                    IIncludePathEntry cpe= ((IPackageFragmentRoot)element).getRawIncludepathEntry();
                     if (cpe == null || cpe.getEntryKind() == IIncludePathEntry.CPE_CONTAINER || cpe.getEntryKind() == IIncludePathEntry.CPE_LIBRARY || cpe.getEntryKind() == IIncludePathEntry.CPE_VARIABLE)
                         return false;
                 } else if (element instanceof PackageFragmentRootContainer) {

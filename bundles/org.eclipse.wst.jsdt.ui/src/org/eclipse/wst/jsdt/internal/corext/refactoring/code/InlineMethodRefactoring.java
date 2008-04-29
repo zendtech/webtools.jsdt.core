@@ -163,12 +163,12 @@ public class InlineMethodRefactoring extends ScriptableRefactoring {
 		ASTNode target= getTargetNode(unit, node, selectionStart, selectionLength);
 		if (target == null)
 			return null;
-		if (target.getNodeType() == ASTNode.METHOD_DECLARATION) {
+		if (target.getNodeType() == ASTNode.FUNCTION_DECLARATION) {
 			
 			return new InlineMethodRefactoring(unit, (FunctionDeclaration)target, selectionStart, selectionLength);
 		} else {
 			IJavaScriptUnit cu= (IJavaScriptUnit) unit;
-			if (target.getNodeType() == ASTNode.METHOD_INVOCATION) {
+			if (target.getNodeType() == ASTNode.FUNCTION_INVOCATION) {
 				return new InlineMethodRefactoring(cu, (FunctionInvocation)target, selectionStart, selectionLength);
 			} else if (target.getNodeType() == ASTNode.SUPER_METHOD_INVOCATION) {
 				return new InlineMethodRefactoring(cu, (SuperMethodInvocation)target, selectionStart, selectionLength);
@@ -344,7 +344,7 @@ public class InlineMethodRefactoring extends ScriptableRefactoring {
 		}
 		final Map arguments= new HashMap();
 		String project= null;
-		IJavaScriptProject javaProject= fInitialTypeRoot.getJavaProject();
+		IJavaScriptProject javaProject= fInitialTypeRoot.getJavaScriptProject();
 		if (javaProject != null)
 			project= javaProject.getElementName();
 		int flags= RefactoringDescriptor.STRUCTURAL_CHANGE | JavaRefactoringDescriptor.JAR_REFACTORING | JavaRefactoringDescriptor.JAR_SOURCE_ATTACHMENT;
@@ -382,7 +382,7 @@ public class InlineMethodRefactoring extends ScriptableRefactoring {
 		IFunction method= (IFunction)methodBinding.getJavaElement();
 		if (method != null) {
 			JavaScriptUnit methodDeclarationAstRoot;
-			IJavaScriptUnit methodCu= method.getCompilationUnit();
+			IJavaScriptUnit methodCu= method.getJavaScriptUnit();
 			if (methodCu != null) {
 				methodDeclarationAstRoot= new RefactoringASTParser(AST.JLS3).parse(methodCu, true);
 			} else {
@@ -424,9 +424,9 @@ public class InlineMethodRefactoring extends ScriptableRefactoring {
 			node= ((ExpressionStatement)node).getExpression();
 		}
 		switch(node.getNodeType()) {
-			case ASTNode.METHOD_DECLARATION:
+			case ASTNode.FUNCTION_DECLARATION:
 					return node;
-			case ASTNode.METHOD_INVOCATION:
+			case ASTNode.FUNCTION_INVOCATION:
 			case ASTNode.SUPER_METHOD_INVOCATION:
 			case ASTNode.CONSTRUCTOR_INVOCATION:
 				return unit instanceof IJavaScriptUnit ? node : null; // don't start on invocations in binary

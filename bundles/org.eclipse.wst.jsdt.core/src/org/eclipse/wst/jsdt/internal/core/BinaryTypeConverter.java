@@ -179,7 +179,7 @@ public class BinaryTypeConverter {
 		}
 
 		/* convert methods - need to add default constructor if necessary */
-		IFunction[] methods = type.getMethods();
+		IFunction[] methods = type.getFunctions();
 		int methodCount = methods == null ? 0 : methods.length;
 
 		/* source type has a constructor ?           */

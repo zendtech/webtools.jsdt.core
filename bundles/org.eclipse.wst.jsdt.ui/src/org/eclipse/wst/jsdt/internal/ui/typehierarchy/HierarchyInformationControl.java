@@ -240,9 +240,9 @@ public class HierarchyInformationControl extends AbstractInformationControl {
 				case IJavaScriptElement.IMPORT_DECLARATION :
 					IImportDeclaration decl= (IImportDeclaration) elem;
 					if (decl.isOnDemand()) {
-						input= JavaModelUtil.findTypeContainer(decl.getJavaProject(), Signature.getQualifier(decl.getElementName()));
+						input= JavaModelUtil.findTypeContainer(decl.getJavaScriptProject(), Signature.getQualifier(decl.getElementName()));
 					} else {
-						input= decl.getJavaProject().findType(decl.getElementName());
+						input= decl.getJavaScriptProject().findType(decl.getElementName());
 					}
 					break;
 				default :

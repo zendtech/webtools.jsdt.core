@@ -127,7 +127,7 @@ public abstract class CompilationUnitContext extends DocumentTemplateContext {
 	
 	protected IJavaScriptProject getJavaProject() {
 		IJavaScriptUnit compilationUnit= getCompilationUnit();
-		IJavaScriptProject project= compilationUnit == null ? null : compilationUnit.getJavaProject();
+		IJavaScriptProject project= compilationUnit == null ? null : compilationUnit.getJavaScriptProject();
 		return project;
 	}	
 }

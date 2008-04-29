@@ -175,7 +175,7 @@ public class VariablePathDialogField extends StringButtonDialogField {
 	public IPath getResolvedPath() {
 		String variable= getVariable();
 		if (variable != null) {
-			IPath path= JavaScriptCore.getClasspathVariable(variable);
+			IPath path= JavaScriptCore.getIncludepathVariable(variable);
 			if (path != null) {
 				return path.append(getPathExtension());
 			}

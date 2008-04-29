@@ -84,7 +84,7 @@ public class AddLibraryToBuildpathAction extends BuildpathModifierAction {
 
 		IIncludePathEntry[] classpath;
 		try {
-			classpath= project.getRawClasspath();
+			classpath= project.getRawIncludepath();
 		} catch (JavaScriptModelException e1) {
 			showExceptionDialog(e1, NewWizardMessages.AddLibraryToBuildpathAction_ErrorTitle);
 			return;

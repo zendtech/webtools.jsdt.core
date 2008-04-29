@@ -151,7 +151,7 @@ public class SourceTypeConverter {
 
 		if (sourceTypes.length == 0) return this.unit;
 		SourceTypeElementInfo topLevelTypeInfo = (SourceTypeElementInfo) sourceTypes[0];
-		org.eclipse.wst.jsdt.core.IJavaScriptUnit cuHandle = topLevelTypeInfo.getHandle().getCompilationUnit();
+		org.eclipse.wst.jsdt.core.IJavaScriptUnit cuHandle = topLevelTypeInfo.getHandle().getJavaScriptUnit();
 		this.cu = (ICompilationUnit) cuHandle;
 		this.annotationPositions = ((CompilationUnitElementInfo) ((JavaElement) this.cu).getElementInfo()).annotationPositions;
 
@@ -170,7 +170,7 @@ public class SourceTypeConverter {
 			// if its null then it is defined in the default package
 			this.unit.currentPackage =
 				createImportReference(packageName, start, end, false, ClassFileConstants.AccDefault);
-		IImportDeclaration[] importDeclarations = topLevelTypeInfo.getHandle().getCompilationUnit().getImports();
+		IImportDeclaration[] importDeclarations = topLevelTypeInfo.getHandle().getJavaScriptUnit().getImports();
 		int importCount = importDeclarations.length;
 		this.unit.imports = new ImportReference[importCount];
 		for (int i = 0; i < importCount; i++) {

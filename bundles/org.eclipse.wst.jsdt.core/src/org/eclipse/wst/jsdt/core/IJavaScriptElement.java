@@ -180,7 +180,7 @@ public interface IJavaScriptElement extends IAdaptable, ILookupScope{
 	 *  <li>the format of the javadoc doesn't match expected standards (different anchors,...)</li>
 	 *  </ul>
 	 * @return the extracted javadoc from the attached javadoc, null if none
-	 * @see IIncludePathAttribute#JAVADOC_LOCATION_ATTRIBUTE_NAME
+	 * @see IIncludePathAttribute#JSDOC_LOCATION_ATTRIBUTE_NAME
 	 * @since 3.2
 	 */
 	String getAttachedJavadoc(IProgressMonitor monitor) throws JavaScriptModelException;
@@ -239,7 +239,7 @@ public interface IJavaScriptElement extends IAdaptable, ILookupScope{
 	 *
 	 * @return the Java model
 	 */
-	IJavaScriptModel getJavaModel();
+	IJavaScriptModel getJavaScriptModel();
 
 	/**
 	 * Returns the Java project this element is contained in,
@@ -251,7 +251,7 @@ public interface IJavaScriptElement extends IAdaptable, ILookupScope{
 	 * @return the containing Java project, or <code>null</code> if this element is
 	 *   not contained in a Java project
 	 */
-	IJavaScriptProject getJavaProject();
+	IJavaScriptProject getJavaScriptProject();
 
 	/**
 	 * Returns the first openable parent. If this element is openable, the element

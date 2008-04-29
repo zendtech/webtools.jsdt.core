@@ -278,7 +278,7 @@ public final class RefactoringExecutionStarter {
 	}
 
 	public static void startExtractInterfaceRefactoring(final IType type, final Shell shell) throws JavaScriptModelException {
-		final ExtractInterfaceRefactoring refactoring= new ExtractInterfaceRefactoring(new ExtractInterfaceProcessor(type, JavaPreferencesSettings.getCodeGenerationSettings(type.getJavaProject())));
+		final ExtractInterfaceRefactoring refactoring= new ExtractInterfaceRefactoring(new ExtractInterfaceProcessor(type, JavaPreferencesSettings.getCodeGenerationSettings(type.getJavaScriptProject())));
 		new RefactoringStarter().activate(refactoring, new ExtractInterfaceWizard(refactoring), shell, RefactoringMessages.OpenRefactoringWizardAction_refactoring, RefactoringSaveHelper.SAVE_JAVA_ONLY_UPDATES);
 	}
 
@@ -287,7 +287,7 @@ public final class RefactoringExecutionStarter {
 			return;
 		IJavaScriptProject project= null;
 		if (members != null && members.length > 0)
-			project= members[0].getJavaProject();
+			project= members[0].getJavaScriptProject();
 		final ExtractSupertypeRefactoring refactoring= new ExtractSupertypeRefactoring(new ExtractSupertypeProcessor(members, JavaPreferencesSettings.getCodeGenerationSettings(project)));
 		new RefactoringStarter().activate(refactoring, new ExtractSupertypeWizard(refactoring), shell, RefactoringMessages.OpenRefactoringWizardAction_refactoring, RefactoringSaveHelper.SAVE_JAVA_ONLY_UPDATES);
 	}
@@ -358,12 +358,12 @@ public final class RefactoringExecutionStarter {
 	public static void startMoveInnerRefactoring(final IType type, final Shell shell) throws JavaScriptModelException {
 		if (!RefactoringAvailabilityTester.isMoveInnerAvailable(type))
 			return;
-		final MoveInnerToTopRefactoring refactoring= new MoveInnerToTopRefactoring(type, JavaPreferencesSettings.getCodeGenerationSettings(type.getJavaProject()));
+		final MoveInnerToTopRefactoring refactoring= new MoveInnerToTopRefactoring(type, JavaPreferencesSettings.getCodeGenerationSettings(type.getJavaScriptProject()));
 		new RefactoringStarter().activate(refactoring, new MoveInnerToTopWizard(refactoring), shell, RefactoringMessages.OpenRefactoringWizardAction_refactoring, RefactoringSaveHelper.SAVE_JAVA_ONLY_UPDATES);
 	}
 
 	public static void startMoveMethodRefactoring(final IFunction method, final Shell shell) throws JavaScriptModelException {
-		final MoveInstanceMethodRefactoring refactoring= new MoveInstanceMethodRefactoring(new MoveInstanceMethodProcessor(method, JavaPreferencesSettings.getCodeGenerationSettings(method.getJavaProject())));
+		final MoveInstanceMethodRefactoring refactoring= new MoveInstanceMethodRefactoring(new MoveInstanceMethodProcessor(method, JavaPreferencesSettings.getCodeGenerationSettings(method.getJavaScriptProject())));
 		new RefactoringStarter().activate(refactoring, new MoveInstanceMethodWizard(refactoring), shell, RefactoringMessages.MoveInstanceMethodAction_dialog_title, RefactoringSaveHelper.SAVE_JAVA_ONLY_UPDATES);
 	}
 
@@ -387,7 +387,7 @@ public final class RefactoringExecutionStarter {
 		final IMember[] elements= (IMember[]) set.toArray(new IMember[set.size()]);
 		IJavaScriptProject project= null;
 		if (elements.length > 0)
-			project= elements[0].getJavaProject();
+			project= elements[0].getJavaScriptProject();
 		final JavaMoveRefactoring refactoring= new JavaMoveRefactoring(new MoveStaticMembersProcessor(elements, JavaPreferencesSettings.getCodeGenerationSettings(project)));
 		new RefactoringStarter().activate(refactoring, new MoveMembersWizard(refactoring), shell, RefactoringMessages.OpenRefactoringWizardAction_refactoring, RefactoringSaveHelper.SAVE_NON_JAVA_UPDATES);
 	}
@@ -397,7 +397,7 @@ public final class RefactoringExecutionStarter {
 			return;
 		IJavaScriptProject project= null;
 		if (members != null && members.length > 0)
-			project= members[0].getJavaProject();
+			project= members[0].getJavaScriptProject();
 		final PullUpRefactoring refactoring= new PullUpRefactoring(new PullUpRefactoringProcessor(members, JavaPreferencesSettings.getCodeGenerationSettings(project)));
 		new RefactoringStarter().activate(refactoring, new PullUpWizard(refactoring), shell, RefactoringMessages.OpenRefactoringWizardAction_refactoring, RefactoringSaveHelper.SAVE_JAVA_ONLY_UPDATES);
 	}

@@ -101,8 +101,34 @@ public interface IPackageFragment extends IParent, IJavaScriptElement, IOpenable
 	 * @param name the given name
 	 * @return the compilation unit with the specified name in this package
 	 * @see JavaScriptConventions#validateCompilationUnitName(String name, String sourceLevel, String complianceLevel)
+	 * @deprecated Use {@link #getJavaScriptUnit(String)} instead
 	 */
 	IJavaScriptUnit getCompilationUnit(String name);
+	/**
+	 * Returns the compilation unit with the specified name
+	 * in this package (for example, <code>"Object.js"</code>).
+	 * The name has to be a valid compilation unit name.
+	 * This is a handle-only method.  The compilation unit may or may not be present.
+	 *
+	 * @param name the given name
+	 * @return the compilation unit with the specified name in this package
+	 * @see JavaScriptConventions#validateCompilationUnitName(String name, String sourceLevel, String complianceLevel)
+	 */
+	IJavaScriptUnit getJavaScriptUnit(String name);
+	/**
+	 * Returns all of the compilation units in this package fragment.
+	 *
+	 * <p>Note: it is possible that a package fragment contains only
+	 * class files (in other words, its kind is <code>K_BINARY</code>), in which
+	 * case this method returns an empty collection.
+	 * </p>
+	 *
+	 * @exception JavaScriptModelException if this element does not exist or if an
+	 *		exception occurs while accessing its corresponding resource.
+	 * @return all of the compilation units in this package fragment
+	 * @deprecated Use {@link #getJavaScriptUnits()} instead
+	 */
+	IJavaScriptUnit[] getCompilationUnits() throws JavaScriptModelException;
 	/**
 	 * Returns all of the compilation units in this package fragment.
 	 *
@@ -115,7 +141,27 @@ public interface IPackageFragment extends IParent, IJavaScriptElement, IOpenable
 	 *		exception occurs while accessing its corresponding resource.
 	 * @return all of the compilation units in this package fragment
 	 */
-	IJavaScriptUnit[] getCompilationUnits() throws JavaScriptModelException;
+	IJavaScriptUnit[] getJavaScriptUnits() throws JavaScriptModelException;
+	/**
+	 * Returns all of the compilation units in this package fragment that are
+	 * in working copy mode and that have the given owner.
+	 * <p>
+	 * Only existing working copies are returned. So a compilation unit handle that has no
+	 * corresponding resource on disk will be included if and only if is in working copy mode.
+	 * </p>
+	 * <p>Note: it is possible that a package fragment contains only
+	 * class files (in other words, its kind is <code>K_BINARY</code>), in which
+	 * case this method returns an empty collection.
+	 * </p>
+	 *
+	 * @param owner the owner of the returned compilation units
+	 * @exception JavaScriptModelException if this element does not exist or if an
+	 *		exception occurs while accessing its corresponding resource.
+	 * @return all of the compilation units in this package fragment
+	 * @since 3.0
+	 * @deprecated Use {@link #getJavaScriptUnits(WorkingCopyOwner)} instead
+	 */
+	IJavaScriptUnit[] getCompilationUnits(WorkingCopyOwner owner) throws JavaScriptModelException;
 	/**
 	 * Returns all of the compilation units in this package fragment that are
 	 * in working copy mode and that have the given owner.
@@ -134,7 +180,7 @@ public interface IPackageFragment extends IParent, IJavaScriptElement, IOpenable
 	 * @return all of the compilation units in this package fragment
 	 * @since 3.0
 	 */
-	IJavaScriptUnit[] getCompilationUnits(WorkingCopyOwner owner) throws JavaScriptModelException;
+	IJavaScriptUnit[] getJavaScriptUnits(WorkingCopyOwner owner) throws JavaScriptModelException;
 	/**
 	 * Returns the dot-separated package name of this fragment, for example
 	 * <code>"java.lang"</code>, or <code>""</code> (the empty string),
@@ -146,7 +192,7 @@ public interface IPackageFragment extends IParent, IJavaScriptElement, IOpenable
 	/**
 	 * Returns this package fragment's root kind encoded as an integer.
 	 * A package fragment can contain source files (i.e. files with one of
-	 * the {@link JavaScriptCore#getJavaLikeExtensions() Java-like extensions}),
+	 * the {@link JavaScriptCore#getJavaScriptLikeExtensions() Java-like extensions}),
 	 * or <code>.class</code> files. This is a convenience method.
 	 *
 	 * @exception JavaScriptModelException if this element does not exist or if an
@@ -176,7 +222,7 @@ public interface IPackageFragment extends IParent, IJavaScriptElement, IOpenable
 	 * @see IIncludePathEntry#getInclusionPatterns()
 	 * @see IIncludePathEntry#getExclusionPatterns()
 	 */
-	Object[] getNonJavaResources() throws JavaScriptModelException;
+	Object[] getNonJavaScriptResources() throws JavaScriptModelException;
 	/**
 	 * Returns whether this package fragment's name is
 	 * a prefix of other package fragments in this package fragment's

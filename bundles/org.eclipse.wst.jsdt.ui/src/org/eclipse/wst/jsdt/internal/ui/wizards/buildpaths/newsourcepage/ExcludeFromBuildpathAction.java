@@ -93,9 +93,9 @@ public class ExcludeFromBuildpathAction extends BuildpathModifierAction {
         final IJavaScriptProject project;
         Object object= getSelectedElements().get(0);
         if (object instanceof IJavaScriptUnit) {
-        	project= ((IJavaScriptUnit)object).getJavaProject();
+        	project= ((IJavaScriptUnit)object).getJavaScriptProject();
         } else {
-        	project= ((IPackageFragment)object).getJavaProject();
+        	project= ((IPackageFragment)object).getJavaScriptProject();
         }
         
         try {

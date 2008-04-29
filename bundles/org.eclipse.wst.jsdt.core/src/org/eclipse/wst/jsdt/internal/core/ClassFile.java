@@ -135,7 +135,7 @@ protected boolean buildStructure(OpenableElementInfo info, IProgressMonitor pm, 
 
 	// generate structure and compute syntax problems if needed
 	CompilationUnitStructureRequestor requestor = new CompilationUnitStructureRequestor(this, unitInfo, newElements);
-	IJavaScriptProject project = getJavaProject();
+	IJavaScriptProject project = getJavaScriptProject();
 
 	boolean createAST;
 	boolean resolveBindings;
@@ -259,7 +259,7 @@ public void codeComplete(int offset, CompletionRequestor requestor, WorkingCopyO
 				getSource().toCharArray(),
 				null,
 				type.sourceFileName((IBinaryType) type.getElementInfo()),
-				getJavaProject()); // use project to retrieve corresponding .js IFile
+				getJavaScriptProject()); // use project to retrieve corresponding .js IFile
 		codeComplete(cu, cu, offset, requestor, owner);
 	}
 }
@@ -650,9 +650,9 @@ private IStatus validateClassFile() {
 		if (root.getKind() != IPackageFragmentRoot.K_BINARY)
 			return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_ELEMENT_TYPES, root);
 	} catch (JavaScriptModelException e) {
-		return e.getJavaModelStatus();
+		return e.getJavaScriptModelStatus();
 	}
-	IJavaScriptProject project = getJavaProject();
+	IJavaScriptProject project = getJavaScriptProject();
 	return JavaScriptConventions.validateClassFileName(getElementName(), project.getOption(JavaScriptCore.COMPILER_SOURCE, true), project.getOption(JavaScriptCore.COMPILER_COMPLIANCE, true));
 }
 /**
@@ -864,7 +864,14 @@ public IField[] getFields() throws JavaScriptModelException {
 		return array;
 	}
 }
+/**
+ * @deprecated Use {@link #getFunction(String,String[])} instead
+ */
 public IFunction getMethod(String selector, String[] parameterTypeSignatures) {
+	return getFunction(selector, parameterTypeSignatures);
+}
+
+public IFunction getFunction(String selector, String[] parameterTypeSignatures) {
 	return new SourceMethod(this, selector, parameterTypeSignatures);
 }
 
@@ -875,7 +882,17 @@ public IType getType(String typeName) {
 /*
  * @see IType#getMethods()
  */
+/**
+ * @deprecated Use {@link #getFunctions()} instead
+ */
 public IFunction[] getMethods() throws JavaScriptModelException {
+	return getFunctions();
+}
+
+/*
+ * @see IType#getMethods()
+ */
+public IFunction[] getFunctions() throws JavaScriptModelException {
 	ArrayList list = getChildrenOfType(METHOD);
 	int size;
 	if ((size = list.size()) == 0) {
@@ -922,7 +939,7 @@ public IType[] getTypes() throws JavaScriptModelException {
 
 			JsGlobalScopeContainerInitializer init = ((IVirtualParent)parent).getContainerInitializer();
 			if(init==null) return super.getDisplayName();
-			return init.getDescription(new Path(getElementName()), getJavaProject());
+			return init.getDescription(new Path(getElementName()), getJavaScriptProject());
 		}
 		return super.getDisplayName();
 	}
@@ -930,7 +947,7 @@ public IType[] getTypes() throws JavaScriptModelException {
 	public URI getHostPath() {
 		if(isVirtual()) {
 			JsGlobalScopeContainerInitializer init = ((IVirtualParent)parent).getContainerInitializer();
-			if(init!=null) return init.getHostPath(new Path(getElementName()), getJavaProject());
+			if(init!=null) return init.getHostPath(new Path(getElementName()), getJavaScriptProject());
 		}
 		return null;
 	}

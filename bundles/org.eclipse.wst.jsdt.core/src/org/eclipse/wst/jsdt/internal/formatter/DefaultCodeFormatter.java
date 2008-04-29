@@ -151,7 +151,7 @@ public class DefaultCodeFormatter extends CodeFormatter {
 		switch(kind) {
 			case K_CLASS_BODY_DECLARATIONS :
 				return formatClassBodyDeclarations(source, indentationLevel, lineSeparator, offset, length);
-			case K_COMPILATION_UNIT :
+			case K_JAVASCRIPT_UNIT :
 				return formatCompilationUnit(source, indentationLevel, lineSeparator, offset, length);
 			case K_EXPRESSION :
 				return formatExpression(source, indentationLevel, lineSeparator, offset, length);

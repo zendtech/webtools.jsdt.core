@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.IPath;
  *
  *	<li>Source code in the current project. In this case, the entry identifies a
  *		root folder in the current project containing package fragments and
- *		source files with one of the {@link JavaScriptCore#getJavaLikeExtensions()
+ *		source files with one of the {@link JavaScriptCore#getJavaScriptLikeExtensions()
  *		Java-like extensions}. The root folder itself represents a default
  *		package, subfolders represent package fragments, and files with a
  *     Java-like extension (e.g. <code>.js</code> files)
@@ -63,9 +63,9 @@ import org.eclipse.core.runtime.IPath;
  *
  *  <li> A path beginning in a classpath variable defined globally to the workspace.
  *		Entries of this kind are  associated with the {@link #CPE_VARIABLE} constant.
- *      Classpath variables are created using {@link JavaScriptCore#setClasspathVariable(String, IPath, org.eclipse.core.runtime.IProgressMonitor)},
+ *      Classpath variables are created using {@link JavaScriptCore#setIncludepathVariable(String, IPath, org.eclipse.core.runtime.IProgressMonitor)},
  * 		and gets resolved, to either a project or library entry, using
- *      {@link JavaScriptCore#getResolvedClasspathEntry(IIncludePathEntry)}.
+ *      {@link JavaScriptCore#getResolvedIncludepathEntry(IIncludePathEntry)}.
  *		It is also possible to register an automatic initializer ({@link JsGlobalScopeVariableInitializer}),
  * 	which will be invoked through the extension point "org.eclipse.wst.jsdt.core.JsGlobalScopeVariableInitializer".
  * 	After resolution, a classpath variable entry may either correspond to a project or a library entry. </li>
@@ -245,7 +245,7 @@ public interface IIncludePathEntry {
 	 * the folder named <code>tests</code>.
 	 * </p>
 	 * <p>
-	 * Example patterns in source entries (assuming that "java" is the only {@link JavaScriptCore#getJavaLikeExtensions() Java-like extension}):
+	 * Example patterns in source entries (assuming that "java" is the only {@link JavaScriptCore#getJavaScriptLikeExtensions() Java-like extension}):
 	 * <ul>
 	 * <li>
 	 * <code>tests/&#42;&#42;</code> (or simply <code>tests/</code>)
@@ -447,7 +447,7 @@ public interface IIncludePathEntry {
 	 *	<p>
 	 * Note that this deprecated API doesn't handle CPE_CONTAINER entries.
 	 *
-	 * @deprecated Use {@link JavaScriptCore#getResolvedClasspathEntry(IIncludePathEntry)} instead
+	 * @deprecated Use {@link JavaScriptCore#getResolvedIncludepathEntry(IIncludePathEntry)} instead
 	 */
 	IIncludePathEntry getResolvedEntry();
 }

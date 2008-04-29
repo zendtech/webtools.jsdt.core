@@ -92,7 +92,7 @@ public class ProjectLibraryRoot implements IAdaptable{
 				IPackageFragmentRoot root= roots[i];
 				IIncludePathEntry classpathEntry=null;
 				try {
-					classpathEntry = root.getRawClasspathEntry();
+					classpathEntry = root.getRawIncludepathEntry();
 				}
 				catch (JavaScriptModelException e) {}
 				
@@ -118,7 +118,7 @@ public class ProjectLibraryRoot implements IAdaptable{
 			// separate loop to make sure all containers are on the classpath
 			IIncludePathEntry[] rawClasspath = new IIncludePathEntry[0];
 			try {
-				rawClasspath = project.getRawClasspath();
+				rawClasspath = project.getRawIncludepath();
 			}
 			catch (JavaScriptModelException e) {}
 			for (int i= 0; i < rawClasspath.length; i++) {

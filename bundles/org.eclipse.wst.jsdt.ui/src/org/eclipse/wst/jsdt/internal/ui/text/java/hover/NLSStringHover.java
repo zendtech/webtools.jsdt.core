@@ -99,7 +99,7 @@ public class NLSStringHover extends AbstractJavaEditorTextHover {
 
 		IStorage propertiesFile;
 		try {
-			propertiesFile= NLSHintHelper.getResourceBundle(je.getJavaProject(), ref);
+			propertiesFile= NLSHintHelper.getResourceBundle(je.getJavaScriptProject(), ref);
 			if (propertiesFile == null)
 				return toHtml(JavaHoverMessages.NLSStringHover_NLSStringHover_PropertiesFileNotDetectedWarning, ""); //$NON-NLS-1$
 		} catch (JavaScriptModelException ex) {

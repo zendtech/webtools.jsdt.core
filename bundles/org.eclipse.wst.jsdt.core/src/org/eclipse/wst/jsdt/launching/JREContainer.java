@@ -117,7 +117,7 @@ public class JREContainer implements IJsGlobalScopeContainer {
 				if (javadocLocation == null) {
 					attributes = new IIncludePathAttribute[0];
 				} else {
-					attributes = new IIncludePathAttribute[]{JavaScriptCore.newClasspathAttribute(IIncludePathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME, javadocLocation.toExternalForm())};
+					attributes = new IIncludePathAttribute[]{JavaScriptCore.newIncludepathAttribute(IIncludePathAttribute.JSDOC_LOCATION_ATTRIBUTE_NAME, javadocLocation.toExternalForm())};
 				}
 				entries.add(JavaScriptCore.newLibraryEntry(libs[i].getSystemLibraryPath(), sourcePath, rootPath, EMPTY_RULES, attributes, false));
 			}
@@ -138,8 +138,16 @@ public class JREContainer implements IJsGlobalScopeContainer {
 	
 	/**
 	 * @see IJsGlobalScopeContainer#getClasspathEntries()
+	 * @deprecated Use {@link #getIncludepathEntries()} instead
 	 */
 	public IIncludePathEntry[] getClasspathEntries() {
+		return getIncludepathEntries();
+	}
+
+	/**
+	 * @see IJsGlobalScopeContainer#getIncludepathEntries()
+	 */
+	public IIncludePathEntry[] getIncludepathEntries() {
 		return getClasspathEntries(fVMInstall);
 	}
 

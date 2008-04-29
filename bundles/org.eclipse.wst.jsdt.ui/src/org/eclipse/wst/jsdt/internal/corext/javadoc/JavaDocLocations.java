@@ -123,7 +123,7 @@ public class JavaDocLocations {
 	
 	final static void updateClasspathEntries(Map oldLocationMap, IProgressMonitor monitor) throws JavaScriptModelException {
 		IWorkspaceRoot root= ResourcesPlugin.getWorkspace().getRoot();
-		IJavaScriptProject[] javaProjects= JavaScriptCore.create(root).getJavaProjects();
+		IJavaScriptProject[] javaProjects= JavaScriptCore.create(root).getJavaScriptProjects();
 		try {
 			monitor.beginTask(CorextMessages.JavaDocLocations_migrate_operation, javaProjects.length); 
 			for (int i= 0; i < javaProjects.length; i++) {
@@ -137,7 +137,7 @@ public class JavaDocLocations {
 					}
 				}
 				
-				IIncludePathEntry[] rawClasspath= project.getRawClasspath();
+				IIncludePathEntry[] rawClasspath= project.getRawIncludepath();
 				boolean hasChange= false;
 				for (int k= 0; k < rawClasspath.length; k++) {
 					IIncludePathEntry updated= getConvertedEntry(rawClasspath[k], project, oldLocationMap);
@@ -147,7 +147,7 @@ public class JavaDocLocations {
 					}
 				}
 				if (hasChange) {
-					project.setRawClasspath(rawClasspath, new SubProgressMonitor(monitor, 1));
+					project.setRawIncludepath(rawClasspath, new SubProgressMonitor(monitor, 1));
 				} else {
 					monitor.worked(1);
 				}
@@ -180,7 +180,7 @@ public class JavaDocLocations {
 		}
 		IIncludePathAttribute[] extraAttributes= entry.getExtraAttributes();
 		for (int i= 0; i < extraAttributes.length; i++) {
-			if (IIncludePathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME.equals(extraAttributes[i].getName())) {
+			if (IIncludePathAttribute.JSDOC_LOCATION_ATTRIBUTE_NAME.equals(extraAttributes[i].getName())) {
 				return null;
 			}
 		}
@@ -200,7 +200,7 @@ public class JavaDocLocations {
 				return;
 			}
 			
-			IIncludePathEntry[] entries= container.getClasspathEntries();
+			IIncludePathEntry[] entries= container.getIncludepathEntries();
 			boolean hasChange= false;
 			for (int i= 0; i < entries.length; i++) {
 				IIncludePathEntry curr= entries[i];
@@ -263,7 +263,7 @@ public class JavaDocLocations {
 		IIncludePathAttribute[] extraAttributes= entry.getExtraAttributes();
 		for (int i= 0; i < extraAttributes.length; i++) {
 			IIncludePathAttribute attrib= extraAttributes[i];
-			if (IIncludePathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME.equals(attrib.getName())) {
+			if (IIncludePathAttribute.JSDOC_LOCATION_ATTRIBUTE_NAME.equals(attrib.getName())) {
 				try {
 					return new URL(attrib.getValue());
 				} catch (MalformedURLException e) {
@@ -285,29 +285,29 @@ public class JavaDocLocations {
 		}
 
 		if (root.getKind() == IPackageFragmentRoot.K_BINARY) {
-			IIncludePathEntry entry= root.getRawClasspathEntry();
+			IIncludePathEntry entry= root.getRawIncludepathEntry();
 			if (entry == null) {
 				return null;
 			}
 			if (entry.getEntryKind() == IIncludePathEntry.CPE_CONTAINER) {
-				entry= getRealClasspathEntry(root.getJavaProject(), entry.getPath(), root.getPath());
+				entry= getRealClasspathEntry(root.getJavaScriptProject(), entry.getPath(), root.getPath());
 				if (entry == null) {
 					return null;
 				}
 			}
 			return getLibraryJavadocLocation(entry);
 		} else {
-			return getProjectJavadocLocation(root.getJavaProject());
+			return getProjectJavadocLocation(root.getJavaScriptProject());
 		}	
 	}
 	
 	private static IIncludePathEntry getRealClasspathEntry(IJavaScriptProject jproject, IPath containerPath, IPath libPath) throws JavaScriptModelException {
 		IJsGlobalScopeContainer container= JavaScriptCore.getJsGlobalScopeContainer(containerPath, jproject);
 		if (container != null) {
-			IIncludePathEntry[] entries= container.getClasspathEntries();
+			IIncludePathEntry[] entries= container.getIncludepathEntries();
 			for (int i= 0; i < entries.length; i++) {
 				IIncludePathEntry curr= entries[i];
-				IIncludePathEntry resolved= JavaScriptCore.getResolvedClasspathEntry(curr);
+				IIncludePathEntry resolved= JavaScriptCore.getResolvedIncludepathEntry(curr);
 				if (resolved != null && libPath.equals(resolved.getPath())) {
 					return curr; // return the real entry
 				}
@@ -497,14 +497,14 @@ public class JavaDocLocations {
 				IImportDeclaration decl= (IImportDeclaration) element;
 
 				if (decl.isOnDemand()) {
-					IJavaScriptElement cont= JavaModelUtil.findTypeContainer(element.getJavaProject(), Signature.getQualifier(decl.getElementName()));
+					IJavaScriptElement cont= JavaModelUtil.findTypeContainer(element.getJavaScriptProject(), Signature.getQualifier(decl.getElementName()));
 					if (cont instanceof IType) {
 						appendTypePath((IType) cont, pathBuffer);
 					} else if (cont instanceof IPackageFragment) {
 						appendPackageSummaryPath((IPackageFragment) cont, pathBuffer);
 					}
 				} else {
-					IType imp= element.getJavaProject().findType(decl.getElementName());
+					IType imp= element.getJavaScriptProject().findType(decl.getElementName());
 					appendTypePath(imp, pathBuffer);
 				}
 				break;

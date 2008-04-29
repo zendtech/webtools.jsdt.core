@@ -98,16 +98,16 @@ abstract class PackageFragmentRootReorgChange extends JDTChange {
 	}
 	
 	protected int getUpdateModelFlags(boolean isCopy) throws JavaScriptModelException{
-		final int destination= IPackageFragmentRoot.DESTINATION_PROJECT_CLASSPATH;
+		final int destination= IPackageFragmentRoot.DESTINATION_PROJECT_INCLUDEPATH;
 		final int replace= IPackageFragmentRoot.REPLACE;
 		final int originating;
 		final int otherProjects;
 		if (isCopy){
-			originating= 0; //ORIGINATING_PROJECT_CLASSPATH does not apply to copy
-			otherProjects= 0;//OTHER_REFERRING_PROJECTS_CLASSPATH does not apply to copy
+			originating= 0; //ORIGINATING_PROJECT_INCLUDEPATH does not apply to copy
+			otherProjects= 0;//OTHER_REFERRING_PROJECTS_INCLUDEPATH does not apply to copy
 		} else{
-			originating= IPackageFragmentRoot.ORIGINATING_PROJECT_CLASSPATH;
-			otherProjects= IPackageFragmentRoot.OTHER_REFERRING_PROJECTS_CLASSPATH;
+			originating= IPackageFragmentRoot.ORIGINATING_PROJECT_INCLUDEPATH;
+			otherProjects= IPackageFragmentRoot.OTHER_REFERRING_PROJECTS_INCLUDEPATH;
 		}
 		
 		if (! JavaScriptCore.create(getDestinationProject()).exists())

@@ -247,9 +247,9 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction {
 				case IJavaScriptElement.IMPORT_DECLARATION:	
 					IImportDeclaration decl= (IImportDeclaration) elem;
 					if (decl.isOnDemand()) {
-						elem= JavaModelUtil.findTypeContainer(elem.getJavaProject(), Signature.getQualifier(elem.getElementName()));
+						elem= JavaModelUtil.findTypeContainer(elem.getJavaScriptProject(), Signature.getQualifier(elem.getElementName()));
 					} else {
-						elem= elem.getJavaProject().findType(elem.getElementName());
+						elem= elem.getJavaScriptProject().findType(elem.getElementName());
 					}
 					if (elem != null) {
 						result.add(elem);

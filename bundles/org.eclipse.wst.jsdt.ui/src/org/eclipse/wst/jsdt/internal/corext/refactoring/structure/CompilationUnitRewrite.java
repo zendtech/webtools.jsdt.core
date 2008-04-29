@@ -228,7 +228,7 @@ public class CompilationUnitRewrite {
 			if (needsAstRewrite) {
 				TextEdit rewriteEdit;
 				if (fRememberContent != null) {
-					rewriteEdit= fRewrite.rewriteAST(fRememberContent, fCu.getJavaProject().getOptions(true));
+					rewriteEdit= fRewrite.rewriteAST(fRememberContent, fCu.getJavaScriptProject().getOptions(true));
 				} else {
 					rewriteEdit= fRewrite.rewriteAST();
 				}
@@ -316,7 +316,7 @@ public class CompilationUnitRewrite {
 	
 	public ImportRemover getImportRemover() {
 		if (fImportRemover == null) {
-			fImportRemover= new ImportRemover(fCu.getJavaProject(), getRoot());
+			fImportRemover= new ImportRemover(fCu.getJavaScriptProject(), getRoot());
 		}
 		return fImportRemover;
 	}

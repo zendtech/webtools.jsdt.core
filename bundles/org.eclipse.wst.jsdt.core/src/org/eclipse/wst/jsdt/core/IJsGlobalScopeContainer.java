@@ -80,9 +80,52 @@ public interface IJsGlobalScopeContainer {
 	 * <li>{@link JavaScriptCore#newProjectEntry(IPath, boolean)} and variants</li>
 	 * <li>{@link JavaScriptCore#create(org.eclipse.core.resources.IWorkspaceRoot)}</li>
 	 * <li>{@link JavaScriptCore#create(org.eclipse.core.resources.IProject)}</li>
-	 * <li>{@link IJavaScriptModel#getJavaProjects()}</li>
-	 * <li>{@link IJavaScriptProject#getRawClasspath()}</li>
-	 * <li>{@link IJavaScriptProject#readRawClasspath()}</li>
+	 * <li>{@link IJavaScriptModel#getJavaScriptProjects()}</li>
+	 * <li>{@link IJavaScriptProject#getRawIncludepath()}</li>
+	 * <li>{@link IJavaScriptProject#readRawIncludepath()}</li>
+	 * <li>{@link IJavaScriptProject#getOutputLocation()}</li>
+	 * <li>{@link IJavaScriptProject#readOutputLocation()}</li>
+	 * <li>Java element operations marked as "handle-only"</li>
+	 * </ul>
+	 * The effects of using other Java model APIs are unspecified.
+	 * </p>
+	 *
+	 * @return IIncludePathEntry[] - the classpath entries this container represents
+	 * @see IIncludePathEntry
+	 * @deprecated Use {@link #getIncludepathEntries()} instead
+	 */
+	IIncludePathEntry[] getClasspathEntries();
+
+	/**
+	 * Answers the set of classpath entries this container is mapping to.
+	 * <p>
+	 * The set of entries associated with a classpath container may contain any of the following:
+	 * <ul>
+	 * <li> library entries (<code>CPE_LIBRARY</code>) </li>
+	 * <li> project entries (<code>CPE_PROJECT</code>) </li>
+	 * </ul>
+	 * A classpath container can neither reference further classpath containers
+	 * or classpath variables.
+	 * </p>
+	 * <p>
+	 * This method is called by the Java model when it needs to resolve this
+	 * classpath container entry into a list of library and project entries.
+	 * The method is typically called exactly once for a given Java project,
+	 * and the resulting list of entries cached internally by the Java model.
+	 * This method must not be called by other clients.
+	 * <p>
+	 * There are a wide variety of conditions under which this method may be
+	 * invoked. To ensure that the implementation does not interfere with
+	 * correct functioning of the Java model, the implementation should use
+	 * only the following Java model APIs:
+	 * <ul>
+	 * <li>{@link JavaScriptCore#newLibraryEntry(IPath, IPath, IPath, boolean)} and variants</li>
+	 * <li>{@link JavaScriptCore#newProjectEntry(IPath, boolean)} and variants</li>
+	 * <li>{@link JavaScriptCore#create(org.eclipse.core.resources.IWorkspaceRoot)}</li>
+	 * <li>{@link JavaScriptCore#create(org.eclipse.core.resources.IProject)}</li>
+	 * <li>{@link IJavaScriptModel#getJavaScriptProjects()}</li>
+	 * <li>{@link IJavaScriptProject#getRawIncludepath()}</li>
+	 * <li>{@link IJavaScriptProject#readRawIncludepath()}</li>
 	 * <li>{@link IJavaScriptProject#getOutputLocation()}</li>
 	 * <li>{@link IJavaScriptProject#readOutputLocation()}</li>
 	 * <li>Java element operations marked as "handle-only"</li>
@@ -93,7 +136,7 @@ public interface IJsGlobalScopeContainer {
 	 * @return IIncludePathEntry[] - the classpath entries this container represents
 	 * @see IIncludePathEntry
 	 */
-    IIncludePathEntry[] getClasspathEntries();
+    IIncludePathEntry[] getIncludepathEntries();
 
 	/**
 	 * Answers a readable description of this container

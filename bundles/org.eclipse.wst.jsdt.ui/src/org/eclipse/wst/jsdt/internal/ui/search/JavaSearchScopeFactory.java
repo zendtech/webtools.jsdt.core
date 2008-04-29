@@ -170,7 +170,7 @@ public class JavaSearchScopeFactory {
 	public IJavaScriptSearchScope createJavaProjectSearchScope(IEditorInput editorInput, int includeMask) {
 		IJavaScriptElement elem= JavaUI.getEditorInputJavaElement(editorInput);
 		if (elem != null) {
-			IJavaScriptProject project= elem.getJavaProject();
+			IJavaScriptProject project= elem.getJavaScriptProject();
 			if (project != null) {
 				return createJavaProjectSearchScope(project, includeMask);
 			}
@@ -216,7 +216,7 @@ public class JavaSearchScopeFactory {
 	public String getProjectScopeDescription(IEditorInput editorInput, boolean includeJRE) {
 		IJavaScriptElement elem= JavaUI.getEditorInputJavaElement(editorInput);
 		if (elem != null) {
-			IJavaScriptProject project= elem.getJavaProject();
+			IJavaScriptProject project= elem.getJavaScriptProject();
 			if (project != null) {
 				return getProjectScopeDescription(project, includeJRE);
 			}
@@ -371,7 +371,7 @@ public class JavaSearchScopeFactory {
 		
 		if (workingSet.isAggregateWorkingSet() && workingSet.isEmpty()) {
 			try {
-				IJavaScriptProject[] projects= JavaScriptCore.create(ResourcesPlugin.getWorkspace().getRoot()).getJavaProjects();
+				IJavaScriptProject[] projects= JavaScriptCore.create(ResourcesPlugin.getWorkspace().getRoot()).getJavaScriptProjects();
 				javaElements.addAll(Arrays.asList(projects));
 			} catch (JavaScriptModelException e) {
 				JavaPlugin.log(e);
@@ -408,7 +408,7 @@ public class JavaSearchScopeFactory {
 	public IJavaScriptSearchScope createWorkspaceScope(int includeMask) {
 		if ((includeMask & NO_PROJ) != NO_PROJ) {
 			try {
-				IJavaScriptProject[] projects= JavaScriptCore.create(ResourcesPlugin.getWorkspace().getRoot()).getJavaProjects();
+				IJavaScriptProject[] projects= JavaScriptCore.create(ResourcesPlugin.getWorkspace().getRoot()).getJavaScriptProjects();
 				return SearchEngine.createJavaSearchScope(projects, getSearchFlags(includeMask));
 			} catch (JavaScriptModelException e) {
 				// ignore, use workspace scope instead
@@ -421,9 +421,9 @@ public class JavaSearchScopeFactory {
 		IPackageFragmentRoot root= (IPackageFragmentRoot) element.getAncestor(IJavaScriptElement.PACKAGE_FRAGMENT_ROOT);
 		if (root != null) {
 			try {
-				IIncludePathEntry entry= root.getRawClasspathEntry();
+				IIncludePathEntry entry= root.getRawIncludepathEntry();
 				if (entry.getEntryKind() == IIncludePathEntry.CPE_CONTAINER) {
-					IJsGlobalScopeContainer container= JavaScriptCore.getJsGlobalScopeContainer(entry.getPath(), root.getJavaProject());
+					IJsGlobalScopeContainer container= JavaScriptCore.getJsGlobalScopeContainer(entry.getPath(), root.getJavaScriptProject());
 					return container != null && container.getKind() == IJsGlobalScopeContainer.K_DEFAULT_SYSTEM;
 				}
 				return false;

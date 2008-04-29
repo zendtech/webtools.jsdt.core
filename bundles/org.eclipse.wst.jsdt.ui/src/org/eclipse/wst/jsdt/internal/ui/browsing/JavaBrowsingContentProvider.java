@@ -107,7 +107,7 @@ class JavaBrowsingContentProvider extends StandardJavaElementContentProvider imp
 	private Object[] getPackageContents(IPackageFragment fragment) throws JavaScriptModelException {
 		ISourceReference[] sourceRefs;
 		if (fragment.getKind() == IPackageFragmentRoot.K_SOURCE) {
-			sourceRefs= fragment.getCompilationUnits();
+			sourceRefs= fragment.getJavaScriptUnits();
 		}
 		else {
 			IClassFile[] classFiles= fragment.getClassFiles();
@@ -123,7 +123,7 @@ class JavaBrowsingContentProvider extends StandardJavaElementContentProvider imp
 		Object[] result= new Object[0];
 		for (int i= 0; i < sourceRefs.length; i++)
 			result= concatenate(result, removeImportAndPackageDeclarations(getChildren(sourceRefs[i])));
-		return concatenate(result, fragment.getNonJavaResources());
+		return concatenate(result, fragment.getNonJavaScriptResources());
 	}
 
 	private Object[] removeImportAndPackageDeclarations(Object[] members) {
@@ -139,7 +139,7 @@ class JavaBrowsingContentProvider extends StandardJavaElementContentProvider imp
 		if (type.isBinary())
 			parent= type.getClassFile();
 		else {
-			parent= type.getCompilationUnit();
+			parent= type.getJavaScriptUnit();
 		}
 		if (type.getDeclaringType() != null)
 			return type.getChildren();
@@ -173,7 +173,7 @@ class JavaBrowsingContentProvider extends StandardJavaElementContentProvider imp
 				list.add(root);
 			}
 		}
-		return concatenate(list.toArray(), project.getNonJavaResources());
+		return concatenate(list.toArray(), project.getNonJavaScriptResources());
 	}
 
 	// ---------------- Element change handling
@@ -357,10 +357,10 @@ class JavaBrowsingContentProvider extends StandardJavaElementContentProvider imp
 	}
 
 	private boolean isOnClassPath(IJavaScriptUnit element) throws JavaScriptModelException {
-		IJavaScriptProject project= element.getJavaProject();
+		IJavaScriptProject project= element.getJavaScriptProject();
 		if (project == null || !project.exists())
 			return false;
-		return project.isOnClasspath(element);
+		return project.isOnIncludepath(element);
 	}
 
 	/**
@@ -514,7 +514,7 @@ class JavaBrowsingContentProvider extends StandardJavaElementContentProvider imp
 	 */
 	protected Object internalGetParent(Object element) {
 		if (element instanceof IJavaScriptProject) {
-			return ((IJavaScriptProject)element).getJavaModel();
+			return ((IJavaScriptProject)element).getJavaScriptModel();
 		}
 		// try to map resources to the containing package fragment
 		if (element instanceof IResource) {

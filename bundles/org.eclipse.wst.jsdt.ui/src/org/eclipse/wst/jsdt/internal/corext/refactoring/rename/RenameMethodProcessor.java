@@ -201,7 +201,7 @@ public abstract class RenameMethodProcessor extends JavaRenameProcessor implemen
 	public final RefactoringStatus checkNewElementName(String newName) {
 		Assert.isNotNull(newName, "new name"); //$NON-NLS-1$
 				
-		RefactoringStatus status= Checks.checkName(newName, JavaScriptConventions.validateMethodName(newName));
+		RefactoringStatus status= Checks.checkName(newName, JavaScriptConventions.validateFunctionName(newName));
 		if (status.isOK() && Checks.startsWithUpperCase(newName))
 			status= RefactoringStatus.createWarningStatus(fIsComposite 
 					? Messages.format(RefactoringCoreMessages.Checks_method_names_lowercase2, new String[] { newName, fMethod.getDeclaringType().getElementName()})
@@ -217,8 +217,8 @@ public abstract class RenameMethodProcessor extends JavaRenameProcessor implemen
 	
 	public Object getNewElement() {
 		if (fMethod.getDeclaringType()!=null)
-			return fMethod.getDeclaringType().getMethod(getNewElementName(), fMethod.getParameterTypes());
-		return fMethod.getCompilationUnit().getMethod(getNewElementName(), fMethod.getParameterTypes());
+			return fMethod.getDeclaringType().getFunction(getNewElementName(), fMethod.getParameterTypes());
+		return fMethod.getJavaScriptUnit().getFunction(getNewElementName(), fMethod.getParameterTypes());
 	}
 	
 	public final IFunction getMethod() {
@@ -279,7 +279,7 @@ public abstract class RenameMethodProcessor extends JavaRenameProcessor implemen
 	public RefactoringStatus checkInitialConditions(IProgressMonitor pm) throws CoreException {
 		if (! fMethod.exists()){
 			String message= Messages.format(RefactoringCoreMessages.RenameMethodRefactoring_deleted, 
-								fMethod.getCompilationUnit().getElementName());
+								fMethod.getJavaScriptUnit().getElementName());
 			return RefactoringStatus.createFatalErrorStatus(message);
 		}	
 		
@@ -399,7 +399,7 @@ public abstract class RenameMethodProcessor extends JavaRenameProcessor implemen
 	private IFunction[] searchForDeclarationsOfClashingMethods(IProgressMonitor pm) throws CoreException {
 		final List results= new ArrayList();
 		SearchPattern pattern= createNewMethodPattern();
-		IJavaScriptSearchScope scope= RefactoringScopeFactory.create(getMethod().getJavaProject());
+		IJavaScriptSearchScope scope= RefactoringScopeFactory.create(getMethod().getJavaScriptProject());
 		SearchRequestor requestor= new SearchRequestor() {
 			public void acceptSearchMatch(SearchMatch match) throws CoreException {
 				Object method= match.getElement();
@@ -463,7 +463,7 @@ public abstract class RenameMethodProcessor extends JavaRenameProcessor implemen
 			if (method.getDeclaringType()!=null)
 			  result.merge(Checks.checkIfConstructorName(method, getNewElementName(), method.getDeclaringType().getElementName()));
 			
-			String[] msgData= new String[]{method.getElementName(), method.getCompilationUnit().getElementName()};
+			String[] msgData= new String[]{method.getElementName(), method.getJavaScriptUnit().getElementName()};
 //			String[] msgData= new String[]{method.getElementName(), JavaModelUtil.getFullyQualifiedName(method.getDeclaringType())};
 			if (! method.exists()){
 				result.addFatalError(Messages.format(RefactoringCoreMessages.RenameMethodRefactoring_not_in_model, msgData)); 
@@ -509,7 +509,7 @@ public abstract class RenameMethodProcessor extends JavaRenameProcessor implemen
 			int i= 0;
 			for (Iterator iter= fMethodsToRename.iterator(); iter.hasNext(); i++) {
 				IFunction method= (IFunction) iter.next();
-				IJavaScriptUnit newCu= RenameAnalyzeUtil.findWorkingCopyForCu(newDeclarationWCs, method.getCompilationUnit());
+				IJavaScriptUnit newCu= RenameAnalyzeUtil.findWorkingCopyForCu(newDeclarationWCs, method.getJavaScriptUnit());
 				IFunctionContainer typeWc= (IFunctionContainer) JavaModelUtil.findInCompilationUnit(newCu, method.getParent());
 				if (typeWc == null)
 					continue;
@@ -622,14 +622,14 @@ public abstract class RenameMethodProcessor extends JavaRenameProcessor implemen
 		Set cus= new HashSet();
 		for (Iterator iter= fMethodsToRename.iterator(); iter.hasNext();) {
 			IFunction method= (IFunction) iter.next();
-			cus.add(method.getCompilationUnit());
+			cus.add(method.getJavaScriptUnit());
 		}
 		return (IJavaScriptUnit[]) cus.toArray(new IJavaScriptUnit[cus.size()]);
 	}
 	
 	private IFunction getMethodInWorkingCopy(IFunction method, String elementName, IFunctionContainer typeWc) throws CoreException{
 		String[] paramTypeSignatures= method.getParameterTypes();
-		return typeWc.getMethod(elementName, paramTypeSignatures);
+		return typeWc.getFunction(elementName, paramTypeSignatures);
 	}
 
 	//-------
@@ -643,7 +643,7 @@ public abstract class RenameMethodProcessor extends JavaRenameProcessor implemen
 		
 		for (Iterator iter= classes.iterator(); iter.hasNext(); ){
 			IType clazz= (IType) iter.next();
-			IFunction[] methods= clazz.getMethods();
+			IFunction[] methods= clazz.getFunctions();
 			boolean isSubclass= subtypes.contains(clazz);
 			for (int j= 0; j < methods.length; j++) {
 				IFunction foundMethod= Checks.findMethod(newName, parameterCount, false, new IFunction[] {methods[j]});
@@ -682,7 +682,7 @@ public abstract class RenameMethodProcessor extends JavaRenameProcessor implemen
 			final List list= new ArrayList(changes.length);
 			list.addAll(Arrays.asList(changes));
 			String project= null;
-			IJavaScriptProject javaProject= fMethod.getJavaProject();
+			IJavaScriptProject javaProject= fMethod.getJavaScriptProject();
 			if (javaProject != null)
 				project= javaProject.getElementName();
 			int flags= JavaRefactoringDescriptor.JAR_MIGRATION | JavaRefactoringDescriptor.JAR_REFACTORING | RefactoringDescriptor.STRUCTURAL_CHANGE;
@@ -803,10 +803,10 @@ public abstract class RenameMethodProcessor extends JavaRenameProcessor implemen
 	protected final ReplaceEdit createReplaceEdit(SearchMatch searchResult, IJavaScriptUnit cu) {
 		if (searchResult.isImplicit()) { // handle Annotation Element references, see bug 94062
 			StringBuffer sb= new StringBuffer(getNewElementName());
-			if (JavaScriptCore.INSERT.equals(cu.getJavaProject().getOption(DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ASSIGNMENT_OPERATOR, true)))
+			if (JavaScriptCore.INSERT.equals(cu.getJavaScriptProject().getOption(DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ASSIGNMENT_OPERATOR, true)))
 				sb.append(' ');
 			sb.append('=');
-			if (JavaScriptCore.INSERT.equals(cu.getJavaProject().getOption(DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ASSIGNMENT_OPERATOR, true)))
+			if (JavaScriptCore.INSERT.equals(cu.getJavaScriptProject().getOption(DefaultCodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ASSIGNMENT_OPERATOR, true)))
 				sb.append(' ');
 			return new ReplaceEdit(searchResult.getOffset(), 0, sb.toString());
 		} else {

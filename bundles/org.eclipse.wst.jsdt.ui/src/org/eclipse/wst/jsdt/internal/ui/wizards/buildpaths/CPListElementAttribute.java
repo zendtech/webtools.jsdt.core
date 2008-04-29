@@ -49,7 +49,7 @@ public class CPListElementAttribute {
 
 	public IIncludePathAttribute getClasspathAttribute() {
 		Assert.isTrue(!fBuiltIn);
-		return JavaScriptCore.newClasspathAttribute(fKey, (String) fValue);
+		return JavaScriptCore.newIncludepathAttribute(fKey, (String) fValue);
 	}
 	
 	public CPListElement getParent() {

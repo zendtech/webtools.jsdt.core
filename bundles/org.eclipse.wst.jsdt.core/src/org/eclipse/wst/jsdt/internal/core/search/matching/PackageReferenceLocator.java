@@ -54,7 +54,7 @@ public static boolean isDeclaringPackageFragment(IPackageFragment packageFragmen
 		try {
 			switch (packageFragment.getKind()) {
 				case IPackageFragmentRoot.K_SOURCE :
-					if (!org.eclipse.wst.jsdt.internal.core.util.Util.isJavaLikeFileName(fileName) || !packageFragment.getCompilationUnit(new String(fileName)).exists()) {
+					if (!org.eclipse.wst.jsdt.internal.core.util.Util.isJavaLikeFileName(fileName) || !packageFragment.getJavaScriptUnit(new String(fileName)).exists()) {
 						return false; // unit doesn't live in selected package
 					}
 					break;

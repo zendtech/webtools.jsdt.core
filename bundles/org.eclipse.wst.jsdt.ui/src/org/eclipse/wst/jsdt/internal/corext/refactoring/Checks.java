@@ -134,7 +134,7 @@ public class Checks {
 	 *  name is not a valid java method name.
 	 */
 	public static RefactoringStatus checkMethodName(String name) {
-		RefactoringStatus status= checkName(name, JavaScriptConventions.validateMethodName(name));
+		RefactoringStatus status= checkName(name, JavaScriptConventions.validateFunctionName(name));
 		if (status.isOK() && startsWithUpperCase(name))
 			return RefactoringStatus.createWarningStatus(RefactoringCoreMessages.Checks_method_names_lowercase); 
 		else	
@@ -153,7 +153,7 @@ public class Checks {
 //		if (name.indexOf(".") != -1) //$NON-NLS-1$
 //			return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.Checks_no_dot);
 //		else	
-			return checkName(name, JavaScriptConventions.validateJavaTypeName(name));
+			return checkName(name, JavaScriptConventions.validateJavaScriptTypeName(name));
 	}
 	
 	/**
@@ -379,7 +379,7 @@ public class Checks {
 
 	public static boolean isInsideJavadoc(ASTNode node) {
 		do {
-			if (node.getNodeType() == ASTNode.JAVADOC)
+			if (node.getNodeType() == ASTNode.JSDOC)
 				return true;
 			node= node.getParent();
 		} while (node != null);
@@ -427,7 +427,7 @@ public class Checks {
 	 * @throws JavaScriptModelException
 	 */
 	public static IFunction findMethod(String name, int parameterCount, boolean isConstructor, IType type) throws JavaScriptModelException {
-		return findMethod(name, parameterCount, isConstructor, type.getMethods());
+		return findMethod(name, parameterCount, isConstructor, type.getFunctions());
 	}
 	
 	/**
@@ -440,7 +440,7 @@ public class Checks {
 	 * @throws JavaScriptModelException
 	 */
 	public static IFunction findMethod(IFunction method, IType type) throws JavaScriptModelException {
-		return findMethod(method.getElementName(), method.getParameterTypes().length, method.isConstructor(), type.getMethods());
+		return findMethod(method.getElementName(), method.getParameterTypes().length, method.isConstructor(), type.getFunctions());
 	}
 
 	/**
@@ -480,7 +480,7 @@ public class Checks {
 	 * @throws JavaScriptModelException
 	 */
 	public static IFunction findSimilarMethod(IFunction method, IType type) throws JavaScriptModelException {
-		return findSimilarMethod(method, type.getMethods());
+		return findSimilarMethod(method, type.getFunctions());
 	}
 
 	/**
@@ -524,7 +524,7 @@ public class Checks {
 	//---------------------
 	
 	public static RefactoringStatus checkIfCuBroken(IMember member) throws JavaScriptModelException{
-		IJavaScriptUnit cu= (IJavaScriptUnit)JavaScriptCore.create(member.getCompilationUnit().getResource());
+		IJavaScriptUnit cu= (IJavaScriptUnit)JavaScriptCore.create(member.getJavaScriptUnit().getResource());
 		if (cu == null)
 			return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.Checks_cu_not_created);	 
 		else if (! cu.isStructureKnown())
@@ -599,7 +599,7 @@ public class Checks {
 	
 	private static boolean hasCompileErrors(IResource resource) throws JavaScriptModelException {
 		try {
-			IMarker[] problemMarkers= resource.findMarkers(IJavaScriptModelMarker.JAVA_MODEL_PROBLEM_MARKER, true, IResource.DEPTH_INFINITE);
+			IMarker[] problemMarkers= resource.findMarkers(IJavaScriptModelMarker.JAVASCRIPT_MODEL_PROBLEM_MARKER, true, IResource.DEPTH_INFINITE);
 			for (int i= 0; i < problemMarkers.length; i++) {
 				if (problemMarkers[i].getAttribute(IMarker.SEVERITY, -1) == IMarker.SEVERITY_ERROR)
 					return true;
@@ -658,7 +658,7 @@ public class Checks {
 		if (res.getParent() != null && pkgRoot.isArchive() && ! res.getParent().equals(definingProject))
 			return true;
 		
-		IProject occurringProject= pkgRoot.getJavaProject().getProject();
+		IProject occurringProject= pkgRoot.getJavaScriptProject().getProject();
 		return !definingProject.equals(occurringProject);
 	}
 	
@@ -750,7 +750,7 @@ public class Checks {
 		/* IJavaScriptUnit.getType expects simple name*/  
 		if (name.indexOf(".") != -1) //$NON-NLS-1$
 			name= name.substring(0, name.indexOf(".")); //$NON-NLS-1$
-		IJavaScriptUnit[] cus= pack.getCompilationUnits();
+		IJavaScriptUnit[] cus= pack.getJavaScriptUnits();
 		for (int i= 0; i < cus.length; i++){
 			if (cus[i].getType(name).exists())
 				return cus[i].getType(name);

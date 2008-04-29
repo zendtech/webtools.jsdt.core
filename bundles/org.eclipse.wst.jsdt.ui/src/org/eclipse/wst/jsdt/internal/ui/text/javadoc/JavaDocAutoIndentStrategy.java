@@ -246,12 +246,12 @@ public class JavaDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy
 		throws CoreException, BadLocationException
 	{
 		String[] typeParamNames= StubUtility.getTypeParameterNames(type.getTypeParameters());
-		String comment= CodeGeneration.getTypeComment(type.getCompilationUnit(), type.getTypeQualifiedName('.'), typeParamNames, lineDelimiter);
+		String comment= CodeGeneration.getTypeComment(type.getJavaScriptUnit(), type.getTypeQualifiedName('.'), typeParamNames, lineDelimiter);
 		if (comment != null) {
 			boolean javadocComment= comment.startsWith("/**"); //$NON-NLS-1$
 			if (!isFirstComment(document, command, type, javadocComment)) 
 				return null;
-			return prepareTemplateComment(comment.trim(), indentation, type.getJavaProject(), lineDelimiter);
+			return prepareTemplateComment(comment.trim(), indentation, type.getJavaScriptProject(), lineDelimiter);
 		}
 		return null;
 	}
@@ -269,7 +269,7 @@ public class JavaDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy
 				return null;
 			boolean isJavaDoc= partition.getLength() >= 3 && document.get(partition.getOffset(), 3).equals("/**"); //$NON-NLS-1$
 			if (javadocComment == isJavaDoc) {
-				return prepareTemplateComment(comment, indentation, method.getJavaProject(), lineDelimiter);
+				return prepareTemplateComment(comment, indentation, method.getJavaScriptProject(), lineDelimiter);
 			}
 		}
 		return null;

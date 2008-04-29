@@ -31,7 +31,7 @@ public class EmptyInnerPackageFilter extends ViewerFilter {
 			try {
 				if (pkg.isDefaultPackage())
 					return true;//pkg.hasChildren();
-				return !pkg.hasSubpackages() || pkg.hasChildren() || (pkg.getNonJavaResources().length > 0);
+				return !pkg.hasSubpackages() || pkg.hasChildren() || (pkg.getNonJavaScriptResources().length > 0);
 			} catch (JavaScriptModelException e) {
 				return false;
 			}

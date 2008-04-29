@@ -28,10 +28,10 @@ public class JavaProcessors {
 		if (element instanceof IMember) {
 			IMember member= (IMember)element;
 			if (JdtFlags.isPrivate(member)) {
-				return element.getJavaProject().getProject().getDescription().getNatureIds();
+				return element.getJavaScriptProject().getProject().getDescription().getNatureIds();
 			}
 		}
-		IJavaScriptProject project= element.getJavaProject();
+		IJavaScriptProject project= element.getJavaScriptProject();
 		return ResourceProcessors.computeAffectedNatures(project.getProject());
 	}
 	

@@ -3961,7 +3961,7 @@ class ASTConverter {
 						recordName(memberRef.getQualifier(), typeRef);
 					}
 				}
-			} else if (node.getNodeType() == ASTNode.METHOD_REF) {
+			} else if (node.getNodeType() == ASTNode.FUNCTION_REF) {
 				FunctionRef methodRef = (FunctionRef) node;
 				Name name = methodRef.getName();
 				// get method name start position

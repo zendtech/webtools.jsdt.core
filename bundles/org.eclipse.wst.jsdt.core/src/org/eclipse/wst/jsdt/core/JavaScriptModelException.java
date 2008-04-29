@@ -87,7 +87,7 @@ public Throwable getException() {
  *
  * @return a status object
  */
-public IJavaScriptModelStatus getJavaModelStatus() {
+public IJavaScriptModelStatus getJavaScriptModelStatus() {
 	IStatus status = this.getStatus();
 	if (status instanceof IJavaScriptModelStatus) {
 		return (IJavaScriptModelStatus)status;
@@ -111,7 +111,7 @@ public IJavaScriptModelStatus getJavaModelStatus() {
  * @see IJavaScriptModelStatusConstants#ELEMENT_NOT_ON_CLASSPATH
  */
 public boolean isDoesNotExist() {
-	IJavaScriptModelStatus javaModelStatus = getJavaModelStatus();
+	IJavaScriptModelStatus javaModelStatus = getJavaScriptModelStatus();
 	return javaModelStatus != null && javaModelStatus.isDoesNotExist();
 }
 

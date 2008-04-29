@@ -110,7 +110,7 @@ public class RemoveFromBuildpathAction extends BuildpathModifierAction {
 				project= (IJavaScriptProject)object;
 			} else if (object instanceof IPackageFragmentRoot) {
 				IPackageFragmentRoot root= (IPackageFragmentRoot)object;
-				project= root.getJavaProject();
+				project= root.getJavaScriptProject();
 			} else {
 				JsGlobalScopeContainer container= (JsGlobalScopeContainer)object;
 				project= container.getJavaProject();
@@ -133,7 +133,7 @@ public class RemoveFromBuildpathAction extends BuildpathModifierAction {
 							if (element instanceof IJavaScriptProject) {
 								toRemove[i]= ClasspathModifier.getListElement(((IJavaScriptProject)element).getPath(), cpProject.getCPListElements());
 							} else if (element instanceof IPackageFragmentRoot) {
-								toRemove[i]= CPListElement.createFromExisting(((IPackageFragmentRoot)element).getRawClasspathEntry(), project);
+								toRemove[i]= CPListElement.createFromExisting(((IPackageFragmentRoot)element).getRawIncludepathEntry(), project);
 							} else {
 								toRemove[i]= CPListElement.createFromExisting(((JsGlobalScopeContainer)element).getClasspathEntry(), project);
 							}
@@ -245,7 +245,7 @@ public class RemoveFromBuildpathAction extends BuildpathModifierAction {
 						return false;
 
 				} else if (element instanceof IPackageFragmentRoot) {
-					IIncludePathEntry entry= ((IPackageFragmentRoot) element).getRawClasspathEntry();
+					IIncludePathEntry entry= ((IPackageFragmentRoot) element).getRawIncludepathEntry();
 					if (entry != null && entry.getEntryKind() == IIncludePathEntry.CPE_CONTAINER) {
 						return false;
 					}

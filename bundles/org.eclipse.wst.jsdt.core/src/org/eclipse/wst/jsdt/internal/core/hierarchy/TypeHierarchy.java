@@ -198,7 +198,7 @@ protected void initializeRegions() {
 		}
 		IPackageFragment pkg = type.getPackageFragment();
 		this.packageRegion.add(pkg);
-		IJavaScriptProject declaringProject = type.getJavaProject();
+		IJavaScriptProject declaringProject = type.getJavaScriptProject();
 		if (declaringProject != null) {
 			this.projectRegion.add(declaringProject);
 		}
@@ -872,7 +872,7 @@ private boolean isAffectedByJavaModel(IJavaScriptElementDelta delta, IJavaScript
 	switch (delta.getKind()) {
 		case IJavaScriptElementDelta.ADDED :
 		case IJavaScriptElementDelta.REMOVED :
-			return element.equals(this.javaProject().getJavaModel());
+			return element.equals(this.javaProject().getJavaScriptModel());
 		case IJavaScriptElementDelta.CHANGED :
 			return isAffectedByChildren(delta);
 	}
@@ -921,7 +921,7 @@ private boolean isAffectedByJavaProject(IJavaScriptElementDelta delta, IJavaScri
 			// then the type hierarchy has changed
 			IJavaScriptElement[] pkgs = this.packageRegion.getElements();
 			for (int i = 0; i < pkgs.length; i++) {
-				IJavaScriptProject javaProject = pkgs[i].getJavaProject();
+				IJavaScriptProject javaProject = pkgs[i].getJavaScriptProject();
 				if (javaProject != null && javaProject.equals(element)) {
 					return true;
 				}
@@ -1069,7 +1069,7 @@ private boolean isInterface(IType type) {
  * Returns the java project this hierarchy was created in.
  */
 public IJavaScriptProject javaProject() {
-	return this.focusType.getJavaProject();
+	return this.focusType.getJavaScriptProject();
 }
 protected static byte[] readUntil(InputStream input, byte separator) throws JavaScriptModelException, IOException{
 	return readUntil(input, separator, 0);

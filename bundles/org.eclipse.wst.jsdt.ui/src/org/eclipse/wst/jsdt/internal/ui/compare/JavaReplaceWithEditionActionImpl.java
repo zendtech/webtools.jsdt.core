@@ -166,13 +166,13 @@ class JavaReplaceWithEditionActionImpl extends JavaHistoryActionImpl {
 			boolean inEditor= beingEdited(file);
 			
 			String content= JavaCompareUtilities.readString((IStreamContentAccessor)ti);
-			String newContent= trimTextBlock(content, TextUtilities.getDefaultLineDelimiter(document), input.getJavaProject());
+			String newContent= trimTextBlock(content, TextUtilities.getDefaultLineDelimiter(document), input.getJavaScriptProject());
 			if (newContent == null) {
 				showError();
 				return;
 			}
 			
-			IJavaScriptUnit compilationUnit= input.getCompilationUnit();
+			IJavaScriptUnit compilationUnit= input.getJavaScriptUnit();
 			JavaScriptUnit root= parsePartialCompilationUnit(compilationUnit);
 			
 			
@@ -204,7 +204,7 @@ class JavaReplaceWithEditionActionImpl extends JavaHistoryActionImpl {
 			}
 			
 			Map options= null;
-			IJavaScriptProject javaProject= compilationUnit.getJavaProject();
+			IJavaScriptProject javaProject= compilationUnit.getJavaScriptProject();
 			if (javaProject != null)
 				options= javaProject.getOptions(true);
 			applyChanges(rewriter, document, textFileBuffer, getShell(), inEditor, options);

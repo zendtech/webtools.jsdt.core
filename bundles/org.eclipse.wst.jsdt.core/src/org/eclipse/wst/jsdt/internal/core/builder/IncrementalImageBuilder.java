@@ -87,7 +87,7 @@ public boolean build(SimpleLookupTable deltas) {
 			// but we need to rebuild every source file since problems were not recorded
 			// AND to avoid the infinite build scenario if this project is involved in a cycle, see bug 160550
 			// we need to avoid unnecessary deltas caused by doing a full build in this case
-			javaBuilder.currentProject.deleteMarkers(IJavaScriptModelMarker.JAVA_MODEL_PROBLEM_MARKER, false, IResource.DEPTH_ZERO);
+			javaBuilder.currentProject.deleteMarkers(IJavaScriptModelMarker.JAVASCRIPT_MODEL_PROBLEM_MARKER, false, IResource.DEPTH_ZERO);
 			addAllSourceFiles(sourceFiles);
 			notifier.updateProgressDelta(0.25f);
 		} else {

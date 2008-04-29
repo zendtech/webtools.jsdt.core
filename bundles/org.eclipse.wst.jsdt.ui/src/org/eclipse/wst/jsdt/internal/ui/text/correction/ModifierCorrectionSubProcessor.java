@@ -133,7 +133,7 @@ public class ModifierCorrectionSubProcessor {
 			case ASTNode.SIMPLE_TYPE:
 				binding= ((SimpleType) selectedNode).resolveBinding();
 				break;
-			case ASTNode.METHOD_INVOCATION:
+			case ASTNode.FUNCTION_INVOCATION:
 				binding= ((FunctionInvocation) selectedNode).getName().resolveBinding();
 				break;
 			case ASTNode.SUPER_METHOD_INVOCATION:
@@ -679,7 +679,7 @@ public class ModifierCorrectionSubProcessor {
 		if (!(selectedNode instanceof FunctionDeclaration)) {
 			return;
 		}
-		boolean is50OrHigher= JavaModelUtil.is50OrHigher(cu.getJavaProject());
+		boolean is50OrHigher= JavaModelUtil.is50OrHigher(cu.getJavaScriptProject());
 		FunctionDeclaration methodDecl= (FunctionDeclaration) selectedNode;
 		AST ast= methodDecl.getAST();
 		ASTRewrite rewrite= ASTRewrite.create(ast);
@@ -981,7 +981,7 @@ public class ModifierCorrectionSubProcessor {
 
 	private static IFunctionBinding findGetter(ProposalParameter context) {
 		ITypeBinding returnType= context.variableBinding.getType();
-		String getterName= GetterSetterUtil.getGetterName(context.variableBinding, context.compilationUnit.getJavaProject(), null, isBoolean(context));
+		String getterName= GetterSetterUtil.getGetterName(context.variableBinding, context.compilationUnit.getJavaScriptProject(), null, isBoolean(context));
 		ITypeBinding declaringType= context.variableBinding.getDeclaringClass();
 		IFunctionBinding getter= Bindings.findMethodInHierarchy(declaringType, getterName, new ITypeBinding[0]);
 		if (getter != null && getter.getReturnType().isAssignmentCompatible(returnType) && Modifier.isStatic(getter.getModifiers()) == Modifier.isStatic(context.variableBinding.getModifiers()))
@@ -1019,7 +1019,7 @@ public class ModifierCorrectionSubProcessor {
 	 */
 	private static ChangeCorrectionProposal addSetterProposal(ProposalParameter context, int relevance) {
 		boolean isBoolean= isBoolean(context);
-		String setterName= GetterSetterUtil.getSetterName(context.variableBinding, context.compilationUnit.getJavaProject(), null, isBoolean);
+		String setterName= GetterSetterUtil.getSetterName(context.variableBinding, context.compilationUnit.getJavaScriptProject(), null, isBoolean);
 		ITypeBinding declaringType= context.variableBinding.getDeclaringClass();
 		IFunctionBinding method= Bindings.findMethodInHierarchy(declaringType, setterName, new ITypeBinding[] { context.variableBinding.getType() });
 		if (method != null && Bindings.isVoidType(method.getReturnType()) && (Modifier.isStatic(method.getModifiers()) == Modifier.isStatic(context.variableBinding.getModifiers()))) {
@@ -1145,7 +1145,7 @@ public class ModifierCorrectionSubProcessor {
 		if (type.isEqualTo(expressionType))
 			return expression; //no cast for same type
 		AST ast= context.astRewrite.getAST();
-		if (JavaModelUtil.is50OrHigher(context.compilationUnit.getJavaProject())) {
+		if (JavaModelUtil.is50OrHigher(context.compilationUnit.getJavaScriptProject())) {
 			if (ast.resolveWellKnownType("java.lang.Character").isEqualTo(type)) //$NON-NLS-1$
 				castTo= ast.newPrimitiveType(PrimitiveType.CHAR);
 			if (ast.resolveWellKnownType("java.lang.Byte").isEqualTo(type)) //$NON-NLS-1$

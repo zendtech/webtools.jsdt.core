@@ -110,8 +110,8 @@ public class RefactoringScopeFactory {
 		if (considerVisibility & javaElement instanceof IMember) {
 			IMember member= (IMember) javaElement;
 			if (JdtFlags.isPrivate(member)) {
-				if (member.getCompilationUnit() != null)
-					return SearchEngine.createJavaSearchScope(new IJavaScriptElement[] { member.getCompilationUnit()});
+				if (member.getJavaScriptUnit() != null)
+					return SearchEngine.createJavaSearchScope(new IJavaScriptElement[] { member.getJavaScriptUnit()});
 				else
 					return SearchEngine.createJavaSearchScope(new IJavaScriptElement[] { member});
 			}
@@ -119,7 +119,7 @@ public class RefactoringScopeFactory {
 			// there can be a package fragment with the same name in a different source folder or project. So we
 			// have to treat package visible members like public or protected members.
 		}
-		return create(javaElement.getJavaProject());
+		return create(javaElement.getJavaScriptProject());
 	}
 
 	private static IJavaScriptSearchScope create(IJavaScriptProject javaProject) throws JavaScriptModelException {
@@ -157,7 +157,7 @@ public class RefactoringScopeFactory {
 	public static IJavaScriptSearchScope createReferencedScope(IJavaScriptElement[] javaElements) {
 		Set projects= new HashSet();
 		for (int i= 0; i < javaElements.length; i++) {
-			projects.add(javaElements[i].getJavaProject());
+			projects.add(javaElements[i].getJavaScriptProject());
 		}
 		IJavaScriptProject[] prj= (IJavaScriptProject[]) projects.toArray(new IJavaScriptProject[projects.size()]);
 		return SearchEngine.createJavaSearchScope(prj, true);
@@ -174,7 +174,7 @@ public class RefactoringScopeFactory {
 	public static IJavaScriptSearchScope createReferencedScope(IJavaScriptElement[] javaElements, int includeMask) {
 		Set projects= new HashSet();
 		for (int i= 0; i < javaElements.length; i++) {
-			projects.add(javaElements[i].getJavaProject());
+			projects.add(javaElements[i].getJavaScriptProject());
 		}
 		IJavaScriptProject[] prj= (IJavaScriptProject[]) projects.toArray(new IJavaScriptProject[projects.size()]);
 		return SearchEngine.createJavaSearchScope(prj, includeMask);
@@ -214,7 +214,7 @@ public class RefactoringScopeFactory {
 	private static IIncludePathEntry getReferencingClassPathEntry(IJavaScriptProject referencingProject, IJavaScriptProject referencedProject) throws JavaScriptModelException {
 		IIncludePathEntry result= null;
 		IPath path= referencedProject.getProject().getFullPath();
-		IIncludePathEntry[] classpath= referencingProject.getResolvedClasspath(true);
+		IIncludePathEntry[] classpath= referencingProject.getResolvedIncludepath(true);
 		for (int i= 0; i < classpath.length; i++) {
 			IIncludePathEntry entry= classpath[i];
 			if (entry.getEntryKind() == IIncludePathEntry.CPE_PROJECT && path.equals(entry.getPath())) {

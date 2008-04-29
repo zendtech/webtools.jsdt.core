@@ -6861,7 +6861,7 @@ public final class CompletionEngine
 				for (int i = 0; i < length; i++) {
 					parameterTypeSignatures[i] = Signature.createTypeSignature(parameterTypeNames[i], false);
 				}
-				IFunction searchedMethod = typeHandle.getMethod(String.valueOf(method.selector), parameterTypeSignatures);
+				IFunction searchedMethod = typeHandle.getFunction(String.valueOf(method.selector), parameterTypeSignatures);
 				IFunction[] foundMethods = typeHandle.findMethods(searchedMethod);
 
 				if(foundMethods != null) {
@@ -9378,10 +9378,10 @@ public final class CompletionEngine
 				buffer.append("LOCAL_VARIABLE_REF"); //$NON-NLS-1$
 				break;
 			case CompletionProposal.METHOD_DECLARATION :
-				buffer.append("METHOD_DECLARATION"); //$NON-NLS-1$
+				buffer.append("FUNCTION_DECLARATION"); //$NON-NLS-1$
 				break;
 			case CompletionProposal.METHOD_REF :
-				buffer.append("METHOD_REF"); //$NON-NLS-1$
+				buffer.append("FUNCTION_REF"); //$NON-NLS-1$
 				break;
 			case CompletionProposal.PACKAGE_REF :
 				buffer.append("PACKAGE_REF"); //$NON-NLS-1$

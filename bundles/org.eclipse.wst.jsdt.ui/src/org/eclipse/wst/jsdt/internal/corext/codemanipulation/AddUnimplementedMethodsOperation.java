@@ -107,7 +107,7 @@ public final class AddUnimplementedMethodsOperation implements IWorkspaceRunnabl
 		fApply= apply;
 		fImports= imports;
 		
-		fDoCreateComments= StubUtility.doAddComments(astRoot.getJavaElement().getJavaProject());
+		fDoCreateComments= StubUtility.doAddComments(astRoot.getJavaElement().getJavaScriptProject());
 	}
 	
 	public void setCreateComments(boolean createComments) {
@@ -178,7 +178,7 @@ public final class AddUnimplementedMethodsOperation implements IWorkspaceRunnabl
 				// not possible, we checked this in the constructor
 			}
 			
-			final CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(cu.getJavaProject());
+			final CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(cu.getJavaScriptProject());
 			settings.createComments= fDoCreateComments;
 
 			ASTNode insertion= getNodeToInsertBefore(memberRewriter);

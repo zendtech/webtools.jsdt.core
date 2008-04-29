@@ -169,7 +169,7 @@ public abstract class JavaRefactoringDescriptor extends RefactoringDescriptor {
 	protected static String elementToHandle(final String project, final IJavaScriptElement element) {
 		final String handle= element.getHandleIdentifier();
 		if (project != null && !(element instanceof IJavaScriptProject)) {
-			final String id= element.getJavaProject().getHandleIdentifier();
+			final String id= element.getJavaScriptProject().getHandleIdentifier();
 			return handle.substring(id.length());
 		}
 		return handle;
@@ -228,7 +228,7 @@ public abstract class JavaRefactoringDescriptor extends RefactoringDescriptor {
 		else
 			element= JavaScriptCore.create(handle);
 		if (element == null && project != null) {
-			final IJavaScriptProject javaProject= JavaScriptCore.create(ResourcesPlugin.getWorkspace().getRoot()).getJavaProject(project);
+			final IJavaScriptProject javaProject= JavaScriptCore.create(ResourcesPlugin.getWorkspace().getRoot()).getJavaScriptProject(project);
 			final String identifier= javaProject.getHandleIdentifier();
 			if (owner != null)
 				element= JavaScriptCore.create(identifier + handle, owner);
@@ -238,7 +238,7 @@ public abstract class JavaRefactoringDescriptor extends RefactoringDescriptor {
 		if (check && element instanceof IFunction) {
 			final IFunction method= (IFunction) element;
 			final IFunction[] methods= (method.getDeclaringType()!=null) ? method.getDeclaringType().findMethods(method)
-					: new IFunction[]{ method.getCompilationUnit().getMethod(method.getElementName(), method.getParameterTypes())};
+					: new IFunction[]{ method.getJavaScriptUnit().getFunction(method.getElementName(), method.getParameterTypes())};
 			if (methods != null && methods.length > 0)
 				element= methods[0];
 		}

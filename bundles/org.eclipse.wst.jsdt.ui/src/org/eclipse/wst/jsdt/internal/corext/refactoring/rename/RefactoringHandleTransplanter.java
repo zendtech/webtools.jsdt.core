@@ -119,7 +119,7 @@ public class RefactoringHandleTransplanter {
 						case IJavaScriptElement.METHOD: {
 							final String newName= resolveElementName(currentElement);
 							final String[] newParameterTypes= resolveParameterTypes((IFunction) currentElement);
-							newElements[i]= ((IType) newParent).getMethod(newName, newParameterTypes);
+							newElements[i]= ((IType) newParent).getFunction(newName, newParameterTypes);
 							break;
 						}
 						case IJavaScriptElement.INITIALIZER: {

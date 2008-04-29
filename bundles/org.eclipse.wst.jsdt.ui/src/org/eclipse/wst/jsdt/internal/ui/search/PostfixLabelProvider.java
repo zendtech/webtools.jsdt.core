@@ -76,7 +76,7 @@ public class PostfixLabelProvider extends SearchLabelProvider {
 				if (type.getClassFile().equals(realParent))
 					return true;
 			} else if (realParent instanceof IJavaScriptUnit) {
-				if (type.getCompilationUnit().equals(realParent))
+				if (type.getJavaScriptUnit().equals(realParent))
 					return true;
 			}
 		}

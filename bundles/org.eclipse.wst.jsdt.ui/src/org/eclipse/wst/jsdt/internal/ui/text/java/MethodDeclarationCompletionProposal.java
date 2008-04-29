@@ -45,7 +45,7 @@ public class MethodDeclarationCompletionProposal extends JavaTypeCompletionPropo
 
 
 	public static void evaluateProposals(IType type, String prefix, int offset, int length, int relevance, Set suggestedMethods, Collection result) throws CoreException {
-		IFunction[] methods= type.getMethods();
+		IFunction[] methods= type.getFunctions();
 		if (!type.isInterface()) {
 			String constructorName= type.getElementName();
 			if (constructorName.length() > 0 && constructorName.startsWith(prefix) && !hasMethod(methods, constructorName) && suggestedMethods.add(constructorName)) {
@@ -54,7 +54,7 @@ public class MethodDeclarationCompletionProposal extends JavaTypeCompletionPropo
 		}
 
 		if (prefix.length() > 0 && !"main".equals(prefix) && !hasMethod(methods, prefix) && suggestedMethods.add(prefix)) { //$NON-NLS-1$
-			if (!JavaScriptConventions.validateMethodName(prefix).matches(IStatus.ERROR)) {
+			if (!JavaScriptConventions.validateFunctionName(prefix).matches(IStatus.ERROR)) {
 				result.add(new MethodDeclarationCompletionProposal(type, prefix, Signature.SIG_VOID, offset, length, relevance));
 			}
 		}
@@ -75,7 +75,7 @@ public class MethodDeclarationCompletionProposal extends JavaTypeCompletionPropo
 	private final String fMethodName;
 
 	public MethodDeclarationCompletionProposal(IType type, String methodName, String returnTypeSig, int start, int length, int relevance) {
-		super("", type.getCompilationUnit(), start, length, null, getDisplayName(methodName, returnTypeSig), relevance); //$NON-NLS-1$
+		super("", type.getJavaScriptUnit(), start, length, null, getDisplayName(methodName, returnTypeSig), relevance); //$NON-NLS-1$
 		Assert.isNotNull(type);
 		Assert.isNotNull(methodName);
 
@@ -115,7 +115,7 @@ public class MethodDeclarationCompletionProposal extends JavaTypeCompletionPropo
 	 */
 	protected boolean updateReplacementString(IDocument document, char trigger, int offset, ImportRewrite impRewrite) throws CoreException, BadLocationException {
 
-		CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(fType.getJavaProject());
+		CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(fType.getJavaScriptProject());
 		boolean addComments= settings.createComments;
 
 		String[] empty= new String[0];
@@ -125,7 +125,7 @@ public class MethodDeclarationCompletionProposal extends JavaTypeCompletionPropo
 
 		StringBuffer buf= new StringBuffer();
 		if (addComments) {
-			String comment= CodeGeneration.getMethodComment(fType.getCompilationUnit(), declTypeName, fMethodName, empty, empty, fReturnTypeSig, empty, null, lineDelim);
+			String comment= CodeGeneration.getMethodComment(fType.getJavaScriptUnit(), declTypeName, fMethodName, empty, empty, fReturnTypeSig, empty, null, lineDelim);
 			if (comment != null) {
 				buf.append(comment);
 				buf.append(lineDelim);
@@ -151,7 +151,7 @@ public class MethodDeclarationCompletionProposal extends JavaTypeCompletionPropo
 			buf.append("() {"); //$NON-NLS-1$
 			buf.append(lineDelim);
 
-			String body= CodeGeneration.getMethodBodyContent(fType.getCompilationUnit(), declTypeName, fMethodName, fReturnTypeSig == null, "", lineDelim); //$NON-NLS-1$
+			String body= CodeGeneration.getMethodBodyContent(fType.getJavaScriptUnit(), declTypeName, fMethodName, fReturnTypeSig == null, "", lineDelim); //$NON-NLS-1$
 			if (body != null) {
 				buf.append(body);
 				buf.append(lineDelim);
@@ -166,7 +166,7 @@ public class MethodDeclarationCompletionProposal extends JavaTypeCompletionPropo
 		int lineStart= region.getOffset();
 		int indent= Strings.computeIndentUnits(document.get(lineStart, getReplacementOffset() - lineStart), settings.tabWidth, settings.indentWidth);
 
-		String replacement= CodeFormatterUtil.format(CodeFormatter.K_CLASS_BODY_DECLARATIONS, stub, indent, null, lineDelim, fType.getJavaProject());
+		String replacement= CodeFormatterUtil.format(CodeFormatter.K_CLASS_BODY_DECLARATIONS, stub, indent, null, lineDelim, fType.getJavaScriptProject());
 
 		if (replacement.endsWith(lineDelim)) {
 			replacement= replacement.substring(0, replacement.length() - lineDelim.length());

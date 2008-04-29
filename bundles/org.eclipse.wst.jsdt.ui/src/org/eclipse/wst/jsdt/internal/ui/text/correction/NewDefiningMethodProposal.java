@@ -64,7 +64,7 @@ public class NewDefiningMethodProposal extends AbstractMethodCompletionProposal 
 		ImportRewrite importRewrite= getImportRewrite();
 		ITypeBinding[] bindings= fMethod.getParameterTypes();
 
-		IJavaScriptProject project= getCompilationUnit().getJavaProject();
+		IJavaScriptProject project= getCompilationUnit().getJavaScriptProject();
 		String[][] paramNames= StubUtility.suggestArgumentNamesWithProposals(project, fParamNames);
 
 		for (int i= 0; i < bindings.length; i++) {

@@ -332,10 +332,10 @@ public class PromoteTempToFieldRefactoring extends ScriptableRefactoring {
     }
     
 	public String[] guessFieldNames() {
-		String rawTempName= StubUtility.removePrefixAndSuffixForVariable(fCu.getJavaProject(), fTempDeclarationNode.resolveBinding());
+		String rawTempName= StubUtility.removePrefixAndSuffixForVariable(fCu.getJavaScriptProject(), fTempDeclarationNode.resolveBinding());
 		String[] excludedNames= getNamesOfFieldsInDeclaringType();
 		int dim= ASTNodes.getDimensions(fTempDeclarationNode);
-		return StubUtility.getFieldNameSuggestions(fCu.getJavaProject(), rawTempName, dim, getModifiers(), excludedNames);
+		return StubUtility.getFieldNameSuggestions(fCu.getJavaScriptProject(), rawTempName, dim, getModifiers(), excludedNames);
 	}
 
     private String getInitialFieldName() {
@@ -583,10 +583,10 @@ public class PromoteTempToFieldRefactoring extends ScriptableRefactoring {
 	}
 
 	private JSdoc getNewConstructorComment(ASTRewrite rewrite) throws CoreException {
-		if (StubUtility.doAddComments(fCu.getJavaProject())){
+		if (StubUtility.doAddComments(fCu.getJavaScriptProject())){
 			String comment= CodeGeneration.getMethodComment(fCu, getEnclosingTypeName(), getEnclosingTypeName(), new String[0], new String[0], null, null, StubUtility.getLineDelimiterUsed(fCu));
 			if (comment != null && comment.length() > 0) {
-				return (JSdoc) rewrite.createStringPlaceholder(comment, ASTNode.JAVADOC);
+				return (JSdoc) rewrite.createStringPlaceholder(comment, ASTNode.JSDOC);
 			}
 		}
 		return null;
@@ -647,7 +647,7 @@ public class PromoteTempToFieldRefactoring extends ScriptableRefactoring {
     private Change createChange(ASTRewrite rewrite) throws CoreException {
 		final Map arguments= new HashMap();
 		String project= null;
-		IJavaScriptProject javaProject= fCu.getJavaProject();
+		IJavaScriptProject javaProject= fCu.getJavaScriptProject();
 		if (javaProject != null)
 			project= javaProject.getElementName();
 		final IVariableBinding binding= fTempDeclarationNode.resolveBinding();

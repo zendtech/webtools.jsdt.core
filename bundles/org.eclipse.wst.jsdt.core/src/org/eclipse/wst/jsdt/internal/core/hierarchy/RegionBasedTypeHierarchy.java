@@ -76,7 +76,7 @@ public RegionBasedTypeHierarchy(IRegion region, IJavaScriptUnit[] workingCopies,
 	}
 	this.region = newRegion;
 	if (elements.length > 0)
-		this.project = elements[0].getJavaProject();
+		this.project = elements[0].getJavaScriptProject();
 }
 /*
  * @see TypeHierarchy#initializeRegions

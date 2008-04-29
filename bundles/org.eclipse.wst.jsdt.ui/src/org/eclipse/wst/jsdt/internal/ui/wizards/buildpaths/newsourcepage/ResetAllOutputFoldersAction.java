@@ -98,7 +98,7 @@ public class ResetAllOutputFoldersAction extends BuildpathModifierAction {
 				monitor.worked(1);
 				if (roots[i].isArchive())
 					continue;
-				IIncludePathEntry entry= roots[i].getRawClasspathEntry();
+				IIncludePathEntry entry= roots[i].getRawIncludepathEntry();
 				CPListElement element= CPListElement.createFromExisting(entry, project);
 				CPListElementAttribute outputFolder= new CPListElementAttribute(element, CPListElement.OUTPUT, element.getAttribute(CPListElement.OUTPUT), true);
 				entries.add(outputFolder);

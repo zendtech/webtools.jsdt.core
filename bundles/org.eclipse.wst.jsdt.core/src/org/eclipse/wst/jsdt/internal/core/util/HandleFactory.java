@@ -159,7 +159,7 @@ public class HandleFactory {
 			
 			if (pkgFragment.isSource() && 
 					!Util.isMetadataFileName(simpleName)) {
-				IJavaScriptUnit unit= pkgFragment.getCompilationUnit(simpleName);
+				IJavaScriptUnit unit= pkgFragment.getJavaScriptUnit(simpleName);
 				return (Openable) unit;
 			} else {
 				IClassFile classFile= pkgFragment.getClassFile(simpleName);
@@ -240,7 +240,7 @@ public class HandleFactory {
 				} else {
 					// method element
 					AbstractMethodDeclaration method = methodScope.referenceMethod();
-					newElement = parentType.getMethod(new String(method.getSafeName()), Util.typeParameterSignatures(method));
+					newElement = parentType.getFunction(new String(method.getSafeName()), Util.typeParameterSignatures(method));
 					if (newElement != null) {
 						knownScopes.put(scope, newElement);
 					}
@@ -289,7 +289,7 @@ public class HandleFactory {
 			for (int i = 0; i < length; i++) {
 				IPath path = enclosingProjectsAndJars[i];
 				if (!org.eclipse.wst.jsdt.internal.compiler.util.Util.isArchiveFileName(path.lastSegment())) {
-					projects[index++] = this.javaModel.getJavaProject(path.segment(0));
+					projects[index++] = this.javaModel.getJavaScriptProject(path.segment(0));
 				}
 			}
 			if (index < length) {
@@ -303,7 +303,7 @@ public class HandleFactory {
 
 		// not found in the scope, walk all projects
 		try {
-			projects = this.javaModel.getJavaProjects();
+			projects = this.javaModel.getJavaScriptProjects();
 		} catch (JavaScriptModelException e) {
 			// java model is not accessible
 			return null;

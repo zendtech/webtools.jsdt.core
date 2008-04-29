@@ -59,7 +59,7 @@ public class ConfigureContainerAction implements IObjectActionDelegate {
 	private void openWizard(IIncludePathEntry entry, String label, final IJavaScriptProject project) {
 		Shell shell= fPart.getSite().getShell();
 		try {
-			IIncludePathEntry[] entries= project.getRawClasspath();
+			IIncludePathEntry[] entries= project.getRawIncludepath();
 			
 			IIncludePathEntry result= BuildPathDialogAccess.configureContainerEntry(shell, entry, project, entries);
 			if (result == null || result.equals(entry)) {
@@ -82,7 +82,7 @@ public class ConfigureContainerAction implements IObjectActionDelegate {
 			context.run(true, true, new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {			
-						project.setRawClasspath(newEntries, project.getOutputLocation(), monitor);
+						project.setRawIncludepath(newEntries, project.getOutputLocation(), monitor);
 					} catch (CoreException e) {
 						throw new InvocationTargetException(e);
 					}

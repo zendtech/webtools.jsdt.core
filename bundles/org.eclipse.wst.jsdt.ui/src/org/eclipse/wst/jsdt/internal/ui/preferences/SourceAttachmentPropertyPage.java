@@ -88,8 +88,8 @@ public class SourceAttachmentPropertyPage extends PropertyPage implements IStatu
 			}
 	
 			IPath containerPath= null;
-			IJavaScriptProject jproject= fRoot.getJavaProject();
-			IIncludePathEntry entry= fRoot.getRawClasspathEntry();
+			IJavaScriptProject jproject= fRoot.getJavaScriptProject();
+			IIncludePathEntry entry= fRoot.getRawIncludepathEntry();
 			if (entry == null) {
 				// use a dummy entry to use for initialization
 				entry= JavaScriptCore.newLibraryEntry(fRoot.getPath(), null, null);
@@ -154,7 +154,7 @@ public class SourceAttachmentPropertyPage extends PropertyPage implements IStatu
 					return true; // no change
 				}
 				
-				IRunnableWithProgress runnable= SourceAttachmentBlock.getRunnable(getShell(), entry, fRoot.getJavaProject(), fContainerPath);		
+				IRunnableWithProgress runnable= SourceAttachmentBlock.getRunnable(getShell(), entry, fRoot.getJavaScriptProject(), fContainerPath);		
 				PlatformUI.getWorkbench().getProgressService().run(true, true, runnable);						
 			} catch (InvocationTargetException e) {
 				String title= PreferencesMessages.SourceAttachmentPropertyPage_error_title; 

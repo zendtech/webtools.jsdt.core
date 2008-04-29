@@ -152,7 +152,7 @@ public class NewSourceFolderWizardPage extends NewElementWizardPage {
 				return proj.getFullPath().makeRelative().toString();
 			}	
 		} else if (selectedElement instanceof IJavaScriptElement) {
-			IJavaScriptProject jproject= ((IJavaScriptElement)selectedElement).getJavaProject();
+			IJavaScriptProject jproject= ((IJavaScriptElement)selectedElement).getJavaScriptProject();
 			if (jproject != null) {
 				return jproject.getProject().getFullPath().makeRelative().toString();
 			}
@@ -271,7 +271,7 @@ public class NewSourceFolderWizardPage extends NewElementWizardPage {
 		try {
 			if (project.hasNature(JavaScriptCore.NATURE_ID)) {
 				fCurrJProject= JavaScriptCore.create(project);
-				fEntries= fCurrJProject.getRawClasspath();
+				fEntries= fCurrJProject.getRawIncludepath();
 				fOutputLocation= fCurrJProject.getOutputLocation();
 				fProjectStatus.setOK();
 				return;
@@ -474,7 +474,7 @@ public class NewSourceFolderWizardPage extends NewElementWizardPage {
 				throw new InterruptedException();
 			}
 			
-			fCurrJProject.setRawClasspath(fNewEntries, fNewOutputLocation, new SubProgressMonitor(monitor, 2));
+			fCurrJProject.setRawIncludepath(fNewEntries, fNewOutputLocation, new SubProgressMonitor(monitor, 2));
 	
 			fCreatedRoot= fCurrJProject.getPackageFragmentRoot(folder);
 		} finally {
@@ -515,7 +515,7 @@ public class NewSourceFolderWizardPage extends NewElementWizardPage {
 	private IJavaScriptProject chooseProject() {
 		IJavaScriptProject[] projects;
 		try {
-			projects= JavaScriptCore.create(fWorkspaceRoot).getJavaProjects();
+			projects= JavaScriptCore.create(fWorkspaceRoot).getJavaScriptProjects();
 		} catch (JavaScriptModelException e) {
 			JavaPlugin.log(e);
 			projects= new IJavaScriptProject[0];

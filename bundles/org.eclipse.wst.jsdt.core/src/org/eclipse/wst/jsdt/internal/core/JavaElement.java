@@ -246,8 +246,15 @@ public abstract class JavaElement extends PlatformObject implements IJavaScriptE
 	}
 	/**
 	 * @see org.eclipse.wst.jsdt.core.IMember
+	 * @deprecated Use {@link #getJavaScriptUnit()} instead
 	 */
 	public IJavaScriptUnit getCompilationUnit() {
+		return getJavaScriptUnit();
+	}
+	/**
+	 * @see org.eclipse.wst.jsdt.core.IMember
+	 */
+	public IJavaScriptUnit getJavaScriptUnit() {
 		return null;
 	}
 	/**
@@ -322,7 +329,7 @@ public abstract class JavaElement extends PlatformObject implements IJavaScriptE
 	/**
 	 * @see IJavaScriptElement
 	 */
-	public IJavaScriptModel getJavaModel() {
+	public IJavaScriptModel getJavaScriptModel() {
 		IJavaScriptElement current = this;
 		do {
 			if (current instanceof IJavaScriptModel) return (IJavaScriptModel) current;
@@ -333,7 +340,7 @@ public abstract class JavaElement extends PlatformObject implements IJavaScriptE
 	/**
 	 * @see IJavaScriptElement
 	 */
-	public IJavaScriptProject getJavaProject() {
+	public IJavaScriptProject getJavaScriptProject() {
 		IJavaScriptElement current = this;
 		do {
 			if (current instanceof IJavaScriptProject) return (IJavaScriptProject) current;
@@ -665,12 +672,12 @@ public abstract class JavaElement extends PlatformObject implements IJavaScriptE
 		}
 
 		if (root.getKind() == IPackageFragmentRoot.K_BINARY) {
-			IIncludePathEntry entry= root.getRawClasspathEntry();
+			IIncludePathEntry entry= root.getRawIncludepathEntry();
 			if (entry == null) {
 				return null;
 			}
 			if (entry.getEntryKind() == IIncludePathEntry.CPE_CONTAINER) {
-				entry= getRealClasspathEntry(root.getJavaProject(), entry.getPath(), root.getPath());
+				entry= getRealClasspathEntry(root.getJavaScriptProject(), entry.getPath(), root.getPath());
 				if (entry == null) {
 					return null;
 				}
@@ -683,7 +690,7 @@ public abstract class JavaElement extends PlatformObject implements IJavaScriptE
 	private static IIncludePathEntry getRealClasspathEntry(IJavaScriptProject jproject, IPath containerPath, IPath libPath) throws JavaScriptModelException {
 		IJsGlobalScopeContainer container= JavaScriptCore.getJsGlobalScopeContainer(containerPath, jproject);
 		if (container != null) {
-			IIncludePathEntry[] entries= container.getClasspathEntries();
+			IIncludePathEntry[] entries= container.getIncludepathEntries();
 			for (int i= 0; i < entries.length; i++) {
 				IIncludePathEntry curr = entries[i];
 				if (curr == null) {
@@ -692,7 +699,7 @@ public abstract class JavaElement extends PlatformObject implements IJavaScriptE
 					}
 					break;
 				}
-				IIncludePathEntry resolved= JavaScriptCore.getResolvedClasspathEntry(curr);
+				IIncludePathEntry resolved= JavaScriptCore.getResolvedIncludepathEntry(curr);
 				if (resolved != null && libPath.equals(resolved.getPath())) {
 					return curr; // return the real entry
 				}
@@ -713,12 +720,12 @@ public abstract class JavaElement extends PlatformObject implements IJavaScriptE
 		IIncludePathAttribute[] extraAttributes= entry.getExtraAttributes();
 		for (int i= 0; i < extraAttributes.length; i++) {
 			IIncludePathAttribute attrib= extraAttributes[i];
-			if (IIncludePathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME.equals(attrib.getName())) {
+			if (IIncludePathAttribute.JSDOC_LOCATION_ATTRIBUTE_NAME.equals(attrib.getName())) {
 				String value = attrib.getValue();
 				try {
 					return new URL(value);
 				} catch (MalformedURLException e) {
-					throw new JavaScriptModelException(new JavaModelStatus(IJavaScriptModelStatusConstants.CANNOT_RETRIEVE_ATTACHED_JAVADOC, value));
+					throw new JavaScriptModelException(new JavaModelStatus(IJavaScriptModelStatusConstants.CANNOT_RETRIEVE_ATTACHED_JSDOC, value));
 				}
 			}
 		}
@@ -787,7 +794,7 @@ public abstract class JavaElement extends PlatformObject implements IJavaScriptE
 			}
 			try {
 				if (encoding == null) {
-					encoding = this.getJavaProject().getProject().getDefaultCharset();
+					encoding = this.getJavaScriptProject().getProject().getDefaultCharset();
 				}
 			} catch (CoreException e) {
 				// ignore
@@ -801,7 +808,7 @@ public abstract class JavaElement extends PlatformObject implements IJavaScriptE
 				}
 			}
  		} catch (MalformedURLException e) {
- 			throw new JavaScriptModelException(new JavaModelStatus(IJavaScriptModelStatusConstants.CANNOT_RETRIEVE_ATTACHED_JAVADOC, this));
+ 			throw new JavaScriptModelException(new JavaModelStatus(IJavaScriptModelStatusConstants.CANNOT_RETRIEVE_ATTACHED_JSDOC, this));
 		} catch (FileNotFoundException e) {
 			// ignore. see bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=120559
 		} catch(IOException e) {
@@ -810,7 +817,7 @@ public abstract class JavaElement extends PlatformObject implements IJavaScriptE
 			e.printStackTrace(writer);
 			writer.flush();
 			writer.close();
-			throw new JavaScriptModelException(new JavaModelStatus(IJavaScriptModelStatusConstants.CANNOT_RETRIEVE_ATTACHED_JAVADOC, this, String.valueOf(stringWriter.getBuffer())));
+			throw new JavaScriptModelException(new JavaModelStatus(IJavaScriptModelStatusConstants.CANNOT_RETRIEVE_ATTACHED_JSDOC, this, String.valueOf(stringWriter.getBuffer())));
 		} finally {
 			if (stream != null) {
 				try {
@@ -839,7 +846,7 @@ public abstract class JavaElement extends PlatformObject implements IJavaScriptE
 	 * Returns a new name lookup. This name lookup first looks in the given working copies.
 	 */
 	public NameLookup newNameLookup(IJavaScriptUnit[] workingCopies) throws JavaScriptModelException {
-		return parent!=null?parent.newNameLookup(workingCopies):getJavaProject().newNameLookup(workingCopies);
+		return parent!=null?parent.newNameLookup(workingCopies):getJavaScriptProject().newNameLookup(workingCopies);
 	}
 
 	/*
@@ -847,14 +854,14 @@ public abstract class JavaElement extends PlatformObject implements IJavaScriptE
 	 */
 	public NameLookup newNameLookup(WorkingCopyOwner owner) throws JavaScriptModelException {
 
-		return parent!=null?parent.newNameLookup(owner):getJavaProject().newNameLookup(owner);
+		return parent!=null?parent.newNameLookup(owner):getJavaScriptProject().newNameLookup(owner);
 	}
 
 	/*
 	 * Returns a new search name environment for this project. This name environment first looks in the given working copies.
 	 */
 	public SearchableEnvironment newSearchableNameEnvironment(IJavaScriptUnit[] workingCopies) throws JavaScriptModelException {
-		return parent!=null?parent.newSearchableNameEnvironment(workingCopies):getJavaProject().newSearchableNameEnvironment(workingCopies);
+		return parent!=null?parent.newSearchableNameEnvironment(workingCopies):getJavaScriptProject().newSearchableNameEnvironment(workingCopies);
 	}
 
 	/*
@@ -862,7 +869,7 @@ public abstract class JavaElement extends PlatformObject implements IJavaScriptE
 	 * of the given owner.
 	 */
 	public SearchableEnvironment newSearchableNameEnvironment(WorkingCopyOwner owner) throws JavaScriptModelException {
-		return parent!=null?parent.newSearchableNameEnvironment(owner):getJavaProject().newSearchableNameEnvironment(owner);
+		return parent!=null?parent.newSearchableNameEnvironment(owner):getJavaScriptProject().newSearchableNameEnvironment(owner);
 	}
 
 	public String getDisplayName() {

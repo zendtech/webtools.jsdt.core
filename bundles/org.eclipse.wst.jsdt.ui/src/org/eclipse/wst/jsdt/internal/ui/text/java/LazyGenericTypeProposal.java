@@ -582,7 +582,7 @@ public final class LazyGenericTypeProposal extends LazyJavaTypeCompletionProposa
 		}
 
 		final ASTParser parser= ASTParser.newParser(AST.JLS3);
-		parser.setProject(fCompilationUnit.getJavaProject());
+		parser.setProject(fCompilationUnit.getJavaScriptProject());
 		parser.setResolveBindings(true);
 
 		final Map bindings= new HashMap();

@@ -275,7 +275,7 @@ public class AddImportsOperation implements IWorkspaceRunnable {
 				return new ReplaceEdit(qualifierStart, simpleNameStart - qualifierStart, ""); //$NON-NLS-1$
 			}
 		}
-		IJavaScriptSearchScope searchScope= SearchEngine.createJavaSearchScope(new IJavaScriptElement[] { fCompilationUnit.getJavaProject() });
+		IJavaScriptSearchScope searchScope= SearchEngine.createJavaSearchScope(new IJavaScriptElement[] { fCompilationUnit.getJavaScriptProject() });
 		
 		TypeNameMatch[] types= findAllTypes(simpleName, searchScope, nameNode, new SubProgressMonitor(monitor, 1));
 		if (types.length == 0) {
@@ -366,7 +366,7 @@ public class AddImportsOperation implements IWorkspaceRunnable {
 	 * Finds a type by the simple name.
 	 */
 	private TypeNameMatch[] findAllTypes(String simpleTypeName, IJavaScriptSearchScope searchScope, SimpleName nameNode, IProgressMonitor monitor) throws JavaScriptModelException {
-		boolean is50OrHigher= JavaModelUtil.is50OrHigher(fCompilationUnit.getJavaProject());
+		boolean is50OrHigher= JavaModelUtil.is50OrHigher(fCompilationUnit.getJavaScriptProject());
 		
 		int typeKinds= SimilarElementsRequestor.ALL_TYPES;
 		if (nameNode != null) {
@@ -421,7 +421,7 @@ public class AddImportsOperation implements IWorkspaceRunnable {
 	 * @return Returns the scheduling rule for this operation
 	 */
 	public ISchedulingRule getScheduleRule() {
-		return fCompilationUnit.getJavaProject().getResource();
+		return fCompilationUnit.getJavaScriptProject().getResource();
 	}
 		
 }

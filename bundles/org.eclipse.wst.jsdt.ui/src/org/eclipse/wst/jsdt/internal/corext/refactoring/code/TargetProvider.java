@@ -114,7 +114,7 @@ abstract class TargetProvider {
 				return new ErrorTargetProvider(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.TargetProvider_cannot_local_method_in_binary));
 			} else {
 				IType declaringClassOfLocal= (IType) type.getDeclaringClass().getJavaElement();
-				return new LocalTypeTargetProvider(declaringClassOfLocal.getCompilationUnit(), declaration);
+				return new LocalTypeTargetProvider(declaringClassOfLocal.getJavaScriptUnit(), declaration);
 			}
 		} else {
 			return new MemberTypeTargetProvider(declaration.resolveBinding());

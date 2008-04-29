@@ -55,7 +55,7 @@ public interface IJsGlobalScopeContainerInitializer {
 	 * <li>{@link JavaScriptCore#getJsGlobalScopeContainer(IPath, IJavaScriptProject)}</li>
 	 * <li>{@link JavaScriptCore#create(org.eclipse.core.resources.IWorkspaceRoot)}</li>
 	 * <li>{@link JavaScriptCore#create(org.eclipse.core.resources.IProject)}</li>
-	 * <li>{@link IJavaScriptModel#getJavaProjects()}</li>
+	 * <li>{@link IJavaScriptModel#getJavaScriptProjects()}</li>
 	 * <li>Java element operations marked as "handle-only"</li>
 	 * </ul>
 	 * The effects of using other Java model APIs are unspecified.

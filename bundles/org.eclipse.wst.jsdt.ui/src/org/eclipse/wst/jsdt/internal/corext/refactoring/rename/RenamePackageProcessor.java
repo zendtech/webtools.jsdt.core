@@ -165,10 +165,10 @@ public class RenamePackageProcessor extends JavaRenameProcessor implements
 		if (fRenameSubpackages) {
 			IPackageFragment[] allPackages= JavaElementUtil.getPackageAndSubpackages(fPackage);
 			for (int i= 0; i < allPackages.length; i++) {
-				combined.addAll(Arrays.asList(ResourceUtil.getFiles(allPackages[i].getCompilationUnits())));
+				combined.addAll(Arrays.asList(ResourceUtil.getFiles(allPackages[i].getJavaScriptUnits())));
 			}
 		} else {
-			combined.addAll(Arrays.asList(ResourceUtil.getFiles(fPackage.getCompilationUnits())));
+			combined.addAll(Arrays.asList(ResourceUtil.getFiles(fPackage.getJavaScriptUnits())));
 		}
 		if (fQualifiedNameSearchResult != null)
 			combined.addAll(Arrays.asList(fQualifiedNameSearchResult.getAllFiles()));
@@ -279,7 +279,7 @@ public class RenamePackageProcessor extends JavaRenameProcessor implements
 			
 			protected IFunction transplantHandle(IType parent, IFunction element) {
 				String[] parameterTypes= resolveParameterTypes(element);
-				return parent.getMethod(element.getElementName(), parameterTypes);
+				return parent.getFunction(element.getElementName(), parameterTypes);
 			}
 			
 			private String[] resolveParameterTypes(IFunction method) {
@@ -454,7 +454,7 @@ public class RenamePackageProcessor extends JavaRenameProcessor implements
 			return false;			
 		else if (pack.containsJavaResources())
 			return false;
-		else if (pack.getNonJavaResources().length != 0)
+		else if (pack.getNonJavaScriptResources().length != 0)
 			return false;
 		else 
 			return true;	
@@ -473,7 +473,7 @@ public class RenamePackageProcessor extends JavaRenameProcessor implements
 	
 	private RefactoringStatus checkPackageName(String newName) throws CoreException {		
 		RefactoringStatus status= new RefactoringStatus();
-		IPackageFragmentRoot[] roots= fPackage.getJavaProject().getPackageFragmentRoots();
+		IPackageFragmentRoot[] roots= fPackage.getJavaScriptProject().getPackageFragmentRoots();
 		Set topLevelTypeNames= getTopLevelTypeNames();
 		for (int i= 0; i < roots.length; i++) {
 			if (! isPackageNameOkInRoot(newName, roots[i])){
@@ -486,7 +486,7 @@ public class RenamePackageProcessor extends JavaRenameProcessor implements
 	}
 	
 	private Set getTopLevelTypeNames() throws CoreException {
-		IJavaScriptUnit[] cus= fPackage.getCompilationUnits();
+		IJavaScriptUnit[] cus= fPackage.getJavaScriptUnits();
 		Set result= new HashSet(2 * cus.length); 
 		for (int i= 0; i < cus.length; i++) {
 			result.addAll(getTopLevelTypeNames(cus[i]));
@@ -507,7 +507,7 @@ public class RenamePackageProcessor extends JavaRenameProcessor implements
 		IPackageFragment otherPack= root.getPackageFragment(newName);
 		if (fPackage.equals(otherPack))
 			return null;
-		IJavaScriptUnit[] cus= otherPack.getCompilationUnits();
+		IJavaScriptUnit[] cus= otherPack.getJavaScriptUnits();
 		RefactoringStatus result= new RefactoringStatus();
 		for (int i= 0; i < cus.length; i++) {
 			result.merge(checkTypeNameConflicts(cus[i], topLevelTypeNames));
@@ -550,7 +550,7 @@ public class RenamePackageProcessor extends JavaRenameProcessor implements
 
 	private RenameJavaElementDescriptor createRefactoringDescriptor() {
 		String project= null;
-		IJavaScriptProject javaProject= fPackage.getJavaProject();
+		IJavaScriptProject javaProject= fPackage.getJavaScriptProject();
 		if (javaProject != null)
 			project= javaProject.getElementName();
 		final int flags= JavaRefactoringDescriptor.JAR_MIGRATION | JavaRefactoringDescriptor.JAR_REFACTORING | RefactoringDescriptor.STRUCTURAL_CHANGE | RefactoringDescriptor.MULTI_CHANGE;
@@ -599,7 +599,7 @@ public class RenamePackageProcessor extends JavaRenameProcessor implements
 		if (fQualifiedNameSearchResult == null)
 			fQualifiedNameSearchResult= new QualifiedNameSearchResult();
 		QualifiedNameFinder.process(fQualifiedNameSearchResult, fPackage.getElementName(), getNewElementName(), 
-			fFilePatterns, fPackage.getJavaProject().getProject(), pm);
+			fFilePatterns, fPackage.getJavaScriptProject().getProject(), pm);
 	}
 
 	public String getNewPackageName(String oldSubPackageName) {

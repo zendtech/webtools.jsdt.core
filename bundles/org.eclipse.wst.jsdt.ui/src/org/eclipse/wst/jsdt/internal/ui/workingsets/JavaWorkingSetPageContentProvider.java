@@ -52,6 +52,6 @@ class JavaWorkingSetPageContentProvider extends StandardJavaElementContentProvid
 	}
 
 	private Object[] getNonJavaProjects(IJavaScriptModel model) throws JavaScriptModelException {
-		return model.getNonJavaResources();
+		return model.getNonJavaScriptResources();
 	}
 }

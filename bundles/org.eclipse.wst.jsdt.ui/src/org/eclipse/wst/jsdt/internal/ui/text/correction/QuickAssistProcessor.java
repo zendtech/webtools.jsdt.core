@@ -842,7 +842,7 @@ public class QuickAssistProcessor implements IQuickAssistProcessor {
 				if (invocation.getParent().getNodeType() == ASTNode.EXPRESSION_STATEMENT) {
 					int kind= body.getNodeType();
 					if (kind != ASTNode.ASSIGNMENT && kind != ASTNode.PREFIX_EXPRESSION && kind != ASTNode.POSTFIX_EXPRESSION
-							&& kind != ASTNode.METHOD_INVOCATION && kind != ASTNode.SUPER_METHOD_INVOCATION) {
+							&& kind != ASTNode.FUNCTION_INVOCATION && kind != ASTNode.SUPER_METHOD_INVOCATION) {
 						body= null;
 					}
 				}

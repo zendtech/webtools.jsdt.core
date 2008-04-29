@@ -848,7 +848,7 @@ public class Bindings {
 	public static IJavaScriptUnit findCompilationUnit(ITypeBinding typeBinding, IJavaScriptProject project) throws JavaScriptModelException {
 		IJavaScriptElement type= typeBinding.getJavaElement();
 		if (type instanceof IType)
-			return ((IType) type).getCompilationUnit();
+			return ((IType) type).getJavaScriptUnit();
 		else
 			return null;
 	}
@@ -865,7 +865,7 @@ public class Bindings {
 	public static IFunction findMethod(IFunctionBinding method, IType type) throws JavaScriptModelException {
 		method= method.getMethodDeclaration();
 		
-		IFunction[] candidates= type.getMethods();
+		IFunction[] candidates= type.getFunctions();
 		for (int i= 0; i < candidates.length; i++) {
 			IFunction candidate= candidates[i];
 			if (candidate.getElementName().equals(method.getName()) && sameParameters(method, candidate)) {

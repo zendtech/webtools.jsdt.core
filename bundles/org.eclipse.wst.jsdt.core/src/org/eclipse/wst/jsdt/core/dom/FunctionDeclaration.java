@@ -436,7 +436,7 @@ public class FunctionDeclaration extends BodyDeclaration {
 	 * Method declared on ASTNode.
 	 */
 	final int getNodeType0() {
-		return METHOD_DECLARATION;
+		return FUNCTION_DECLARATION;
 	}
 
 	/* (omit javadoc for this method)

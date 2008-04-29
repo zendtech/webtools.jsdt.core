@@ -93,7 +93,7 @@ public class ConstructorFromSuperclassProposal extends LinkedCorrectionProposal 
 		
 		createImportRewrite((JavaScriptUnit) fTypeNode.getRoot());
 		
-		CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(getCompilationUnit().getJavaProject());
+		CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(getCompilationUnit().getJavaScriptProject());
 		if (!settings.createComments) {
 			settings= null;
 		}
@@ -166,7 +166,7 @@ public class ConstructorFromSuperclassProposal extends LinkedCorrectionProposal 
 			}
 		}
 
-		String bodyStatement= (invocation == null) ? "" : ASTNodes.asFormattedString(invocation, 0, String.valueOf('\n'), getCompilationUnit().getJavaProject().getOptions(true)); //$NON-NLS-1$
+		String bodyStatement= (invocation == null) ? "" : ASTNodes.asFormattedString(invocation, 0, String.valueOf('\n'), getCompilationUnit().getJavaScriptProject().getOptions(true)); //$NON-NLS-1$
 		String placeHolder= CodeGeneration.getMethodBodyContent(getCompilationUnit(), name, name, true, bodyStatement, String.valueOf('\n'));
 		if (placeHolder != null) {
 			ASTNode todoNode= rewrite.createStringPlaceholder(placeHolder, ASTNode.RETURN_STATEMENT);
@@ -175,7 +175,7 @@ public class ConstructorFromSuperclassProposal extends LinkedCorrectionProposal 
 		if (commentSettings != null) {
 			String string= CodeGeneration.getMethodComment(getCompilationUnit(), name, decl, null, String.valueOf('\n'));
 			if (string != null) {
-				JSdoc javadoc= (JSdoc) rewrite.createStringPlaceholder(string, ASTNode.JAVADOC);
+				JSdoc javadoc= (JSdoc) rewrite.createStringPlaceholder(string, ASTNode.JSDOC);
 				decl.setJavadoc(javadoc);
 			}
 		}
@@ -188,7 +188,7 @@ public class ConstructorFromSuperclassProposal extends LinkedCorrectionProposal 
 
 		SingleVariableDeclaration var= ast.newSingleVariableDeclaration();
 		var.setType(getImportRewrite().addImport(enclosingInstance, ast));
-		String[] enclosingArgNames= StubUtility.getArgumentNameSuggestions(getCompilationUnit().getJavaProject(), enclosingInstance.getTypeDeclaration().getName(), 0, paramNames);
+		String[] enclosingArgNames= StubUtility.getArgumentNameSuggestions(getCompilationUnit().getJavaScriptProject(), enclosingInstance.getTypeDeclaration().getName(), 0, paramNames);
 		String firstName= enclosingArgNames[0];
 		var.setName(ast.newSimpleName(firstName));
 		parameters.add(var);
@@ -232,6 +232,6 @@ public class ConstructorFromSuperclassProposal extends LinkedCorrectionProposal 
 		if (binding == null) {
 			return new String[0];
 		}
-		return StubUtility.suggestArgumentNames(getCompilationUnit().getJavaProject(), binding);
+		return StubUtility.suggestArgumentNames(getCompilationUnit().getJavaScriptProject(), binding);
 	}
 }

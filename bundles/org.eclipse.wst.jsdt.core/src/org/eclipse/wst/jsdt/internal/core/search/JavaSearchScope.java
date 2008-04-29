@@ -116,7 +116,7 @@ void add(JavaProject javaProject, IPath pathToAdd, int includeMask, HashSet visi
 	this.addEnclosingProjectOrJar(projectPath);
 
 	IIncludePathEntry[] entries = javaProject.getResolvedClasspath();
-	IJavaScriptModel model = javaProject.getJavaModel();
+	IJavaScriptModel model = javaProject.getJavaScriptModel();
 	JavaModelManager.PerProjectInfo perProjectInfo = javaProject.getPerProjectInfo();
 	for (int i = 0, length = entries.length; i < length; i++) {
 		IIncludePathEntry entry = entries[i];
@@ -169,7 +169,7 @@ void add(JavaProject javaProject, IPath pathToAdd, int includeMask, HashSet visi
 				if ((includeMask & REFERENCED_PROJECTS) != 0) {
 					IPath path = entry.getPath();
 					if (pathToAdd == null || pathToAdd.equals(path)) {
-						add((JavaProject) model.getJavaProject(entry.getPath().lastSegment()), null, includeMask, visitedProjects, cpEntry);
+						add((JavaProject) model.getJavaScriptProject(entry.getPath().lastSegment()), null, includeMask, visitedProjects, cpEntry);
 					}
 				}
 				break;
@@ -206,7 +206,7 @@ public void add(IJavaScriptElement element) throws JavaScriptModelException {
 
 			IPath rootPath = root.getPath();
 
-			IIncludePathEntry entry = root.getResolvedClasspathEntry();
+			IIncludePathEntry entry = root.getResolvedIncludepathEntry();
 			IPath[] exclusionsPaths = entry.getExclusionPatterns();
 
 			if(exclusionsPaths!=null &&  exclusionsPaths.length>0)
@@ -216,7 +216,7 @@ public void add(IJavaScriptElement element) throws JavaScriptModelException {
 			containerPath = root.getKind() == IPackageFragmentRoot.K_SOURCE ? root.getParent().getPath() : rootPath;
 			containerPathToString = containerPath.getDevice() == null ? containerPath.toString() : containerPath.toOSString();
 			IResource rootResource = root.getResource();
-			String projectPath = root.getJavaProject().getPath().toString();
+			String projectPath = root.getJavaScriptProject().getPath().toString();
 			if (rootResource != null && rootResource.isAccessible()) {
 				String relativePath = Util.relativePath(rootResource.getFullPath(), containerPath.segmentCount());
 				add(projectPath, relativePath, containerPathToString, false/*not a package*/, null);
@@ -226,7 +226,7 @@ public void add(IJavaScriptElement element) throws JavaScriptModelException {
 			break;
 		case IJavaScriptElement.PACKAGE_FRAGMENT:
 			root = (IPackageFragmentRoot)element.getParent();
-			projectPath = root.getJavaProject().getPath().toString();
+			projectPath = root.getJavaScriptProject().getPath().toString();
 			if (root.isArchive()) {
 				String relativePath = Util.concatWith(((PackageFragment) element).names, '/');
 				containerPath = root.getPath();
@@ -256,7 +256,7 @@ public void add(IJavaScriptElement element) throws JavaScriptModelException {
 				this.elements.add(element);
 			}
 			root = (IPackageFragmentRoot) element.getAncestor(IJavaScriptElement.PACKAGE_FRAGMENT_ROOT);
-			projectPath = root.getJavaProject().getPath().toString();
+			projectPath = root.getJavaScriptProject().getPath().toString();
 			String relativePath;
 			if (root.getKind() == IPackageFragmentRoot.K_SOURCE) {
 				containerPath = root.getParent().getPath();

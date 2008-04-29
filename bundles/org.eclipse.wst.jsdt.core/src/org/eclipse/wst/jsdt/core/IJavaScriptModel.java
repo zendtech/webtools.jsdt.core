@@ -120,7 +120,7 @@ void delete(IJavaScriptElement[] elements, boolean force, IProgressMonitor monit
  * @param name the name of the Java project
  * @return the Java project with the given name
  */
-IJavaScriptProject getJavaProject(String name);
+IJavaScriptProject getJavaScriptProject(String name);
 /**
  * Returns the Java projects in this Java model, or an empty array if there
  * are none.
@@ -129,7 +129,7 @@ IJavaScriptProject getJavaProject(String name);
  * are none
  * @exception JavaScriptModelException if this request fails.
  */
-IJavaScriptProject[] getJavaProjects() throws JavaScriptModelException;
+IJavaScriptProject[] getJavaScriptProjects() throws JavaScriptModelException;
 /**
  * Returns an array of non-Java resources (that is, non-Java projects) in
  * the workspace.
@@ -144,7 +144,7 @@ IJavaScriptProject[] getJavaProjects() throws JavaScriptModelException;
  *		exception occurs while accessing its corresponding resource
  * @since 2.1
  */
-Object[] getNonJavaResources() throws JavaScriptModelException;
+Object[] getNonJavaScriptResources() throws JavaScriptModelException;
 /**
  * Returns the workspace associated with this Java model.
  *

@@ -83,7 +83,7 @@ public class HierarchicalDecorationContext implements IDecorationContext {
 			return fPack;
 		}
 		public IProject[] getProjects() {
-			return new IProject[] {fPack.getJavaProject().getProject() };
+			return new IProject[] {fPack.getJavaScriptProject().getProject() };
 		}
 		public ResourceTraversal[] getTraversals(ResourceMappingContext context, IProgressMonitor monitor) throws CoreException {
 			return new ResourceTraversal[] {

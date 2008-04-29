@@ -224,7 +224,7 @@ public class PackageExplorerContentProvider extends StandardJavaElementContentPr
 		ArrayList result= new ArrayList();
 		getHierarchicalPackageChildren(root, null, result);
 		if (!isProjectPackageFragmentRoot(root)) {
-			Object[] nonJavaResources= root.getNonJavaResources();
+			Object[] nonJavaResources= root.getNonJavaScriptResources();
 			for (int i= 0; i < nonJavaResources.length; i++) {
 				result.add(nonJavaResources[i]);
 			}
@@ -368,7 +368,7 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 		IPackageFragmentRoot[] roots= project.getPackageFragmentRoots();
 		for (int i= 0; i < roots.length; i++) {
 			IPackageFragmentRoot root= roots[i];
-			IIncludePathEntry classpathEntry= root.getRawClasspathEntry();
+			IIncludePathEntry classpathEntry= root.getRawIncludepathEntry();
 			int entryKind= classpathEntry.getEntryKind();
 			if (entryKind == IIncludePathEntry.CPE_CONTAINER) {
 				// all JsGlobalScopeContainers are added later 
@@ -394,14 +394,14 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 		}
 		
 		// separate loop to make sure all containers are on the classpath
-		IIncludePathEntry[] rawClasspath= project.getRawClasspath();
+		IIncludePathEntry[] rawClasspath= project.getRawIncludepath();
 		for (int i= 0; i < rawClasspath.length; i++) {
 			IIncludePathEntry classpathEntry= rawClasspath[i];
 			if (classpathEntry.getEntryKind() == IIncludePathEntry.CPE_CONTAINER) {
 				projectPackageFragmentRoots.add(new JsGlobalScopeContainer(project, classpathEntry));
 			}	
 		}	
-		Object[] resources= project.getNonJavaResources();
+		Object[] resources= project.getNonJavaScriptResources();
 		for (int i= 0; i < resources.length; i++) {
 			result.add(resources[i]);
 		}
@@ -546,7 +546,7 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 	}
 
 	private Object[] getNonJavaProjects(IJavaScriptModel model) throws JavaScriptModelException {
-		return model.getNonJavaResources();
+		return model.getNonJavaScriptResources();
 	}
 
 	protected Object internalGetParent(Object element) {
@@ -559,12 +559,12 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 			IPackageFragmentRoot root= (IPackageFragmentRoot)element;
 			
 			try {
-				IIncludePathEntry entry= root.getRawClasspathEntry();
+				IIncludePathEntry entry= root.getRawIncludepathEntry();
 				int entryKind= entry.getEntryKind();
 				if (entryKind == IIncludePathEntry.CPE_CONTAINER) {
-					return new JsGlobalScopeContainer(root.getJavaProject(), entry);
+					return new JsGlobalScopeContainer(root.getJavaScriptProject(), entry);
 				} else if (fShowLibrariesNode && (entryKind == IIncludePathEntry.CPE_LIBRARY || entryKind == IIncludePathEntry.CPE_VARIABLE)) {
-					return new LibraryContainer(root.getJavaProject());
+					return new LibraryContainer(root.getJavaScriptProject());
 				}
 			} catch (JavaScriptModelException e) {
 				// fall through
@@ -673,7 +673,7 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 			}
 		}
 		if (parent.getResource() instanceof IProject) {
-			return parent.getJavaProject();
+			return parent.getJavaScriptProject();
 		}
 		return parent;
 	}
@@ -690,7 +690,7 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 	}
 		
 	private static boolean isEmpty(IPackageFragment fragment) throws JavaScriptModelException {
-		return !fragment.containsJavaResources() && fragment.getNonJavaResources().length == 0;
+		return !fragment.containsJavaResources() && fragment.getNonJavaScriptResources().length == 0;
 	}
 	
 	private static IPackageFragment findSinglePackageChild(IPackageFragment fragment, IJavaScriptElement[] children) {
@@ -732,7 +732,7 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 		
 		
 		if (elementType != IJavaScriptElement.JAVA_MODEL && elementType != IJavaScriptElement.JAVA_PROJECT) {
-			IJavaScriptProject proj= element.getJavaProject();
+			IJavaScriptProject proj= element.getJavaScriptProject();
 			if (proj == null || !proj.getProject().isOpen()) // TODO: Not needed if parent already did the 'open' check!
 				return false;	
 		}
@@ -788,7 +788,7 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 				return false;
 			}
 			// if the raw class path has changed we refresh the entire project
-			if ((flags & IJavaScriptElementDelta.F_CLASSPATH_CHANGED) != 0) {
+			if ((flags & IJavaScriptElementDelta.F_INCLUDEPATH_CHANGED) != 0) {
 				postRefresh(element, ORIGINAL, element, runnables);
 				return false;				
 			}
@@ -872,7 +872,7 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 			
 			if (isClassPathChange(delta)) {
 				 // throw the towel and do a full refresh of the affected java project. 
-				postRefresh(element.getJavaProject(), PROJECT, element, runnables);
+				postRefresh(element.getJavaScriptProject(), PROJECT, element, runnables);
 				return true;
 			}
 		}	
@@ -946,10 +946,10 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 	}
 
 	private boolean isOnClassPath(IJavaScriptUnit element) {
-		IJavaScriptProject project= element.getJavaProject();
+		IJavaScriptProject project= element.getJavaScriptProject();
 		if (project == null || !project.exists())
 			return false;
-		return project.isOnClasspath(element);
+		return project.isOnIncludepath(element);
 	}
 
 	/**

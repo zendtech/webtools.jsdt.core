@@ -419,7 +419,7 @@ public class JavaProject
 					} else {
 						// create new marker
 						project.createClasspathProblemMarker(
-							new JavaModelStatus(IJavaScriptModelStatusConstants.CLASSPATH_CYCLE, project));
+							new JavaModelStatus(IJavaScriptModelStatusConstants.INCLUDEPATH_CYCLE, project));
 					}
 				} else {
 					project.flushClasspathProblemMarkers(true, false);
@@ -837,7 +837,7 @@ public class JavaProject
 		boolean isCycleProblem = false, isClasspathFileFormatProblem = false;
 		switch (status.getCode()) {
 
-			case  IJavaScriptModelStatusConstants.CLASSPATH_CYCLE :
+			case  IJavaScriptModelStatusConstants.INCLUDEPATH_CYCLE :
 				isCycleProblem = true;
 				if (JavaScriptCore.ERROR.equals(getOption(JavaScriptCore.CORE_CIRCULAR_CLASSPATH, true))) {
 					severity = IMarker.SEVERITY_ERROR;
@@ -846,7 +846,7 @@ public class JavaProject
 				}
 				break;
 
-			case  IJavaScriptModelStatusConstants.INVALID_CLASSPATH_FILE_FORMAT :
+			case  IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH_FILE_FORMAT :
 				isClasspathFileFormatProblem = true;
 				severity = IMarker.SEVERITY_ERROR;
 				break;
@@ -882,7 +882,7 @@ public class JavaProject
 					IMarker.SEVERITY,
 					IMarker.LOCATION,
 					IJavaScriptModelMarker.CYCLE_DETECTED,
-					IJavaScriptModelMarker.CLASSPATH_FILE_FORMAT,
+					IJavaScriptModelMarker.INCLUDEPATH_FILE_FORMAT,
 					IJavaScriptModelMarker.ID,
 					IJavaScriptModelMarker.ARGUMENTS ,
 					IJavaScriptModelMarker.CATEGORY_ID,
@@ -954,7 +954,7 @@ public class JavaProject
 		}
 			}
 		}
-		// return a new empty classpath is it size is 0, to differenciate from an INVALID_CLASSPATH
+		// return a new empty classpath is it size is 0, to differenciate from an INVALID_INCLUDEPATH
 		int pathSize = paths.size();
 		IIncludePathEntry[] entries = new IIncludePathEntry[pathSize + (defaultOutput == null ? 0 : 1)];
 		paths.toArray(entries);
@@ -962,7 +962,7 @@ public class JavaProject
 		return entries;
 	}
 
-	public IIncludePathEntry decodeClasspathEntry(String encodedEntry) {
+	public IIncludePathEntry decodeIncludepathEntry(String encodedEntry) {
 
 		try {
 			if (encodedEntry == null) return null;
@@ -1055,7 +1055,7 @@ public class JavaProject
 		}
 	}
 
-	public String encodeClasspathEntry(IIncludePathEntry classpathEntry) {
+	public String encodeIncludepathEntry(IIncludePathEntry classpathEntry) {
 		try {
 			ByteArrayOutputStream s = new ByteArrayOutputStream();
 			OutputStreamWriter writer = new OutputStreamWriter(s, "UTF8"); //$NON-NLS-1$
@@ -1235,7 +1235,7 @@ public class JavaProject
 	 */
 	public IPackageFragmentRoot[] findPackageFragmentRoots(IIncludePathEntry entry) {
 		try {
-			IIncludePathEntry[] classpath = this.getRawClasspath();
+			IIncludePathEntry[] classpath = this.getRawIncludepath();
 			for (int i = 0, length = classpath.length; i < length; i++) {
 				if (classpath[i].equals(entry)) { // entry may need to be resolved
 					return
@@ -1376,7 +1376,7 @@ public class JavaProject
 						marker.delete();
 					} else {
 						String cycleAttr = (String)marker.getAttribute(IJavaScriptModelMarker.CYCLE_DETECTED);
-						String classpathFileFormatAttr =  (String)marker.getAttribute(IJavaScriptModelMarker.CLASSPATH_FILE_FORMAT);
+						String classpathFileFormatAttr =  (String)marker.getAttribute(IJavaScriptModelMarker.INCLUDEPATH_FILE_FORMAT);
 						if ((flushCycleMarkers == (cycleAttr != null && cycleAttr.equals("true"))) //$NON-NLS-1$
 							&& (flushClasspathFormatMarkers == (classpathFileFormatAttr != null && classpathFileFormatAttr.equals("true")))){ //$NON-NLS-1$
 							marker.delete();
@@ -1626,7 +1626,7 @@ public class JavaProject
 	/**
 	 * Returns an array of non-java resources contained in the receiver.
 	 */
-	public Object[] getNonJavaResources() throws JavaScriptModelException {
+	public Object[] getNonJavaScriptResources() throws JavaScriptModelException {
 
 		return ((JavaProjectElementInfo) getElementInfo()).getNonJavaResources(this);
 	}
@@ -1711,7 +1711,7 @@ public class JavaProject
 		if (outputLocation != null) return outputLocation;
 
 		// force to read classpath - will position output location as well
-		getRawClasspath();
+		getRawIncludepath();
 
 		outputLocation = perProjectInfo.outputLocation;
 		if (outputLocation == null) {
@@ -1914,7 +1914,7 @@ public class JavaProject
 	/**
 	 * @see IJavaScriptProject
 	 */
-	public IIncludePathEntry[] getRawClasspath() throws JavaScriptModelException {
+	public IIncludePathEntry[] getRawIncludepath() throws JavaScriptModelException {
 		JavaModelManager.PerProjectInfo perProjectInfo = getPerProjectInfo();
 		IIncludePathEntry[] classpath = perProjectInfo.rawClasspath;
 		if (classpath != null) return classpath;
@@ -1948,7 +1948,7 @@ public class JavaProject
 	/**
 	 * @see IJavaScriptProject
 	 */
-	public IIncludePathEntry[] getResolvedClasspath(boolean ignoreUnresolvedEntry) throws JavaScriptModelException {
+	public IIncludePathEntry[] getResolvedIncludepath(boolean ignoreUnresolvedEntry) throws JavaScriptModelException {
 		if  (JavaModelManager.getJavaModelManager().isClasspathBeingResolved(this)) {
 			if (JavaModelManager.CP_RESOLVE_VERBOSE_ADVANCED)
 				verbose_reentering_classpath_resolution();
@@ -2071,7 +2071,7 @@ public class JavaProject
 	/**
 	 * @see IJavaScriptProject
 	 */
-	public boolean hasClasspathCycle(IIncludePathEntry[] preferredClasspath) {
+	public boolean hasIncludepathCycle(IIncludePathEntry[] preferredClasspath) {
 		HashSet cycleParticipants = new HashSet();
 		HashMap preferredClasspaths = new HashMap(1);
 		preferredClasspaths.put(this, preferredClasspath);
@@ -2097,7 +2097,7 @@ public class JavaProject
 		// no need for resolved path given source folder cannot be abstracted
 		IIncludePathEntry[] entries;
 		try {
-			entries = this.getRawClasspath();
+			entries = this.getRawIncludepath();
 		} catch (JavaScriptModelException e) {
 			return true; // unsure
 		}
@@ -2114,10 +2114,10 @@ public class JavaProject
 	/*
 	 * @see IJavaScriptProject
 	 */
-	public boolean isOnClasspath(IJavaScriptElement element) {
+	public boolean isOnIncludepath(IJavaScriptElement element) {
 		IIncludePathEntry[] rawClasspath;
 		try {
-			rawClasspath = getRawClasspath();
+			rawClasspath = getRawIncludepath();
 		} catch(JavaScriptModelException e){
 			return false; // not a Java project
 		}
@@ -2177,7 +2177,7 @@ public class JavaProject
 					}
 					if (container == null)
 						break;
-					IIncludePathEntry[] containerEntries = container.getClasspathEntries();
+					IIncludePathEntry[] containerEntries = container.getIncludepathEntries();
 					if (containerEntries == null)
 						break;
 					// container was bound
@@ -2194,7 +2194,7 @@ public class JavaProject
 					}
 					break;
 				case IIncludePathEntry.CPE_VARIABLE:
-					IIncludePathEntry resolvedEntry = JavaScriptCore.getResolvedClasspathEntry(rawEntry);
+					IIncludePathEntry resolvedEntry = JavaScriptCore.getResolvedIncludepathEntry(rawEntry);
 					if (resolvedEntry == null)
 						break;
 					if (isOnClasspathEntry(elementPath, isFolderPath, isPackageFragmentRoot, resolvedEntry))
@@ -2209,7 +2209,7 @@ public class JavaProject
 	/*
 	 * @see IJavaScriptProject
 	 */
-	public boolean isOnClasspath(IResource resource) {
+	public boolean isOnIncludepath(IResource resource) {
 		IPath exactPath = resource.getLocation();
 		IPath path = resource.getFullPath();
 
@@ -2500,7 +2500,7 @@ public class JavaProject
 	/**
 	 * @see IJavaScriptProject
 	 */
-	public IIncludePathEntry[] readRawClasspath() {
+	public IIncludePathEntry[] readRawIncludepath() {
 		// Read classpath file without creating markers nor logging problems
 		IIncludePathEntry[] classpath = readFileEntries(null/*not interested in unknown elements*/);
 		if (classpath == JavaProject.INVALID_CLASSPATH)
@@ -2558,7 +2558,7 @@ public class JavaProject
 				case IIncludePathEntry.CPE_VARIABLE:
 					IIncludePathEntry resolvedEntry = null;
 					try {
-						resolvedEntry = JavaScriptCore.getResolvedClasspathEntry(rawEntry);
+						resolvedEntry = JavaScriptCore.getResolvedIncludepathEntry(rawEntry);
 					} catch (AssertionFailedException e) {
 						// Catch the assertion failure
 						// see bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=55992
@@ -2571,7 +2571,7 @@ public class JavaProject
 					IJsGlobalScopeContainer container = JavaScriptCore.getJsGlobalScopeContainer(rawEntry.getPath(), this);
 					if (container == null)
 						break;
-					IIncludePathEntry[] containerEntries = container.getClasspathEntries();
+					IIncludePathEntry[] containerEntries = container.getIncludepathEntries();
 					if (containerEntries == null)
 						break;
 
@@ -2634,7 +2634,7 @@ public class JavaProject
 					case IIncludePathEntry.CPE_VARIABLE :
 						IIncludePathEntry resolvedEntry = null;
 						try {
-							resolvedEntry = JavaScriptCore.getResolvedClasspathEntry(rawEntry);
+							resolvedEntry = JavaScriptCore.getResolvedIncludepathEntry(rawEntry);
 						} catch (AssertionFailedException e) {
 							// Catch the assertion failure and set ststus instead
 							// see bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=55992
@@ -2659,7 +2659,7 @@ public class JavaProject
 							break;
 						}
 
-						IIncludePathEntry[] containerEntries = container.getClasspathEntries();
+						IIncludePathEntry[] containerEntries = container.getIncludepathEntries();
 						if (containerEntries == null) break;
 
 						// container was bound
@@ -2844,7 +2844,7 @@ public class JavaProject
 		if (path.equals(getOutputLocation())) {
 			return;
 		}
-		setRawClasspath(getRawClasspath(), path, monitor);
+		setRawIncludepath(getRawIncludepath(), path, monitor);
 	}
 
 	/**
@@ -2863,15 +2863,15 @@ public class JavaProject
 	}
 
 	/**
-	 * @see IJavaScriptProject#setRawClasspath(IIncludePathEntry[],boolean,IProgressMonitor)
+	 * @see IJavaScriptProject#setRawIncludepath(IIncludePathEntry[],boolean,IProgressMonitor)
 	 */
-	public void setRawClasspath(
+	public void setRawIncludepath(
 		IIncludePathEntry[] entries,
 		boolean canModifyResources,
 		IProgressMonitor monitor)
 		throws JavaScriptModelException {
 
-		setRawClasspath(
+		setRawIncludepath(
 			entries,
 			getOutputLocation()/*don't change output*/,
 			canModifyResources,
@@ -2879,9 +2879,9 @@ public class JavaProject
 	}
 
 	/**
-	 * @see IJavaScriptProject#setRawClasspath(IIncludePathEntry[],IPath,boolean,IProgressMonitor)
+	 * @see IJavaScriptProject#setRawIncludepath(IIncludePathEntry[],IPath,boolean,IProgressMonitor)
 	 */
-	public void setRawClasspath(
+	public void setRawIncludepath(
 			IIncludePathEntry[] newRawClasspath,
 			IPath newOutputLocation,
 			boolean canModifyResources,
@@ -2906,15 +2906,15 @@ public class JavaProject
 	}
 
 	/**
-	 * @see IJavaScriptProject#setRawClasspath(IIncludePathEntry[],IPath,IProgressMonitor)
+	 * @see IJavaScriptProject#setRawIncludepath(IIncludePathEntry[],IPath,IProgressMonitor)
 	 */
-	public void setRawClasspath(
+	public void setRawIncludepath(
 		IIncludePathEntry[] entries,
 		IPath outputLocation,
 		IProgressMonitor monitor)
 		throws JavaScriptModelException {
 
-		setRawClasspath(
+		setRawIncludepath(
 			entries,
 			outputLocation,
 			true/*can change resource (as per API contract)*/,
@@ -2924,12 +2924,12 @@ public class JavaProject
 	/**
 	 * @see IJavaScriptProject
 	 */
-	public void setRawClasspath(
+	public void setRawIncludepath(
 		IIncludePathEntry[] entries,
 		IProgressMonitor monitor)
 		throws JavaScriptModelException {
 
-		setRawClasspath(
+		setRawIncludepath(
 			entries,
 			getOutputLocation()/*don't change output*/,
 			true/*can change resource (as per API contract)*/,

@@ -341,7 +341,7 @@ public class SourceAttachmentBlock {
 		if (path != null) {
 			String varName= path.segment(0);
 			if (varName != null) {
-				IPath varPath= JavaScriptCore.getClasspathVariable(varName);
+				IPath varPath= JavaScriptCore.getIncludepathVariable(varName);
 				if (varPath != null) {
 					return varPath.append(path.removeFirstSegments(1));
 				}
@@ -375,7 +375,7 @@ public class SourceAttachmentBlock {
 					status.setError(NewWizardMessages.SourceAttachmentBlock_filename_error_notvalid); 
 					return status;
 				}
-				fFileVariablePath= JavaScriptCore.getClasspathVariable(varName);
+				fFileVariablePath= JavaScriptCore.getIncludepathVariable(varName);
 				if (fFileVariablePath == null) {
 					status.setError(NewWizardMessages.SourceAttachmentBlock_filename_error_varnotexists); 
 					return status;
@@ -553,7 +553,7 @@ public class SourceAttachmentBlock {
 			return new Path(varName);
 		}
 		
-		IPath varPath= JavaScriptCore.getClasspathVariable(varName);
+		IPath varPath= JavaScriptCore.getIncludepathVariable(varName);
 		if (varPath != null) {
 			if (varPath.isPrefixOf(path)) {
 				path= path.removeFirstSegments(varPath.segmentCount());

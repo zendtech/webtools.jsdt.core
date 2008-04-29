@@ -60,7 +60,7 @@ public class UserLibraryMarkerResolutionGenerator implements IMarkerResolutionGe
 				|| id == IJavaScriptModelStatusConstants.CP_VARIABLE_PATH_UNBOUND
 				|| id == IJavaScriptModelStatusConstants.INVALID_CP_CONTAINER_ENTRY
 				|| id == IJavaScriptModelStatusConstants.DEPRECATED_VARIABLE
-				|| id == IJavaScriptModelStatusConstants.INVALID_CLASSPATH) {
+				|| id == IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH) {
 			return true;
 		}
 		return false;
@@ -120,7 +120,7 @@ public class UserLibraryMarkerResolutionGenerator implements IMarkerResolutionGe
 
 	protected void changeToExistingLibrary(Shell shell, IPath path, boolean isNew, final IJavaScriptProject project) {
 		try {
-			IIncludePathEntry[] entries= project.getRawClasspath();
+			IIncludePathEntry[] entries= project.getRawIncludepath();
 			int idx= indexOfClasspath(entries, path);
 			if (idx == -1) {
 				return;
@@ -150,7 +150,7 @@ public class UserLibraryMarkerResolutionGenerator implements IMarkerResolutionGe
 			context.run(true, true, new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
-						project.setRawClasspath(newEntries, project.getOutputLocation(), monitor);
+						project.setRawIncludepath(newEntries, project.getOutputLocation(), monitor);
 					} catch (CoreException e) {
 						throw new InvocationTargetException(e);
 					}

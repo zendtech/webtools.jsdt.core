@@ -256,7 +256,7 @@ public class SuppressWarningsSubProcessor {
 				property= Initializer.MODIFIERS2_PROPERTY;
 				name= CorrectionMessages.SuppressWarningsSubProcessor_suppress_warnings_initializer_label;
 				break;
-			case ASTNode.METHOD_DECLARATION:
+			case ASTNode.FUNCTION_DECLARATION:
 				property= FunctionDeclaration.MODIFIERS2_PROPERTY;
 				name= ((FunctionDeclaration) node).getName().getIdentifier() + "()"; //$NON-NLS-1$
 				break;

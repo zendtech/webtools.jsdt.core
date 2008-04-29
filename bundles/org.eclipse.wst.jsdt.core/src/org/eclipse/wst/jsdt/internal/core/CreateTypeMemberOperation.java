@@ -67,7 +67,7 @@ public CreateTypeMemberOperation(IJavaScriptElement parentElement, String source
 }
 protected StructuralPropertyDescriptor getChildPropertyDescriptor(ASTNode parent) {
 	switch (parent.getNodeType()) {
-		case ASTNode.COMPILATION_UNIT:
+		case ASTNode.JAVASCRIPT_UNIT:
 			if (createdNode instanceof AbstractTypeDeclaration)
 				return JavaScriptUnit.TYPES_PROPERTY;
 			else
@@ -85,11 +85,11 @@ protected ASTNode generateElementAST(ASTRewrite rewriter, IDocument document, IJ
 		this.source = removeIndentAndNewLines(this.source, document, cu);
 		ASTParser parser = ASTParser.newParser(AST.JLS3);
 		parser.setSource(this.source.toCharArray());
-		parser.setProject(getCompilationUnit().getJavaProject());
+		parser.setProject(getCompilationUnit().getJavaScriptProject());
 		parser.setKind(ASTParser.K_CLASS_BODY_DECLARATIONS);
 		ASTNode node = parser.createAST(this.progressMonitor);
 		String createdNodeSource;
-		if (node.getNodeType() == ASTNode.COMPILATION_UNIT) {
+		if (node.getNodeType() == ASTNode.JAVASCRIPT_UNIT) {
 			JavaScriptUnit compilationUnit = (JavaScriptUnit) node;
 			this.createdNode = (ASTNode) compilationUnit.statements().iterator().next();
 			createdNodeSource = this.source;
@@ -131,7 +131,7 @@ protected ASTNode generateElementAST(ASTRewrite rewriter, IDocument document, IJ
 	return rewriter.createStringPlaceholder(this.source, this.createdNode.getNodeType());
 }
 private String removeIndentAndNewLines(String code, IDocument document, IJavaScriptUnit cu) {
-	IJavaScriptProject project = cu.getJavaProject();
+	IJavaScriptProject project = cu.getJavaScriptProject();
 	Map options = project.getOptions(true/*inherit JavaScriptCore options*/);
 	int tabWidth = IndentManipulation.getTabWidth(options);
 	int indentWidth = IndentManipulation.getIndentWidth(options);
@@ -213,7 +213,7 @@ public IJavaScriptModelStatus verify() {
 			IJavaScriptUnit cu = getCompilationUnit();
 			generateElementAST(null, getDocument(cu), cu);
 		} catch (JavaScriptModelException jme) {
-			return jme.getJavaModelStatus();
+			return jme.getJavaScriptModelStatus();
 		}
 		return verifyNameCollision();
 	}

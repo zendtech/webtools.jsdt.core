@@ -193,7 +193,7 @@ public void accept(ISourceType[] sourceTypes, PackageBinding packageBinding, Acc
 		try {
 			this.lookupEnvironment.buildTypeBindings(unit, accessRestriction);
 
-			org.eclipse.wst.jsdt.core.IJavaScriptUnit cu = ((SourceTypeElementInfo)sourceType).getHandle().getCompilationUnit();
+			org.eclipse.wst.jsdt.core.IJavaScriptUnit cu = ((SourceTypeElementInfo)sourceType).getHandle().getJavaScriptUnit();
 			rememberAllTypes(unit, cu, false);
 
 			this.lookupEnvironment.completeTypeBindings(unit, true/*build constructor only*/);
@@ -404,7 +404,7 @@ private void remember(IGenericType suppliedType, ReferenceBinding typeBinding) {
 	this.typeBindings[this.typeIndex] = typeBinding;
 }
 private void remember(IType type, ReferenceBinding typeBinding) {
-	if (((CompilationUnit)type.getCompilationUnit()).isOpen()) {
+	if (((CompilationUnit)type.getJavaScriptUnit()).isOpen()) {
 		try {
 			IGenericType genericType = (IGenericType)((JavaElement)type).getElementInfo();
 			remember(genericType, typeBinding);
@@ -455,7 +455,7 @@ private void remember(IType type, ReferenceBinding typeBinding) {
 }
 
 private void rememberInferredType(InferredType inferredType, IType type, ReferenceBinding typeBinding) {
-	if (type.getCompilationUnit()!=null && ((CompilationUnit)type.getCompilationUnit()).isOpen()) {
+	if (type.getJavaScriptUnit()!=null && ((CompilationUnit)type.getJavaScriptUnit()).isOpen()) {
 		try {
 			IGenericType genericType = (IGenericType)((JavaElement)type).getElementInfo();
 			remember(genericType, typeBinding);
@@ -659,7 +659,7 @@ public void resolve(IGenericType suppliedType) {
 			this.superTypesOnly = true;
 			reportHierarchy(this.builder.getType(), null, binaryTypeBinding);
 		} else {
-			org.eclipse.wst.jsdt.core.IJavaScriptUnit cu = ((SourceTypeElementInfo)suppliedType).getHandle().getCompilationUnit();
+			org.eclipse.wst.jsdt.core.IJavaScriptUnit cu = ((SourceTypeElementInfo)suppliedType).getHandle().getJavaScriptUnit();
 			HashSet localTypes = new HashSet();
 			localTypes.add(cu.getPath().toString());
 			this.superTypesOnly = true;
@@ -700,7 +700,7 @@ public void resolve(Openable[] openables, HashSet localTypes, IProgressMonitor m
 			if (focus.isBinary()) {
 				focusOpenable = (Openable)focus.getClassFile();
 			} else {
-				focusOpenable = (Openable)focus.getCompilationUnit();
+				focusOpenable = (Openable)focus.getJavaScriptUnit();
 			}
 		}
 

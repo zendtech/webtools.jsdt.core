@@ -82,7 +82,7 @@ public class JavadocAttributeConfiguration extends ClasspathAttributeConfigurati
 			if (result != null) {
 				URL newURL= result[0];
 				String string= newURL != null ? newURL.toExternalForm() : null;
-				return JavaScriptCore.newClasspathAttribute(IIncludePathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME, string);
+				return JavaScriptCore.newIncludepathAttribute(IIncludePathAttribute.JSDOC_LOCATION_ATTRIBUTE_NAME, string);
 			}
 		} catch (MalformedURLException e) {
 			// todo
@@ -94,7 +94,7 @@ public class JavadocAttributeConfiguration extends ClasspathAttributeConfigurati
 	 * @see org.eclipse.wst.jsdt.ui.wizards.ClasspathAttributeConfiguration#performRemove(org.eclipse.wst.jsdt.ui.wizards.ClasspathAttributeConfiguration.ClasspathAttributeAccess)
 	 */
 	public IIncludePathAttribute performRemove(ClasspathAttributeAccess attribute) {
-		return JavaScriptCore.newClasspathAttribute(IIncludePathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME, null);
+		return JavaScriptCore.newIncludepathAttribute(IIncludePathAttribute.JSDOC_LOCATION_ATTRIBUTE_NAME, null);
 	}
 
 	/* (non-Javadoc)

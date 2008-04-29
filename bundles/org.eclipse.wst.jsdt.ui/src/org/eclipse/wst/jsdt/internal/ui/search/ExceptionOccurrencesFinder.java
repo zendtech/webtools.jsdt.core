@@ -102,7 +102,7 @@ public class ExceptionOccurrencesFinder extends ASTVisitor implements IOccurrenc
 	private FunctionDeclaration resolveMethodDeclaration(ASTNode node) {
 		if (node instanceof FunctionDeclaration)
 			return (FunctionDeclaration)node;
-		JSdoc doc= (JSdoc) ASTNodes.getParent(node, ASTNode.JAVADOC);
+		JSdoc doc= (JSdoc) ASTNodes.getParent(node, ASTNode.JSDOC);
 		if (doc == null)
 			return null;
 		if (doc.getParent() instanceof FunctionDeclaration)

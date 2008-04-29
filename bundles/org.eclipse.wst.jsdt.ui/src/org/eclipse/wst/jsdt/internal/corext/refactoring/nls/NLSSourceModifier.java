@@ -258,7 +258,7 @@ public class NLSSourceModifier {
 	}
 
 	private String createImportForAccessor(MultiTextEdit parent, String accessorClassName, IPackageFragment accessorPackage, IJavaScriptUnit cu) throws CoreException {
-		IType type= accessorPackage.getCompilationUnit(accessorClassName + JavaModelUtil.DEFAULT_CU_SUFFIX).getType(accessorClassName);
+		IType type= accessorPackage.getJavaScriptUnit(accessorClassName + JavaModelUtil.DEFAULT_CU_SUFFIX).getType(accessorClassName);
 		String fullyQualifiedName= type.getFullyQualifiedName();
 
 		ImportRewrite importRewrite= StubUtility.createImportRewrite(cu, true);

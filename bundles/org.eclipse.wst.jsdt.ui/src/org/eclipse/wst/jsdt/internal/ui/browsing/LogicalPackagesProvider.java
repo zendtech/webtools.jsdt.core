@@ -65,7 +65,7 @@ abstract class LogicalPackagesProvider implements IPropertyChangeListener, IElem
 	}
 
 	protected String getKey(IPackageFragment fragment) {
-		return fragment.getElementName() + fragment.getJavaProject().getElementName();
+		return fragment.getElementName() + fragment.getJavaScriptProject().getElementName();
 	}
 
 	/**

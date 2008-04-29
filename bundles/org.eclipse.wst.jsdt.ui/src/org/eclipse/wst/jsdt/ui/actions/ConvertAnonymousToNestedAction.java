@@ -95,7 +95,7 @@ public class ConvertAnonymousToNestedAction extends SelectionDispatchAction {
 		ISourceRange range;
 		try {
 			range= type.getNameRange();
-			run(type.getCompilationUnit(), range.getOffset(), range.getLength());
+			run(type.getJavaScriptUnit(), range.getOffset(), range.getLength());
 		} catch (JavaScriptModelException e) {
 			ExceptionHandler.handle(e, RefactoringMessages.ConvertAnonymousToNestedAction_dialog_title, RefactoringMessages.NewTextRefactoringAction_exception); 
 		}

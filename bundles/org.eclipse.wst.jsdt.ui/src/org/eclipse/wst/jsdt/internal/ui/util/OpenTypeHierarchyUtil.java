@@ -105,7 +105,7 @@ public class OpenTypeHierarchyUtil {
 		if (input instanceof IMember) {
 			if (input.getElementType() != IJavaScriptElement.TYPE) {
 				IMember member=(IMember)input;
-				perspectiveInput= member.getDeclaringType()!=null ? member.getDeclaringType() : (IJavaScriptElement)member.getCompilationUnit();
+				perspectiveInput= member.getDeclaringType()!=null ? member.getDeclaringType() : (IJavaScriptElement)member.getJavaScriptUnit();
 			} else {
 				perspectiveInput= input;
 			}
@@ -153,9 +153,9 @@ public class OpenTypeHierarchyUtil {
 				case IJavaScriptElement.IMPORT_DECLARATION:	
 					IImportDeclaration decl= (IImportDeclaration) elem;
 					if (decl.isOnDemand()) {
-						elem= JavaModelUtil.findTypeContainer(elem.getJavaProject(), Signature.getQualifier(elem.getElementName()));
+						elem= JavaModelUtil.findTypeContainer(elem.getJavaScriptProject(), Signature.getQualifier(elem.getElementName()));
 					} else {
-						elem= elem.getJavaProject().findType(elem.getElementName());
+						elem= elem.getJavaScriptProject().findType(elem.getElementName());
 					}
 					if (elem == null)
 						return null;

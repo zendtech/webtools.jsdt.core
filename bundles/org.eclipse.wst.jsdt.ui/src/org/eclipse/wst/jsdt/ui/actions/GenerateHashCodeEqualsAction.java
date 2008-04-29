@@ -154,7 +154,7 @@ public final class GenerateHashCodeEqualsAction extends SelectionDispatchAction 
 			final Object element= selection.getFirstElement();
 			if (element instanceof IType) {
 				final IType type= (IType) element;
-				return type.getCompilationUnit() != null && type.isClass();
+				return type.getJavaScriptUnit() != null && type.isClass();
 			}
 			if (element instanceof IJavaScriptUnit)
 				return true;
@@ -173,7 +173,7 @@ public final class GenerateHashCodeEqualsAction extends SelectionDispatchAction 
 	private IType getSelectedType(final IStructuredSelection selection) throws JavaScriptModelException {
 		if (selection.size() == 1 && selection.getFirstElement() instanceof IType) {
 			final IType type= (IType) selection.getFirstElement();
-			if (type.getCompilationUnit() != null && type.isClass())
+			if (type.getJavaScriptUnit() != null && type.isClass())
 				return type;
 		} else if (selection.getFirstElement() instanceof IJavaScriptUnit) {
 			final IJavaScriptUnit unit= (IJavaScriptUnit) selection.getFirstElement();
@@ -333,9 +333,9 @@ public final class GenerateHashCodeEqualsAction extends SelectionDispatchAction 
 				}
 			}
 
-			final CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(type.getJavaProject());
+			final CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(type.getJavaScriptProject());
 			settings.createComments= dialog.getGenerateComment();
-			final IEditorPart editor= JavaUI.openInEditor(type.getCompilationUnit());
+			final IEditorPart editor= JavaUI.openInEditor(type.getJavaScriptUnit());
 			final IRewriteTarget target= editor != null ? (IRewriteTarget) editor.getAdapter(IRewriteTarget.class) : null;
 
 			if (target != null)
@@ -447,7 +447,7 @@ public final class GenerateHashCodeEqualsAction extends SelectionDispatchAction 
 
 	private void initialize(IType type) throws JavaScriptModelException {
 		RefactoringASTParser parser= new RefactoringASTParser(AST.JLS3);
-		fUnit= parser.parse(type.getCompilationUnit(), true);
+		fUnit= parser.parse(type.getJavaScriptUnit(), true);
 		fTypeBinding= null;
 		// type cannot be anonymous
 		final AbstractTypeDeclaration declaration= (AbstractTypeDeclaration) ASTNodes.getParent(NodeFinder.perform(fUnit, type.getNameRange()),

@@ -239,7 +239,7 @@ public class ASTRewrite {
 		char[] content= typeRoot.getBuffer().getCharacters();
 		LineInformation lineInfo= LineInformation.create(astRoot);
 		String lineDelim= typeRoot.findRecommendedLineSeparator();
-		Map options= typeRoot.getJavaProject().getOptions(true);
+		Map options= typeRoot.getJavaScriptProject().getOptions(true);
 
 		return internalRewriteAST(content, lineInfo, lineDelim, astRoot.getCommentList(), options, rootNode);
 	}

@@ -308,7 +308,7 @@ public class NLSHintHelper {
 			if (root.getKind() == IPackageFragmentRoot.K_SOURCE) {
 				IPackageFragment packageFragment= root.getPackageFragment(packageName);
 				if (packageFragment.exists()) {
-					Object[] resources= packageFragment.isDefaultPackage() ? root.getNonJavaResources() : packageFragment.getNonJavaResources();
+					Object[] resources= packageFragment.isDefaultPackage() ? root.getNonJavaScriptResources() : packageFragment.getNonJavaScriptResources();
 					for (int j= 0; j < resources.length; j++) {
 						Object object= resources[j];
 						if (object instanceof IFile) {
@@ -325,7 +325,7 @@ public class NLSHintHelper {
 	}
 	
 	public static IStorage getResourceBundle(IJavaScriptUnit compilationUnit) throws JavaScriptModelException {
-		IJavaScriptProject project= compilationUnit.getJavaProject();
+		IJavaScriptProject project= compilationUnit.getJavaScriptProject();
 		if (project == null)
 			return null;
 		
@@ -355,7 +355,7 @@ public class NLSHintHelper {
 	public static IStorage getResourceBundle(IPackageFragmentRoot root, String packageName, String resourceName) throws JavaScriptModelException {
 		IPackageFragment packageFragment= root.getPackageFragment(packageName);
 		if (packageFragment.exists()) {
-			Object[] resources= packageFragment.isDefaultPackage() ? root.getNonJavaResources() : packageFragment.getNonJavaResources();
+			Object[] resources= packageFragment.isDefaultPackage() ? root.getNonJavaScriptResources() : packageFragment.getNonJavaScriptResources();
 			for (int j= 0; j < resources.length; j++) {
 				Object object= resources[j];
 				if (JavaModelUtil.isOpenableStorage(object)) {

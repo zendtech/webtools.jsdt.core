@@ -307,7 +307,7 @@ public class JavaElementComparator extends ViewerComparator {
 	private int getClassPathIndex(IPackageFragmentRoot root) {
 		try {
 			IPath rootPath= root.getPath();
-			IPackageFragmentRoot[] roots= root.getJavaProject().getPackageFragmentRoots();
+			IPackageFragmentRoot[] roots= root.getJavaScriptProject().getPackageFragmentRoots();
 			for (int i= 0; i < roots.length; i++) {
 				if (roots[i].getPath().equals(rootPath)) {
 					return i;
@@ -335,7 +335,7 @@ public class JavaElementComparator extends ViewerComparator {
 	
 	private IJavaScriptProject getJavaProject(Object element) {
 		if (element instanceof IJavaScriptElement) {
-			return ((IJavaScriptElement)element).getJavaProject();
+			return ((IJavaScriptElement)element).getJavaScriptProject();
 		} else if (element instanceof PackageFragmentRootContainer) {
 			return ((PackageFragmentRootContainer)element).getJavaProject();
 		}

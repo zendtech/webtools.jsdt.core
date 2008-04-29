@@ -352,7 +352,7 @@ public class OpenTypeHistory extends History {
 	
 	
 	public boolean isContainerDirty(TypeNameMatch match) {
-		IJavaScriptUnit cu= match.getType().getCompilationUnit();
+		IJavaScriptUnit cu= match.getType().getJavaScriptUnit();
 		if (cu == null) {
 			return false;
 		}

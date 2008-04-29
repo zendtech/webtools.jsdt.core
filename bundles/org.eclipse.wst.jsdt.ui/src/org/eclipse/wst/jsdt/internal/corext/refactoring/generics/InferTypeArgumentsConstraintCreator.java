@@ -771,7 +771,7 @@ public class InferTypeArgumentsConstraintCreator extends HierarchicalASTVisitor 
 		if (expressionCv == null)
 			return;
 		
-		FunctionDeclaration methodDeclaration= (FunctionDeclaration) ASTNodes.getParent(node, ASTNode.METHOD_DECLARATION);
+		FunctionDeclaration methodDeclaration= (FunctionDeclaration) ASTNodes.getParent(node, ASTNode.FUNCTION_DECLARATION);
 		if (methodDeclaration == null)
 			return;
 		IFunctionBinding methodBinding= methodDeclaration.resolveBinding();
@@ -837,7 +837,7 @@ public class InferTypeArgumentsConstraintCreator extends HierarchicalASTVisitor 
 		
 //		ConstraintVariable2 nameCv;
 //		switch (node.getParent().getNodeType()) {
-//			case ASTNode.METHOD_DECLARATION :
+//			case ASTNode.FUNCTION_DECLARATION :
 //				FunctionDeclaration parent= (FunctionDeclaration) node.getParent();
 //				int index= parent.parameters().indexOf(node);
 //				nameCv= fTCFactory.makeParameterTypeVariable(parent.resolveBinding(), index, node.getType());

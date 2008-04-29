@@ -157,7 +157,7 @@ public final class RenameCompilationUnitProcessor extends JavaRenameProcessor im
 		IPackageFragment pack= (IPackageFragment)parent;
 		if (JavaScriptConventions.validateCompilationUnitName(getNewElementName()).getSeverity() == IStatus.ERROR)
 			return fCu; //??
-		return pack.getCompilationUnit(getNewElementName());
+		return pack.getJavaScriptUnit(getNewElementName());
 	}
 	
 	//---- ITextUpdating ---------------------------------------------
@@ -397,7 +397,7 @@ public final class RenameCompilationUnitProcessor extends JavaRenameProcessor im
 			label= fragment.getElementName() + "." + fCu.getElementName(); //$NON-NLS-1$
 		else
 			label= fCu.getElementName();
-		final String name= fCu.getJavaProject().getElementName();
+		final String name= fCu.getJavaScriptProject().getElementName();
 		final String description= Messages.format(RefactoringCoreMessages.RenameCompilationUnitChange_descriptor_description_short, fCu.getElementName());
 		final String header= Messages.format(RefactoringCoreMessages.RenameCompilationUnitChange_descriptor_description, new String[] { label, newName});
 		final String comment= new JDTRefactoringDescriptorComment(name, this, header).asString();

@@ -261,7 +261,7 @@ public class CodeGeneration {
 		String[] typeParameterNames= StubUtility.getTypeParameterNames(method.getTypeParameters());
 		
 		String typeName = (method.getDeclaringType()!=null) ? method.getDeclaringType().getElementName() : ""; //$NON-NLS-1$
-		return StubUtility.getMethodComment(method.getCompilationUnit(), typeName,
+		return StubUtility.getMethodComment(method.getJavaScriptUnit(), typeName,
 			method.getElementName(), paramNames, method.getExceptionTypes(), retType, typeParameterNames, overridden, false, lineDelimiter);
 	}
 	
@@ -311,7 +311,7 @@ public class CodeGeneration {
 	 * @throws CoreException Thrown when the evaluation of the code template fails.
 	 */	
 	public static String getMethodBodyContent(IJavaScriptUnit cu, String declaringTypeName, String methodName, boolean isConstructor, String bodyStatement, String lineDelimiter) throws CoreException {
-		return StubUtility.getMethodBodyContent(isConstructor, cu.getJavaProject(), declaringTypeName, methodName, bodyStatement, lineDelimiter);
+		return StubUtility.getMethodBodyContent(isConstructor, cu.getJavaScriptProject(), declaringTypeName, methodName, bodyStatement, lineDelimiter);
 	}
 	
 	/**
@@ -331,7 +331,7 @@ public class CodeGeneration {
 	 * @since 3.0
 	 */	
 	public static String getGetterMethodBodyContent(IJavaScriptUnit cu, String declaringTypeName, String methodName, String fieldName, String lineDelimiter) throws CoreException {
-		return StubUtility.getGetterMethodBodyContent(cu.getJavaProject(), declaringTypeName, methodName, fieldName, lineDelimiter);
+		return StubUtility.getGetterMethodBodyContent(cu.getJavaScriptProject(), declaringTypeName, methodName, fieldName, lineDelimiter);
 	}
 	
 	/**
@@ -352,7 +352,7 @@ public class CodeGeneration {
 	 * @since 3.0
 	 */	
 	public static String getSetterMethodBodyContent(IJavaScriptUnit cu, String declaringTypeName, String methodName, String fieldName, String paramName, String lineDelimiter) throws CoreException {
-		return StubUtility.getSetterMethodBodyContent(cu.getJavaProject(), declaringTypeName, methodName, fieldName, paramName, lineDelimiter);
+		return StubUtility.getSetterMethodBodyContent(cu.getJavaScriptProject(), declaringTypeName, methodName, fieldName, paramName, lineDelimiter);
 	}
 	
 	/**

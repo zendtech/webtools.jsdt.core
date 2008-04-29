@@ -540,7 +540,7 @@ protected void reportDeclaration(MethodBinding methodBinding, MatchLocator locat
 			}
 			parameterTypes[i] = Signature.createTypeSignature(typeName, false);
 		}
-		method = type.getMethod(new String(bindingSelector), parameterTypes);
+		method = type.getFunction(new String(bindingSelector), parameterTypes);
 //	}
 	if (method == null || knownMethods.addIfNotIncluded(method) == null) return;
 
@@ -548,7 +548,7 @@ protected void reportDeclaration(MethodBinding methodBinding, MatchLocator locat
 	IBinaryType info = null;
 	if (isBinary) {
 		if (resource == null)
-			resource = type.getJavaProject().getProject();
+			resource = type.getJavaScriptProject().getProject();
 		info = locator.getBinaryInfo((org.eclipse.wst.jsdt.internal.core.ClassFile)type.getClassFile(), resource);
 		locator.reportBinaryMemberDeclaration(resource, method, methodBinding, info, SearchMatch.A_ACCURATE);
 	} else {

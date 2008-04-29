@@ -51,7 +51,7 @@ public class CopyPackageFragmentRootOperation extends JavaModelOperation {
 	protected void executeOperation() throws JavaScriptModelException {
 
 		IPackageFragmentRoot root = (IPackageFragmentRoot)this.getElementToProcess();
-		IIncludePathEntry rootEntry = root.getRawClasspathEntry();
+		IIncludePathEntry rootEntry = root.getRawIncludepathEntry();
 		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 
 		// copy resource
@@ -60,7 +60,7 @@ public class CopyPackageFragmentRootOperation extends JavaModelOperation {
 		}
 
 		// update classpath if needed
-		if ((this.updateModelFlags & IPackageFragmentRoot.DESTINATION_PROJECT_CLASSPATH) != 0) {
+		if ((this.updateModelFlags & IPackageFragmentRoot.DESTINATION_PROJECT_INCLUDEPATH) != 0) {
 			addEntryToClasspath(rootEntry, workspaceRoot);
 		}
 	}
@@ -142,7 +142,7 @@ public class CopyPackageFragmentRootOperation extends JavaModelOperation {
 
 		IProject destProject = workspaceRoot.getProject(this.destination.segment(0));
 		IJavaScriptProject jProject = JavaScriptCore.create(destProject);
-		IIncludePathEntry[] classpath = jProject.getRawClasspath();
+		IIncludePathEntry[] classpath = jProject.getRawIncludepath();
 		int length = classpath.length;
 		IIncludePathEntry[] newClasspath;
 
@@ -154,7 +154,7 @@ public class CopyPackageFragmentRootOperation extends JavaModelOperation {
 					newClasspath = new IIncludePathEntry[length];
 					System.arraycopy(classpath, 0, newClasspath, 0, length);
 					newClasspath[i] = copy(rootEntry);
-					jProject.setRawClasspath(newClasspath, progressMonitor);
+					jProject.setRawIncludepath(newClasspath, progressMonitor);
 					return;
 				}
 			}
@@ -187,7 +187,7 @@ public class CopyPackageFragmentRootOperation extends JavaModelOperation {
 		}
 		IIncludePathEntry newEntry = copy(rootEntry);
 		newClasspath[position] = newEntry;
-		jProject.setRawClasspath(newClasspath, progressMonitor);
+		jProject.setRawIncludepath(newClasspath, progressMonitor);
 	}
 	/*
 	 * Copies the given classpath entry replacing its path with the destination path
@@ -236,13 +236,13 @@ public class CopyPackageFragmentRootOperation extends JavaModelOperation {
 			}
 		}
 
-		if ((this.updateModelFlags & IPackageFragmentRoot.DESTINATION_PROJECT_CLASSPATH) != 0) {
+		if ((this.updateModelFlags & IPackageFragmentRoot.DESTINATION_PROJECT_INCLUDEPATH) != 0) {
 			String destProjectName = this.destination.segment(0);
 			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(destProjectName);
 			if (JavaProject.hasJavaNature(project)) {
 				try {
 					IJavaScriptProject destProject = JavaScriptCore.create(project);
-					IIncludePathEntry[] destClasspath = destProject.getRawClasspath();
+					IIncludePathEntry[] destClasspath = destProject.getRawIncludepath();
 					boolean foundSibling = false;
 					boolean foundExistingEntry = false;
 					for (int i = 0, length = destClasspath.length; i < length; i++) {
@@ -264,7 +264,7 @@ public class CopyPackageFragmentRootOperation extends JavaModelOperation {
 							Messages.bind(Messages.status_nameCollision, new String[] {this.destination.toString()}));
 					}
 				} catch (JavaScriptModelException e) {
-					return e.getJavaModelStatus();
+					return e.getJavaScriptModelStatus();
 				}
 			}
 		}

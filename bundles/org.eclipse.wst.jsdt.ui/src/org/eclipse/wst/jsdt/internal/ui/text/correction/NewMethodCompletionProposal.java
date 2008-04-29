@@ -107,7 +107,7 @@ public class NewMethodCompletionProposal extends AbstractMethodCompletionProposa
 	protected boolean isConstructor() {
 		ASTNode node= getInvocationNode();
 
-		return node.getNodeType() != ASTNode.METHOD_INVOCATION && node.getNodeType() != ASTNode.SUPER_METHOD_INVOCATION;
+		return node.getNodeType() != ASTNode.FUNCTION_INVOCATION && node.getNodeType() != ASTNode.SUPER_METHOD_INVOCATION;
 	}
 
 	/* (non-Javadoc)
@@ -244,7 +244,7 @@ public class NewMethodCompletionProposal extends AbstractMethodCompletionProposa
 	}
 
 	private String evaluateParameterName(List takenNames, Expression argNode, Type type, String key) {
-		IJavaScriptProject project= getCompilationUnit().getJavaProject();
+		IJavaScriptProject project= getCompilationUnit().getJavaScriptProject();
 		String[] names= StubUtility.getVariableNameSuggestions(StubUtility.PARAMETER, project, type, argNode, takenNames);
 		for (int i= 0; i < names.length; i++) {
 			addLinkedPositionProposal(key, names[i], null);

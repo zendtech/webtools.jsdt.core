@@ -256,11 +256,11 @@ public class IntroduceIndirectionRefactoring extends ScriptableRefactoring {
 
 	public IJavaScriptProject getProject() {
 		if (fSelectionCompilationUnit != null)
-			return fSelectionCompilationUnit.getJavaProject();
+			return fSelectionCompilationUnit.getJavaScriptProject();
 		if (fSelectionClassFile != null)
-			return fSelectionClassFile.getJavaProject();
+			return fSelectionClassFile.getJavaScriptProject();
 		if (fTargetMethod != null)
-			return fTargetMethod.getJavaProject();
+			return fTargetMethod.getJavaScriptProject();
 		return null;
 	}
 
@@ -287,7 +287,7 @@ public class IntroduceIndirectionRefactoring extends ScriptableRefactoring {
 	private RefactoringStatus checkOverloading() {
 		try {
 			if (fIntermediaryClass != null) {
-				IFunction[] toCheck= fIntermediaryClass.getMethods();
+				IFunction[] toCheck= fIntermediaryClass.getFunctions();
 				for (int i= 0; i < toCheck.length; i++) {
 					IFunction method= toCheck[i];
 					if (method.getElementName().equals(fIntermediaryMethodName))
@@ -385,9 +385,9 @@ public class IntroduceIndirectionRefactoring extends ScriptableRefactoring {
 
 				IFunctionBinding targetMethodBinding= null;
 
-				if (selectionNode.getNodeType() == ASTNode.METHOD_INVOCATION) {
+				if (selectionNode.getNodeType() == ASTNode.FUNCTION_INVOCATION) {
 					targetMethodBinding= ((FunctionInvocation) selectionNode).resolveMethodBinding();
-				} else if (selectionNode.getNodeType() == ASTNode.METHOD_DECLARATION) {
+				} else if (selectionNode.getNodeType() == ASTNode.FUNCTION_DECLARATION) {
 					targetMethodBinding= ((FunctionDeclaration) selectionNode).resolveBinding();
 				} else if (selectionNode.getNodeType() == ASTNode.SUPER_METHOD_INVOCATION) {
 					// Allow invocation on super methods calls. makes sense as other
@@ -409,15 +409,15 @@ public class IntroduceIndirectionRefactoring extends ScriptableRefactoring {
 //				if (fTargetMethod.getDeclaringType().isAnnotation())
 //					return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.IntroduceIndirectionRefactoring_not_available_on_annotation);
 
-				if (fTargetMethod.getCompilationUnit() != null) {
+				if (fTargetMethod.getJavaScriptUnit() != null) {
 					// source method
-					JavaScriptUnit selectionCURoot= getCachedCURewrite(fTargetMethod.getCompilationUnit()).getRoot();
+					JavaScriptUnit selectionCURoot= getCachedCURewrite(fTargetMethod.getJavaScriptUnit()).getRoot();
 					FunctionDeclaration declaration= ASTNodeSearchUtil.getMethodDeclarationNode(fTargetMethod, selectionCURoot);
 					fTargetMethodBinding= declaration.resolveBinding().getMethodDeclaration();
 				} else {
 					// binary method - no CURewrite available (and none needed as we cannot update the method anyway)
 					ASTParser parser= ASTParser.newParser(AST.JLS3);
-					parser.setProject(fTargetMethod.getJavaProject());
+					parser.setProject(fTargetMethod.getJavaScriptProject());
 					IBinding[] bindings= parser.createBindings(new IJavaScriptElement[] { fTargetMethod }, null);
 					fTargetMethodBinding= ((IFunctionBinding) bindings[0]).getMethodDeclaration();
 				}
@@ -474,7 +474,7 @@ public class IntroduceIndirectionRefactoring extends ScriptableRefactoring {
 			return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.IntroduceIndirectionRefactoring_cannot_run_without_intermediary_type);
 
 		// intermediary class is already non binary/non-enum/non-interface.
-		CompilationUnitRewrite imRewrite= getCachedCURewrite(fIntermediaryClass.getCompilationUnit());
+		CompilationUnitRewrite imRewrite= getCachedCURewrite(fIntermediaryClass.getJavaScriptUnit());
 		fIntermediaryClassBinding= typeToBinding(fIntermediaryClass, imRewrite.getRoot());
 
 		fAdjustor= new MemberVisibilityAdjustor(fIntermediaryClass, fIntermediaryClass);
@@ -536,7 +536,7 @@ public class IntroduceIndirectionRefactoring extends ScriptableRefactoring {
 		pm.worked(visibilityTicks);
 		pm.setTaskName(RefactoringCoreMessages.IntroduceIndirectionRefactoring_checking_conditions);
 
-		createChangeAndDiscardRewrite(fIntermediaryClass.getCompilationUnit());
+		createChangeAndDiscardRewrite(fIntermediaryClass.getJavaScriptUnit());
 
 		result.merge(Checks.validateModifiesFiles(getAllFilesToModify(), getValidationContext()));
 		pm.done();
@@ -724,7 +724,7 @@ public class IntroduceIndirectionRefactoring extends ScriptableRefactoring {
 	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		final Map arguments= new HashMap();
 		String project= null;
-		IJavaScriptProject javaProject= fTargetMethod.getJavaProject();
+		IJavaScriptProject javaProject= fTargetMethod.getJavaScriptProject();
 		if (javaProject != null)
 			project= javaProject.getElementName();
 		int flags= JavaRefactoringDescriptor.JAR_MIGRATION | JavaRefactoringDescriptor.JAR_REFACTORING | RefactoringDescriptor.STRUCTURAL_CHANGE | RefactoringDescriptor.MULTI_CHANGE;
@@ -770,7 +770,7 @@ public class IntroduceIndirectionRefactoring extends ScriptableRefactoring {
 
 	private void createIntermediaryMethod() throws CoreException {
 
-		CompilationUnitRewrite imRewrite= getCachedCURewrite(fIntermediaryClass.getCompilationUnit());
+		CompilationUnitRewrite imRewrite= getCachedCURewrite(fIntermediaryClass.getJavaScriptUnit());
 		AST ast= imRewrite.getAST();
 		FunctionDeclaration intermediary= ast.newFunctionDeclaration();
 
@@ -834,10 +834,10 @@ public class IntroduceIndirectionRefactoring extends ScriptableRefactoring {
 
 		// method comment
 		IJavaScriptUnit targetCU= imRewrite.getCu();
-		if (StubUtility.doAddComments(targetCU.getJavaProject())) {
+		if (StubUtility.doAddComments(targetCU.getJavaScriptProject())) {
 			String comment= CodeGeneration.getMethodComment(targetCU, getIntermediaryClassName(), intermediary, null, StubUtility.getLineDelimiterUsed(targetCU));
 			if (comment != null) {
-				JSdoc javadoc= (JSdoc) imRewrite.getASTRewrite().createStringPlaceholder(comment, ASTNode.JAVADOC);
+				JSdoc javadoc= (JSdoc) imRewrite.getASTRewrite().createStringPlaceholder(comment, ASTNode.JSDOC);
 				intermediary.setJavadoc(javadoc);
 			}
 		}
@@ -1112,7 +1112,7 @@ public class IntroduceIndirectionRefactoring extends ScriptableRefactoring {
 	}
 
 	private boolean isRewriteKept(IJavaScriptUnit compilationUnit) {
-		return fIntermediaryClass.getCompilationUnit().equals(compilationUnit);
+		return fIntermediaryClass.getJavaScriptUnit().equals(compilationUnit);
 	}
 
 	private void createChangeAndDiscardRewrite(IJavaScriptUnit compilationUnit) throws CoreException {
@@ -1173,7 +1173,7 @@ public class IntroduceIndirectionRefactoring extends ScriptableRefactoring {
 	private RefactoringStatus createWarningAboutCall(IMember enclosing, ASTNode concreteNode, String message) {
 		String name= JavaElementLabels.getElementLabel(enclosing, JavaElementLabels.ALL_DEFAULT);
 		String container= JavaElementLabels.getElementLabel(enclosing.getDeclaringType(), JavaElementLabels.ALL_FULLY_QUALIFIED);
-		return RefactoringStatus.createWarningStatus(Messages.format(message, new String[] { name, container }), JavaStatusContext.create(enclosing.getCompilationUnit(), concreteNode));
+		return RefactoringStatus.createWarningStatus(Messages.format(message, new String[] { name, container }), JavaStatusContext.create(enclosing.getJavaScriptUnit(), concreteNode));
 	}
 
 	private ITypeBinding getExpressionType(FunctionInvocation invocation) {
@@ -1227,8 +1227,8 @@ public class IntroduceIndirectionRefactoring extends ScriptableRefactoring {
 			node= ((ExpressionStatement) node).getExpression();
 		}
 		switch (node.getNodeType()) {
-			case ASTNode.METHOD_INVOCATION:
-			case ASTNode.METHOD_DECLARATION:
+			case ASTNode.FUNCTION_INVOCATION:
+			case ASTNode.FUNCTION_DECLARATION:
 			case ASTNode.SUPER_METHOD_INVOCATION:
 				return node;
 		}
@@ -1252,7 +1252,7 @@ public class IntroduceIndirectionRefactoring extends ScriptableRefactoring {
 	private RefactoringStatus adjustVisibility(IMember whoToAdjust, ModifierKeyword neededVisibility, boolean alsoIncreaseEnclosing, IProgressMonitor monitor) throws CoreException {
 		
 		Map adjustments;
-		if (isRewriteKept(whoToAdjust.getCompilationUnit()))
+		if (isRewriteKept(whoToAdjust.getJavaScriptUnit()))
 			adjustments= fIntermediaryAdjustments;
 		else
 			adjustments= new HashMap();
@@ -1280,13 +1280,13 @@ public class IntroduceIndirectionRefactoring extends ScriptableRefactoring {
 		try {
 			monitor.beginTask(RefactoringCoreMessages.MemberVisibilityAdjustor_adjusting, 2);
 			Map rewrites;
-			if (!isRewriteKept(whoToAdjust.getCompilationUnit())) {
-				CompilationUnitRewrite rewrite= new CompilationUnitRewrite(whoToAdjust.getCompilationUnit());
+			if (!isRewriteKept(whoToAdjust.getJavaScriptUnit())) {
+				CompilationUnitRewrite rewrite= new CompilationUnitRewrite(whoToAdjust.getJavaScriptUnit());
 				rewrite.setResolveBindings(false);
 				rewrites= new HashMap();
-				rewrites.put(whoToAdjust.getCompilationUnit(), rewrite);
+				rewrites.put(whoToAdjust.getJavaScriptUnit(), rewrite);
 				status.merge(rewriteVisibility(adjustments, rewrites, new SubProgressMonitor(monitor, 1, SubProgressMonitor.SUPPRESS_SUBTASK_LABEL)));
-				rewrite.attachChange((CompilationUnitChange) fTextChangeManager.get(whoToAdjust.getCompilationUnit()), true, new SubProgressMonitor(monitor, 1, SubProgressMonitor.SUPPRESS_SUBTASK_LABEL));
+				rewrite.attachChange((CompilationUnitChange) fTextChangeManager.get(whoToAdjust.getJavaScriptUnit()), true, new SubProgressMonitor(monitor, 1, SubProgressMonitor.SUPPRESS_SUBTASK_LABEL));
 			}
 		} finally {
 			monitor.done();

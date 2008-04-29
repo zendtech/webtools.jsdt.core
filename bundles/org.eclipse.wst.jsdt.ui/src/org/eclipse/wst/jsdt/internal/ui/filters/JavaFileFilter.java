@@ -37,7 +37,7 @@ public class JavaFileFilter  extends ViewerFilter {
 			
 		if (element instanceof IPackageFragment)
 			try {
-				return ((IPackageFragment)element).getNonJavaResources().length > 0;
+				return ((IPackageFragment)element).getNonJavaScriptResources().length > 0;
 			} catch (JavaScriptModelException ex) {
 				return true;
 			}

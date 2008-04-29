@@ -99,7 +99,7 @@ public class JavaContentAssistInvocationContext extends ContentAssistInvocationC
 	 */
 	public IJavaScriptProject getProject() {
 		IJavaScriptUnit unit= getCompilationUnit();
-		return unit == null ? null : unit.getJavaProject();
+		return unit == null ? null : unit.getJavaScriptProject();
 	}
 	
 	/**
@@ -203,7 +203,7 @@ public class JavaContentAssistInvocationContext extends ContentAssistInvocationC
 			if (context != null) {
 				char[][] expectedTypes= context.getExpectedTypesSignatures();
 				if (expectedTypes != null && expectedTypes.length > 0) {
-					IJavaScriptProject project= getCompilationUnit().getJavaProject();
+					IJavaScriptProject project= getCompilationUnit().getJavaScriptProject();
 					if (project != null) {
 						try {
 							fType= project.findType(SignatureUtil.stripSignatureToFQN(String.valueOf(expectedTypes[0])));

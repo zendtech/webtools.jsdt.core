@@ -128,7 +128,7 @@ public class CopyResourceElementsOperation extends MultiOperation implements Suf
 			}
 		}
 		// Gather non-java resources
-		Object[] nonJavaResources = source.getNonJavaResources();
+		Object[] nonJavaResources = source.getNonJavaScriptResources();
 		int actualNonJavaResourceCount = 0;
 		for (int i = 0, max = nonJavaResources.length; i < max; i++){
 			if (nonJavaResources[i] instanceof IResource) actualNonJavaResourceCount++;
@@ -179,7 +179,7 @@ public class CopyResourceElementsOperation extends MultiOperation implements Suf
 				if (i < newFragName.length - 1 // all but the last one are side effect packages
 						&& !Util.isExcluded(parentFolder, inclusionPatterns, exclusionPatterns)) {
 					if (projectDelta == null) {
-						projectDelta = getDeltaFor(root.getJavaProject());
+						projectDelta = getDeltaFor(root.getJavaScriptProject());
 					}
 					projectDelta.added(sideEffectPackage);
 				}
@@ -223,9 +223,9 @@ public class CopyResourceElementsOperation extends MultiOperation implements Suf
 	 */
 	protected void prepareDeltas(IJavaScriptElement sourceElement, IJavaScriptElement destinationElement, boolean isMove) {
 		if (Util.isExcluded(sourceElement) || Util.isExcluded(destinationElement)) return;
-		IJavaScriptProject destProject = destinationElement.getJavaProject();
+		IJavaScriptProject destProject = destinationElement.getJavaScriptProject();
 		if (isMove) {
-			IJavaScriptProject sourceProject = sourceElement.getJavaProject();
+			IJavaScriptProject sourceProject = sourceElement.getJavaScriptProject();
 			getDeltaFor(sourceProject).movedFrom(sourceElement, destinationElement);
 			getDeltaFor(destProject).movedTo(destinationElement, sourceElement);
 		} else {
@@ -348,7 +348,7 @@ public class CopyResourceElementsOperation extends MultiOperation implements Suf
 		switch (element.getElementType()) {
 			case IJavaScriptElement.COMPILATION_UNIT :
 				processCompilationUnitResource((IJavaScriptUnit) element, (PackageFragment) dest);
-				createdElements.add(((IPackageFragment) dest).getCompilationUnit(element.getElementName()));
+				createdElements.add(((IPackageFragment) dest).getJavaScriptUnit(element.getElementName()));
 				break;
 			case IJavaScriptElement.PACKAGE_FRAGMENT :
 				processPackageFragmentResource((PackageFragment) element, (PackageFragmentRoot) dest, getNewNameFor(element));
@@ -471,7 +471,7 @@ public class CopyResourceElementsOperation extends MultiOperation implements Suf
 					String resourceName = resources[i].getName();
 					if (Util.isJavaLikeFileName(resourceName)) {
 						// we only consider potential compilation units
-						IJavaScriptUnit cu = newFrag.getCompilationUnit(resourceName);
+						IJavaScriptUnit cu = newFrag.getJavaScriptUnit(resourceName);
 						if (Util.isExcluded(cu.getPath(), inclusionPatterns, exclusionPatterns, false/*not a folder*/)) continue;
 						this.parser.setSource(cu);
 						JavaScriptUnit astCU = (JavaScriptUnit) this.parser.createAST(this.progressMonitor);
@@ -528,9 +528,9 @@ public class CopyResourceElementsOperation extends MultiOperation implements Suf
 			}
 			// workaround for bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=24505
 			if (isEmpty && isMove() && !(Util.isExcluded(source) || Util.isExcluded(newFrag))) {
-				IJavaScriptProject sourceProject = source.getJavaProject();
+				IJavaScriptProject sourceProject = source.getJavaScriptProject();
 				getDeltaFor(sourceProject).movedFrom(source, newFrag);
-				IJavaScriptProject destProject = newFrag.getJavaProject();
+				IJavaScriptProject destProject = newFrag.getJavaScriptProject();
 				getDeltaFor(destProject).movedTo(newFrag, source);
 			}
 		} catch (JavaScriptModelException e) {
@@ -553,7 +553,7 @@ public class CopyResourceElementsOperation extends MultiOperation implements Suf
 		// note this doesn't interfer with repository providers as this is a new resource that cannot be under
 		// version control yet
 		Util.setReadOnly(destFile, false);
-		IJavaScriptUnit destCU = dest.getCompilationUnit(destName);
+		IJavaScriptUnit destCU = dest.getJavaScriptUnit(destName);
 		IDocument document = getDocument(destCU);
 		TextEdit edits = rewrite.rewriteAST(document, null);
 		try {

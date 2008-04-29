@@ -124,7 +124,7 @@ public class AccessorClassModifier {
 		if (document == null)
 			document= new Document(fCU.getSource());
 		 
-		return fASTRewrite.rewriteAST(document, fCU.getJavaProject().getOptions(true));
+		return fASTRewrite.rewriteAST(document, fCU.getJavaScriptProject().getOptions(true));
 	}
 
 	public static Change create(IJavaScriptUnit cu, NLSSubstitution[] substitutions) throws CoreException {

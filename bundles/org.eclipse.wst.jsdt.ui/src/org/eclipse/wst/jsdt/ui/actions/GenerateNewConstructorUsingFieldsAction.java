@@ -117,7 +117,7 @@ public class GenerateNewConstructorUsingFieldsAction extends SelectionDispatchAc
 
 		if ((selection.size() == 1) && (selection.getFirstElement() instanceof IType)) {
 			IType type= (IType) selection.getFirstElement();
-			return type.getCompilationUnit() != null && !type.isInterface() && !type.isAnnotation();
+			return type.getJavaScriptUnit() != null && !type.isInterface() && !type.isAnnotation();
 		}
 
 		if ((selection.size() == 1) && (selection.getFirstElement() instanceof IJavaScriptUnit))
@@ -157,11 +157,11 @@ public class GenerateNewConstructorUsingFieldsAction extends SelectionDispatchAc
 					IField field= (IField) elements.get(index);
 					if (index == 0) {
 						// remember the CU of the first element
-						unit= field.getCompilationUnit();
+						unit= field.getJavaScriptUnit();
 						if (unit == null) {
 							return null;
 						}
-					} else if (!unit.equals(field.getCompilationUnit())) {
+					} else if (!unit.equals(field.getJavaScriptUnit())) {
 						// all fields must be in the same CU
 						return null;
 					}
@@ -187,7 +187,7 @@ public class GenerateNewConstructorUsingFieldsAction extends SelectionDispatchAc
 		Object[] elements= selection.toArray();
 		if (elements.length == 1 && (elements[0] instanceof IType)) {
 			IType type= (IType) elements[0];
-			if (type.getCompilationUnit() != null && !type.isInterface() && !type.isAnnotation()) {
+			if (type.getJavaScriptUnit() != null && !type.isInterface() && !type.isAnnotation()) {
 				return type;
 			}
 		} else if (elements[0] instanceof IJavaScriptUnit) {
@@ -196,7 +196,7 @@ public class GenerateNewConstructorUsingFieldsAction extends SelectionDispatchAc
 			if (type != null && !type.isInterface() && !type.isAnnotation())
 				return type;
 		} else if (elements[0] instanceof IField) {
-			return ((IField) elements[0]).getCompilationUnit().findPrimaryType();
+			return ((IField) elements[0]).getJavaScriptUnit().findPrimaryType();
 		}
 		return null;
 	}
@@ -289,7 +289,7 @@ public class GenerateNewConstructorUsingFieldsAction extends SelectionDispatchAc
 			notifyResult(false);
 			return;
 		}
-		if (type.getCompilationUnit() == null) {
+		if (type.getJavaScriptUnit() == null) {
 			MessageDialog.openInformation(getShell(), ActionMessages.GenerateConstructorUsingFieldsAction_error_title, ActionMessages.GenerateNewConstructorUsingFieldsAction_error_not_a_source_file);
 			notifyResult(false);
 			return;
@@ -365,8 +365,8 @@ public class GenerateNewConstructorUsingFieldsAction extends SelectionDispatchAc
 			}
 			IVariableBinding[] variables= new IVariableBinding[result.size()];
 			result.toArray(variables);
-			IEditorPart editor= JavaUI.openInEditor(type.getCompilationUnit());
-			CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(type.getJavaProject());
+			IEditorPart editor= JavaUI.openInEditor(type.getJavaScriptUnit());
+			CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(type.getJavaScriptProject());
 			settings.createComments= dialog.getGenerateComment();
 			IFunctionBinding constructor= dialog.getSuperConstructorChoice();
 			IRewriteTarget target= editor != null ? (IRewriteTarget) editor.getAdapter(IRewriteTarget.class) : null;

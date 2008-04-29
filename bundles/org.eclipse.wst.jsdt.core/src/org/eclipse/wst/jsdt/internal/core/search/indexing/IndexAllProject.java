@@ -61,7 +61,7 @@ public class IndexAllProject extends IndexRequest {
 			// Get source folder entries. Libraries are done as a separate job
 			JavaProject javaProject = (JavaProject)JavaScriptCore.create(this.project);
 			// Do not create marker while getting raw classpath (see bug 41859)
-			IIncludePathEntry[] entries = javaProject.getRawClasspath();
+			IIncludePathEntry[] entries = javaProject.getRawIncludepath();
 			int length = entries.length;
 			IIncludePathEntry[] sourceEntries = new IIncludePathEntry[length+1];
 			int sourceEntriesNumber = 0;

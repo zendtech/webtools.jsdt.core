@@ -47,7 +47,7 @@ public class CPListElement {
 	public static final String ACCESSRULES= "accessrules"; //$NON-NLS-1$
 	public static final String COMBINE_ACCESSRULES= "combineaccessrules"; //$NON-NLS-1$
 
-	public static final String JAVADOC= IIncludePathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME;
+	public static final String JAVADOC= IIncludePathAttribute.JSDOC_LOCATION_ATTRIBUTE_NAME;
 	public static final String NATIVE_LIB_PATH= JavaRuntime.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY;
 	
 	private IJavaScriptProject fProject;
@@ -126,7 +126,7 @@ public class CPListElement {
 				try {
 					IJsGlobalScopeContainer container= JavaScriptCore.getJsGlobalScopeContainer(fPath, fProject);
 					if (container != null) {
-						IIncludePathEntry[] entries= container.getClasspathEntries();
+						IIncludePathEntry[] entries= container.getIncludepathEntries();
 						if (entries != null) { // invalid container implementation
 							for (int i= 0; i < entries.length; i++) {
 								IIncludePathEntry entry= entries[i];
@@ -481,7 +481,7 @@ public class CPListElement {
 			return false;
 		}
 		if (fPath.segmentCount() > 0) {
-			return JavaScriptCore.getClasspathVariableDeprecationMessage(fPath.segment(0)) != null;
+			return JavaScriptCore.getIncludepathVariableDeprecationMessage(fPath.segment(0)) != null;
 		}
 		return false;
 	}
@@ -781,7 +781,7 @@ public class CPListElement {
 	}
 	
 	public static CPListElement[] createFromExisting(IJavaScriptProject project) throws JavaScriptModelException {
-		IIncludePathEntry[] rawClasspath= project.getRawClasspath();
+		IIncludePathEntry[] rawClasspath= project.getRawIncludepath();
 		CPListElement[] result= new CPListElement[rawClasspath.length];
 		for (int i= 0; i < rawClasspath.length; i++) {
 			result[i]= CPListElement.createFromExisting(rawClasspath[i], project);

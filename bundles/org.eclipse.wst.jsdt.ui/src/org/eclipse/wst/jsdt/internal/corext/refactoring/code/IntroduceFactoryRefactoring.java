@@ -259,7 +259,7 @@ public class IntroduceFactoryRefactoring extends ScriptableRefactoring {
 		ASTNode node= ASTNodes.getNormalizedNode(NodeFinder.perform(fCU, offset, length));
 		if (node.getNodeType() == ASTNode.CLASS_INSTANCE_CREATION)
 			return node;
-		if (node.getNodeType() == ASTNode.METHOD_DECLARATION && ((FunctionDeclaration)node).isConstructor())
+		if (node.getNodeType() == ASTNode.FUNCTION_DECLARATION && ((FunctionDeclaration)node).isConstructor())
 			return node;
 		// we have some sub node. Make sure its the right child of the parent
 		StructuralPropertyDescriptor location= node.getLocationInParent();
@@ -325,7 +325,7 @@ public class IntroduceFactoryRefactoring extends ScriptableRefactoring {
 				return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.IntroduceFactory_constructorInEnum); 
 	
 			// Put the generated factory method inside the type that owns the constructor
-			fFactoryUnitHandle= ctorOwningType.getCompilationUnit();
+			fFactoryUnitHandle= ctorOwningType.getJavaScriptUnit();
 			fFactoryCU= getASTFor(fFactoryUnitHandle);
 	
 			Name	ctorOwnerName= (Name) NodeFinder.perform(fFactoryCU, ctorOwningType.getNameRange());
@@ -479,7 +479,7 @@ public class IntroduceFactoryRefactoring extends ScriptableRefactoring {
 		final RefactoringSearchEngine2 engine= new RefactoringSearchEngine2(p);
 
 		engine.setFiltering(true, true);
-		engine.setScope(RefactoringScopeFactory.create(fCtorBinding.getJavaElement().getJavaProject()));
+		engine.setScope(RefactoringScopeFactory.create(fCtorBinding.getJavaElement().getJavaScriptProject()));
 		engine.setStatus(status);
 		engine.searchPattern(new SubProgressMonitor(pm, 1));
 
@@ -1049,7 +1049,7 @@ public class IntroduceFactoryRefactoring extends ScriptableRefactoring {
 			final ITypeBinding binding= fFactoryOwningClass.resolveBinding();
 			final Map arguments= new HashMap();
 			String project= null;
-			IJavaScriptProject javaProject= fCUHandle.getJavaProject();
+			IJavaScriptProject javaProject= fCUHandle.getJavaScriptProject();
 			if (javaProject != null)
 				project= javaProject.getElementName();
 			int flags= JavaRefactoringDescriptor.JAR_MIGRATION | JavaRefactoringDescriptor.JAR_REFACTORING | RefactoringDescriptor.STRUCTURAL_CHANGE | RefactoringDescriptor.MULTI_CHANGE;
@@ -1189,7 +1189,7 @@ public class IntroduceFactoryRefactoring extends ScriptableRefactoring {
 	 * Returns the project on behalf of which this refactoring was invoked.
 	 */
 	public IJavaScriptProject getProject() {
-		return fCUHandle.getJavaProject();
+		return fCUHandle.getJavaScriptProject();
 	}
 
 	/**
@@ -1212,7 +1212,7 @@ public class IntroduceFactoryRefactoring extends ScriptableRefactoring {
 			return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.IntroduceFactory_cantCheckForInterface); 
 		}
 
-		IJavaScriptUnit	factoryUnitHandle= factoryType.getCompilationUnit();
+		IJavaScriptUnit	factoryUnitHandle= factoryType.getJavaScriptUnit();
 
 		if (factoryType.isBinary())
 			return RefactoringStatus.createErrorStatus(RefactoringCoreMessages.IntroduceFactory_cantPutFactoryInBinaryClass); 

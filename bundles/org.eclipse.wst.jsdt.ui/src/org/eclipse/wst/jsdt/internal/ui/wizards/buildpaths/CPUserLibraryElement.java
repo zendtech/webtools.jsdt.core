@@ -28,7 +28,17 @@ public class CPUserLibraryElement {
 		/* (non-Javadoc)
 		 * @see org.eclipse.wst.jsdt.core.IJsGlobalScopeContainer#getClasspathEntries()
 		 */
+		/**
+		 * @deprecated Use {@link #getIncludepathEntries()} instead
+		 */
 		public IIncludePathEntry[] getClasspathEntries() {
+			return getIncludepathEntries();
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.wst.jsdt.core.IJsGlobalScopeContainer#getClasspathEntries()
+		 */
+		public IIncludePathEntry[] getIncludepathEntries() {
 			CPListElement[] children= getChildren();
 			IIncludePathEntry[] entries= new IIncludePathEntry[children.length];
 			for (int i= 0; i < entries.length; i++) {
@@ -76,7 +86,7 @@ public class CPUserLibraryElement {
 		fName= name;
 		fChildren= new ArrayList();
 		if (container != null) {
-			IIncludePathEntry[] entries= container.getClasspathEntries();
+			IIncludePathEntry[] entries= container.getIncludepathEntries();
 			CPListElement[] res= new CPListElement[entries.length];
 			for (int i= 0; i < res.length; i++) {
 				IIncludePathEntry curr= entries[i];
@@ -186,7 +196,7 @@ public class CPUserLibraryElement {
 		if (oldContainer == null || (oldContainer.getKind() == IJsGlobalScopeContainer.K_SYSTEM) != fIsSystemLibrary) {
 			return true;
 		}
-		IIncludePathEntry[] oldEntries= oldContainer.getClasspathEntries();
+		IIncludePathEntry[] oldEntries= oldContainer.getIncludepathEntries();
 		if (fChildren.size() != oldEntries.length) {
 			return true;
 		}

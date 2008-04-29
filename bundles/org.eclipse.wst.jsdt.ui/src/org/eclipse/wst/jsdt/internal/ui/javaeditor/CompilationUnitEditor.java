@@ -212,7 +212,7 @@ public class CompilationUnitEditor extends JavaEditor implements IJavaReconcilin
 
 			Map preferences;
 			IJavaScriptElement inputJavaElement= getInputJavaElement();
-			IJavaScriptProject javaProject= inputJavaElement != null ? inputJavaElement.getJavaProject() : null;
+			IJavaScriptProject javaProject= inputJavaElement != null ? inputJavaElement.getJavaScriptProject() : null;
 			if (javaProject == null)
 				preferences= new HashMap(JavaScriptCore.getOptions());
 			else
@@ -1371,7 +1371,7 @@ public class CompilationUnitEditor extends JavaEditor implements IJavaReconcilin
 	 */
 	protected boolean isTabsToSpacesConversionEnabled() {
 		IJavaScriptElement element= getInputJavaElement();
-		IJavaScriptProject project= element == null ? null : element.getJavaProject();
+		IJavaScriptProject project= element == null ? null : element.getJavaScriptProject();
 		String option;
 		if (project == null)
 			option= JavaScriptCore.getOption(SPACES_FOR_TABS);

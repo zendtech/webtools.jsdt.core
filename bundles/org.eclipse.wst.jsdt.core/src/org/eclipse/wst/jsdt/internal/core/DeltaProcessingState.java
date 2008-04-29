@@ -211,7 +211,7 @@ public class DeltaProcessingState implements IResourceChangeListener {
 				IJavaScriptModel model = JavaModelManager.getJavaModelManager().getJavaModel();
 				IJavaScriptProject[] projects;
 				try {
-					projects = model.getJavaProjects();
+					projects = model.getJavaScriptProjects();
 				} catch (JavaScriptModelException e) {
 					// nothing can be done
 					return;
@@ -228,7 +228,7 @@ public class DeltaProcessingState implements IResourceChangeListener {
 					for (int j= 0, classpathLength = classpath.length; j < classpathLength; j++) {
 						IIncludePathEntry entry = classpath[j];
 						if (entry.getEntryKind() == IIncludePathEntry.CPE_PROJECT) {
-							IJavaScriptProject key = model.getJavaProject(entry.getPath().segment(0)); // TODO (jerome) reuse handle
+							IJavaScriptProject key = model.getJavaScriptProject(entry.getPath().segment(0)); // TODO (jerome) reuse handle
 							IJavaScriptProject[] dependents = (IJavaScriptProject[]) newProjectDependencies.get(key);
 							if (dependents == null) {
 								dependents = new IJavaScriptProject[] {project};
@@ -428,7 +428,7 @@ public class DeltaProcessingState implements IResourceChangeListener {
 
 	public IJavaScriptProject findJavaProject(String name) {
 		if (getOldJavaProjecNames().contains(name))
-			return JavaModelManager.getJavaModelManager().getJavaModel().getJavaProject(name);
+			return JavaModelManager.getJavaModelManager().getJavaModel().getJavaScriptProject(name);
 		return null;
 	}
 
@@ -442,7 +442,7 @@ public class DeltaProcessingState implements IResourceChangeListener {
 			HashSet result = new HashSet();
 			IJavaScriptProject[] projects;
 			try {
-				projects = JavaModelManager.getJavaModelManager().getJavaModel().getJavaProjects();
+				projects = JavaModelManager.getJavaModelManager().getJavaModel().getJavaScriptProjects();
 			} catch (JavaScriptModelException e) {
 				return this.javaProjectNamesCache;
 			}

@@ -1215,9 +1215,9 @@ public final class CompletionProposal extends InternalCompletionProposal {
 	 * of the type that declares the field that is referenced</li>
 	 * 	<li><code>METHOD_IMPORT</code> - type signature
 	 * of the type that declares the method that is imported</li>
-	 *  <li><code>METHOD_REF</code> - type signature
+	 *  <li><code>FUNCTION_REF</code> - type signature
 	 * of the type that declares the method that is referenced</li>
-	 * 	<li><code>METHOD_DECLARATION</code> - type signature
+	 * 	<li><code>FUNCTION_DECLARATION</code> - type signature
 	 * of the type that declares the method that is being
 	 * implemented or overridden</li>
 	 * 	<li><code>PACKAGE_REF</code> - dot-based package
@@ -1251,7 +1251,7 @@ public final class CompletionProposal extends InternalCompletionProposal {
 	 * <ul>
 	 * <li><code>ANONYMOUS_CLASS_DECLARATION</code> - key
 	 * of the type that is being subclassed or implemented</li>
-	 * 	<li><code>METHOD_DECLARATION</code> - key
+	 * 	<li><code>FUNCTION_DECLARATION</code> - key
 	 * of the type that declares the method that is being
 	 * implemented or overridden</li>
 	 * </ul>
@@ -1320,8 +1320,8 @@ public final class CompletionProposal extends InternalCompletionProposal {
 	 * 	<li><code>LABEL_REF</code> - the name of the label</li>
 	 * 	<li><code>LOCAL_VARIABLE_REF</code> - the name of the local variable</li>
 	 * 	<li><code>METHOD_IMPORT</code> - the name of the method</li>
-	 *  <li><code>METHOD_REF</code> - the name of the method (the type simple name for constructor)</li>
-	 * 	<li><code>METHOD_DECLARATION</code> - the name of the method (the type simple name for constructor)</li>
+	 *  <li><code>FUNCTION_REF</code> - the name of the method (the type simple name for constructor)</li>
+	 * 	<li><code>FUNCTION_DECLARATION</code> - the name of the method (the type simple name for constructor)</li>
 	 * 	<li><code>VARIABLE_DECLARATION</code> - the name of the variable</li>
 	 *  <li><code>POTENTIAL_METHOD_DECLARATION</code> - the name of the method</li>
 	 * </ul>
@@ -1376,9 +1376,9 @@ public final class CompletionProposal extends InternalCompletionProposal {
 	 * of the referenced local variable's type</li>
 	 * 	<li><code>METHOD_IMPORT</code> - method signature
 	 * of the method that is imported</li>
-	 *  <li><code>METHOD_REF</code> - method signature
+	 *  <li><code>FUNCTION_REF</code> - method signature
 	 * of the method that is referenced</li>
-	 * 	<li><code>METHOD_DECLARATION</code> - method signature
+	 * 	<li><code>FUNCTION_DECLARATION</code> - method signature
 	 * of the method that is being implemented or overridden</li>
 	 * 	<li><code>TYPE_IMPORT</code> - type signature
 	 * of the type that is imported</li>
@@ -1411,7 +1411,7 @@ public final class CompletionProposal extends InternalCompletionProposal {
 	 * <li><code>ANONYMOUS_CLASS_DECLARATION</code> - method key
 	 * of the constructor that is being invoked, or <code>null</code> if
 	 * the declaring type is an interface</li>
-	 * 	<li><code>METHOD_DECLARATION</code> - method key
+	 * 	<li><code>FUNCTION_DECLARATION</code> - method key
 	 * of the method that is being implemented or overridden</li>
 	 * </ul>
 	 * For kinds of completion proposals, this method returns
@@ -1438,9 +1438,9 @@ public final class CompletionProposal extends InternalCompletionProposal {
 //	 * of the type that is being subclassed or implemented</li>
 //	 * 	<li><code>FIELD_REF</code> - the dot-based package name
 //	 * of the type that declares the field that is referenced</li>
-//	 * 	<li><code>METHOD_REF</code> - the dot-based package name
+//	 * 	<li><code>FUNCTION_REF</code> - the dot-based package name
 //	 * of the type that declares the method that is referenced</li>
-//	 * 	<li><code>METHOD_DECLARATION</code> - the dot-based package name
+//	 * 	<li><code>FUNCTION_DECLARATION</code> - the dot-based package name
 //	 * of the type that declares the method that is being
 //	 * implemented or overridden</li>
 //	 * </ul>
@@ -1473,10 +1473,10 @@ public final class CompletionProposal extends InternalCompletionProposal {
 //	 * 	<li><code>FIELD_REF</code> - the dot-based type name
 //	 * of the type that declares the field that is referenced
 //	 * or an anonymous type instantiation ("new X(){}") if it is an anonymous type</li>
-//	 * 	<li><code>METHOD_REF</code> - the dot-based type name
+//	 * 	<li><code>FUNCTION_REF</code> - the dot-based type name
 //	 * of the type that declares the method that is referenced
 //	 * or an anonymous type instantiation ("new X(){}") if it is an anonymous type</li>
-//	 * 	<li><code>METHOD_DECLARATION</code> - the dot-based type name
+//	 * 	<li><code>FUNCTION_DECLARATION</code> - the dot-based type name
 //	 * of the type that declares the method that is being
 //	 * implemented or overridden</li>
 //	 * </ul>
@@ -1507,9 +1507,9 @@ public final class CompletionProposal extends InternalCompletionProposal {
 //	 * of the referenced field's type</li>
 //	 * 	<li><code>LOCAL_VARIABLE_REF</code> - the dot-based package name
 //	 * of the referenced local variable's type</li>
-//	 * 	<li><code>METHOD_REF</code> -  the dot-based package name
+//	 * 	<li><code>FUNCTION_REF</code> -  the dot-based package name
 //	 * of the return type of the method that is referenced</li>
-//	 * 	<li><code>METHOD_DECLARATION</code> - the dot-based package name
+//	 * 	<li><code>FUNCTION_DECLARATION</code> - the dot-based package name
 //	 * of the return type of the method that is being implemented
 //	 * or overridden</li>
 //	 * 	<li><code>PACKAGE_REF</code> - the dot-based package name
@@ -1546,9 +1546,9 @@ public final class CompletionProposal extends InternalCompletionProposal {
 //	 * of the referenced field's type</li>
 //	 * 	<li><code>LOCAL_VARIABLE_REF</code> - the dot-based type name
 //	 * of the referenced local variable's type</li>
-//	 * 	<li><code>METHOD_REF</code> -  the dot-based type name
+//	 * 	<li><code>FUNCTION_REF</code> -  the dot-based type name
 //	 * of the return type of the method that is referenced</li>
-//	 * 	<li><code>METHOD_DECLARATION</code> - the dot-based type name
+//	 * 	<li><code>FUNCTION_DECLARATION</code> - the dot-based type name
 //	 * of the return type of the method that is being implemented
 //	 * or overridden</li>
 //	 * 	<li><code>TYPE_REF</code> - the dot-based type name
@@ -1581,9 +1581,9 @@ public final class CompletionProposal extends InternalCompletionProposal {
 //	 * <ul>
 //	 * 	<li><code>ANONYMOUS_CLASS_DECLARATION</code> - parameter package names
 //	 * of the constructor that is being invoked</li>
-//	 * 	<li><code>METHOD_REF</code> - parameter package names
+//	 * 	<li><code>FUNCTION_REF</code> - parameter package names
 //	 * of the method that is referenced</li>
-//	 * 	<li><code>METHOD_DECLARATION</code> - parameter package names
+//	 * 	<li><code>FUNCTION_DECLARATION</code> - parameter package names
 //	 * of the method that is being implemented or overridden</li>
 //	 * </ul>
 //	 * For kinds of completion proposals, this method returns
@@ -1611,9 +1611,9 @@ public final class CompletionProposal extends InternalCompletionProposal {
 //	 * <ul>
 //	 * 	<li><code>ANONYMOUS_CLASS_DECLARATION</code> - parameter type names
 //	 * of the constructor that is being invoked</li>
-//	 * 	<li><code>METHOD_REF</code> - parameter type names
+//	 * 	<li><code>FUNCTION_REF</code> - parameter type names
 //	 * of the method that is referenced</li>
-//	 * 	<li><code>METHOD_DECLARATION</code> - parameter type names
+//	 * 	<li><code>FUNCTION_DECLARATION</code> - parameter type names
 //	 * of the method that is being implemented or overridden</li>
 //	 * </ul>
 //	 * For kinds of completion proposals, this method returns
@@ -1692,12 +1692,12 @@ public final class CompletionProposal extends InternalCompletionProposal {
 	 *  <li><code>METHOD_IMPORT</code> - modifier flags
 	 * of the method that is imported;
 	 *  </li>
-	 * 	<li><code>METHOD_REF</code> - modifier flags
+	 * 	<li><code>FUNCTION_REF</code> - modifier flags
 	 * of the method that is referenced;
 	 * <code>Flags.AccAnnotation</code> can be used to recognize
 	 * references to annotation type members
 	 * </li>
-	 * <li><code>METHOD_DECLARATION</code> - modifier flags
+	 * <li><code>FUNCTION_DECLARATION</code> - modifier flags
 	 * for the method that is being implemented or overridden</li>
 	 * <li><code>TYPE_IMPORT</code> - modifier flags
 	 * of the type that is imported; <code>Flags.AccInterface</code>
@@ -1760,7 +1760,7 @@ public final class CompletionProposal extends InternalCompletionProposal {
 	 *    <li><code>FIELD_IMPORT</code></li>
 	 *   </ul>
 	 * </li>
-	 * 	<li><code>METHOD_REF</code> - The allowed required proposals for this kind are:
+	 * 	<li><code>FUNCTION_REF</code> - The allowed required proposals for this kind are:
 	 *   <ul>
 	 *    <li><code>TYPE_REF</code></li>
 	 *    <li><code>TYPE_IMPORT</code></li>
@@ -1931,9 +1931,9 @@ public final class CompletionProposal extends InternalCompletionProposal {
 	 * This field is available for the following kinds of
 	 * completion proposals:
 	 * <ul>
-	 * <li><code>METHOD_REF</code> - return <code>true</code>
+	 * <li><code>FUNCTION_REF</code> - return <code>true</code>
 	 * if the referenced method is a constructor</li>
-	 * 	<li><code>METHOD_DECLARATION</code> - return <code>true</code>
+	 * 	<li><code>FUNCTION_DECLARATION</code> - return <code>true</code>
 	 * if the declared method is a constructor</li>
 	 * </ul>
 	 * For kinds of completion proposals, this method returns
@@ -1967,13 +1967,13 @@ public final class CompletionProposal extends InternalCompletionProposal {
 				buffer.append("LOCAL_VARIABLE_REF"); //$NON-NLS-1$
 				break;
 			case CompletionProposal.METHOD_DECLARATION :
-				buffer.append("METHOD_DECLARATION"); //$NON-NLS-1$
+				buffer.append("FUNCTION_DECLARATION"); //$NON-NLS-1$
 				if(this.isConstructor) {
 					buffer.append("<CONSTRUCTOR>"); //$NON-NLS-1$
 				}
 				break;
 			case CompletionProposal.METHOD_REF :
-				buffer.append("METHOD_REF"); //$NON-NLS-1$
+				buffer.append("FUNCTION_REF"); //$NON-NLS-1$
 				if(this.isConstructor) {
 					buffer.append("<CONSTRUCTOR>"); //$NON-NLS-1$
 				}

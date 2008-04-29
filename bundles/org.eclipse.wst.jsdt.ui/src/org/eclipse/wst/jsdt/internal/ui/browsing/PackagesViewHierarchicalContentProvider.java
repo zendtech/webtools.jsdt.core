@@ -138,7 +138,7 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider im
 							
 							addFragmentsToMap(fragments);
 							
-							Object[] nonJavaResources= packageFragment.getNonJavaResources();
+							Object[] nonJavaResources= packageFragment.getNonJavaScriptResources();
 							if (nonJavaResources.length == 0) {
 								return fragments;
 							}
@@ -309,7 +309,7 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider im
 						else return lp;
 					}
 				} else
-					return fragment.getJavaProject();
+					return fragment.getJavaScriptProject();
 			} else if (element instanceof IFolder) {
 				IFolder folder = (IFolder) element;
 				IResource res = folder.getParent();
@@ -339,7 +339,7 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider im
 
 		List fragments= new ArrayList();
 		try {
-			IPackageFragmentRoot[] roots= pkgFragment.getJavaProject().getPackageFragmentRoots();
+			IPackageFragmentRoot[] roots= pkgFragment.getJavaScriptProject().getPackageFragmentRoots();
 			for (int i= 0; i < roots.length; i++) {
 				IPackageFragmentRoot root= roots[i];
 				IPackageFragment fragment= root.getPackageFragment(pkgFragment.getElementName());
@@ -436,7 +436,7 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider im
 		if (isClassPathChange(delta)) {
 			Object input= fViewer.getInput();
 			if (input != null) {
-				if (fInputIsProject && input.equals(element.getJavaProject())) {
+				if (fInputIsProject && input.equals(element.getJavaScriptProject())) {
 					postRefresh(input);
 					return;
 				} else if (!fInputIsProject && input.equals(element)) {
@@ -492,7 +492,7 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider im
 		if (fViewer.testFindItem(object) == null) {
 			 Object parent= getParent(object);
 			 if(parent instanceof IPackageFragmentRoot && fInputIsProject)
-			 	parent= ((IPackageFragmentRoot)parent).getJavaProject();
+			 	parent= ((IPackageFragmentRoot)parent).getJavaScriptProject();
 
 			if(parent != null)
 				toBeRefreshed= parent;
@@ -581,7 +581,7 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider im
 			if (parent instanceof IPackageFragmentRoot){
 				IPackageFragmentRoot root= (IPackageFragmentRoot) parent;
 				if (fInputIsProject){
-					postRefresh(root.getJavaProject());
+					postRefresh(root.getJavaScriptProject());
 				} else {
 					postRefresh(root);
 				}
@@ -600,7 +600,7 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider im
 			if (parent instanceof IPackageFragmentRoot) {
 				IPackageFragmentRoot root= (IPackageFragmentRoot) parent;
 				if (fInputIsProject) {
-					postAdd(frag, root.getJavaProject());
+					postAdd(frag, root.getJavaScriptProject());
 				} else
 					postAdd(frag, root);
 			} else {
@@ -629,7 +629,7 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider im
 
 				Object parent= getParent(fragment);
 				if (parent instanceof IPackageFragmentRoot) {
-					parent= ((IPackageFragmentRoot)parent).getJavaProject();
+					parent= ((IPackageFragmentRoot)parent).getJavaScriptProject();
 				}
 				postAdd(fragment, parent);
 			}

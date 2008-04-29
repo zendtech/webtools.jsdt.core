@@ -97,7 +97,7 @@ public class JavaElementUtil {
 		if (type.isBinary())
 			return false;
 			
-		if (type.getCompilationUnit() == null)
+		if (type.getJavaScriptUnit() == null)
 			return false;
 		
 		if (type.getDeclaringType() != null)
@@ -108,12 +108,12 @@ public class JavaElementUtil {
 
 
 	private static boolean isPrimaryType(IType type){
-		return type.equals(type.getCompilationUnit().findPrimaryType());
+		return type.equals(type.getJavaScriptUnit().findPrimaryType());
 	}
 
 
 	private static boolean isCuOnlyType(IType type) throws JavaScriptModelException{
-		return type.getCompilationUnit().getTypes().length == 1;
+		return type.getJavaScriptUnit().getTypes().length == 1;
 	}
 
 	/** see org.eclipse.wst.jsdt.internal.core.JavaElement#isAncestorOf(org.eclipse.wst.jsdt.core.IJavaScriptElement) */
@@ -129,7 +129,7 @@ public class JavaElementUtil {
 		if (JavaModelUtil.isInterfaceOrAnnotation(type))
 			return new IFunction[0];
 		List result= new ArrayList();
-		IFunction[] methods= type.getMethods();
+		IFunction[] methods= type.getFunctions();
 		for (int i= 0; i < methods.length; i++) {
 			IFunction iMethod= methods[i];
 			if (iMethod.isConstructor())
@@ -143,8 +143,8 @@ public class JavaElementUtil {
 	 * classpaths.
 	 */
 	public static IJavaScriptProject[] getReferencingProjects(IPackageFragmentRoot root) throws JavaScriptModelException {
-		IIncludePathEntry cpe= root.getRawClasspathEntry();
-		IJavaScriptProject[] allJavaProjects= JavaScriptCore.create(ResourcesPlugin.getWorkspace().getRoot()).getJavaProjects();
+		IIncludePathEntry cpe= root.getRawIncludepathEntry();
+		IJavaScriptProject[] allJavaProjects= JavaScriptCore.create(ResourcesPlugin.getWorkspace().getRoot()).getJavaScriptProjects();
 		List result= new ArrayList(allJavaProjects.length);
 		for (int i= 0; i < allJavaProjects.length; i++) {
 			IJavaScriptProject project= allJavaProjects[i];

@@ -186,12 +186,12 @@ public class OthersWorkingSetUpdater implements IWorkingSetUpdater {
 		}
 		IJavaScriptModel model= JavaScriptCore.create(ResourcesPlugin.getWorkspace().getRoot());
 		try {
-			IJavaScriptProject[] jProjects= model.getJavaProjects();
+			IJavaScriptProject[] jProjects= model.getJavaScriptProjects();
 			for (int i= 0; i < jProjects.length; i++) {
 				if (!projects.contains(jProjects[i].getProject()))
 					result.add(jProjects[i]);
 			}
-			Object[] rProjects= model.getNonJavaResources();
+			Object[] rProjects= model.getNonJavaScriptResources();
 			for (int i= 0; i < rProjects.length; i++) {
 				if (!projects.contains(rProjects[i]))
 					result.add(rProjects[i]);

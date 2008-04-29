@@ -343,7 +343,7 @@ public class JavaModelStatus extends Status implements IJavaScriptModelStatus, I
 					javaProject = (IJavaScriptProject)elements[0];
 					return Messages.bind(Messages.classpath_unboundVariablePath, new String[] {path.makeRelative().toString(), javaProject.getElementName()});
 
-				case CLASSPATH_CYCLE:
+				case INCLUDEPATH_CYCLE:
 					javaProject = (IJavaScriptProject)elements[0];
 					return Messages.bind(Messages.classpath_cycle, javaProject.getElementName());
 
@@ -374,7 +374,7 @@ public class JavaModelStatus extends Status implements IJavaScriptModelStatus, I
 							string,
 						});
 
-				case CANNOT_RETRIEVE_ATTACHED_JAVADOC :
+				case CANNOT_RETRIEVE_ATTACHED_JSDOC :
 					if (elements != null && elements.length == 1) {
 						if (this.string != null) {
 							return Messages.bind(Messages.status_cannot_retrieve_attached_javadoc, ((JavaElement)elements[0]).toStringWithAncestors(), this.string);
@@ -386,7 +386,7 @@ public class JavaModelStatus extends Status implements IJavaScriptModelStatus, I
 					}
 					break;
 
-				case UNKNOWN_JAVADOC_FORMAT :
+				case UNKNOWN_JSDOC_FORMAT :
 					return Messages.bind(Messages.status_unknown_javadoc_format, ((JavaElement)elements[0]).toStringWithAncestors());
 
 				case DEPRECATED_VARIABLE :

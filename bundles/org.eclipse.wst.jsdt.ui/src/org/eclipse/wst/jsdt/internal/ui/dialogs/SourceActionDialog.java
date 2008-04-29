@@ -100,7 +100,7 @@ public class SourceActionDialog extends CheckedTreeSelectionDialog {
 		fHeight= 18;
 		
 		int insertionDefault= isConstructor ? 0 : 1;
-		boolean generateCommentsDefault= JavaPreferencesSettings.getCodeGenerationSettings(type.getJavaProject()).createComments;
+		boolean generateCommentsDefault= JavaPreferencesSettings.getCodeGenerationSettings(type.getJavaScriptProject()).createComments;
 		
 		IDialogSettings dialogSettings= JavaPlugin.getDefault().getDialogSettings();
 		String sectionId= isConstructor ? SETTINGS_SECTION_CONSTRUCTORS : SETTINGS_SECTION_METHODS;
@@ -118,7 +118,7 @@ public class SourceActionDialog extends CheckedTreeSelectionDialog {
 		fLabels= new ArrayList(); 
 		
 		IJavaScriptElement[] members= fType.getChildren();
-		IFunction[] methods= fType.getMethods();
+		IFunction[] methods= fType.getFunctions();
 		
 		fInsertPositions.add(methods.length > 0 ? methods[0]: null); // first
 		fInsertPositions.add(null); // last
@@ -369,7 +369,7 @@ public class SourceActionDialog extends CheckedTreeSelectionDialog {
 	protected void openCodeTempatePage(String id) {
 		HashMap arg= new HashMap();
 		arg.put(CodeTemplatePreferencePage.DATA_SELECT_TEMPLATE, id);
-		PreferencesUtil.createPropertyDialogOn(getShell(), fType.getJavaProject().getProject(), CodeTemplatePreferencePage.PROP_ID, null, arg).open();
+		PreferencesUtil.createPropertyDialogOn(getShell(), fType.getJavaScriptProject().getProject(), CodeTemplatePreferencePage.PROP_ID, null, arg).open();
 	}
 	
 

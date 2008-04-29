@@ -410,7 +410,7 @@ public class JavaMoveLinesAction extends TextEditorAction {
 		IEditorInput editorInput= fSharedState.fEditor.getEditorInput();
 		IJavaScriptUnit unit= JavaPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(editorInput);
 		if (unit != null)
-			return unit.getJavaProject();
+			return unit.getJavaScriptProject();
 		return null;
 	}
 

@@ -170,7 +170,7 @@ public class CorrectionMarkerResolutionGenerator implements IMarkerResolutionGen
 							Hashtable projects= new Hashtable();
 							for (Iterator iter= cus.iterator(); iter.hasNext();) {
 								IJavaScriptUnit cu= (IJavaScriptUnit)iter.next();
-								IJavaScriptProject project= cu.getJavaProject();
+								IJavaScriptProject project= cu.getJavaScriptProject();
 								if (!projects.containsKey(project)) {
 									projects.put(project, new ArrayList());
 								}
@@ -432,10 +432,10 @@ public class CorrectionMarkerResolutionGenerator implements IMarkerResolutionGen
 				
 				if (element instanceof IJavaScriptUnit) {
 					IJavaScriptUnit cu= (IJavaScriptUnit)element;
-					List cus= (List)result.get(cu.getJavaProject());
+					List cus= (List)result.get(cu.getJavaScriptProject());
 					if (cus == null) {
 						cus= new ArrayList();
-						result.put(cu.getJavaProject(), cus);
+						result.put(cu.getJavaScriptProject(), cus);
 					}
 					cus.add(cu);
 				}

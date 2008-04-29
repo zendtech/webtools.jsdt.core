@@ -50,7 +50,7 @@ public class ModifierRewrite {
 
 	private ListRewrite evaluateListRewrite(ASTRewrite rewrite, ASTNode declNode) {
 		switch (declNode.getNodeType()) {
-			case ASTNode.METHOD_DECLARATION:
+			case ASTNode.FUNCTION_DECLARATION:
 				return rewrite.getListRewrite(declNode, FunctionDeclaration.MODIFIERS2_PROPERTY);
 			case ASTNode.FIELD_DECLARATION:
 				return rewrite.getListRewrite(declNode, FieldDeclaration.MODIFIERS2_PROPERTY);

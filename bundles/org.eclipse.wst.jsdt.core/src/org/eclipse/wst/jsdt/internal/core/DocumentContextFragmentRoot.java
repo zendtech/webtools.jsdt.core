@@ -71,9 +71,9 @@ public class DocumentContextFragmentRoot extends PackageFragmentRoot{
 
 			if(DEBUG && !shown) {
 				shown=false;
-				IJavaScriptProject proj = getJavaProject();
+				IJavaScriptProject proj = getJavaScriptProject();
 				try {
-					IIncludePathEntry[] entries = proj.getResolvedClasspath(true);
+					IIncludePathEntry[] entries = proj.getResolvedIncludepath(true);
 					System.out.println("DocumentContextFragmentRoot ====>" +"Project Classpath : \n"); //$NON-NLS-1$ //$NON-NLS-2$
 
 					for(int i = 0;i<entries.length;i++) {
@@ -152,7 +152,7 @@ public class DocumentContextFragmentRoot extends PackageFragmentRoot{
 
 		if(fSystemFiles!=null) return fSystemFiles;
 
-		IJavaScriptProject javaProject = getJavaProject();
+		IJavaScriptProject javaProject = getJavaScriptProject();
 		int lastGood = 0;
 		IPackageFragmentRoot[]  projectRoots = null;
 
@@ -161,7 +161,7 @@ public class DocumentContextFragmentRoot extends PackageFragmentRoot{
 			for(int i =0;i<projectRoots.length;i++) {
 				if(projectRoots[i].isLanguageRuntime()) {
 					projectRoots[lastGood++]=projectRoots[i];
-				}else if(projectRoots[i].getRawClasspathEntry().getEntryKind()== IIncludePathEntry.CPE_SOURCE) {
+				}else if(projectRoots[i].getRawIncludepathEntry().getEntryKind()== IIncludePathEntry.CPE_SOURCE) {
 					projectRoots[lastGood++]=projectRoots[i];
 				}
 			}
@@ -212,9 +212,9 @@ public class DocumentContextFragmentRoot extends PackageFragmentRoot{
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.jsdt.internal.core.PackageFragmentRoot#getRawClasspathEntry()
 	 */
-	public IIncludePathEntry getRawClasspathEntry() throws JavaScriptModelException {
+	public IIncludePathEntry getRawIncludepathEntry() throws JavaScriptModelException {
 		if(rawClassPathEntry!=null) return rawClassPathEntry;
-		return super.getRawClasspathEntry();
+		return super.getRawIncludepathEntry();
 	}
 
 	protected  RestrictedDocumentBinding getRestrictedAccessRequestor() {
@@ -268,10 +268,10 @@ public class DocumentContextFragmentRoot extends PackageFragmentRoot{
 		if(equals) return;
 /*  start  try and expand the include paths from the library entries if necisary */
 		IIncludePathEntry[] current = new IIncludePathEntry[0];
-		IJavaScriptProject javaProject = getJavaProject();
+		IJavaScriptProject javaProject = getJavaScriptProject();
 
 		try {
-			current = javaProject.getRawClasspath();
+			current = javaProject.getRawIncludepath();
 		} catch (JavaScriptModelException ex) {
 			// TODO Auto-generated catch block
 		//	ex.printStackTrace();
@@ -387,20 +387,20 @@ public class DocumentContextFragmentRoot extends PackageFragmentRoot{
 
 
 		ArrayList newEntriesList = new ArrayList();
-		IJavaScriptProject javaProject = getJavaProject();
+		IJavaScriptProject javaProject = getJavaScriptProject();
 		IResource myResource = getResource();
 		IContainer folder = (IContainer)myResource;
 
 		for(int i = 0;i<includedFiles.length;i++) {
 			IResource theFile = folder.findMember(includedFiles[i]);
-			if(javaProject.isOnClasspath(theFile)) continue;
+			if(javaProject.isOnIncludepath(theFile)) continue;
 			IIncludePathEntry entry = JavaScriptCore.newLibraryEntry(theFile.getLocation().makeAbsolute(), null, null, new IAccessRule[0], new IIncludePathAttribute[] {IIncludePathAttribute.HIDE}, true);
 
 			newEntriesList.add(entry);
 		}
 		IIncludePathEntry[] current = new IIncludePathEntry[0];
 		try {
-			current = javaProject.getRawClasspath();
+			current = javaProject.getRawIncludepath();
 		} catch (JavaScriptModelException ex) {
 			// TODO Auto-generated catch block
 		//	ex.printStackTrace();
@@ -414,7 +414,7 @@ public class DocumentContextFragmentRoot extends PackageFragmentRoot{
 			newCpEntries[i] = (IIncludePathEntry)newEntriesList.get(newPtr++);
 		}
 		try {
-			javaProject.setRawClasspath(newCpEntries, false, new NullProgressMonitor());
+			javaProject.setRawIncludepath(newCpEntries, false, new NullProgressMonitor());
 		} catch (JavaScriptModelException ex) {}
 
 	}
@@ -537,7 +537,7 @@ public class DocumentContextFragmentRoot extends PackageFragmentRoot{
 		SearchableEnvironment env =  super.newSearchableNameEnvironment(owner);//new SearchableEnvironment((JavaProject)getJavaProject(),this, owner);
 		int includeMask = IJavaScriptSearchScope.SOURCES | IJavaScriptSearchScope.APPLICATION_LIBRARIES | IJavaScriptSearchScope.SYSTEM_LIBRARIES | IJavaScriptSearchScope.REFERENCED_PROJECTS;
 		env.nameLookup.setRestrictedAccessRequestor(getRestrictedAccessRequestor());
-		((JavaSearchScope)env.searchScope).add((JavaProject)getJavaProject(), includeMask, new HashSet(2));
+		((JavaSearchScope)env.searchScope).add((JavaProject)getJavaScriptProject(), includeMask, new HashSet(2));
 		return env;
 	}
 

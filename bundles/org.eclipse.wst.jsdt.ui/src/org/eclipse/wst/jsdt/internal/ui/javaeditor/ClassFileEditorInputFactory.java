@@ -51,7 +51,7 @@ public class ClassFileEditorInputFactory implements IElementFactory {
 				 */ 
 				IClassFile cf= (IClassFile)element;
 				IType type= cf.getType(); // this will work, see https://bugs.eclipse.org/bugs/show_bug.cgi?id=154667
-				IJavaScriptProject project= element.getJavaProject();
+				IJavaScriptProject project= element.getJavaScriptProject();
 				if (project != null) {
 					type= JavaModelUtil.findType(project, type.getFullyQualifiedName());
 					if (type == null)

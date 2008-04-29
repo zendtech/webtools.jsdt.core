@@ -154,7 +154,7 @@ public class AddDelegateMethodsAction extends SelectionDispatchAction {
 
 		AddDelegateMethodsContentProvider(IType type, IField[] fields) throws JavaScriptModelException {
 			RefactoringASTParser parser= new RefactoringASTParser(AST.JLS3);
-			fUnit= parser.parse(type.getCompilationUnit(), true);
+			fUnit= parser.parse(type.getJavaScriptUnit(), true);
 			final ITypeBinding binding= ASTNodes.getTypeBinding(fUnit, type);
 			if (binding != null) {
 				IBinding[][] bindings= StubUtility2.getDelegatableMethods(fUnit.getAST(), binding);
@@ -368,7 +368,7 @@ public class AddDelegateMethodsAction extends SelectionDispatchAction {
 
 		if ((selection.size() == 1) && (selection.getFirstElement() instanceof IType)) {
 			IType type= (IType) selection.getFirstElement();
-			return type.getCompilationUnit() != null && !type.isInterface();
+			return type.getJavaScriptUnit() != null && !type.isInterface();
 		}
 
 		if ((selection.size() == 1) && (selection.getFirstElement() instanceof IJavaScriptUnit))
@@ -391,7 +391,7 @@ public class AddDelegateMethodsAction extends SelectionDispatchAction {
 	}
 
 	private boolean canRunOn(IType type) throws JavaScriptModelException {
-		if (type == null || type.getCompilationUnit() == null) {
+		if (type == null || type.getJavaScriptUnit() == null) {
 			MessageDialog.openInformation(getShell(), DIALOG_TITLE, ActionMessages.AddDelegateMethodsAction_not_in_source_file); 
 			return false;
 		} else if (type.isAnnotation()) {
@@ -415,11 +415,11 @@ public class AddDelegateMethodsAction extends SelectionDispatchAction {
 
 					if (index == 0) {
 						// remember the CU of the first element
-						unit= field.getCompilationUnit();
+						unit= field.getJavaScriptUnit();
 						if (unit == null) {
 							return null;
 						}
-					} else if (!unit.equals(field.getCompilationUnit())) {
+					} else if (!unit.equals(field.getJavaScriptUnit())) {
 						// all fields must be in the same CU
 						return null;
 					}
@@ -575,7 +575,7 @@ public class AddDelegateMethodsAction extends SelectionDispatchAction {
 				try {
 					if (target != null)
 						target.beginCompoundChange();
-					CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(type.getJavaProject());
+					CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(type.getJavaScriptProject());
 					settings.createComments= dialog.getGenerateComment();
 					final int size= tuples.size();
 					String[] methodKeys= new String[size];

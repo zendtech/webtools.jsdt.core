@@ -115,11 +115,11 @@ public class ClasspathVariablesPreferencePage extends PreferencePage implements 
 	
 	private String getCurrentSettings() {
 		StringBuffer buf= new StringBuffer();
-		String[] names= JavaScriptCore.getClasspathVariableNames();
+		String[] names= JavaScriptCore.getIncludepathVariableNames();
 		for (int i= 0; i < names.length; i++) {
 			String curr= names[i];
 			buf.append(curr).append('\0');
-			IPath val= JavaScriptCore.getClasspathVariable(curr);
+			IPath val= JavaScriptCore.getIncludepathVariable(curr);
 			if (val != null) {
 				buf.append(val.toString());
 			}

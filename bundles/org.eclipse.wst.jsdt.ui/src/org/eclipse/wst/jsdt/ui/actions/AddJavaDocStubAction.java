@@ -103,7 +103,7 @@ public class AddJavaDocStubAction extends SelectionDispatchAction {
 		}
 		
 		try {
-			IJavaScriptUnit cu= members[0].getCompilationUnit();
+			IJavaScriptUnit cu= members[0].getJavaScriptUnit();
 			if (!ActionUtil.isEditable(getShell(), cu)) {
 				return;
 			}
@@ -152,7 +152,7 @@ public class AddJavaDocStubAction extends SelectionDispatchAction {
 			}
 			IMember[] members= new IMember[] { (IMember)element };
 			if (ElementValidator.checkValidateEdit(members, getShell(), getDialogTitle()))
-				run(members[0].getCompilationUnit(), members);
+				run(members[0].getJavaScriptUnit(), members);
 		} catch (CoreException e) {
 			ExceptionHandler.handle(e, getShell(), getDialogTitle(), ActionMessages.AddJavaDocStubsAction_error_actionFailed); 
 		}
@@ -194,11 +194,11 @@ public class AddJavaDocStubAction extends SelectionDispatchAction {
 						return null;
 					}
 					if (i == 0) {
-						cu= member.getCompilationUnit();
+						cu= member.getJavaScriptUnit();
 						if (cu == null) {
 							return null;
 						}
-					} else if (!cu.equals(member.getCompilationUnit())) {
+					} else if (!cu.equals(member.getJavaScriptUnit())) {
 						return null;
 					}
 					if (member instanceof IType && member.getElementName().length() == 0) {

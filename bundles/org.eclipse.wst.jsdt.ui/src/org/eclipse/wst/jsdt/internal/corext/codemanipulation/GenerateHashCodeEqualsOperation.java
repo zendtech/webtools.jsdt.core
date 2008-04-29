@@ -568,7 +568,7 @@ public final class GenerateHashCodeEqualsOperation implements IWorkspaceRunnable
 
 	private Statement createAddArrayHashCode(IVariableBinding binding) {
 		FunctionInvocation invoc= fAst.newFunctionInvocation();
-		if (JavaModelUtil.is50OrHigher(fRewrite.getCu().getJavaProject())) {
+		if (JavaModelUtil.is50OrHigher(fRewrite.getCu().getJavaScriptProject())) {
 			invoc.setName(fAst.newSimpleName(METHODNAME_HASH_CODE));
 			invoc.setExpression(getQualifiedName(JAVA_UTIL_ARRAYS));
 			invoc.arguments().add(getThisAccessForHashCode(binding.getName()));
@@ -996,11 +996,11 @@ public final class GenerateHashCodeEqualsOperation implements IWorkspaceRunnable
 		if (fSettings.createComments) {
 			String string= CodeGeneration.getMethodComment(fRewrite.getCu(), fType.getQualifiedName(), newDeclaration, copyFrom, StubUtility.getLineDelimiterUsed(fRewrite.getCu()));
 			if (string != null) {
-				JSdoc javadoc= (JSdoc) fRewrite.getASTRewrite().createStringPlaceholder(string, ASTNode.JAVADOC);
+				JSdoc javadoc= (JSdoc) fRewrite.getASTRewrite().createStringPlaceholder(string, ASTNode.JSDOC);
 				newDeclaration.setJavadoc(javadoc);
 			}
 		}
-		if (fSettings.overrideAnnotation && JavaModelUtil.is50OrHigher(fUnit.getJavaElement().getJavaProject()))
+		if (fSettings.overrideAnnotation && JavaModelUtil.is50OrHigher(fUnit.getJavaElement().getJavaScriptProject()))
 			StubUtility2.addOverrideAnnotation(fRewrite.getASTRewrite(), newDeclaration, copyFrom);
 	}
 

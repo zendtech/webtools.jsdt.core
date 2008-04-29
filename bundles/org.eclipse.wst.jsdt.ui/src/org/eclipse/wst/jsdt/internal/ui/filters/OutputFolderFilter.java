@@ -60,7 +60,7 @@ public class OutputFolderFilter extends ViewerFilter {
 					return false;
 				
 				// Check output location for each class path entry
-				IIncludePathEntry[] cpEntries= jProject.getRawClasspath();
+				IIncludePathEntry[] cpEntries= jProject.getRawIncludepath();
 				for (int i= 0, length= cpEntries.length; i < length; i++) {
 					IPath outputLocation= cpEntries[i].getOutputLocation();
 					if (outputLocation != null && outputLocation.equals(folderPath))

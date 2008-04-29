@@ -144,7 +144,7 @@ class JavaScriptUnitResolver extends Compiler {
 		// Need to reparse the entire source of the compilation unit so as to get source positions
 		// (case of processing a source that was not known by beginToCompile (e.g. when asking to createBinding))
 		SourceTypeElementInfo sourceType = (SourceTypeElementInfo) sourceTypes[0];
-		accept((org.eclipse.wst.jsdt.internal.compiler.env.ICompilationUnit) sourceType.getHandle().getCompilationUnit(), accessRestriction);
+		accept((org.eclipse.wst.jsdt.internal.compiler.env.ICompilationUnit) sourceType.getHandle().getJavaScriptUnit(), accessRestriction);
 	}
 
 	/**

@@ -105,20 +105,20 @@ protected JavaModelOperation getNestedOperation(IJavaScriptElement element) {
 					return new RenameResourceElementsOperation(new IJavaScriptElement[] {dest}, new IJavaScriptElement[] {dest.getParent()}, new String[]{getNewNameFor(element) + '.' + extension}, this.force);
 				} else {
 					String source = getSourceFor(element);
-					String lineSeparator = org.eclipse.wst.jsdt.internal.core.util.Util.getLineSeparator(source, element.getJavaProject());
+					String lineSeparator = org.eclipse.wst.jsdt.internal.core.util.Util.getLineSeparator(source, element.getJavaScriptProject());
 					return new CreateTypeOperation(dest, source + lineSeparator, this.force);
 				}
 			case IJavaScriptElement.METHOD :
 				String source = getSourceFor(element);
-				String lineSeparator = org.eclipse.wst.jsdt.internal.core.util.Util.getLineSeparator(source, element.getJavaProject());
+				String lineSeparator = org.eclipse.wst.jsdt.internal.core.util.Util.getLineSeparator(source, element.getJavaScriptProject());
 				return new CreateMethodOperation(dest, source + lineSeparator, this.force);
 			case IJavaScriptElement.FIELD :
 				source = getSourceFor(element);
-				lineSeparator = org.eclipse.wst.jsdt.internal.core.util.Util.getLineSeparator(source, element.getJavaProject());
+				lineSeparator = org.eclipse.wst.jsdt.internal.core.util.Util.getLineSeparator(source, element.getJavaScriptProject());
 				return new CreateFieldOperation(dest, source + lineSeparator, this.force);
 			case IJavaScriptElement.INITIALIZER :
 				source = getSourceFor(element);
-				lineSeparator = org.eclipse.wst.jsdt.internal.core.util.Util.getLineSeparator(source, element.getJavaProject());
+				lineSeparator = org.eclipse.wst.jsdt.internal.core.util.Util.getLineSeparator(source, element.getJavaScriptProject());
 				return new CreateInitializerOperation((IType) dest, source + lineSeparator);
 			default :
 				return null;
@@ -182,7 +182,7 @@ protected void processElement(IJavaScriptElement element) throws JavaScriptModel
 	executeNestedOperation(op, 1);
 
 	JavaElement destination = (JavaElement) getDestinationParent(element);
-	IJavaScriptUnit unit= destination.getCompilationUnit();
+	IJavaScriptUnit unit= destination.getJavaScriptUnit();
 	if (!unit.isWorkingCopy()) {
 		unit.close();
 	}

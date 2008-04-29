@@ -1249,7 +1249,7 @@ public class ClasspathEntry implements IIncludePathEntry {
 	 */
 	public IIncludePathEntry getResolvedEntry() {
 
-		return JavaScriptCore.getResolvedClasspathEntry(this);
+		return JavaScriptCore.getResolvedIncludepathEntry(this);
 	}
 
 	/**
@@ -1313,7 +1313,7 @@ public class ClasspathEntry implements IIncludePathEntry {
 		try {
 			classpath = ((JavaProject)javaProject).resolveClasspath(rawClasspath);
 		} catch(JavaScriptModelException e){
-			return e.getJavaModelStatus();
+			return e.getJavaScriptModelStatus();
 		}
 		int length = classpath.length;
 
@@ -1375,7 +1375,7 @@ public class ClasspathEntry implements IIncludePathEntry {
 					// output before complaining
 					if (potentialNestedOutput == null) potentialNestedOutput = customOutput;
 				} else {
-					return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_CLASSPATH, Messages.bind(Messages.classpath_cannotNestOutputInOutput, new String[] {customOutput.makeRelative().toString(), outputLocations[index].makeRelative().toString()}));
+					return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH, Messages.bind(Messages.classpath_cannotNestOutputInOutput, new String[] {customOutput.makeRelative().toString(), outputLocations[index].makeRelative().toString()}));
 				}
 			}
 		}
@@ -1383,7 +1383,7 @@ public class ClasspathEntry implements IIncludePathEntry {
 		if (sourceEntryCount <= outputCount-1) {
 		    allowNestingInOutputLocations[0] = true;
 		} else if (potentialNestedOutput != null) {
-			return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_CLASSPATH, Messages.bind(Messages.classpath_cannotNestOutputInOutput, new String[] {potentialNestedOutput.makeRelative().toString(), outputLocations[0].makeRelative().toString()}));
+			return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH, Messages.bind(Messages.classpath_cannotNestOutputInOutput, new String[] {potentialNestedOutput.makeRelative().toString(), outputLocations[0].makeRelative().toString()}));
 		}
 
 		for (int i = 0 ; i < length; i++) {
@@ -1456,17 +1456,17 @@ public class ClasspathEntry implements IIncludePathEntry {
 								&& !Util.isExcluded(entryPath.append("*"), inclusionPatterns = ((ClasspathEntry)otherEntry).fullInclusionPatternChars(), exclusionPatterns = ((ClasspathEntry)otherEntry).fullExclusionPatternChars(), false)) { //$NON-NLS-1$
 							String exclusionPattern = entryPath.removeFirstSegments(otherPath.segmentCount()).segment(0);
 							if (Util.isExcluded(entryPath, inclusionPatterns, exclusionPatterns, false)) {
-								return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_CLASSPATH, Messages.bind(Messages.classpath_mustEndWithSlash, new String[] {exclusionPattern, entryPath.makeRelative().toString()}));
+								return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH, Messages.bind(Messages.classpath_mustEndWithSlash, new String[] {exclusionPattern, entryPath.makeRelative().toString()}));
 							} else {
 								if (otherKind == IIncludePathEntry.CPE_SOURCE) {
 									exclusionPattern += '/';
 									if (!disableExclusionPatterns) {
-										return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_CLASSPATH, Messages.bind(Messages.classpath_cannotNestEntryInEntry, new String[] {entryPath.makeRelative().toString(), otherEntry.getPath().makeRelative().toString(), exclusionPattern}));
+										return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH, Messages.bind(Messages.classpath_cannotNestEntryInEntry, new String[] {entryPath.makeRelative().toString(), otherEntry.getPath().makeRelative().toString(), exclusionPattern}));
 									} else {
-										return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_CLASSPATH, Messages.bind(Messages.classpath_cannotNestEntryInEntryNoExclusion, new String[] {entryPath.makeRelative().toString(), otherEntry.getPath().makeRelative().toString(), exclusionPattern}));
+										return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH, Messages.bind(Messages.classpath_cannotNestEntryInEntryNoExclusion, new String[] {entryPath.makeRelative().toString(), otherEntry.getPath().makeRelative().toString(), exclusionPattern}));
 									}
 								} else {
-									return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_CLASSPATH, Messages.bind(Messages.classpath_cannotNestEntryInLibrary, new String[] {entryPath.makeRelative().toString(), otherEntry.getPath().makeRelative().toString()}));
+									return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH, Messages.bind(Messages.classpath_cannotNestEntryInLibrary, new String[] {entryPath.makeRelative().toString(), otherEntry.getPath().makeRelative().toString()}));
 								}
 							}
 						}
@@ -1482,7 +1482,7 @@ public class ClasspathEntry implements IIncludePathEntry {
     			if (entryPath.equals(currentOutput)) continue;
 				if (entryPath.isPrefixOf(currentOutput)) {
 				    if (kind != IIncludePathEntry.CPE_SOURCE || !Util.isExcluded(currentOutput, inclusionPatterns, exclusionPatterns, true)) {
-						return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_CLASSPATH, Messages.bind(Messages.classpath_cannotNestOutputInEntry, new String[] {currentOutput.makeRelative().toString(), entryPath.makeRelative().toString()}));
+						return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH, Messages.bind(Messages.classpath_cannotNestOutputInEntry, new String[] {currentOutput.makeRelative().toString(), entryPath.makeRelative().toString()}));
 				    }
 				}
 		    }
@@ -1492,7 +1492,7 @@ public class ClasspathEntry implements IIncludePathEntry {
 //		        if (allowNestingInOutputLocations[j]) continue;
 //		        IPath currentOutput = outputLocations[j];
 //				if (currentOutput.isPrefixOf(entryPath)) {
-//					return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_CLASSPATH, Messages.bind(Messages.classpath_cannotNestEntryInOutput, new String[] {entryPath.makeRelative().toString(), currentOutput.makeRelative().toString()}));
+//					return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH, Messages.bind(Messages.classpath_cannotNestEntryInOutput, new String[] {entryPath.makeRelative().toString(), currentOutput.makeRelative().toString()}));
 //				}
 //		    }
 		}
@@ -1526,12 +1526,12 @@ public class ClasspathEntry implements IIncludePathEntry {
 					switch (otherEntry.getEntryKind()) {
 						case IIncludePathEntry.CPE_SOURCE :
 							if (otherEntry.getPath().equals(output)) {
-								return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_CLASSPATH, Messages.bind(Messages.classpath_cannotUseDistinctSourceFolderAsOutput, new String[] {entryPathMsg, otherPathMsg, projectName}));
+								return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH, Messages.bind(Messages.classpath_cannotUseDistinctSourceFolderAsOutput, new String[] {entryPathMsg, otherPathMsg, projectName}));
 							}
 							break;
 						case IIncludePathEntry.CPE_LIBRARY :
 							if (otherEntry.getPath().equals(output)) {
-								return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_CLASSPATH, Messages.bind(Messages.classpath_cannotUseLibraryAsOutput, new String[] {entryPathMsg, otherPathMsg, projectName}));
+								return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH, Messages.bind(Messages.classpath_cannotUseLibraryAsOutput, new String[] {entryPathMsg, otherPathMsg, projectName}));
 							}
 					}
 				}
@@ -1587,7 +1587,7 @@ public class ClasspathEntry implements IIncludePathEntry {
 							// don't create a marker if initialization is in progress (case of cp initialization batching)
 							return JavaModelStatus.VERIFIED_OK;
 						}
-						IIncludePathEntry[] containerEntries = container.getClasspathEntries();
+						IIncludePathEntry[] containerEntries = container.getIncludepathEntries();
 						if (containerEntries != null){
 							for (int i = 0, length = containerEntries.length; i < length; i++){
 								IIncludePathEntry containerEntry = containerEntries[i];
@@ -1612,7 +1612,7 @@ public class ClasspathEntry implements IIncludePathEntry {
 						return new JavaModelStatus(e);
 					}
 				} else {
-					return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_CLASSPATH, Messages.bind(Messages.classpath_illegalContainerPath, new String[] {entryPathMsg, projectName}));
+					return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH, Messages.bind(Messages.classpath_illegalContainerPath, new String[] {entryPathMsg, projectName}));
 				}
 				break;
 
@@ -1620,7 +1620,7 @@ public class ClasspathEntry implements IIncludePathEntry {
 			case IIncludePathEntry.CPE_VARIABLE :
 				if (path != null && path.segmentCount() >= 1){
 					try {
-						entry = JavaScriptCore.getResolvedClasspathEntry(entry);
+						entry = JavaScriptCore.getResolvedIncludepathEntry(entry);
 					} catch (AssertionFailedException e) {
 						// Catch the assertion failure and throw java model exception instead
 						// see bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=55992
@@ -1636,13 +1636,13 @@ public class ClasspathEntry implements IIncludePathEntry {
 
 					// return deprecation status if any
 					String variableName = path.segment(0);
-					String deprecatedMessage = JavaScriptCore.getClasspathVariableDeprecationMessage(variableName);
+					String deprecatedMessage = JavaScriptCore.getIncludepathVariableDeprecationMessage(variableName);
 					if (deprecatedMessage != null) {
 						return new JavaModelStatus(IStatus.WARNING, IJavaScriptModelStatusConstants.DEPRECATED_VARIABLE, project, path, deprecatedMessage);
 					}
 					return status;
 				} else {
-					return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_CLASSPATH, Messages.bind(Messages.classpath_illegalVariablePath, new String[] {entryPathMsg, projectName}));
+					return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH, Messages.bind(Messages.classpath_illegalVariablePath, new String[] {entryPathMsg, projectName}));
 				}
 
 			// library entry check
@@ -1669,10 +1669,10 @@ public class ClasspathEntry implements IIncludePathEntry {
 										&& sourceAttachment != null
 										&& !sourceAttachment.isEmpty()
 										&& JavaModel.getTarget(workspaceRoot, sourceAttachment, true) == null){
-										return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_CLASSPATH, Messages.bind(Messages.classpath_unboundSourceAttachment, new String [] {sourceAttachment.toString(), path.toString(), projectName}));
+										return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH, Messages.bind(Messages.classpath_unboundSourceAttachment, new String [] {sourceAttachment.toString(), path.toString(), projectName}));
 									}
 								} else {
-									return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_CLASSPATH, Messages.bind(Messages.classpath_illegalLibraryArchive, new String[] {entryPathMsg, projectName}));
+									return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH, Messages.bind(Messages.classpath_illegalLibraryArchive, new String[] {entryPathMsg, projectName}));
 								}
 								break;
 							case IResource.FOLDER :	// internal binary folder
@@ -1680,34 +1680,34 @@ public class ClasspathEntry implements IIncludePathEntry {
 									&& sourceAttachment != null
 									&& !sourceAttachment.isEmpty()
 									&& JavaModel.getTarget(workspaceRoot, sourceAttachment, true) == null){
-									return  new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_CLASSPATH, Messages.bind(Messages.classpath_unboundSourceAttachment, new String [] {sourceAttachment.toString(), path.toString(), projectName}));
+									return  new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH, Messages.bind(Messages.classpath_unboundSourceAttachment, new String [] {sourceAttachment.toString(), path.toString(), projectName}));
 								}
 						}
 					} else if (target instanceof File){
 						File file = JavaModel.getFile(target);
 					    if (file == null) {
-							return  new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_CLASSPATH, Messages.bind(Messages.classpath_illegalExternalFolder, new String[] {path.toOSString(), projectName}));
+							return  new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH, Messages.bind(Messages.classpath_illegalExternalFolder, new String[] {path.toOSString(), projectName}));
 					    } else if (!
 					    		(org.eclipse.wst.jsdt.internal.compiler.util.Util.isArchiveFileName(file.getName())
 							    		||		org.eclipse.wst.jsdt.internal.compiler.util.Util.isJavaFileName(file.getName()))
 							    		) {
-							return  new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_CLASSPATH, Messages.bind(Messages.classpath_illegalLibraryArchive, (new String[] {path.toOSString(), projectName})));
+							return  new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH, Messages.bind(Messages.classpath_illegalLibraryArchive, (new String[] {path.toOSString(), projectName})));
 					    } else if (checkSourceAttachment
 								&& sourceAttachment != null
 								&& !sourceAttachment.isEmpty()
 								&& JavaModel.getTarget(workspaceRoot, sourceAttachment, true) == null){
-								return  new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_CLASSPATH, Messages.bind(Messages.classpath_unboundSourceAttachment, new String [] {sourceAttachment.toString(), path.toOSString(), projectName}));
+								return  new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH, Messages.bind(Messages.classpath_unboundSourceAttachment, new String [] {sourceAttachment.toString(), path.toOSString(), projectName}));
 					    }
 					} else {
 						boolean isExternal = path.getDevice() != null || !workspaceRoot.getProject(path.segment(0)).exists();
 						if (isExternal) {
-							return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_CLASSPATH, Messages.bind(Messages.classpath_unboundLibrary, new String[] {path.toOSString(), projectName}));
+							return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH, Messages.bind(Messages.classpath_unboundLibrary, new String[] {path.toOSString(), projectName}));
 						} else {
-							return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_CLASSPATH, Messages.bind(Messages.classpath_unboundLibrary, new String[] {entryPathMsg, projectName}));
+							return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH, Messages.bind(Messages.classpath_unboundLibrary, new String[] {entryPathMsg, projectName}));
 						}
 					}
 				} else {
-					return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_CLASSPATH, Messages.bind(Messages.classpath_illegalLibraryPath, new String[] {entryPathMsg, projectName}));
+					return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH, Messages.bind(Messages.classpath_illegalLibraryPath, new String[] {entryPathMsg, projectName}));
 				}
 				break;
 
@@ -1718,10 +1718,10 @@ public class ClasspathEntry implements IIncludePathEntry {
 					IJavaScriptProject prereqProject = JavaScriptCore.create(prereqProjectRsc);
 					try {
 						if (!prereqProjectRsc.exists() || !prereqProjectRsc.hasNature(JavaScriptCore.NATURE_ID)){
-							return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_CLASSPATH, Messages.bind(Messages.classpath_unboundProject, new String[] {path.segment(0), projectName}));
+							return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH, Messages.bind(Messages.classpath_unboundProject, new String[] {path.segment(0), projectName}));
 						}
 						if (!prereqProjectRsc.isOpen()){
-							return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_CLASSPATH, Messages.bind(Messages.classpath_closedProject, new String[] {path.segment(0)}));
+							return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH, Messages.bind(Messages.classpath_closedProject, new String[] {path.segment(0)}));
 						}
 						if (!JavaScriptCore.IGNORE.equals(project.getOption(JavaScriptCore.CORE_INCOMPATIBLE_JDK_LEVEL, true))) {
 							long projectTargetJDK = CompilerOptions.versionToJdkLevel(project.getOption(JavaScriptCore.COMPILER_CODEGEN_TARGET_PLATFORM, true));
@@ -1731,10 +1731,10 @@ public class ClasspathEntry implements IIncludePathEntry {
 							}
 						}
 					} catch (CoreException e){
-						return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_CLASSPATH, Messages.bind(Messages.classpath_unboundProject, new String[] {path.segment(0), projectName}));
+						return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH, Messages.bind(Messages.classpath_unboundProject, new String[] {path.segment(0), projectName}));
 					}
 				} else {
-					return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_CLASSPATH, Messages.bind(Messages.classpath_illegalProjectPath, new String[] {path.toString(), projectName}));
+					return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH, Messages.bind(Messages.classpath_illegalProjectPath, new String[] {path.toString(), projectName}));
 				}
 				break;
 
@@ -1751,10 +1751,10 @@ public class ClasspathEntry implements IIncludePathEntry {
 				if (path != null && path.isAbsolute() && !path.isEmpty()) {
 					IPath projectPath= project.getProject().getFullPath();
 					if (!projectPath.isPrefixOf(path) || JavaModel.getTarget(workspaceRoot, path, true) == null){
-						return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_CLASSPATH, Messages.bind(Messages.classpath_unboundSourceFolder, new String[] {entryPathMsg, projectName}));
+						return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH, Messages.bind(Messages.classpath_unboundSourceFolder, new String[] {entryPathMsg, projectName}));
 					}
 				} else {
-					return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_CLASSPATH, Messages.bind(Messages.classpath_illegalSourceFolderPath, new String[] {entryPathMsg, projectName}));
+					return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH, Messages.bind(Messages.classpath_illegalSourceFolderPath, new String[] {entryPathMsg, projectName}));
 				}
 				break;
 		}

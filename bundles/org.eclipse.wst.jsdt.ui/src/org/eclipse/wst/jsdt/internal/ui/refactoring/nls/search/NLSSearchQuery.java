@@ -85,7 +85,7 @@ public class NLSSearchQuery implements ISearchQuery {
 					engine.search(pattern, participants, fScope, requestor, new SubProgressMonitor(monitor, 4));
 					requestor.reportUnusedPropertyNames(new SubProgressMonitor(monitor, 1));
 					
-					IJavaScriptUnit compilationUnit= ((IType)wrapperClass).getCompilationUnit();
+					IJavaScriptUnit compilationUnit= ((IType)wrapperClass).getJavaScriptUnit();
 					CompilationUnitEntry groupElement= new CompilationUnitEntry(Messages.format(NLSSearchMessages.NLSSearchResultCollector_unusedKeys, labelProvider.getText(compilationUnit)), compilationUnit);
 					
 					boolean hasUnusedPropertie= false;

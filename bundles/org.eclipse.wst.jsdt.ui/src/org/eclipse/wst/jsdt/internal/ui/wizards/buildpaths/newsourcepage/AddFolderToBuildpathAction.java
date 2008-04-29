@@ -111,7 +111,7 @@ public class AddFolderToBuildpathAction extends BuildpathModifierAction {
 			if (object instanceof IJavaScriptProject) {
 				project= (IJavaScriptProject)object;
 			} else if (object instanceof IPackageFragment) {
-				project= ((IPackageFragment)object).getJavaProject();
+				project= ((IPackageFragment)object).getJavaScriptProject();
 			} else {
 				IFolder folder= (IFolder)object;
 				project= JavaScriptCore.create(folder.getProject());

@@ -25,7 +25,7 @@ public interface IJavaScriptModelMarker {
 	 * recognize those markers in the workspace that flag problems detected by
 	 * the Java tooling during compilation.
 	 */
-	String JAVA_MODEL_PROBLEM_MARKER = JavaScriptCore.PLUGIN_ID + ".problem"; //$NON-NLS-1$
+	String JAVASCRIPT_MODEL_PROBLEM_MARKER = JavaScriptCore.PLUGIN_ID + ".problem"; //$NON-NLS-1$
 
 	/**
 	 * Java model transient problem marker type (value
@@ -106,5 +106,5 @@ public interface IJavaScriptModelMarker {
 	 *
 	 * @since 2.0
 	 */
-	String CLASSPATH_FILE_FORMAT = "classpathFileFormat"; //$NON-NLS-1$
+	String INCLUDEPATH_FILE_FORMAT = "classpathFileFormat"; //$NON-NLS-1$
 }

@@ -172,7 +172,7 @@ public final class AddCustomConstructorOperation implements IWorkspaceRunnable {
 			monitor.beginTask("", 1); //$NON-NLS-1$
 			monitor.setTaskName(CodeGenerationMessages.AddCustomConstructorOperation_description); 
 			fCreated.clear();
-			final IJavaScriptUnit unit= fType.getCompilationUnit();
+			final IJavaScriptUnit unit= fType.getJavaScriptUnit();
 			final CompilationUnitRewrite rewrite= new CompilationUnitRewrite(unit, fUnit);
 			ITypeBinding binding= null;
 			ListRewrite rewriter= null;

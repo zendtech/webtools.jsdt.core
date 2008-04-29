@@ -78,7 +78,7 @@ public class LibrarySuperType {
 			// TODO Auto-generated catch block
 			ex.printStackTrace();
 		}
-		if(container!=null) return	container.getClasspathEntries();
+		if(container!=null) return	container.getIncludepathEntries();
 
 		return new IIncludePathEntry[0];
 	}

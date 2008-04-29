@@ -71,7 +71,7 @@ public class CommitWorkingCopyOperation extends JavaModelOperation {
 			beginTask(Messages.workingCopy_commit, 2);
 			CompilationUnit workingCopy = getCompilationUnit();
 
-			if (ExternalJavaProject.EXTERNAL_PROJECT_NAME.equals(workingCopy.getJavaProject().getElementName())) {
+			if (ExternalJavaProject.EXTERNAL_PROJECT_NAME.equals(workingCopy.getJavaScriptProject().getElementName())) {
 				// case of a working copy without a resource
 				workingCopy.getBuffer().save(this.progressMonitor, this.force);
 				return;
@@ -84,7 +84,7 @@ public class CommitWorkingCopyOperation extends JavaModelOperation {
 			PackageFragmentRoot root = (PackageFragmentRoot)workingCopy.getAncestor(IJavaScriptElement.PACKAGE_FRAGMENT_ROOT);
 			boolean isIncluded = !Util.isExcluded(workingCopy);
 			IFile resource = (IFile)workingCopy.getResource();
-			IJavaScriptProject project = root.getJavaProject();
+			IJavaScriptProject project = root.getJavaScriptProject();
 			if (isPrimary || (root.validateOnClasspath().isOK() && isIncluded && resource.isAccessible() && Util.isValidCompilationUnitName(workingCopy.getElementName(), project.getOption(JavaScriptCore.COMPILER_SOURCE, true), project.getOption(JavaScriptCore.COMPILER_COMPLIANCE, true)))) {
 
 				// force opening so that the delta builder can get the old info

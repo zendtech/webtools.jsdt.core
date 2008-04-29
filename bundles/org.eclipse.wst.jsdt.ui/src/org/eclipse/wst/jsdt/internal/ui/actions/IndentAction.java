@@ -450,7 +450,7 @@ public class IndentAction extends TextEditorAction {
 		IJavaScriptUnit cu= JavaPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(editor.getEditorInput());
 		if (cu == null)
 			return null;
-		return cu.getJavaProject();
+		return cu.getJavaScriptProject();
 	}
 
 	/**

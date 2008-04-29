@@ -206,7 +206,7 @@ public class DeleteModifications extends RefactoringModifications {
 					IFile file= (IFile)member;
 					if ("class".equals(file.getFileExtension()) && file.isDerived()) //$NON-NLS-1$
 						continue;
-					if (pack.isDefaultPackage() && ! JavaScriptCore.isJavaLikeFileName(file.getName()))
+					if (pack.isDefaultPackage() && ! JavaScriptCore.isJavaScriptLikeFileName(file.getName()))
 						continue;
 					resourcesCollector.add(member);
 					getResourceModifications().addDelete(member);

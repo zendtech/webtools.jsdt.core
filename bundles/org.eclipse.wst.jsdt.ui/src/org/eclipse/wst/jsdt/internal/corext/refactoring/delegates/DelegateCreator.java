@@ -144,7 +144,7 @@ public abstract class DelegateCreator {
 	 */
 	public void setSourceRewrite(CompilationUnitRewrite rewrite) {
 		fOriginalRewrite= rewrite;
-		fPreferences= JavaPreferencesSettings.getCodeGenerationSettings(rewrite.getCu().getJavaProject());
+		fPreferences= JavaPreferencesSettings.getCodeGenerationSettings(rewrite.getCu().getJavaScriptProject());
 
 		fDelegateRewrite= new CompilationUnitRewrite(rewrite.getCu(), rewrite.getRoot());
 		fDelegateRewrite.getASTRewrite().setTargetSourceRangeComputer(rewrite.getASTRewrite().getExtendedSourceRangeComputer());
@@ -356,7 +356,7 @@ public abstract class DelegateCreator {
 	public void createEdit() throws JavaScriptModelException {
 		try {
 			IDocument document= new Document(fDelegateRewrite.getCu().getBuffer().getContents());
-			TextEdit edit= fDelegateRewrite.getASTRewrite().rewriteAST(document, fDelegateRewrite.getCu().getJavaProject().getOptions(true));
+			TextEdit edit= fDelegateRewrite.getASTRewrite().rewriteAST(document, fDelegateRewrite.getCu().getJavaScriptProject().getOptions(true));
 			edit.apply(document, TextEdit.UPDATE_REGIONS);
 
 			String newSource= Strings.trimIndentation(document.get(fTrackedPosition.getStartPosition(), fTrackedPosition.getLength()),

@@ -113,7 +113,7 @@ public final class JavaScriptConventions {
 	 * <ul>
 	 * <li> it must not be null
 	 * <li> it must be suffixed by a dot ('.') followed by one of the
-	 *       {@link JavaScriptCore#getJavaLikeExtensions() Java-like extensions}
+	 *       {@link JavaScriptCore#getJavaScriptLikeExtensions() Java-like extensions}
 	 * <li> its prefix must be a valid identifier
 	 * <li> it must not contain any characters or substrings that are not valid
 	 *		   on the file system on which workspace root is located.
@@ -136,7 +136,7 @@ public final class JavaScriptConventions {
 	 * <ul>
 	 * <li> it must not be null
 	 * <li> it must be suffixed by a dot ('.') followed by one of the
-	 *       {@link JavaScriptCore#getJavaLikeExtensions() Java-like extensions}
+	 *       {@link JavaScriptCore#getJavaScriptLikeExtensions() Java-like extensions}
 	 * <li> its prefix must be a valid identifier
 	 * <li> it must not contain any characters or substrings that are not valid
 	 *		   on the file system on which workspace root is located.
@@ -384,10 +384,10 @@ public final class JavaScriptConventions {
 	 *		indicating why the given name is discouraged,
 	 *      otherwise a status object indicating what is wrong with
 	 *      the name
-	 * @deprecated Use {@link #validateJavaTypeName(String id, String sourceLevel, String complianceLevel)} instead
+	 * @deprecated Use {@link #validateJavaScriptTypeName(String id, String sourceLevel, String complianceLevel)} instead
 	 */
-	public static IStatus validateJavaTypeName(String name) {
-		return validateJavaTypeName(name, CompilerOptions.VERSION_1_3,CompilerOptions.VERSION_1_3);
+	public static IStatus validateJavaScriptTypeName(String name) {
+		return validateJavaScriptTypeName(name, CompilerOptions.VERSION_1_3,CompilerOptions.VERSION_1_3);
 	}
 
 	/**
@@ -406,7 +406,7 @@ public final class JavaScriptConventions {
 	 *      the name
 	 * @since 3.3
 	 */
-	public static IStatus validateJavaTypeName(String name, String sourceLevel, String complianceLevel) {
+	public static IStatus validateJavaScriptTypeName(String name, String sourceLevel, String complianceLevel) {
 		if (name == null) {
 			return new Status(IStatus.ERROR, JavaScriptCore.PLUGIN_ID, -1, Messages.convention_type_nullName, null);
 		}
@@ -458,10 +458,48 @@ public final class JavaScriptConventions {
 	 * @return a status object with code <code>IStatus.OK</code> if
 	 *		the given name is valid as a method name, otherwise a status
 	 *		object indicating what is wrong with the name
-	 * @deprecated Use {@link #validateMethodName(String id, String sourceLevel, String complianceLevel)} instead
+	 * @deprecated Use {@link #validateFunctionName(String id, String sourceLevel, String complianceLevel)} instead
+	 * @deprecated Use {@link #validateFunctionName(String)} instead
 	 */
 	public static IStatus validateMethodName(String name) {
-		return validateMethodName(name, CompilerOptions.VERSION_1_3,CompilerOptions.VERSION_1_3);
+		return validateFunctionName(name);
+	}
+
+	/**
+	 * Validate the given method name.
+	 * The special names "&lt;init&gt;" and "&lt;clinit&gt;" are not valid.
+	 * <p>
+	 * The syntax for a method  name is defined by Identifier
+	 * of MethodDeclarator (JLS2 8.4). For example "println".
+	 *
+	 * @param name the name of a method
+	 * @return a status object with code <code>IStatus.OK</code> if
+	 *		the given name is valid as a method name, otherwise a status
+	 *		object indicating what is wrong with the name
+	 * @deprecated Use {@link #validateFunctionName(String id, String sourceLevel, String complianceLevel)} instead
+	 */
+	public static IStatus validateFunctionName(String name) {
+		return validateFunctionName(name, CompilerOptions.VERSION_1_3,CompilerOptions.VERSION_1_3);
+	}
+
+	/**
+	 * Validate the given method name for the given source and compliance levels.
+	 * The special names "&lt;init&gt;" and "&lt;clinit&gt;" are not valid.
+	 * <p>
+	 * The syntax for a method  name is defined by Identifier
+	 * of MethodDeclarator (JLS2 8.4). For example "println".
+	 *
+	 * @param name the name of a method
+	 * @param sourceLevel the source level
+	 * @param complianceLevel the compliance level
+	 * @return a status object with code <code>IStatus.OK</code> if
+	 *		the given name is valid as a method name, otherwise a status
+	 *		object indicating what is wrong with the name
+	 * @since 3.3
+	 * @deprecated Use {@link #validateFunctionName(String,String,String)} instead
+	 */
+	public static IStatus validateMethodName(String name, String sourceLevel, String complianceLevel) {
+		return validateFunctionName(name, sourceLevel, complianceLevel);
 	}
 
 	/**
@@ -479,7 +517,7 @@ public final class JavaScriptConventions {
 	 *		object indicating what is wrong with the name
 	 * @since 3.3
 	 */
-	public static IStatus validateMethodName(String name, String sourceLevel, String complianceLevel) {
+	public static IStatus validateFunctionName(String name, String sourceLevel, String complianceLevel) {
 		return validateIdentifier(name, sourceLevel,complianceLevel);
 	}
 
@@ -621,7 +659,7 @@ public final class JavaScriptConventions {
 	 */
 	public static IJavaScriptModelStatus validateClasspathEntry(IJavaScriptProject project, IIncludePathEntry entry, boolean checkSourceAttachment){
 		IJavaScriptModelStatus status = ClasspathEntry.validateClasspathEntry(project, entry, checkSourceAttachment, true/*recurse in container*/);
-		if (status.getCode() == IJavaScriptModelStatusConstants.INVALID_CLASSPATH && ((ClasspathEntry) entry).isOptional())
+		if (status.getCode() == IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH && ((ClasspathEntry) entry).isOptional())
 			return JavaModelStatus.VERIFIED_OK;
 		return status;
 	}

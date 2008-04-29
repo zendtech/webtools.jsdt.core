@@ -199,7 +199,7 @@ public class ExternalizeStringsAction extends SelectionDispatchAction {
 		if (first instanceof IJavaScriptUnit) 
 			return (IJavaScriptUnit) first;
 		if (first instanceof IType)
-			return ((IType) first).getCompilationUnit();
+			return ((IType) first).getJavaScriptUnit();
 		return null;
 	}
 	
@@ -252,7 +252,7 @@ public class ExternalizeStringsAction extends SelectionDispatchAction {
 						pm.worked(1);
 					} else if (elementType == IJavaScriptElement.TYPE) {
 						IType type= (IType)element;
-						IJavaScriptUnit cu= type.getCompilationUnit();
+						IJavaScriptUnit cu= type.getJavaScriptUnit();
 						if (cu != null && cu.exists()) {
 							NonNLSElement nlsElement= analyze(cu);
 							if (nlsElement != null) {
@@ -298,7 +298,7 @@ public class ExternalizeStringsAction extends SelectionDispatchAction {
 			if (pack == null)
 				return new ArrayList(0);
 				
-			IJavaScriptUnit[] cus= pack.getCompilationUnits();
+			IJavaScriptUnit[] cus= pack.getJavaScriptUnits();
 	
 			pm.beginTask("", cus.length); //$NON-NLS-1$
 			pm.setTaskName(pack.getElementName());

@@ -425,7 +425,7 @@ public final class PushDownRefactoringProcessor extends HierarchyProcessor {
 		try {
 			monitor.beginTask(RefactoringCoreMessages.PushDownRefactoring_checking, 5);
 			clearCaches();
-			IJavaScriptUnit unit= getDeclaringType().getCompilationUnit();
+			IJavaScriptUnit unit= getDeclaringType().getJavaScriptUnit();
 			if (fLayer)
 				unit= unit.findWorkingCopy(fOwner);
 			resetWorkingCopies(unit);
@@ -567,14 +567,14 @@ public final class PushDownRefactoringProcessor extends HierarchyProcessor {
 			return;
 		}
 		try {
-			final IDocument document= new Document(method.getCompilationUnit().getBuffer().getContents());
+			final IDocument document= new Document(method.getJavaScriptUnit().getBuffer().getContents());
 			final ASTRewrite rewriter= ASTRewrite.create(body.getAST());
 			final ITrackedNodePosition position= rewriter.track(body);
 			body.accept(new TypeVariableMapper(rewriter, mapping));
-			rewriter.rewriteAST(document, getDeclaringType().getCompilationUnit().getJavaProject().getOptions(true)).apply(document, TextEdit.NONE);
+			rewriter.rewriteAST(document, getDeclaringType().getJavaScriptUnit().getJavaScriptProject().getOptions(true)).apply(document, TextEdit.NONE);
 			String content= document.get(position.getStartPosition(), position.getLength());
 			String[] lines= Strings.convertIntoLines(content);
-			Strings.trimIndentation(lines, method.getJavaProject(), false);
+			Strings.trimIndentation(lines, method.getJavaScriptProject(), false);
 			content= Strings.concatenate(lines, StubUtility.getLineDelimiterUsed(method));
 			newMethod.setBody((Block) targetRewrite.createStringPlaceholder(content, ASTNode.BLOCK));
 		} catch (MalformedTreeException exception) {
@@ -592,7 +592,7 @@ public final class PushDownRefactoringProcessor extends HierarchyProcessor {
 			for (int index= 0; index < destinations.length; index++) {
 				type= destinations[index];
 				mapping= TypeVariableUtil.superTypeToInheritedType(getDeclaringType(), type);
-				if (unitRewriter.getCu().equals(type.getCompilationUnit())) {
+				if (unitRewriter.getCu().equals(type.getJavaScriptUnit())) {
 					IMember member= null;
 					MemberVisibilityAdjustor adjustor= null;
 					AbstractTypeDeclaration declaration= ASTNodeSearchUtil.getAbstractTypeDeclarationNode(type, unitRewriter.getRoot());
@@ -612,7 +612,7 @@ public final class PushDownRefactoringProcessor extends HierarchyProcessor {
 						adjustor.adjustVisibility(new SubProgressMonitor(monitor, 1));
 						adjustments.remove(member);
 						adjustors.add(adjustor);
-						status.merge(checkProjectCompliance(getCompilationUnitRewrite(rewrites, getDeclaringType().getCompilationUnit()), type, new IMember[] {infos[offset].getMember()}));
+						status.merge(checkProjectCompliance(getCompilationUnitRewrite(rewrites, getDeclaringType().getJavaScriptUnit()), type, new IMember[] {infos[offset].getMember()}));
 						if (infos[offset].isFieldInfo()) {
 							final VariableDeclarationFragment oldField= ASTNodeSearchUtil.getFieldDeclarationFragmentNode((IField) infos[offset].getMember(), sourceRewriter.getRoot());
 							if (oldField != null) {
@@ -644,7 +644,7 @@ public final class PushDownRefactoringProcessor extends HierarchyProcessor {
 			final Map arguments= new HashMap();
 			String project= null;
 			final IType declaring= getDeclaringType();
-			final IJavaScriptProject javaProject= declaring.getJavaProject();
+			final IJavaScriptProject javaProject= declaring.getJavaScriptProject();
 			if (javaProject != null)
 				project= javaProject.getElementName();
 			int flags= JavaRefactoringDescriptor.JAR_MIGRATION | JavaRefactoringDescriptor.JAR_REFACTORING | RefactoringDescriptor.STRUCTURAL_CHANGE | RefactoringDescriptor.MULTI_CHANGE;
@@ -692,14 +692,14 @@ public final class PushDownRefactoringProcessor extends HierarchyProcessor {
 		Assert.isNotNull(status);
 		try {
 			monitor.beginTask(RefactoringCoreMessages.PushDownRefactoring_checking, 7);
-			final IJavaScriptUnit source= getDeclaringType().getCompilationUnit();
+			final IJavaScriptUnit source= getDeclaringType().getJavaScriptUnit();
 			final CompilationUnitRewrite sourceRewriter= new CompilationUnitRewrite(source);
 			final Map rewrites= new HashMap(2);
 			rewrites.put(source, sourceRewriter);
 			IType[] types= getHierarchyOfDeclaringClass(new SubProgressMonitor(monitor, 1)).getSubclasses(getDeclaringType());
 			final Set result= new HashSet(types.length + 1);
 			for (int index= 0; index < types.length; index++)
-				result.add(types[index].getCompilationUnit());
+				result.add(types[index].getJavaScriptUnit());
 			result.add(source);
 			final Map adjustments= new HashMap();
 			final List adjustors= new ArrayList();
@@ -760,9 +760,9 @@ public final class PushDownRefactoringProcessor extends HierarchyProcessor {
 		if (initializer != null) {
 			Expression newInitializer= null;
 			if (mapping.length > 0)
-				newInitializer= createPlaceholderForExpression(initializer, field.getCompilationUnit(), mapping, rewrite);
+				newInitializer= createPlaceholderForExpression(initializer, field.getJavaScriptUnit(), mapping, rewrite);
 			else
-				newInitializer= createPlaceholderForExpression(initializer, field.getCompilationUnit(), rewrite);
+				newInitializer= createPlaceholderForExpression(initializer, field.getJavaScriptUnit(), rewrite);
 			newFragment.setInitializer(newInitializer);
 		}
 		newFragment.setName(ast.newSimpleName(oldFieldFragment.getName().getIdentifier()));
@@ -773,7 +773,7 @@ public final class PushDownRefactoringProcessor extends HierarchyProcessor {
 		copyAnnotations(oldField, newField);
 		newField.modifiers().addAll(ASTNodeFactory.newModifiers(ast, info.getNewModifiersForCopyInSubclass(oldField.getModifiers())));
 		Type oldType= oldField.getType();
-		IJavaScriptUnit cu= field.getCompilationUnit();
+		IJavaScriptUnit cu= field.getJavaScriptUnit();
 		Type newType= null;
 		if (mapping.length > 0) {
 			newType= createPlaceholderForType(oldType, cu, mapping, rewrite);
@@ -794,7 +794,7 @@ public final class PushDownRefactoringProcessor extends HierarchyProcessor {
 		newMethod.setExtraDimensions(oldMethod.getExtraDimensions());
 		if (info.copyJavadocToCopiesInSubclasses())
 			copyJavadocNode(rewrite, method, oldMethod, newMethod);
-		final IJavaScriptProject project= rewriter.getCu().getJavaProject();
+		final IJavaScriptProject project= rewriter.getCu().getJavaScriptProject();
 		if (info.isNewMethodToBeDeclaredAbstract() && JavaModelUtil.is50OrHigher(project) && JavaPreferencesSettings.getCodeGenerationSettings(project).overrideAnnotation) {
 			final MarkerAnnotation annotation= ast.newMarkerAnnotation();
 			annotation.setTypeName(ast.newSimpleName("Override")); //$NON-NLS-1$
@@ -803,8 +803,8 @@ public final class PushDownRefactoringProcessor extends HierarchyProcessor {
 		copyAnnotations(oldMethod, newMethod);
 		newMethod.modifiers().addAll(ASTNodeFactory.newModifiers(ast, info.getNewModifiersForCopyInSubclass(oldMethod.getModifiers())));
 		newMethod.setName(ast.newSimpleName(oldMethod.getName().getIdentifier()));
-		copyReturnType(rewrite, method.getCompilationUnit(), oldMethod, newMethod, mapping);
-		copyParameters(rewrite, method.getCompilationUnit(), oldMethod, newMethod, mapping);
+		copyReturnType(rewrite, method.getJavaScriptUnit(), oldMethod, newMethod, mapping);
+		copyParameters(rewrite, method.getJavaScriptUnit(), oldMethod, newMethod, mapping);
 		copyThrownExceptions(oldMethod, newMethod);
 		copyTypeParameters(oldMethod, newMethod);
 		return newMethod;
@@ -836,7 +836,7 @@ public final class PushDownRefactoringProcessor extends HierarchyProcessor {
 		List result= new ArrayList(allDirectSubclasses.length);
 		for (int index= 0; index < allDirectSubclasses.length; index++) {
 			IType subclass= allDirectSubclasses[index];
-			if (subclass.exists() && !subclass.isBinary() && !subclass.isReadOnly() && subclass.getCompilationUnit() != null && subclass.isStructureKnown())
+			if (subclass.exists() && !subclass.isBinary() && !subclass.isReadOnly() && subclass.getJavaScriptUnit() != null && subclass.isStructureKnown())
 				result.add(subclass);
 		}
 		return (IType[]) result.toArray(new IType[result.size()]);

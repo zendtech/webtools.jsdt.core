@@ -175,7 +175,7 @@ protected boolean resourceExists() {
 	public String getDisplayName() {
 
 		JsGlobalScopeContainerInitializer containerInitializer = getContainerInitializer();
-		if(containerInitializer!=null) return containerInitializer.getDescription(getPath(), getJavaProject());
+		if(containerInitializer!=null) return containerInitializer.getDescription(getPath(), getJavaScriptProject());
 		return super.getDisplayName();
 
 	}

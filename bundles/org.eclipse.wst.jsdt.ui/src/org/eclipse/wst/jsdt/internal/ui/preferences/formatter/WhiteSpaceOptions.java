@@ -236,7 +236,7 @@ public final class WhiteSpaceOptions {
     "value= condition ? TRUE : FALSE;"); //$NON-NLS-1$
 
 //    private final PreviewSnippet CLASS_DECL_PREVIEW= new PreviewSnippet(
-//    CodeFormatter.K_COMPILATION_UNIT, 
+//    CodeFormatter.K_JAVASCRIPT_UNIT, 
 //    "class MyClass implements I0, I1, I2 {}"); //$NON-NLS-1$
 
 //    private final PreviewSnippet ANON_CLASS_PREVIEW= new PreviewSnippet(

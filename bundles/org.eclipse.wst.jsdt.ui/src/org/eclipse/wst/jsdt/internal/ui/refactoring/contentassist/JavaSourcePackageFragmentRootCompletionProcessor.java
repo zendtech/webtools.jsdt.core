@@ -103,7 +103,7 @@ public class JavaSourcePackageFragmentRootCompletionProcessor implements IConten
 	private ICompletionProposal[] createSourcePackageFragmentRootProposals(String prefix, int replacementLength) {
 		List proposals= new ArrayList();
 		try {
-			IJavaScriptProject[] projects= fRoot.getJavaProjects();
+			IJavaScriptProject[] projects= fRoot.getJavaScriptProjects();
 			for (int i= 0; i < projects.length; i++) {
 				IJavaScriptProject project= projects[i];
 				IPackageFragmentRoot[] roots= project.getPackageFragmentRoots();

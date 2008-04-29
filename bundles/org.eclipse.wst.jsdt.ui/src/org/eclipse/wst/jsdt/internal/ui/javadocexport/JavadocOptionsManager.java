@@ -200,7 +200,7 @@ public class JavadocOptionsManager {
 	private IJavaScriptProject getSingleProjectFromInitialSelection() {
 		IJavaScriptProject res= null;
 		for (int i= 0; i < fInitialElements.length; i++) {
-			IJavaScriptProject curr= fInitialElements[i].getJavaProject();
+			IJavaScriptProject curr= fInitialElements[i].getJavaScriptProject();
 			if (res == null) {
 				res= curr;
 			} else if (!res.equals(curr)) {
@@ -517,7 +517,7 @@ public class JavadocOptionsManager {
 			StringTokenizer tokenizer= new StringTokenizer(sourcefiles, ","); //$NON-NLS-1$
 			while (tokenizer.hasMoreTokens()) {
 				String name= tokenizer.nextToken().trim();
-				if (JavaScriptCore.isJavaLikeFileName(name)) {
+				if (JavaScriptCore.isJavaScriptLikeFileName(name)) {
 					IPath path= makeAbsolutePathFromRelative(new Path(name));
 					//if unable to create an absolute path to the resource skip it
 					if (path != null) {
@@ -1050,7 +1050,7 @@ public class JavadocOptionsManager {
 						return cu;
 					}
 			}
-			IJavaScriptProject project= je.getJavaProject();
+			IJavaScriptProject project= je.getJavaScriptProject();
 			if (isValidProject(project))
 				return project;
 		}
@@ -1083,7 +1083,7 @@ public class JavadocOptionsManager {
 	}
 
 	private boolean containsCompilationUnits(IPackageFragment pack) throws JavaScriptModelException {
-		return pack.getCompilationUnits().length > 0;
+		return pack.getJavaScriptUnits().length > 0;
 	}
 
 	public RecentSettingsStore getRecentSettings() {

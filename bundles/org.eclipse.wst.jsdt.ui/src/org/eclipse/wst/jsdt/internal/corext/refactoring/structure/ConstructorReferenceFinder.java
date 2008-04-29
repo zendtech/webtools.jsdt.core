@@ -240,7 +240,7 @@ class ConstructorReferenceFinder {
 	//Collection of SearchResults
 	private static Collection getAllSuperConstructorInvocations(IType type) throws JavaScriptModelException {
 		IFunction[] constructors= JavaElementUtil.getAllConstructors(type);
-		JavaScriptUnit cuNode= new RefactoringASTParser(AST.JLS3).parse(type.getCompilationUnit(), false);
+		JavaScriptUnit cuNode= new RefactoringASTParser(AST.JLS3).parse(type.getJavaScriptUnit(), false);
 		List result= new ArrayList(constructors.length);
 		for (int i= 0; i < constructors.length; i++) {
 			ASTNode superCall= getSuperConstructorCallNode(constructors[i], cuNode);

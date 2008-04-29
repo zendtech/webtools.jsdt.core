@@ -64,7 +64,7 @@ public final class PrimitiveType extends TType {
 	protected boolean doCanAssignTo(TType lhs) {
 		if (lhs.getKind() != PRIMITIVE_TYPE) {
 			if (lhs.getKind() == STANDARD_TYPE) {
-				IJavaScriptProject javaProject= ((StandardType)lhs).getJavaElementType().getJavaProject();
+				IJavaScriptProject javaProject= ((StandardType)lhs).getJavaElementType().getJavaScriptProject();
 				return getEnvironment().createBoxed(this, javaProject).canAssignTo(lhs);
 			}
 			return false;

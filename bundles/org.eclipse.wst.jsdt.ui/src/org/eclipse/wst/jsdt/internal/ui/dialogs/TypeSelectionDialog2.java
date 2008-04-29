@@ -213,7 +213,7 @@ public class TypeSelectionDialog2 extends SelectionStatusDialog {
 					String text= ((ITextSelection)selection).getText();
 					if (text != null) {
 						text= text.trim();
-						if (text.length() > 0 && JavaScriptConventions.validateJavaTypeName(text, JavaScriptCore.VERSION_1_3, JavaScriptCore.VERSION_1_3).isOK()) {
+						if (text.length() > 0 && JavaScriptConventions.validateJavaScriptTypeName(text, JavaScriptCore.VERSION_1_3, JavaScriptCore.VERSION_1_3).isOK()) {
 							fInitialFilter= text;
 							fSelectionMode= FULL_SELECTION;
 						}

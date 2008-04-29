@@ -201,7 +201,7 @@ public class ClassFileEditor extends JavaEditor implements ClassFileDocumentProv
 		private void createSourceAttachmentControls(Composite composite, IPackageFragmentRoot root) throws JavaScriptModelException {
 			IIncludePathEntry entry;
 			try {
-				entry= root.getRawClasspathEntry();
+				entry= root.getRawIncludepathEntry();
 			} catch (JavaScriptModelException ex) {
 				if (ex.isDoesNotExist())
 					entry= null;
@@ -215,7 +215,7 @@ public class ClassFileEditor extends JavaEditor implements ClassFileDocumentProv
 				return;
 			}
 
-			IJavaScriptProject jproject= root.getJavaProject();
+			IJavaScriptProject jproject= root.getJavaScriptProject();
 			if (entry.getEntryKind() == IIncludePathEntry.CPE_CONTAINER) {
 				containerPath= entry.getPath();
 				JsGlobalScopeContainerInitializer initializer= JavaScriptCore.getJsGlobalScopeContainerInitializer(containerPath.segment(0));
@@ -633,8 +633,8 @@ public class ClassFileEditor extends JavaEditor implements ClassFileDocumentProv
 		if (e != null) {
 			IClassFileEditorInput classFileEditorInput= (IClassFileEditorInput) input;
 			IClassFile file= classFileEditorInput.getClassFile();
-			IJavaScriptProject javaProject= file.getJavaProject();
-			if (!javaProject.exists() || !javaProject.isOnClasspath(file)) {
+			IJavaScriptProject javaProject= file.getJavaScriptProject();
+			if (!javaProject.exists() || !javaProject.isOnIncludepath(file)) {
 				throw new CoreException(JavaUIStatus.createError(
 						IJavaScriptModelStatusConstants.INVALID_RESOURCE,
 						JavaEditorMessages.ClassFileEditor_error_classfile_not_on_classpath,

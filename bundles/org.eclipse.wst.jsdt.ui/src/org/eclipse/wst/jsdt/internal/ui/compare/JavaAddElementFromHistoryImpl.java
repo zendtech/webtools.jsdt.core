@@ -93,7 +93,7 @@ class JavaAddElementFromHistoryImpl extends JavaHistoryActionImpl {
 		} else {
 			input= getEditionElement(selection);
 			if (input != null) {
-				cu= input.getCompilationUnit();
+				cu= input.getJavaScriptUnit();
 				parent= input;
 				input= null;
 
@@ -150,7 +150,7 @@ class JavaAddElementFromHistoryImpl extends JavaHistoryActionImpl {
 								
 			IJavaScriptUnit cu2= cu;
 			if (parent instanceof IMember)
-				cu2= ((IMember)parent).getCompilationUnit();
+				cu2= ((IMember)parent).getJavaScriptUnit();
 			
 			JavaScriptUnit root= parsePartialCompilationUnit(cu2);
 			ASTRewrite rewriter= ASTRewrite.create(root.getAST());
@@ -159,7 +159,7 @@ class JavaAddElementFromHistoryImpl extends JavaHistoryActionImpl {
 			for (int i= 0; i < results.length; i++) {
 				
 			    // create an AST node
-				ASTNode newNode= createASTNode(rewriter, results[i], TextUtilities.getDefaultLineDelimiter(document), cu.getJavaProject());
+				ASTNode newNode= createASTNode(rewriter, results[i], TextUtilities.getDefaultLineDelimiter(document), cu.getJavaScriptProject());
 				if (newNode == null) {
 					MessageDialog.openError(shell, errorTitle, errorMessage);
 					return;	
@@ -201,7 +201,7 @@ class JavaAddElementFromHistoryImpl extends JavaHistoryActionImpl {
 			}
 			
 			Map options= null;
-			IJavaScriptProject javaProject= cu2.getJavaProject();
+			IJavaScriptProject javaProject= cu2.getJavaScriptProject();
 			if (javaProject != null)
 				options= javaProject.getOptions(true);
 			applyChanges(rewriter, document, textFileBuffer, shell, inEditor, options);
@@ -275,7 +275,7 @@ class JavaAddElementFromHistoryImpl extends JavaHistoryActionImpl {
 				
 			case JavaNode.CONSTRUCTOR:
 			case JavaNode.METHOD:
-				return ASTNode.METHOD_DECLARATION;
+				return ASTNode.FUNCTION_DECLARATION;
 				
 			case JavaNode.FIELD:
 				return ASTNode.FIELD_DECLARATION;
@@ -288,7 +288,7 @@ class JavaAddElementFromHistoryImpl extends JavaHistoryActionImpl {
 				return ASTNode.IMPORT_DECLARATION;
 
 			case JavaNode.CU:
-			    return ASTNode.COMPILATION_UNIT;
+			    return ASTNode.JAVASCRIPT_UNIT;
 			}
 		}
 		return -1;

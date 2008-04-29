@@ -44,9 +44,9 @@ public abstract class JsGlobalScopeVariableInitializer {
      * @param variable the name of the workspace classpath variable
      *    that requires a binding
      *
-     * @see JavaScriptCore#getClasspathVariable(String)
-     * @see JavaScriptCore#setClasspathVariable(String, org.eclipse.core.runtime.IPath, org.eclipse.core.runtime.IProgressMonitor)
-     * @see JavaScriptCore#setClasspathVariables(String[], org.eclipse.core.runtime.IPath[], org.eclipse.core.runtime.IProgressMonitor)
+     * @see JavaScriptCore#getIncludepathVariable(String)
+     * @see JavaScriptCore#setIncludepathVariable(String, org.eclipse.core.runtime.IPath, org.eclipse.core.runtime.IProgressMonitor)
+     * @see JavaScriptCore#setIncludepathVariables(String[], org.eclipse.core.runtime.IPath[], org.eclipse.core.runtime.IProgressMonitor)
      */
     public abstract void initialize(String variable);
 }

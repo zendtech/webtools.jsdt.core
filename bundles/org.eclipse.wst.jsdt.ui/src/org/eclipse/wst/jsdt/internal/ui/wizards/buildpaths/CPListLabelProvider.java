@@ -312,7 +312,7 @@ public class CPListLabelProvider extends LabelProvider {
 	
 	private String getVariableString(IPath path) {
 		String name= path.makeRelative().toString();
-		IPath entryPath= JavaScriptCore.getClasspathVariable(path.segment(0));
+		IPath entryPath= JavaScriptCore.getIncludepathVariable(path.segment(0));
 		if (entryPath != null) {
 			String appended= entryPath.append(path.removeFirstSegments(1)).toOSString();
 			return Messages.format(NewWizardMessages.CPListLabelProvider_twopart, new String[] { name, appended }); 

@@ -111,7 +111,7 @@ public class JavaMergeViewer extends TextMergeViewer {
 			if (resource != null) {
 				IJavaScriptElement element= JavaScriptCore.create(resource);
 				if (element != null)
-					return element.getJavaProject();
+					return element.getJavaScriptProject();
 			}
 		}
 		return null;

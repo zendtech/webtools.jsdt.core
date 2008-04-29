@@ -151,7 +151,7 @@ public class HierarchyScope extends AbstractSearchScope implements SuffixConstan
 //			} else 
 			{
 				// type is a project
-				paths.put(type.getJavaProject().getProject().getFullPath(), type);
+				paths.put(type.getJavaScriptProject().getProject().getFullPath(), type);
 			}
 		}
 		this.enclosingProjectsAndJars = new IPath[paths.size()];
@@ -173,7 +173,7 @@ public class HierarchyScope extends AbstractSearchScope implements SuffixConstan
 			// add all projects that reference this archive and their dependents
 			IPath rootPath = root.getPath();
 			IJavaScriptModel model = JavaModelManager.getJavaModelManager().getJavaModel();
-			IJavaScriptProject[] projects = model.getJavaProjects();
+			IJavaScriptProject[] projects = model.getJavaScriptProjects();
 			HashSet visited = new HashSet();
 			for (int i = 0; i < projects.length; i++) {
 				JavaProject project = (JavaProject) projects[i];

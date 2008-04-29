@@ -506,7 +506,7 @@ public class ChangeParametersControl extends Composite {
 					ParameterInfo info= (ParameterInfo) fParameterInfos.get(i);
 					excludedParamNames[i]= info.getNewName();
 				}
-				IJavaScriptProject javaProject= fTypeContext.getCuHandle().getJavaProject();
+				IJavaScriptProject javaProject= fTypeContext.getCuHandle().getJavaScriptProject();
 				String newParamName= StubUtility.suggestArgumentName(javaProject, RefactoringMessages.ChangeParametersControl_new_parameter_default_name, excludedParamNames);
 				ParameterInfo newInfo= ParameterInfo.createInfoForAddedParameter("Object", newParamName, "null"); //$NON-NLS-1$ //$NON-NLS-2$
 				int insertIndex= fParameterInfos.size();

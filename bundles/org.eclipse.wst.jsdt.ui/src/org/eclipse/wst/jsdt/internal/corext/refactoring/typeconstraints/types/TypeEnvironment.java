@@ -354,7 +354,7 @@ public class TypeEnvironment {
 	}
 	
 	private ParameterizedType createParameterizedType(ITypeBinding binding) {
-		IJavaScriptProject javaProject= binding.getJavaElement().getJavaProject();
+		IJavaScriptProject javaProject= binding.getJavaElement().getJavaScriptProject();
 		String bindingKey= binding.getKey();
 		ProjectKeyPair pair= new ProjectKeyPair(javaProject, bindingKey);
 		ParameterizedType result= (ParameterizedType)fParameterizedTypes.get(pair);
@@ -423,7 +423,7 @@ public class TypeEnvironment {
 	}
 	
 	private CaptureType createCaptureType(ITypeBinding binding) {
-		IJavaScriptProject javaProject= binding.getDeclaringClass().getJavaElement().getJavaProject();
+		IJavaScriptProject javaProject= binding.getDeclaringClass().getJavaElement().getJavaScriptProject();
 		String bindingKey= binding.getKey();
 		ProjectKeyPair pair= new ProjectKeyPair(javaProject, bindingKey);
 		CaptureType result= (CaptureType)fCaptureTypes.get(pair);

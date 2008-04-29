@@ -186,7 +186,7 @@ public class AssignToVariableAssistProposal extends LinkedCorrectionProposal {
 		Assignment assignment= ast.newAssignment();
 		assignment.setRightHandSide((Expression) rewrite.createCopyTarget(expression));
 
-		boolean needsThis= StubUtility.useThisForFieldAccess(getCompilationUnit().getJavaProject());
+		boolean needsThis= StubUtility.useThisForFieldAccess(getCompilationUnit().getJavaScriptProject());
 		if (isParamToField) {
 			needsThis |= varName.equals(((SimpleName) expression).getIdentifier());
 		}
@@ -271,12 +271,12 @@ public class AssignToVariableAssistProposal extends LinkedCorrectionProposal {
 	}
 
 	private String[] suggestLocalVariableNames(ITypeBinding binding, Expression expression) {
-		IJavaScriptProject project= getCompilationUnit().getJavaProject();
+		IJavaScriptProject project= getCompilationUnit().getJavaScriptProject();
 		return StubUtility.getVariableNameSuggestions(StubUtility.LOCAL, project, binding, expression, getUsedVariableNames());
 	}
 
 	private String[] suggestFieldNames(ITypeBinding binding, Expression expression, int modifiers) {
-		IJavaScriptProject project= getCompilationUnit().getJavaProject();
+		IJavaScriptProject project= getCompilationUnit().getJavaScriptProject();
 		int varKind= Modifier.isStatic(modifiers) ? StubUtility.STATIC_FIELD : StubUtility.INSTANCE_FIELD;
 		return StubUtility.getVariableNameSuggestions(varKind, project, binding, expression, getUsedVariableNames());
 	}

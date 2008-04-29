@@ -187,7 +187,7 @@ public class QuickFixProcessor implements IQuickFixProcessor {
 			case IProblem.UnhandledWarningToken:
 				return true;
 			default:
-				if (JavaModelUtil.is50OrHigher(cu.getJavaProject())) {
+				if (JavaModelUtil.is50OrHigher(cu.getJavaScriptProject())) {
 					return SuppressWarningsSubProcessor.hasSuppressWarningsProposal(problemId);
 				}
 				return false;
@@ -541,7 +541,7 @@ public class QuickFixProcessor implements IQuickFixProcessor {
 				break;
 			default:
 		}
-		if (JavaModelUtil.is50OrHigher(context.getCompilationUnit().getJavaProject())) {
+		if (JavaModelUtil.is50OrHigher(context.getCompilationUnit().getJavaScriptProject())) {
 			SuppressWarningsSubProcessor.addSuppressWarningsProposals(context, problem, proposals);
 		}
 	}

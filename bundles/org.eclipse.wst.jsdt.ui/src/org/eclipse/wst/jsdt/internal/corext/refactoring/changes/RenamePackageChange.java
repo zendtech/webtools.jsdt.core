@@ -84,12 +84,12 @@ public final class RenamePackageChange extends AbstractJavaElementRenameChange {
 			return new NullChange();
 		Map stamps= new HashMap();
 		if (!fRenameSubpackages) {
-			addStamps(stamps, pack.getCompilationUnits());
+			addStamps(stamps, pack.getJavaScriptUnits());
 		} else {
 			IPackageFragment[] allPackages= JavaElementUtil.getPackageAndSubpackages(pack);
 			for (int i= 0; i < allPackages.length; i++) {
 				IPackageFragment currentPackage= allPackages[i];
-				addStamps(stamps, currentPackage.getCompilationUnits());
+				addStamps(stamps, currentPackage.getJavaScriptUnits());
 			}
 		}
 		return new RenamePackageChange(createNewPath(), getNewName(), getOldName(), stampToRestore, stamps, fRenameSubpackages);
@@ -168,7 +168,7 @@ public final class RenamePackageChange extends AbstractJavaElementRenameChange {
 	}
 
 	private void isValid(RefactoringStatus result, IPackageFragment pack, IProgressMonitor pm) throws JavaScriptModelException {
-		IJavaScriptUnit[] units= pack.getCompilationUnits();
+		IJavaScriptUnit[] units= pack.getJavaScriptUnits();
 		pm.beginTask("", units.length); //$NON-NLS-1$
 		for (int i= 0; i < units.length; i++) {
 			pm.subTask(Messages.format(RefactoringCoreMessages.RenamePackageChange_checking_change, pack.getElementName()));
@@ -183,7 +183,7 @@ public final class RenamePackageChange extends AbstractJavaElementRenameChange {
 		if (fCompilationUnitStamps != null) {
 			IPackageFragment newPack= (IPackageFragment) JavaScriptCore.create(ResourcesPlugin.getWorkspace().getRoot().getFolder(newPath));
 			if (newPack.exists()) {
-				IJavaScriptUnit[] units= newPack.getCompilationUnits();
+				IJavaScriptUnit[] units= newPack.getJavaScriptUnits();
 				for (int i= 0; i < units.length; i++) {
 					IResource resource= units[i].getResource();
 					if (resource != null) {

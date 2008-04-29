@@ -63,7 +63,7 @@ public class JavaSourceHover extends AbstractJavaEditorTextHover implements ITex
 				String firstLine= sourceLines[0];
 				if (!Character.isWhitespace(firstLine.charAt(0)))
 					sourceLines[0]= ""; //$NON-NLS-1$
-				Strings.trimIndentation(sourceLines, curr.getJavaProject());
+				Strings.trimIndentation(sourceLines, curr.getJavaScriptProject());
 
 				if (!Character.isWhitespace(firstLine.charAt(0)))
 					sourceLines[0]= firstLine;

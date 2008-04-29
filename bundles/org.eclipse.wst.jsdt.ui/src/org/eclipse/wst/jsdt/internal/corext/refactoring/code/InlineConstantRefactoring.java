@@ -422,7 +422,7 @@ public class InlineConstantRefactoring extends ScriptableRefactoring {
 			for (int i= 0; i < references.length; i++)
 				fReferences[i]= getQualifiedReference(references[i]);
 			
-			fIs15= JavaModelUtil.is50OrHigher(cuRewrite.getCu().getJavaProject());
+			fIs15= JavaModelUtil.is50OrHigher(cuRewrite.getCu().getJavaScriptProject());
 			fStaticImportsInInitializer= fIs15 ? staticImportsInInitializer : new HashSet(0);
 		}
 
@@ -497,7 +497,7 @@ public class InlineConstantRefactoring extends ScriptableRefactoring {
 
 		private String prepareInitializerForLocation(Expression location) throws CoreException {
 			HashSet staticImportsInReference= new HashSet();
-			final IJavaScriptProject project= fCuRewrite.getCu().getJavaProject();
+			final IJavaScriptProject project= fCuRewrite.getCu().getJavaScriptProject();
 			if (fIs15)
 				location.accept(new ImportReferencesCollector(project, null, new ArrayList(), staticImportsInReference));
 			InitializerTraversal traversal= new InitializerTraversal(fInitializer, fStaticImportsInInitializer, location, staticImportsInReference, fCuRewrite);
@@ -505,7 +505,7 @@ public class InlineConstantRefactoring extends ScriptableRefactoring {
 			IDocument document= new Document(fInitializerUnit.getBuffer().getContents()); // could reuse document when generating and applying undo edits
 			
 			final RangeMarker marker= new RangeMarker(fInitializer.getStartPosition(), fInitializer.getLength());
-			TextEdit[] rewriteEdits= initializerRewrite.rewriteAST(document, fInitializerUnit.getJavaProject().getOptions(true)).removeChildren();
+			TextEdit[] rewriteEdits= initializerRewrite.rewriteAST(document, fInitializerUnit.getJavaScriptProject().getOptions(true)).removeChildren();
 			marker.addChildren(rewriteEdits);
 			try {
 				marker.apply(document, TextEdit.UPDATE_REGIONS);
@@ -706,10 +706,10 @@ public class InlineConstantRefactoring extends ScriptableRefactoring {
 			return null;
 		}
 
-		if (fField.getCompilationUnit() == null)
+		if (fField.getJavaScriptUnit() == null)
 			return RefactoringStatus.createStatus(RefactoringStatus.FATAL, RefactoringCoreMessages.InlineConstantRefactoring_binary_file, null, Corext.getPluginId(), RefactoringStatusCodes.DECLARED_IN_CLASSFILE, null); 
 		
-		fDeclarationCuRewrite= new CompilationUnitRewrite(fField.getCompilationUnit());
+		fDeclarationCuRewrite= new CompilationUnitRewrite(fField.getJavaScriptUnit());
 		fDeclaration= ASTNodeSearchUtil.getFieldDeclarationFragmentNode(fField, fDeclarationCuRewrite.getRoot());
 		return null;
 	}
@@ -733,7 +733,7 @@ public class InlineConstantRefactoring extends ScriptableRefactoring {
 	}
 	
 	private IJavaScriptUnit getDeclaringCompilationUnit() throws JavaScriptModelException {
-		return fField.getCompilationUnit();
+		return fField.getJavaScriptUnit();
 	}
 
 	public RefactoringStatus checkFinalConditions(IProgressMonitor pm) throws CoreException {
@@ -743,7 +743,7 @@ public class InlineConstantRefactoring extends ScriptableRefactoring {
 		try {
 			List/*<CompilationUnitChange>*/changes= new ArrayList();
 			HashSet staticImportsInInitializer= new HashSet();
-			ImportReferencesCollector importReferencesCollector= new ImportReferencesCollector(fField.getJavaProject(), null, new ArrayList(), staticImportsInInitializer);
+			ImportReferencesCollector importReferencesCollector= new ImportReferencesCollector(fField.getJavaScriptProject(), null, new ArrayList(), staticImportsInInitializer);
 			getInitializer().accept(importReferencesCollector);
 			
 			if (getReplaceAllReferences()) {
@@ -821,7 +821,7 @@ public class InlineConstantRefactoring extends ScriptableRefactoring {
 		CompilationUnitRewrite cuRewrite;
 		if (cu.equals(fSelectionCu)) {
 			cuRewrite= fSelectionCuRewrite;
-		} else if (cu.equals(fField.getCompilationUnit())) {
+		} else if (cu.equals(fField.getJavaScriptUnit())) {
 			cuRewrite= fDeclarationCuRewrite;
 		} else {
 			cuRewrite= new CompilationUnitRewrite(cu);
@@ -848,7 +848,7 @@ public class InlineConstantRefactoring extends ScriptableRefactoring {
 			pm.beginTask(RefactoringCoreMessages.InlineConstantRefactoring_preview, 2);
 			final Map arguments= new HashMap();
 			String project= null;
-			IJavaScriptProject javaProject= fSelectionCu.getJavaProject();
+			IJavaScriptProject javaProject= fSelectionCu.getJavaScriptProject();
 			if (javaProject != null)
 				project= javaProject.getElementName();
 			int flags= RefactoringDescriptor.STRUCTURAL_CHANGE | JavaRefactoringDescriptor.JAR_REFACTORING | JavaRefactoringDescriptor.JAR_SOURCE_ATTACHMENT;
@@ -951,7 +951,7 @@ public class InlineConstantRefactoring extends ScriptableRefactoring {
 						} catch (JavaScriptModelException exception) {
 							return createInputFatalStatus(element, IJavaRefactorings.INLINE_CONSTANT);
 						}
-						fSelectionCu= field.getCompilationUnit();
+						fSelectionCu= field.getJavaScriptUnit();
 					} else
 						return RefactoringStatus.createFatalErrorStatus(Messages.format(RefactoringCoreMessages.InitializableRefactoring_illegal_argument, new Object[] { handle, JDTRefactoringDescriptor.ATTRIBUTE_INPUT}));
 					final ASTParser parser= ASTParser.newParser(AST.JLS3);

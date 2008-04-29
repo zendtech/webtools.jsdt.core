@@ -254,7 +254,7 @@ public class InlineTempRefactoring extends ScriptableRefactoring {
 			pm.beginTask(RefactoringCoreMessages.InlineTempRefactoring_preview, 2);
 			final Map arguments= new HashMap();
 			String project= null;
-			IJavaScriptProject javaProject= fCu.getJavaProject();
+			IJavaScriptProject javaProject= fCu.getJavaScriptProject();
 			if (javaProject != null)
 				project= javaProject.getElementName();
 			
@@ -374,7 +374,7 @@ public class InlineTempRefactoring extends ScriptableRefactoring {
 		
 		IDocument document= new Document(fCu.getBuffer().getContents());
 		final RangeMarker marker= new RangeMarker(invocation.getStartPosition(), invocation.getLength());
-		IJavaScriptProject project= fCu.getJavaProject();
+		IJavaScriptProject project= fCu.getJavaScriptProject();
 		TextEdit[] rewriteEdits= rewrite.rewriteAST(document, project.getOptions(true)).removeChildren();
 		marker.addChildren(rewriteEdits);
 		try {

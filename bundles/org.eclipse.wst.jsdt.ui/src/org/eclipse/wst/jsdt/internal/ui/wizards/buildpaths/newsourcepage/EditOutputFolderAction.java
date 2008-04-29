@@ -106,7 +106,7 @@ public class EditOutputFolderAction extends BuildpathModifierAction {
 			} else if (firstElement instanceof IPackageFragmentRoot) {
 				IPackageFragmentRoot root= (IPackageFragmentRoot)firstElement;
 				
-				javaProject= root.getJavaProject();
+				javaProject= root.getJavaScriptProject();
 								
 				final IIncludePathEntry entry= ClasspathModifier.getClasspathEntryFor(root.getPath(), javaProject, IIncludePathEntry.CPE_SOURCE);
 				cpElement= CPListElement.createFromExisting(entry, javaProject);
@@ -208,7 +208,7 @@ public class EditOutputFolderAction extends BuildpathModifierAction {
 				if (root.getKind() != IPackageFragmentRoot.K_SOURCE)
 					return false;
 					
-				IJavaScriptProject javaProject= root.getJavaProject();
+				IJavaScriptProject javaProject= root.getJavaScriptProject();
 				if (javaProject == null)
 					return false;
 				

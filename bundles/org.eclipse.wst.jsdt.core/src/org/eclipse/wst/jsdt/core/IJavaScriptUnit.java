@@ -17,7 +17,7 @@ import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
 
 /**
  * Represents an entire Java compilation unit (source file with one of the
- * {@link JavaScriptCore#getJavaLikeExtensions() Java-like extensions}).
+ * {@link JavaScriptCore#getJavaScriptLikeExtensions() Java-like extensions}).
  * Compilation unit elements need to be opened before they can be navigated or manipulated.
  * The children are of type {@link IPackageDeclaration},
  * {@link IImportContainer}, and {@link IType},
@@ -724,7 +724,11 @@ JavaScriptUnit reconcile(int astLevel, int reconcileFlags, WorkingCopyOwner owne
  * @since 3.0
  */
 void restore() throws JavaScriptModelException;
+/**
+ * @deprecated Use {@link #findFunctions(IFunction)} instead
+ */
 IFunction[] findMethods(IFunction method);
+IFunction[] findFunctions(IFunction method);
 
 
 

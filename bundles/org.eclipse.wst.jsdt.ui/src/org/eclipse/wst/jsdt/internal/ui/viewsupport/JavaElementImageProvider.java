@@ -104,7 +104,7 @@ public class JavaElementImageProvider {
 			return getJavaImageDescriptor((IJavaScriptElement) element, flags);
 		} else if (element instanceof IFile) {
 			IFile file= (IFile) element;
-			if (JavaScriptCore.isJavaLikeFileName(file.getName())) {
+			if (JavaScriptCore.isJavaScriptLikeFileName(file.getName())) {
 				return getCUResourceImageDescriptor(file, flags); // image for a CU not on the build path
 			}
 			return getWorkbenchImageDescriptor(file, flags);

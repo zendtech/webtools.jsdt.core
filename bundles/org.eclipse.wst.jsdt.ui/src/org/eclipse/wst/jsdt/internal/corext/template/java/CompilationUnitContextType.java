@@ -75,7 +75,7 @@ public abstract class CompilationUnitContextType extends TemplateContextType {
 			IJavaScriptUnit unit= ((CompilationUnitContext) context).getCompilationUnit();
 			if (unit == null) 
 				return null;
-			return JavaScriptCore.removeJavaLikeExtension(unit.getElementName());
+			return JavaScriptCore.removeJavaScriptLikeExtension(unit.getElementName());
 		}
 	 	
 		/*

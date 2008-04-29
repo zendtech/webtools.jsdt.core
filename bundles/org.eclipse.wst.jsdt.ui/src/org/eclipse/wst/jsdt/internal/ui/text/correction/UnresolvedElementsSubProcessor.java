@@ -207,7 +207,7 @@ public class UnresolvedElementsSubProcessor {
 
 		// add type proposals
 		if (typeKind != 0) {
-			if (!JavaModelUtil.is50OrHigher(cu.getJavaProject())) {
+			if (!JavaModelUtil.is50OrHigher(cu.getJavaScriptProject())) {
 				typeKind &= ~(SimilarElementsRequestor.ANNOTATIONS | SimilarElementsRequestor.ENUMS | SimilarElementsRequestor.VARIABLES);
 			}
 
@@ -244,15 +244,15 @@ public class UnresolvedElementsSubProcessor {
 		String name= simpleName.getIdentifier();
 		ASTNode bodyDeclaration= ASTResolving.findParentBodyDeclaration(node, true);
 		int type= bodyDeclaration.getNodeType(); 
-		if (type == ASTNode.METHOD_DECLARATION) {
-			int relevance= StubUtility.hasParameterName(cu.getJavaProject(), name) ? 8 : 5;
+		if (type == ASTNode.FUNCTION_DECLARATION) {
+			int relevance= StubUtility.hasParameterName(cu.getJavaScriptProject(), name) ? 8 : 5;
 			String label= Messages.format(CorrectionMessages.UnresolvedElementsSubProcessor_createparameter_description, simpleName.getIdentifier());
 			Image image= JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_LOCAL);
 			proposals.add(new NewVariableCompletionProposal(label, cu, NewVariableCompletionProposal.PARAM, simpleName, null, relevance, image));
 		}
-		if (type == ASTNode.INITIALIZER || type == ASTNode.COMPILATION_UNIT ||
-				(type == ASTNode.METHOD_DECLARATION && !ASTResolving.isInsideConstructorInvocation((FunctionDeclaration) bodyDeclaration, node))) {
-			int relevance= StubUtility.hasLocalVariableName(cu.getJavaProject(), name) ? 10 : 7;
+		if (type == ASTNode.INITIALIZER || type == ASTNode.JAVASCRIPT_UNIT ||
+				(type == ASTNode.FUNCTION_DECLARATION && !ASTResolving.isInsideConstructorInvocation((FunctionDeclaration) bodyDeclaration, node))) {
+			int relevance= StubUtility.hasLocalVariableName(cu.getJavaScriptProject(), name) ? 10 : 7;
 			String label= Messages.format(CorrectionMessages.UnresolvedElementsSubProcessor_createlocal_description, simpleName.getIdentifier());
 			Image image= JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_LOCAL);
 			proposals.add(new NewVariableCompletionProposal(label, cu, NewVariableCompletionProposal.LOCAL, simpleName, null, relevance, image));
@@ -324,7 +324,7 @@ public class UnresolvedElementsSubProcessor {
 					label= Messages.format(CorrectionMessages.UnresolvedElementsSubProcessor_createfield_other_description, new Object[] { name, ASTResolving.getTypeSignature(senderDeclBinding) } );
 					image= JavaPluginImages.get(JavaPluginImages.IMG_FIELD_PUBLIC);
 				}
-				int fieldRelevance= StubUtility.hasFieldName(targetCU.getJavaProject(), name) ? 9 : 6;
+				int fieldRelevance= StubUtility.hasFieldName(targetCU.getJavaScriptProject(), name) ? 9 : 6;
 				proposals.add(new NewVariableCompletionProposal(label, targetCU, NewVariableCompletionProposal.FIELD, simpleName, senderDeclBinding, fieldRelevance, image));
 			}
 
@@ -371,7 +371,7 @@ public class UnresolvedElementsSubProcessor {
 					otherNameInAssign= ((SimpleName) assignment.getLeftHandSide()).getIdentifier();
 				}
 				break;
-			case ASTNode.METHOD_INVOCATION:
+			case ASTNode.FUNCTION_INVOCATION:
 				FunctionInvocation inv= (FunctionInvocation) parent;
 				if (inv.getExpression() == node) {
 					methodSenderName= inv.getName().getIdentifier();
@@ -521,7 +521,7 @@ public class UnresolvedElementsSubProcessor {
 			return;
 		}
 
-		int kind= evauateTypeKind(selectedNode, cu.getJavaProject());
+		int kind= evauateTypeKind(selectedNode, cu.getJavaScriptProject());
 
 		while (selectedNode.getLocationInParent() == QualifiedName.NAME_PROPERTY) {
 			selectedNode= selectedNode.getParent();
@@ -551,7 +551,7 @@ public class UnresolvedElementsSubProcessor {
 		}
 		
 		if (selectedNode != node) {
-			kind= evauateTypeKind(node, cu.getJavaProject());
+			kind= evauateTypeKind(node, cu.getJavaScriptProject());
 		}
 		if ((kind & (SimilarElementsRequestor.CLASSES | SimilarElementsRequestor.INTERFACES)) != 0) {
 			kind &= ~SimilarElementsRequestor.ANNOTATIONS; // only propose annotations when there are no other suggestions
@@ -719,7 +719,7 @@ public class UnresolvedElementsSubProcessor {
 					rel += 3;
 				}
 
-				if ((enclosingPackage != null && !enclosingPackage.getCompilationUnit(typeName + JavaModelUtil.DEFAULT_CU_SUFFIX).exists()) // new top level type
+				if ((enclosingPackage != null && !enclosingPackage.getJavaScriptUnit(typeName + JavaModelUtil.DEFAULT_CU_SUFFIX).exists()) // new top level type
 						|| (enclosingType != null && !enclosingType.isReadOnly() && !enclosingType.getType(typeName).exists())) { // new member type
 					IJavaScriptElement enclosing= enclosingPackage != null ? (IJavaScriptElement) enclosingPackage : enclosingType;
 

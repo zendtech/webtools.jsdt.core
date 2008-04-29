@@ -59,7 +59,7 @@ protected ASTNode generateElementAST(ASTRewrite rewriter, IDocument document, IJ
 protected IJavaScriptElement generateResultHandle() {
 	try {
 		//update the children to be current
-		getType().getCompilationUnit().close();
+		getType().getJavaScriptUnit().close();
 		if (this.anchorElement == null) {
 			return getType().getInitializer(this.numberOfInitializers);
 		} else {

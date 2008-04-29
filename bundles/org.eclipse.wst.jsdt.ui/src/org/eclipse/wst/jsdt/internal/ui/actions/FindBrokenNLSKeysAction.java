@@ -257,7 +257,7 @@ public class FindBrokenNLSKeysAction extends SelectionDispatchAction {
 								for (int j= 0; j < allPackageFragmentRoots.length; j++) {
 									IPackageFragmentRoot root= allPackageFragmentRoots[j];
 									if (root.getKind() == IPackageFragmentRoot.K_SOURCE) {
-										if (javaProject.equals(root.getJavaProject())) {
+										if (javaProject.equals(root.getJavaScriptProject())) {
 											collectNLSFiles(new Object[] {root.getCorrespondingResource()}, result);
 										}
 									}
@@ -311,7 +311,7 @@ public class FindBrokenNLSKeysAction extends SelectionDispatchAction {
 		
 		IPath propertyFullPath= file.getFullPath();
 		// Try to find a corresponding CU
-		String[] javaExtensions= JavaScriptCore.getJavaLikeExtensions();
+		String[] javaExtensions= JavaScriptCore.getJavaScriptLikeExtensions();
 		for (int i= 0; i < javaExtensions.length; i++) { 
 			String extension= javaExtensions[i];
 			IPath cuPath= propertyFullPath.removeFileExtension().addFileExtension(extension);

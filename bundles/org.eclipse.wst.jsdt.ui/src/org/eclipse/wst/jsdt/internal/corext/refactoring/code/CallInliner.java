@@ -255,7 +255,7 @@ public class CallInliner {
 		fRootScope= CodeScopeBuilder.perform(declaration, fSourceProvider.getDeclaration().resolveBinding());
 		fNumberOfLocals= 0;
 		switch (declaration.getNodeType()) {
-			case ASTNode.METHOD_DECLARATION:
+			case ASTNode.FUNCTION_DECLARATION:
 			case ASTNode.INITIALIZER:
 				fNumberOfLocals= LocalVariableIndex.perform(declaration);
 				break;
@@ -317,7 +317,7 @@ public class CallInliner {
 				RefactoringCoreMessages.CallInliner_constructors, 
 				JavaStatusContext.create(fCUnit, fInvocation)));
 		}
-		if (fSourceProvider.hasSuperMethodInvocation() && fInvocation.getNodeType() == ASTNode.METHOD_INVOCATION) {
+		if (fSourceProvider.hasSuperMethodInvocation() && fInvocation.getNodeType() == ASTNode.FUNCTION_INVOCATION) {
 			Expression receiver= ((FunctionInvocation)fInvocation).getExpression();
 			if (receiver instanceof ThisExpression) {
 				result.addEntry(new RefactoringStatusEntry(
@@ -329,7 +329,7 @@ public class CallInliner {
 	}
 
 	private void checkInvocationContext(RefactoringStatus result, int severity) {
-		if (fInvocation.getNodeType() == ASTNode.METHOD_INVOCATION) {
+		if (fInvocation.getNodeType() == ASTNode.FUNCTION_INVOCATION) {
 			Expression exp= ((FunctionInvocation)fInvocation).getExpression();
 			if (exp != null && exp.resolveTypeBinding() == null) {
 				addEntry(result, RefactoringCoreMessages.CallInliner_receiver_type, 
@@ -344,7 +344,7 @@ public class CallInliner {
 					RefactoringStatusCodes.INLINE_METHOD_EXECUTION_FLOW, severity);
 				return;
 			}
-		} else if (nodeType == ASTNode.METHOD_INVOCATION) {
+		} else if (nodeType == ASTNode.FUNCTION_INVOCATION) {
 			ASTNode parent= fTargetNode.getParent();
 			if (isReturnStatement(parent)) {
 				//support inlining even if the execution flow is interrupted
@@ -457,7 +457,7 @@ public class CallInliner {
 		switch (fBodyDeclaration.getNodeType()) {
 			case ASTNode.INITIALIZER:
 			case ASTNode.FIELD_DECLARATION:
-			case ASTNode.METHOD_DECLARATION:
+			case ASTNode.FUNCTION_DECLARATION:
 				fFlowInfo= new InputFlowAnalyzer(fFlowContext, selection, true).perform(fBodyDeclaration);
 				break;
 			default:
@@ -478,7 +478,7 @@ public class CallInliner {
 	}
 	
 	public TextEdit getModifications() {
-		return fRewrite.rewriteAST(fBuffer.getDocument(), fCUnit.getJavaProject().getOptions(true));
+		return fRewrite.rewriteAST(fBuffer.getDocument(), fCUnit.getJavaScriptProject().getOptions(true));
 	}
 
 	private void computeRealArguments() throws BadLocationException {
@@ -626,16 +626,16 @@ public class CallInliner {
 						node= createLocalDeclaration(
 							invocation.getReturnType(), 
 							fInvocationScope.createName(fSourceProvider.getMethodName(), true), 
-							(Expression)fRewrite.createStringPlaceholder(block, ASTNode.METHOD_INVOCATION));
+							(Expression)fRewrite.createStringPlaceholder(block, ASTNode.FUNCTION_INVOCATION));
 					} else {
 						node= fTargetNode.getAST().newExpressionStatement(
-							(Expression)fRewrite.createStringPlaceholder(block, ASTNode.METHOD_INVOCATION));
+							(Expression)fRewrite.createStringPlaceholder(block, ASTNode.FUNCTION_INVOCATION));
 					}
 				} else {
 					node= null;
 				}
 			} else if (fTargetNode instanceof Expression) {
-				node= fRewrite.createStringPlaceholder(block, ASTNode.METHOD_INVOCATION);
+				node= fRewrite.createStringPlaceholder(block, ASTNode.FUNCTION_INVOCATION);
 				
 				// fixes bug #24941
 				if(needsExplicitCast(status)) {
@@ -681,7 +681,7 @@ public class CallInliner {
 				return false;		 
 		ASTNode parent= fTargetNode.getParent();
 		int nodeType= parent.getNodeType();
-		if (nodeType == ASTNode.METHOD_INVOCATION) {
+		if (nodeType == ASTNode.FUNCTION_INVOCATION) {
 			FunctionInvocation methodInvocation= (FunctionInvocation)parent;
 			if(methodInvocation.getExpression() == fTargetNode)
 				return false;
@@ -727,7 +727,7 @@ public class CallInliner {
 		ASTNode parent= fTargetNode.getParent();
 		int type= parent.getNodeType();
 		return 
-			type == ASTNode.METHOD_INVOCATION || 
+			type == ASTNode.FUNCTION_INVOCATION || 
 			(parent instanceof Expression && type != ASTNode.ASSIGNMENT) ||
 			(fSourceProvider.returnsConditionalExpression() &&
 				type == ASTNode.VARIABLE_DECLARATION_FRAGMENT &&  

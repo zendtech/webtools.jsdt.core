@@ -88,7 +88,7 @@ public class RemoveFromClasspathAction extends SelectionDispatchAction {
 						IPackageFragmentRoot[] roots= getRootsToRemove(selection);
 						pm.beginTask(ActionMessages.RemoveFromClasspathAction_Removing, roots.length); 
 						for (int i= 0; i < roots.length; i++) {
-							int jCoreFlags= IPackageFragmentRoot.NO_RESOURCE_MODIFICATION | IPackageFragmentRoot.ORIGINATING_PROJECT_CLASSPATH;
+							int jCoreFlags= IPackageFragmentRoot.NO_RESOURCE_MODIFICATION | IPackageFragmentRoot.ORIGINATING_PROJECT_INCLUDEPATH;
 							roots[i].delete(IResource.NONE, jCoreFlags, new SubProgressMonitor(pm, 1));
 						}
 					} finally {
@@ -120,7 +120,7 @@ public class RemoveFromClasspathAction extends SelectionDispatchAction {
 			return false;
 		IPackageFragmentRoot root= (IPackageFragmentRoot)element;
 		try {
-			IIncludePathEntry cpe= root.getRawClasspathEntry();
+			IIncludePathEntry cpe= root.getRawIncludepathEntry();
 			if (cpe == null || cpe.getEntryKind() == IIncludePathEntry.CPE_CONTAINER)
 				return false; // don't want to remove the container if only a child is selected
 			return true;

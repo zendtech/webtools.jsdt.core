@@ -810,7 +810,7 @@ public class ColoredJavaElementLabels {
 	
 	private static boolean getVariableLabel(IPackageFragmentRoot root, long flags, ColoredString result) {
 		try {
-			IIncludePathEntry rawEntry= root.getRawClasspathEntry();
+			IIncludePathEntry rawEntry= root.getRawIncludepathEntry();
 			if (rawEntry != null && rawEntry.getEntryKind() == IIncludePathEntry.CPE_VARIABLE) {
 				IPath path= rawEntry.getPath().makeRelative();
 				int offset= result.length();
@@ -935,7 +935,7 @@ public class ColoredJavaElementLabels {
 		IResource resource= root.getResource();
 		if (resource != null) {
 			IProject jarProject= resource.getProject();
-			IProject container= root.getJavaProject().getProject();
+			IProject container= root.getJavaScriptProject().getProject();
 			return !container.equals(jarProject);
 		}
 		return false;

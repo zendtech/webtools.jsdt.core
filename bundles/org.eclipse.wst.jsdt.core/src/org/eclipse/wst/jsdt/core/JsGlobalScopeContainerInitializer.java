@@ -119,7 +119,13 @@ public abstract class JsGlobalScopeContainerInitializer implements IJsGlobalScop
     	final String description = getDescription(containerPath, project);
     	return
     		new IJsGlobalScopeContainer() {
+				/**
+				 * @deprecated Use {@link #getIncludepathEntries()} instead
+				 */
 				public IIncludePathEntry[] getClasspathEntries() {
+					return getIncludepathEntries();
+				}
+				public IIncludePathEntry[] getIncludepathEntries() {
 					return new IIncludePathEntry[0];
 				}
 				public String getDescription() {
@@ -176,7 +182,14 @@ public abstract class JsGlobalScopeContainerInitializer implements IJsGlobalScop
 	}
 
 
+	/**
+	 * @deprecated Use {@link #getIncludepathEntries()} instead
+	 */
 	public IIncludePathEntry[] getClasspathEntries() {
+		return getIncludepathEntries();
+	}
+
+	public IIncludePathEntry[] getIncludepathEntries() {
 		LibraryLocation libLocation =  getLibraryLocation();
 		char[][] filesInLibs = libLocation.getLibraryFileNames();
 		IIncludePathEntry[] entries = new IIncludePathEntry[filesInLibs.length];

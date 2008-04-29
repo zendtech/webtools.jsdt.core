@@ -162,7 +162,7 @@ public class FunctionRef extends ASTNode implements IDocElement {
 	 * Method declared on ASTNode.
 	 */
 	final int getNodeType0() {
-		return METHOD_REF;
+		return FUNCTION_REF;
 	}
 
 	/* (omit javadoc for this method)

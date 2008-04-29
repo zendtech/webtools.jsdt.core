@@ -26,10 +26,10 @@ public class JSDScopeUtil {
 		return initializer ;
 	}
 
-	public IIncludePathEntry[] getClasspathEntries(IJsGlobalScopeContainer container) {
+	public IIncludePathEntry[] getIncludepathEntries(IJsGlobalScopeContainer container) {
 
 
-		if(container!=null) return	container.getClasspathEntries();
+		if(container!=null) return	container.getIncludepathEntries();
 
 		return new IIncludePathEntry[0];
 	}

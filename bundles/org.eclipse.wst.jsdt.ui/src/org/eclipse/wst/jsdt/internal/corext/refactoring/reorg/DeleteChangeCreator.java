@@ -127,7 +127,7 @@ class DeleteChangeCreator {
 	private static TextChange addTextEditFromRewrite(TextChangeManager manager, IJavaScriptUnit cu, ASTRewrite rewrite) throws CoreException {
 		try {
 			ITextFileBuffer buffer= RefactoringFileBuffers.acquire(cu);
-			TextEdit resultingEdits= rewrite.rewriteAST(buffer.getDocument(), cu.getJavaProject().getOptions(true));
+			TextEdit resultingEdits= rewrite.rewriteAST(buffer.getDocument(), cu.getJavaScriptProject().getOptions(true));
 			TextChange textChange= manager.get(cu);
 			if (textChange instanceof TextFileChange) {
 				TextFileChange tfc= (TextFileChange) textChange;

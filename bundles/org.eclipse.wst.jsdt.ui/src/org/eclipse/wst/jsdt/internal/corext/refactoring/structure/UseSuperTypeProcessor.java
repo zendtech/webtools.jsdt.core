@@ -200,7 +200,7 @@ public final class UseSuperTypeProcessor extends SuperTypeRefactoringProcessor {
 				fChanges= changes.length;
 				IJavaScriptProject project= null;
 				if (!fSubType.isBinary())
-					project= fSubType.getJavaProject();
+					project= fSubType.getJavaScriptProject();
 				int flags= JavaRefactoringDescriptor.JAR_MIGRATION | JavaRefactoringDescriptor.JAR_REFACTORING | RefactoringDescriptor.STRUCTURAL_CHANGE | RefactoringDescriptor.MULTI_CHANGE;
 				try {
 					if (fSubType.isLocal() || fSubType.isAnonymous())
@@ -251,7 +251,7 @@ public final class UseSuperTypeProcessor extends SuperTypeRefactoringProcessor {
 			monitor.beginTask("", 300); //$NON-NLS-1$
 			monitor.setTaskName(RefactoringCoreMessages.UseSuperTypeProcessor_creating);
 			final TextEditBasedChangeManager manager= new TextEditBasedChangeManager();
-			final IJavaScriptProject project= fSubType.getJavaProject();
+			final IJavaScriptProject project= fSubType.getJavaScriptProject();
 			final ASTParser parser= ASTParser.newParser(AST.JLS3);
 			parser.setWorkingCopyOwner(fOwner);
 			parser.setResolveBindings(true);
@@ -265,7 +265,7 @@ public final class UseSuperTypeProcessor extends SuperTypeRefactoringProcessor {
 						rewriteTypeOccurrences(manager, null, null, null, null, new HashSet(), status, new SubProgressMonitor(monitor, 150));
 				}
 			} else {
-				parser.createASTs(new IJavaScriptUnit[] { fSubType.getCompilationUnit() }, new String[0], new ASTRequestor() {
+				parser.createASTs(new IJavaScriptUnit[] { fSubType.getJavaScriptUnit() }, new String[0], new ASTRequestor() {
 
 					public final void acceptAST(final IJavaScriptUnit unit, final JavaScriptUnit node) {
 						try {

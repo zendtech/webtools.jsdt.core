@@ -77,14 +77,14 @@ public class JavadocConfigurationPropertyPage extends PropertyPage implements IS
 			if (elem instanceof IPackageFragmentRoot && ((IPackageFragmentRoot) elem).getKind() == IPackageFragmentRoot.K_BINARY) {
 				IPackageFragmentRoot root= (IPackageFragmentRoot) elem;
 				
-				IIncludePathEntry entry= root.getRawClasspathEntry();
+				IIncludePathEntry entry= root.getRawIncludepathEntry();
 				if (entry == null) {
 					fIsValidElement= false;
 					setDescription(PreferencesMessages.JavadocConfigurationPropertyPage_IsIncorrectElement_description);
 				} else {
 					if (entry.getEntryKind() == IIncludePathEntry.CPE_CONTAINER) {
 						fContainerPath= entry.getPath();
-						fEntry= handleContainerEntry(fContainerPath, elem.getJavaProject(), root.getPath());
+						fEntry= handleContainerEntry(fContainerPath, elem.getJavaScriptProject(), root.getPath());
 						fIsValidElement= fEntry != null;
 					} else {
 						fContainerPath= null;
@@ -117,7 +117,7 @@ public class JavadocConfigurationPropertyPage extends PropertyPage implements IS
 			return null;
 		}
 		String containerName= container.getDescription();
-		IStatus status= initializer.getAttributeStatus(containerPath, jproject, IIncludePathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME);
+		IStatus status= initializer.getAttributeStatus(containerPath, jproject, IIncludePathAttribute.JSDOC_LOCATION_ATTRIBUTE_NAME);
 		if (status.getCode() == JsGlobalScopeContainerInitializer.ATTRIBUTE_NOT_SUPPORTED) {
 			setDescription(Messages.format(PreferencesMessages.JavadocConfigurationPropertyPage_not_supported, containerName));
 			return null;
@@ -224,7 +224,7 @@ public class JavadocConfigurationPropertyPage extends PropertyPage implements IS
 		return new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) throws InvocationTargetException {				
 				try {
-					IJavaScriptProject project= elem.getJavaProject();
+					IJavaScriptProject project= elem.getJavaScriptProject();
 					if (elem instanceof IPackageFragmentRoot) {
 						CPListElement cpElem= CPListElement.createFromExisting(entry, project);
 						String loc= javadocLocation != null ? javadocLocation.toExternalForm() : null;

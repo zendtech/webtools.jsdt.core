@@ -512,11 +512,11 @@ public abstract class NewTypeWizardPage extends NewContainerWizardPage {
 				
 		if (elem != null) {
 			// evaluate the enclosing type
-			project= elem.getJavaProject();
+			project= elem.getJavaScriptProject();
 			pack= (IPackageFragment) elem.getAncestor(IJavaScriptElement.PACKAGE_FRAGMENT);
 			IType typeInCU= (IType) elem.getAncestor(IJavaScriptElement.TYPE);
 			if (typeInCU != null) {
-				if (typeInCU.getCompilationUnit() != null) {
+				if (typeInCU.getJavaScriptUnit() != null) {
 					enclosingType= typeInCU;
 				}
 			} else {
@@ -568,11 +568,11 @@ public abstract class NewTypeWizardPage extends NewContainerWizardPage {
 	
 	private static IStatus validateJavaTypeName(String text, IJavaScriptProject project) {
 		if (project == null || !project.exists()) {
-			return JavaScriptConventions.validateJavaTypeName(text, JavaScriptCore.VERSION_1_3, JavaScriptCore.VERSION_1_3);
+			return JavaScriptConventions.validateJavaScriptTypeName(text, JavaScriptCore.VERSION_1_3, JavaScriptCore.VERSION_1_3);
 		}
 		String sourceLevel= project.getOption(JavaScriptCore.COMPILER_SOURCE, true);
 		String compliance= project.getOption(JavaScriptCore.COMPILER_COMPLIANCE, true);
-		return JavaScriptConventions.validateJavaTypeName(text, sourceLevel, compliance);
+		return JavaScriptConventions.validateJavaScriptTypeName(text, sourceLevel, compliance);
 	}
 	
 	private static IStatus validatePackageName(String text, IJavaScriptProject project) {
@@ -1335,7 +1335,7 @@ public abstract class NewTypeWizardPage extends NewContainerWizardPage {
 		IPackageFragment pack= getPackageFragment();
 		if (pack != null) {
 			String cuName= getCompilationUnitName(getTypeNameWithoutParameters());
-			return pack.getCompilationUnit(cuName).getResource();
+			return pack.getJavaScriptUnit(cuName).getResource();
 		}
 		return null;
 	}
@@ -1349,14 +1349,14 @@ public abstract class NewTypeWizardPage extends NewContainerWizardPage {
 		IStatus status= super.containerChanged();
 	    IPackageFragmentRoot root= getPackageFragmentRoot();
 		if ((fTypeKind == ANNOTATION_TYPE || fTypeKind == ENUM_TYPE) && !status.matches(IStatus.ERROR)) {
-	    	if (root != null && !JavaModelUtil.is50OrHigher(root.getJavaProject())) {
+	    	if (root != null && !JavaModelUtil.is50OrHigher(root.getJavaScriptProject())) {
 	    		// error as createType will fail otherwise (bug 96928)
-				return new StatusInfo(IStatus.ERROR, Messages.format(NewWizardMessages.NewTypeWizardPage_warning_NotJDKCompliant, root.getJavaProject().getElementName()));  
+				return new StatusInfo(IStatus.ERROR, Messages.format(NewWizardMessages.NewTypeWizardPage_warning_NotJDKCompliant, root.getJavaScriptProject().getElementName()));  
 	    	}
 	    	if (fTypeKind == ENUM_TYPE) {
 		    	try {
 		    	    // if findType(...) == null then Enum is unavailable
-		    	    if (findType(root.getJavaProject(), "java.lang.Enum") == null) //$NON-NLS-1$
+		    	    if (findType(root.getJavaScriptProject(), "java.lang.Enum") == null) //$NON-NLS-1$
 		    	        return new StatusInfo(IStatus.WARNING, NewWizardMessages.NewTypeWizardPage_warning_EnumClassNotFound);  
 		    	} catch (JavaScriptModelException e) {
 		    	    JavaPlugin.log(e);
@@ -1386,7 +1386,7 @@ public abstract class NewTypeWizardPage extends NewContainerWizardPage {
 		IPackageFragmentRoot root= getPackageFragmentRoot();
 		fPackageDialogField.enableButton(root != null);
 		
-		IJavaScriptProject project= root != null ? root.getJavaProject() : null;
+		IJavaScriptProject project= root != null ? root.getJavaScriptProject() : null;
 		
 		String packName= getPackageText();
 		if (packName.length() > 0) {
@@ -1483,17 +1483,17 @@ public abstract class NewTypeWizardPage extends NewContainerWizardPage {
 			return status;
 		}
 		try {
-			IType type= findType(root.getJavaProject(), enclName);
+			IType type= findType(root.getJavaScriptProject(), enclName);
 			if (type == null) {
 				status.setError(NewWizardMessages.NewTypeWizardPage_error_EnclosingTypeNotExists); 
 				return status;
 			}
 
-			if (type.getCompilationUnit() == null) {
+			if (type.getJavaScriptUnit() == null) {
 				status.setError(NewWizardMessages.NewTypeWizardPage_error_EnclosingNotInCU); 
 				return status;
 			}
-			if (!JavaModelUtil.isEditable(type.getCompilationUnit())) {
+			if (!JavaModelUtil.isEditable(type.getJavaScriptUnit())) {
 				status.setError(NewWizardMessages.NewTypeWizardPage_error_EnclosingNotEditable); 
 				return status;			
 			}
@@ -1581,7 +1581,7 @@ public abstract class NewTypeWizardPage extends NewContainerWizardPage {
 		if (!isEnclosingTypeSelected()) {
 			IPackageFragment pack= getPackageFragment();
 			if (pack != null) {
-				IJavaScriptUnit cu= pack.getCompilationUnit(getCompilationUnitName(typeName));
+				IJavaScriptUnit cu= pack.getJavaScriptUnit(getCompilationUnitName(typeName));
 				fCurrType= cu.getType(typeName);
 				IResource resource= cu.getResource();
 
@@ -1662,7 +1662,7 @@ public abstract class NewTypeWizardPage extends NewContainerWizardPage {
 				status.setError(NewWizardMessages.NewTypeWizardPage_error_InvalidSuperClassName); 
 				return status;
 			}
-			if (type instanceof ParameterizedType && ! JavaModelUtil.is50OrHigher(root.getJavaProject())) {
+			if (type instanceof ParameterizedType && ! JavaModelUtil.is50OrHigher(root.getJavaScriptProject())) {
 				status.setError(NewWizardMessages.NewTypeWizardPage_error_SuperClassNotParameterized); 
 				return status;
 			}
@@ -1710,7 +1710,7 @@ public abstract class NewTypeWizardPage extends NewContainerWizardPage {
 					status.setError(Messages.format(NewWizardMessages.NewTypeWizardPage_error_InvalidSuperInterfaceName, intfname)); 
 					return status;
 				}
-				if (type instanceof ParameterizedType && ! JavaModelUtil.is50OrHigher(root.getJavaProject())) {
+				if (type instanceof ParameterizedType && ! JavaModelUtil.is50OrHigher(root.getJavaScriptProject())) {
 					status.setError(Messages.format(NewWizardMessages.NewTypeWizardPage_error_SuperInterfaceNotParameterized, intfname)); 
 					return status;
 				}
@@ -1933,7 +1933,7 @@ public abstract class NewTypeWizardPage extends NewContainerWizardPage {
 			
 			String lineDelimiter= null;	
 			if (!isInnerClass) {
-				lineDelimiter= StubUtility.getLineDelimiterUsed(pack.getJavaProject());
+				lineDelimiter= StubUtility.getLineDelimiterUsed(pack.getJavaScriptProject());
 				
 				String cuName= getCompilationUnitName(typeName);
 				IJavaScriptUnit parentCU= pack.createCompilationUnit(cuName, "", false, new SubProgressMonitor(monitor, 2)); //$NON-NLS-1$
@@ -1972,7 +1972,7 @@ public abstract class NewTypeWizardPage extends NewContainerWizardPage {
 			} else {
 				IType enclosingType= getEnclosingType();
 				
-				IJavaScriptUnit parentCU= enclosingType.getCompilationUnit();
+				IJavaScriptUnit parentCU= enclosingType.getJavaScriptUnit();
 				
 				needsSave= !parentCU.isWorkingCopy();
 				parentCU.becomeWorkingCopy(new SubProgressMonitor(monitor, 1)); // cu is now for sure (primary) a working copy
@@ -2025,7 +2025,7 @@ public abstract class NewTypeWizardPage extends NewContainerWizardPage {
 			
 			// add imports for superclass/interfaces, so types can be resolved correctly
 			
-			IJavaScriptUnit cu= createdType.getCompilationUnit();	
+			IJavaScriptUnit cu= createdType.getJavaScriptUnit();	
 			
 			imports.create(false, new SubProgressMonitor(monitor, 1));
 				
@@ -2053,7 +2053,7 @@ public abstract class NewTypeWizardPage extends NewContainerWizardPage {
 			IBuffer buf= cu.getBuffer();
 			String originalContent= buf.getText(range.getOffset(), range.getLength());
 			
-			String formattedContent= CodeFormatterUtil.format(CodeFormatter.K_CLASS_BODY_DECLARATIONS, originalContent, indent, null, lineDelimiter, pack.getJavaProject());
+			String formattedContent= CodeFormatterUtil.format(CodeFormatter.K_CLASS_BODY_DECLARATIONS, originalContent, indent, null, lineDelimiter, pack.getJavaScriptProject());
 			formattedContent= Strings.trimLeadingTabsAndSpaces(formattedContent);
 			buf.replace(range.getOffset(), range.getLength(), formattedContent);
 			if (!isInnerClass) {
@@ -2162,7 +2162,7 @@ public abstract class NewTypeWizardPage extends NewContainerWizardPage {
 		String content= CodeGeneration.getCompilationUnitContent(cu, fileComment, typeComment, typeContent, lineDelimiter);
 		if (content != null) {
 			ASTParser parser= ASTParser.newParser(AST.JLS3);
-			parser.setProject(cu.getJavaProject());
+			parser.setProject(cu.getJavaScriptProject());
 			parser.setSource(content.toCharArray());
 			JavaScriptUnit unit= (JavaScriptUnit) parser.createAST(null);
 			if ((pack.isDefaultPackage() || unit.getPackage() != null) && !unit.types().isEmpty()) {
@@ -2409,7 +2409,7 @@ public abstract class NewTypeWizardPage extends NewContainerWizardPage {
 	 * @deprecated Use getTypeComment(IJavaScriptUnit, String)
 	 */
 	protected String getTypeComment(IJavaScriptUnit parentCU) {
-		if (StubUtility.doAddComments(parentCU.getJavaProject()))
+		if (StubUtility.doAddComments(parentCU.getJavaScriptProject()))
 			return getTypeComment(parentCU, StubUtility.getLineDelimiterUsed(parentCU));
 		return null;
 	}
@@ -2469,14 +2469,14 @@ public abstract class NewTypeWizardPage extends NewContainerWizardPage {
 	 * @throws CoreException thrown when the creation fails.
 	 */
 	protected IFunction[] createInheritedMethods(IType type, boolean doConstructors, boolean doUnimplementedMethods, ImportsManager imports, IProgressMonitor monitor) throws CoreException {
-		final IJavaScriptUnit cu= type.getCompilationUnit();
+		final IJavaScriptUnit cu= type.getJavaScriptUnit();
 		JavaModelUtil.reconcile(cu);
-		IFunction[] typeMethods= type.getMethods();
+		IFunction[] typeMethods= type.getFunctions();
 		Set handleIds= new HashSet(typeMethods.length);
 		for (int index= 0; index < typeMethods.length; index++)
 			handleIds.add(typeMethods[index].getHandleIdentifier());
 		ArrayList newMethods= new ArrayList();
-		CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(type.getJavaProject());
+		CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(type.getJavaScriptProject());
 		settings.createComments= isAddComments();
 		ASTParser parser= ASTParser.newParser(AST.JLS3);
 		parser.setResolveBindings(true);
@@ -2499,7 +2499,7 @@ public abstract class NewTypeWizardPage extends NewContainerWizardPage {
 			}
 		}
 		JavaModelUtil.reconcile(cu);
-		typeMethods= type.getMethods();
+		typeMethods= type.getFunctions();
 		for (int index= 0; index < typeMethods.length; index++)
 			if (!handleIds.contains(typeMethods[index].getHandleIdentifier()))
 				newMethods.add(typeMethods[index]);

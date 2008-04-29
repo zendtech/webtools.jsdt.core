@@ -141,7 +141,7 @@ public final class AddGetterSetterOperation implements IWorkspaceRunnable {
 	 */
 	private void addNewAccessor(final IType type, final IField field, final String contents, final ListRewrite rewrite, final ASTNode insertion) throws JavaScriptModelException {
 		final String delimiter= StubUtility.getLineDelimiterUsed(type);
-		final FunctionDeclaration declaration= (FunctionDeclaration) rewrite.getASTRewrite().createStringPlaceholder(CodeFormatterUtil.format(CodeFormatter.K_CLASS_BODY_DECLARATIONS, contents, 0, null, delimiter, field.getJavaProject()), ASTNode.METHOD_DECLARATION);
+		final FunctionDeclaration declaration= (FunctionDeclaration) rewrite.getASTRewrite().createStringPlaceholder(CodeFormatterUtil.format(CodeFormatter.K_CLASS_BODY_DECLARATIONS, contents, 0, null, delimiter, field.getJavaScriptProject()), ASTNode.FUNCTION_DECLARATION);
 		if (insertion != null)
 			rewrite.insertBefore(declaration, insertion, null);
 		else
@@ -287,7 +287,7 @@ public final class AddGetterSetterOperation implements IWorkspaceRunnable {
 		try {
 			monitor.setTaskName(CodeGenerationMessages.AddGetterSetterOperation_description); 
 			monitor.beginTask("", fGetterFields.length + fSetterFields.length); //$NON-NLS-1$
-			final IJavaScriptUnit unit= fType.getCompilationUnit();
+			final IJavaScriptUnit unit= fType.getJavaScriptUnit();
 			final ASTRewrite astRewrite= ASTRewrite.create(fASTRoot.getAST());
 			ListRewrite listRewriter= null;
 			if (fType.isAnonymous()) {

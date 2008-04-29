@@ -1463,7 +1463,7 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor {
 		return true;
 	}
 	private static String[] suggestLocalVariableNames(IJavaScriptUnit cu, ITypeBinding binding) {
-		return StubUtility.getVariableNameSuggestions(StubUtility.LOCAL, cu.getJavaProject(), binding, null, null);
+		return StubUtility.getVariableNameSuggestions(StubUtility.LOCAL, cu.getJavaScriptProject(), binding, null, null);
 	}
 
 	private static boolean getPickOutStringProposals(IInvocationContext context, ASTNode node, Collection resultingCollections) {
@@ -1623,7 +1623,7 @@ public class AdvancedQuickAssistProcessor implements IQuickAssistProcessor {
 		Expression elseCopy= (Expression) rewrite.createCopyTarget(elseExpression);
 
 		
-		if (!JavaModelUtil.is50OrHigher(context.getCompilationUnit().getJavaProject())) {
+		if (!JavaModelUtil.is50OrHigher(context.getCompilationUnit().getJavaScriptProject())) {
 			ITypeBinding thenBinding= thenExpression.resolveTypeBinding();
 			ITypeBinding elseBinding= elseExpression.resolveTypeBinding();
 			if (thenBinding != null && elseBinding != null && exprBinding != null && !elseBinding.isAssignmentCompatible(thenBinding)) {

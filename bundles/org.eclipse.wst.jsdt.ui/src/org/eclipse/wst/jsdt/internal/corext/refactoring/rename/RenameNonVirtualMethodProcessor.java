@@ -157,7 +157,7 @@ public class RenameNonVirtualMethodProcessor extends RenameMethodProcessor {
 	}
 	
 	private IJavaScriptUnit getDeclaringCU() {
-		return getMethod().getCompilationUnit();
+		return getMethod().getJavaScriptUnit();
 	}
 
 	/*

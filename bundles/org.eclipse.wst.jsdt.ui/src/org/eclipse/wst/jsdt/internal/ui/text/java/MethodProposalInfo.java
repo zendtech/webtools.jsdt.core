@@ -78,7 +78,7 @@ public final class MethodProposalInfo extends MemberProposalInfo {
 			else
 			{
 				ITypeRoot typeRoot=fJavaProject.findTypeRoot(typeName);
-				return typeRoot.getMethod(name, parameters);
+				return typeRoot.getFunction(name, parameters);
 			}
 		}		
 		return null;
@@ -100,12 +100,12 @@ public final class MethodProposalInfo extends MemberProposalInfo {
 	 */
 	private IFunction findMethod(String name, String[] paramTypes, boolean isConstructor, IType type) throws JavaScriptModelException {
 		Map typeVariables= computeTypeVariables(type);
-		return findMethod(name, paramTypes, isConstructor, type.getMethods(), typeVariables);
+		return findMethod(name, paramTypes, isConstructor, type.getFunctions(), typeVariables);
 	}
 
 	/**
 	 * The type and method signatures received in
-	 * <code>CompletionProposals</code> of type <code>METHOD_REF</code>
+	 * <code>CompletionProposals</code> of type <code>FUNCTION_REF</code>
 	 * contain concrete type bounds. When comparing parameters of the signature
 	 * with an <code>IFunction</code>, we have to make sure that we match the
 	 * case where the formal method declaration uses a type variable which in

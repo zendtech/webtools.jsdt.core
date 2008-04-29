@@ -221,7 +221,7 @@ public class RenameFieldProcessor extends JavaRenameProcessor implements IRefere
 		
 		boolean exists = (fField.getDeclaringType()!=null) ?
 				fField.getDeclaringType().getField(newName).exists() :
-				fField.getCompilationUnit().getField(newName).exists() ;
+				fField.getJavaScriptUnit().getField(newName).exists() ;
 		if (exists)
 			result.addError(fIsComposite 
 					? Messages.format(RefactoringCoreMessages.RenameFieldRefactoring_field_already_defined2, new String[] { newName, fField.getDeclaringType().getElementName() }) 
@@ -233,7 +233,7 @@ public class RenameFieldProcessor extends JavaRenameProcessor implements IRefere
 	public Object getNewElement() {
 		return (fField.getDeclaringType()!=null) ?
 		 fField.getDeclaringType().getField(getNewElementName()):
-		 fField.getCompilationUnit().getField(getNewElementName());
+		 fField.getJavaScriptUnit().getField(getNewElementName());
 	}
 	
 	//---- ITextUpdating2 ---------------------------------------------
@@ -333,13 +333,13 @@ public class RenameFieldProcessor extends JavaRenameProcessor implements IRefere
 	public String getNewGetterName() throws CoreException {
 		IFunction primaryGetterCandidate= JavaModelUtil.findMethod(GetterSetterUtil.getGetterName(fField, new String[0]), new String[0], false, fField.getDeclaringType());
 		if (! JavaModelUtil.isBoolean(fField) || (primaryGetterCandidate != null && primaryGetterCandidate.exists()))
-			return GetterSetterUtil.getGetterName(fField.getJavaProject(), getNewElementName(), fField.getFlags(), JavaModelUtil.isBoolean(fField), null);
+			return GetterSetterUtil.getGetterName(fField.getJavaScriptProject(), getNewElementName(), fField.getFlags(), JavaModelUtil.isBoolean(fField), null);
 		//bug 30906 describes why we need to look for other alternatives here	
-		return GetterSetterUtil.getGetterName(fField.getJavaProject(), getNewElementName(), fField.getFlags(), false, null);
+		return GetterSetterUtil.getGetterName(fField.getJavaScriptProject(), getNewElementName(), fField.getFlags(), false, null);
 	}
 
 	public String getNewSetterName() throws CoreException {
-		return GetterSetterUtil.getSetterName(fField.getJavaProject(), getNewElementName(), fField.getFlags(), JavaModelUtil.isBoolean(fField), null);
+		return GetterSetterUtil.getSetterName(fField.getJavaScriptProject(), getNewElementName(), fField.getFlags(), JavaModelUtil.isBoolean(fField), null);
 	}
 	
 	// ------------------- IDelegateUpdating ----------------------
@@ -392,7 +392,7 @@ public class RenameFieldProcessor extends JavaRenameProcessor implements IRefere
 	public RefactoringStatus checkInitialConditions(IProgressMonitor pm) throws CoreException {
 		IField primary= (IField) fField.getPrimaryElement();
 		if (primary == null || !primary.exists()) {
-			String message= Messages.format(RefactoringCoreMessages.RenameFieldRefactoring_deleted, fField.getCompilationUnit().getElementName());
+			String message= Messages.format(RefactoringCoreMessages.RenameFieldRefactoring_deleted, fField.getJavaScriptUnit().getElementName());
 			return RefactoringStatus.createFatalErrorStatus(message);
 		}
 		fField= primary;
@@ -572,7 +572,7 @@ public class RenameFieldProcessor extends JavaRenameProcessor implements IRefere
 			final List list= new ArrayList(changes.length);
 			list.addAll(Arrays.asList(changes));
 			String project= null;
-			IJavaScriptProject javaProject= fField.getJavaProject();
+			IJavaScriptProject javaProject= fField.getJavaScriptProject();
 			if (javaProject != null)
 				project= javaProject.getElementName();
 			int flags= JavaRefactoringDescriptor.JAR_MIGRATION | JavaRefactoringDescriptor.JAR_REFACTORING | RefactoringDescriptor.STRUCTURAL_CHANGE;
@@ -661,7 +661,7 @@ public class RenameFieldProcessor extends JavaRenameProcessor implements IRefere
 	private void addDeclarationUpdate() throws CoreException { 
 		ISourceRange nameRange= fField.getNameRange();
 		TextEdit textEdit= new ReplaceEdit(nameRange.getOffset(), nameRange.getLength(), getNewElementName());
-		IJavaScriptUnit cu= fField.getCompilationUnit();
+		IJavaScriptUnit cu= fField.getJavaScriptUnit();
 		String groupName= RefactoringCoreMessages.RenameFieldRefactoring_Update_field_declaration; 
 		addTextEdit(fChangeManager.get(cu), groupName, textEdit);
 	}
@@ -669,7 +669,7 @@ public class RenameFieldProcessor extends JavaRenameProcessor implements IRefere
 	private RefactoringStatus addDelegates() throws JavaScriptModelException, CoreException {
 
 		RefactoringStatus status= new RefactoringStatus();
-		CompilationUnitRewrite rewrite= new CompilationUnitRewrite(fField.getCompilationUnit());
+		CompilationUnitRewrite rewrite= new CompilationUnitRewrite(fField.getJavaScriptUnit());
 		rewrite.setResolveBindings(true);
 
 		// add delegate for the field
@@ -702,7 +702,7 @@ public class RenameFieldProcessor extends JavaRenameProcessor implements IRefere
 		final CompilationUnitChange change= rewrite.createChange();
 		if (change != null) {
 			change.setKeepPreviewEdits(true);
-			fChangeManager.manage(fField.getCompilationUnit(), change);
+			fChangeManager.manage(fField.getJavaScriptUnit(), change);
 		}
 
 		return status;
@@ -793,7 +793,7 @@ public class RenameFieldProcessor extends JavaRenameProcessor implements IRefere
 				// limited change set, no accessors.
 				for (int i= 0; i < oldReferences.length; i++) 
 					compilationUnitsToModify.add(oldReferences[i].getCompilationUnit());
-				compilationUnitsToModify.add(fField.getCompilationUnit());
+				compilationUnitsToModify.add(fField.getJavaScriptUnit());
 			} else {
 				// include all cus, including accessors
 				compilationUnitsToModify.addAll(Arrays.asList(fChangeManager.getAllCompilationUnits()));
@@ -817,7 +817,7 @@ public class RenameFieldProcessor extends JavaRenameProcessor implements IRefere
 
 	private SearchResultGroup[] getNewReferences(IProgressMonitor pm, RefactoringStatus status, WorkingCopyOwner owner, IJavaScriptUnit[] newWorkingCopies) throws CoreException {
 		pm.beginTask("", 2); //$NON-NLS-1$
-		IJavaScriptUnit declaringCuWorkingCopy= RenameAnalyzeUtil.findWorkingCopyForCu(newWorkingCopies, fField.getCompilationUnit());
+		IJavaScriptUnit declaringCuWorkingCopy= RenameAnalyzeUtil.findWorkingCopyForCu(newWorkingCopies, fField.getJavaScriptUnit());
 		if (declaringCuWorkingCopy == null)
 			return new SearchResultGroup[0];
 		

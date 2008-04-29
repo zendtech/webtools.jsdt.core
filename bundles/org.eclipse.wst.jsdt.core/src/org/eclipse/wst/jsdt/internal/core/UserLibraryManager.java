@@ -228,14 +228,14 @@ public class UserLibraryManager {
 				monitor.beginTask("", 1); //$NON-NLS-1$
 			}
 			IWorkspaceRoot root= ResourcesPlugin.getWorkspace().getRoot();
-			IJavaScriptProject[] projects= JavaScriptCore.create(root).getJavaProjects();
+			IJavaScriptProject[] projects= JavaScriptCore.create(root).getJavaScriptProjects();
 			IPath containerPath= new Path(JavaScriptCore.USER_LIBRARY_CONTAINER_ID).append(name);
 
 			ArrayList affectedProjects= new ArrayList();
 
 			for (int i= 0; i < projects.length; i++) {
 				IJavaScriptProject project= projects[i];
-				IIncludePathEntry[] entries= project.getRawClasspath();
+				IIncludePathEntry[] entries= project.getRawIncludepath();
 				for (int k= 0; k < entries.length; k++) {
 					IIncludePathEntry curr= entries[k];
 					if (curr.getEntryKind() == IIncludePathEntry.CPE_CONTAINER) {

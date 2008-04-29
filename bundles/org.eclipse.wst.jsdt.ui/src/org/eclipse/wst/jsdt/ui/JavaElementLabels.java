@@ -1043,7 +1043,7 @@ public class JavaElementLabels {
 	}
 
 	public static void getFileLabel(IMember member, long flags, StringBuffer buf) {
-		IJavaScriptUnit compUnit=member.getCompilationUnit();
+		IJavaScriptUnit compUnit=member.getJavaScriptUnit();
 		if (compUnit!=null)
 			getCompilationUnitLabel(compUnit, flags, buf);
 		else {
@@ -1118,7 +1118,7 @@ public class JavaElementLabels {
 	
 	private static boolean getVariableLabel(IPackageFragmentRoot root, long flags, StringBuffer buf) {
 		try {
-			IIncludePathEntry rawEntry= root.getRawClasspathEntry();
+			IIncludePathEntry rawEntry= root.getRawIncludepathEntry();
 			if (rawEntry != null && rawEntry.getEntryKind() == IIncludePathEntry.CPE_VARIABLE) {
 				IPath path= rawEntry.getPath().makeRelative();
 				if (getFlag(flags, REFERENCED_ROOT_POST_QUALIFIED)) {
@@ -1223,7 +1223,7 @@ public class JavaElementLabels {
 		IResource resource= root.getResource();
 		if (resource != null) {
 			IProject jarProject= resource.getProject();
-			IProject container= root.getJavaProject().getProject();
+			IProject container= root.getJavaScriptProject().getProject();
 			return !container.equals(jarProject);
 		}
 		return false;

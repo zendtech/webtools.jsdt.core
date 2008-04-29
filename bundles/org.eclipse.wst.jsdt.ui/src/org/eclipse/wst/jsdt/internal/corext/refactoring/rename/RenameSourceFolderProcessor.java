@@ -81,7 +81,7 @@ public final class RenameSourceFolderProcessor extends JavaRenameProcessor {
 	}
 
 	public Object getNewElement() throws CoreException {
-		IPackageFragmentRoot[] roots= fSourceFolder.getJavaProject().getPackageFragmentRoots();
+		IPackageFragmentRoot[] roots= fSourceFolder.getJavaScriptProject().getPackageFragmentRoots();
 		for (int i= 0; i < roots.length; i++) {
 			if (roots[i].getElementName().equals(getNewElementName()))
 				return roots[i];	
@@ -130,7 +130,7 @@ public final class RenameSourceFolderProcessor extends JavaRenameProcessor {
 		if (result.hasFatalError())
 			return result;
 			
-		IJavaScriptProject project= fSourceFolder.getJavaProject();
+		IJavaScriptProject project= fSourceFolder.getJavaScriptProject();
 		IPath p= project.getProject().getFullPath().append(newName);
 		if (project.findPackageFragmentRoot(p) != null)
 			return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.RenameSourceFolderRefactoring_already_exists); 

@@ -100,7 +100,7 @@ public class DeleteSourceManipulationChange extends AbstractDeleteChange {
 			return new UndoDeleteResourceChange(resourceDescription);
 			
 		} else if (element instanceof IPackageFragment) {
-			IJavaScriptUnit[] units= ((IPackageFragment)element).getCompilationUnits();
+			IJavaScriptUnit[] units= ((IPackageFragment)element).getJavaScriptUnits();
 			pm.beginTask("", units.length + 1); //$NON-NLS-1$
 			for (int i = 0; i < units.length; i++) {
 				// fix https://bugs.eclipse.org/bugs/show_bug.cgi?id=66835

@@ -139,7 +139,7 @@ public class TypeHierarchyLifeCycle implements ITypeHierarchyChangedListener, IE
 					}
 				}
 			} else if (element.getElementType() == IJavaScriptElement.PACKAGE_FRAGMENT) {
-				IPackageFragmentRoot[] roots= element.getJavaProject().getPackageFragmentRoots();
+				IPackageFragmentRoot[] roots= element.getJavaScriptProject().getPackageFragmentRoots();
 				String name= element.getElementName();
 				for (int i= 0; i < roots.length; i++) {
 					IPackageFragment pack= roots[i].getPackageFragment(name);
@@ -150,7 +150,7 @@ public class TypeHierarchyLifeCycle implements ITypeHierarchyChangedListener, IE
 			} else {
 				region.add(element);
 			}
-			IJavaScriptProject jproject= element.getJavaProject();
+			IJavaScriptProject jproject= element.getJavaScriptProject();
 			return jproject.newTypeHierarchy(region, pm);
 		}
 	}

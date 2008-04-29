@@ -466,7 +466,7 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 					String text= ((ITextSelection) selection).getText();
 					if (text != null) {
 						text= text.trim();
-						if (text.length() > 0 && JavaScriptConventions.validateJavaTypeName(text, JavaScriptCore.VERSION_1_3, JavaScriptCore.VERSION_1_3).isOK()) {
+						if (text.length() > 0 && JavaScriptConventions.validateJavaScriptTypeName(text, JavaScriptCore.VERSION_1_3, JavaScriptCore.VERSION_1_3).isOK()) {
 							setInitialPattern(text, FULL_SELECTION);
 						}
 					}

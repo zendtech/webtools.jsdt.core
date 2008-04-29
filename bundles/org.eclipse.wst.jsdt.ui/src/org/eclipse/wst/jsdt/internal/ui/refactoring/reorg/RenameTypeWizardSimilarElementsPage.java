@@ -173,7 +173,7 @@ class RenameTypeWizardSimilarElementsPage extends UserInputWizardPage {
 						return new StatusInfo(IStatus.ERROR, RefactoringMessages.RenameTypeWizardSimilarElementsPage_field_exists);
 				}
 				if (fElementToEdit instanceof IFunction) {
-					final IFunction m= type.getMethod(name, ((IFunction) fElementToEdit).getParameterTypes());
+					final IFunction m= type.getFunction(name, ((IFunction) fElementToEdit).getParameterTypes());
 					if (m.exists())
 						return new StatusInfo(IStatus.ERROR, RefactoringMessages.RenameTypeWizardSimilarElementsPage_method_exists);
 				}

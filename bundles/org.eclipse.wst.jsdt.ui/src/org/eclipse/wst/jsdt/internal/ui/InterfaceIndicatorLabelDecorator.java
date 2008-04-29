@@ -157,7 +157,7 @@ public class InterfaceIndicatorLabelDecorator implements ILabelDecorator, ILight
 				}
 				return null;
 			}
-			String typeName= JavaScriptCore.removeJavaLikeExtension(unit.getElementName());
+			String typeName= JavaScriptCore.removeJavaScriptLikeExtension(unit.getElementName());
 			return getOverlayWithSearchEngine(unit, typeName);
 		} else if (element instanceof IClassFile) {
 			IClassFile classFile= (IClassFile) element;

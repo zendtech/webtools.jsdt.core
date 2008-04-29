@@ -193,7 +193,7 @@ public class ContextSensitiveImportRewriteContext extends ImportRewriteContext {
 			IJavaScriptProject project= null;
 			IJavaScriptElement javaElement= fCompilationUnit.getJavaElement();
 			if (javaElement != null)
-				project= javaElement.getJavaProject();
+				project= javaElement.getJavaScriptProject();
 			
 			List imports= new ArrayList();
 			ImportReferencesCollector.collect(fCompilationUnit, project, null, imports, null);

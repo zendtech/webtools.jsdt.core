@@ -79,7 +79,7 @@ public final class FillArgumentNamesCompletionProposalCollector extends Completi
 		if (cu == null || getContext().isInJsdoc())
 			return super.createJavaCompletionProposal(typeProposal);
 
-		IJavaScriptProject project= cu.getJavaProject();
+		IJavaScriptProject project= cu.getJavaScriptProject();
 		if (!shouldProposeGenerics(project))
 			return super.createJavaCompletionProposal(typeProposal);
 

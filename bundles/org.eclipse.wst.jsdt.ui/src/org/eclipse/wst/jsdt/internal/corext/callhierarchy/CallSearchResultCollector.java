@@ -61,7 +61,7 @@ class CallSearchResultCollector {
     private boolean isIgnored(IMember enclosingElement) {
     	IType type = getTypeOfElement(enclosingElement);
         String fullyQualifiedName = (type!=null)? type.getFullyQualifiedName() :
-        	enclosingElement.getCompilationUnit().getElementName();
+        	enclosingElement.getJavaScriptUnit().getElementName();
 
         return CallHierarchy.getDefault().isIgnored(fullyQualifiedName);
     }

@@ -95,7 +95,7 @@ public final class DestinationContentProvider extends StandardJavaElementContent
 			IJavaScriptProject javaProject= JavaScriptCore.create(container.getProject());
 			if (javaProject == null || !javaProject.exists())
 				return members;
-			boolean isFolderOnClasspath = javaProject.isOnClasspath(container);
+			boolean isFolderOnClasspath = javaProject.isOnIncludepath(container);
 			List nonJavaResources= new ArrayList();
 			// Can be on classpath but as a member of non-java resource folder
 			for (int i= 0; i < members.length; i++) {
@@ -108,7 +108,7 @@ public final class DestinationContentProvider extends StandardJavaElementContent
 					if (javaProject.findPackageFragmentRoot(member.getFullPath()) == null) {
 						nonJavaResources.add(member);
 					} 
-				} else if (!javaProject.isOnClasspath(member)) {
+				} else if (!javaProject.isOnIncludepath(member)) {
 					nonJavaResources.add(member);
 				}
 			}
@@ -119,7 +119,7 @@ public final class DestinationContentProvider extends StandardJavaElementContent
 	}
 	
 	private static Object[] getOpenNonJavaProjects(IJavaScriptModel model) throws JavaScriptModelException {
-		Object[] nonJavaProjects= model.getNonJavaResources();
+		Object[] nonJavaProjects= model.getNonJavaScriptResources();
 		ArrayList result= new ArrayList(nonJavaProjects.length);
 		for (int i= 0; i < nonJavaProjects.length; i++) {
 			IProject project = (IProject) nonJavaProjects[i];

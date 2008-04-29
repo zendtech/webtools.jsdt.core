@@ -55,14 +55,14 @@ public static boolean canSeeFocus(IJavaScriptElement focus, boolean isPolymorphi
 			JavaProject focusProject = focus instanceof JarPackageFragmentRoot ? (JavaProject) focus.getParent() : (JavaProject) focus;
 			focusEntries = focusProject.getExpandedClasspath();
 		}
-		IJavaScriptModel model = focus.getJavaModel();
+		IJavaScriptModel model = focus.getJavaScriptModel();
 		IJavaScriptProject project = getJavaProject(projectOrJarPath, model);
 		if (project != null)
 			return canSeeFocus(focus, (JavaProject) project, focusEntries);
 
 		// projectOrJarPath is a jar
 		// it can see the focus only if it is on the classpath of a project that can see the focus
-		IJavaScriptProject[] allProjects = model.getJavaProjects();
+		IJavaScriptProject[] allProjects = model.getJavaScriptProjects();
 		for (int i = 0, length = allProjects.length; i < length; i++) {
 			JavaProject otherProject = (JavaProject) allProjects[i];
 			IIncludePathEntry entry = otherProject.getClasspathEntryFor(projectOrJarPath);
@@ -167,7 +167,7 @@ private void initializeIndexLocations() {
 			}
 			// jar files can be included in the search scope without including one of the projects that references them, so scan all projects that have not been visited
 			if (jarsToCheck.elementSize > 0) {
-				IJavaScriptProject[] allProjects = model.getJavaProjects();
+				IJavaScriptProject[] allProjects = model.getJavaScriptProjects();
 				for (int i = 0, l = allProjects.length; i < l && jarsToCheck.elementSize > 0; i++) {
 					JavaProject project = (JavaProject) allProjects[i];
 					if (!visitedProjects.includes(project)) {
@@ -209,7 +209,7 @@ public IPath[] getIndexLocations() {
  * Returns null if the path doesn't correspond to a project.
  */
 private static IJavaScriptProject getJavaProject(IPath path, IJavaScriptModel model) {
-	IJavaScriptProject project = model.getJavaProject(path.lastSegment());
+	IJavaScriptProject project = model.getJavaScriptProject(path.lastSegment());
 	if (project.exists()) {
 		return project;
 	}

@@ -503,7 +503,7 @@ public class CleanUpRefactoring extends Refactoring implements IScheduledRefacto
 	}
 	
 	public void addCompilationUnit(IJavaScriptUnit unit) {
-		IJavaScriptProject javaProject= unit.getJavaProject();
+		IJavaScriptProject javaProject= unit.getJavaScriptProject();
 		if (!fProjects.containsKey(javaProject))
 			fProjects.put(javaProject, new ArrayList());
 		

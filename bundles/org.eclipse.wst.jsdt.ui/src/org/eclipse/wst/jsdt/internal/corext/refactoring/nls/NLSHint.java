@@ -66,7 +66,7 @@ public class NLSHint {
 		fResourceBundleName= NLSRefactoring.DEFAULT_PROPERTY_FILENAME + NLSRefactoring.PROPERTY_FILE_EXT;
 		fResourceBundlePackage= cuPackage;
 		
-		IJavaScriptProject project= cu.getJavaProject();
+		IJavaScriptProject project= cu.getJavaScriptProject();
 		NLSLine[] lines= createRawLines(cu);
 		
 		AccessorClassReference accessClassRef= findFirstAccessorReference(lines, astRoot);

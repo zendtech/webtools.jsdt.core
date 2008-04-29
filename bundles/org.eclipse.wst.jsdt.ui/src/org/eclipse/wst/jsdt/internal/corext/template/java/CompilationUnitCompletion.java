@@ -146,7 +146,7 @@ final class CompilationUnitCompletion extends CompletionRequestor {
 			if (fUnit == null)
 				return false;
 
-			IJavaScriptProject project= fUnit.getJavaProject();
+			IJavaScriptProject project= fUnit.getJavaScriptProject();
 
 			try {
 				IType sub= project.findType(implementorName);
@@ -187,7 +187,7 @@ final class CompilationUnitCompletion extends CompletionRequestor {
 			if (fUnit == null)
 				return empty;
 			
-			IJavaScriptProject project= fUnit.getJavaProject();
+			IJavaScriptProject project= fUnit.getJavaScriptProject();
 			
 			try {
 				IType sub= project.findType(implementorName);
@@ -365,7 +365,7 @@ final class CompilationUnitCompletion extends CompletionRequestor {
 		 */
 		public TypeParameterResolver(Variable variable) throws JavaScriptModelException {
 			String typeName= SignatureUtil.stripSignatureToFQN(variable.signature);
-			IJavaScriptProject project= fUnit.getJavaProject();
+			IJavaScriptProject project= fUnit.getJavaScriptProject();
 			fType= project.findType(typeName);
 			fHierarchy= fType.newSupertypeHierarchy(null);
 			fVariable= variable;
@@ -389,7 +389,7 @@ final class CompilationUnitCompletion extends CompletionRequestor {
 		 * @throws IndexOutOfBoundsException if the index is not valid
 		 */
 		public String[] computeBinding(String superType, int index) throws JavaScriptModelException, IndexOutOfBoundsException {
-			IJavaScriptProject project= fUnit.getJavaProject();
+			IJavaScriptProject project= fUnit.getJavaScriptProject();
 			IType type= project.findType(superType);
 			if (type == null)
 				throw new JavaScriptModelException(new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.OK, "No such type", null))); //$NON-NLS-1$
@@ -636,7 +636,7 @@ final class CompilationUnitCompletion extends CompletionRequestor {
 			if (Signature.getTypeSignatureKind(subTypeSignature) != Signature.BASE_TYPE_SIGNATURE && SignatureUtil.isJavaLangObject(superTypeSignature)) 
 				return true;
 			
-			IJavaScriptProject project= fUnit.getJavaProject();
+			IJavaScriptProject project= fUnit.getJavaScriptProject();
 			
 			try {
 				
@@ -680,7 +680,7 @@ final class CompilationUnitCompletion extends CompletionRequestor {
 			
 			// try and resolve otherwise
 			if (context.isBinary()) {
-				return fUnit.getJavaProject().findType(SignatureUtil.stripSignatureToFQN(signature)) != null;
+				return fUnit.getJavaScriptProject().findType(SignatureUtil.stripSignatureToFQN(signature)) != null;
 			} else {
 				return context.resolveType(SignatureUtil.stripSignatureToFQN(signature)) != null;
 			}

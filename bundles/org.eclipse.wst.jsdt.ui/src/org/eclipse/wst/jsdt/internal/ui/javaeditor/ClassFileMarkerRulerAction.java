@@ -66,7 +66,7 @@ class ClassFileMarkerRulerAction extends MarkerRulerAction {
 		IEditorInput input= getTextEditor().getEditorInput();
 		if (input instanceof IClassFileEditorInput) {
 			IClassFile classFile= ((IClassFileEditorInput) input).getClassFile();
-			JavaScriptCore.addJavaElementMarkerAttributes(attributes, classFile);
+			JavaScriptCore.addJavaScriptElementMarkerAttributes(attributes, classFile);
 		}
 
 		return attributes;

@@ -278,7 +278,7 @@ public class OverrideMethodDialog extends SourceActionDialog {
 	public OverrideMethodDialog(Shell shell, CompilationUnitEditor editor, IType type, boolean isSubType) throws JavaScriptModelException {
 		super(shell, new BindingLabelProvider(), new OverrideMethodContentProvider(), editor, type, false);
 		RefactoringASTParser parser= new RefactoringASTParser(AST.JLS3);
-		fUnit= parser.parse(type.getCompilationUnit(), true);
+		fUnit= parser.parse(type.getJavaScriptUnit(), true);
 		final ITypeBinding binding= ASTNodes.getTypeBinding(fUnit, type);
 		List toImplement= new ArrayList();
 		IFunctionBinding[] overridable= null;

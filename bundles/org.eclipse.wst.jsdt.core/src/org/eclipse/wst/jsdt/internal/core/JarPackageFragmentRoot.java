@@ -175,7 +175,7 @@ public class JarPackageFragmentRoot extends PackageFragmentRoot {
 	/**
 	 * Returns an array of non-java resources contained in the receiver.
 	 */
-	public Object[] getNonJavaResources() throws JavaScriptModelException {
+	public Object[] getNonJavaScriptResources() throws JavaScriptModelException {
 		// We want to show non java resources of the default package at the root (see PR #1G58NB8)
 		Object[] defaultPkgResources =  ((JarPackageFragment) getPackageFragment(CharOperation.NO_STRINGS)).storedNonJavaResources();
 		int length = defaultPkgResources.length;
@@ -240,7 +240,7 @@ public class JarPackageFragmentRoot extends PackageFragmentRoot {
 			existingLength--;
 		}
 		JavaModelManager manager = JavaModelManager.getJavaModelManager();
-		IJavaScriptProject project = getJavaProject();
+		IJavaScriptProject project = getJavaScriptProject();
 		for (int i = existingLength; i < length; i++) {
 			if (Util.isValidFolderNameForPackage(pkgName[i], project.getOption(JavaScriptCore.COMPILER_SOURCE, true), project.getOption(JavaScriptCore.COMPILER_COMPLIANCE, true))) {
 				System.arraycopy(existing, 0, existing = new String[i+1], 0, i);

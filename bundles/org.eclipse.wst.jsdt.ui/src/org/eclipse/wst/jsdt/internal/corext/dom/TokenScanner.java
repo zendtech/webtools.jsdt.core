@@ -77,7 +77,7 @@ public class TokenScanner {
 	 * @throws JavaScriptModelException thorwn if the buffer cannot be accessed
 	 */
 	public TokenScanner(IJavaScriptUnit cu) throws JavaScriptModelException {
-		IJavaScriptProject project= cu.getJavaProject();
+		IJavaScriptProject project= cu.getJavaScriptProject();
 		String sourceLevel= project.getOption(JavaScriptCore.COMPILER_SOURCE, true);
 		String complianceLevel= project.getOption(JavaScriptCore.COMPILER_COMPLIANCE, true);
 		fScanner= ToolFactory.createScanner(true, false, true, sourceLevel, complianceLevel); // line info required

@@ -221,7 +221,7 @@ public class MoveCuUpdateCreator {
 	private IType[] getDestinationPackageTypes() throws JavaScriptModelException {
 		List types= new ArrayList();
 		if (fDestination.exists()) {
-			IJavaScriptUnit[] cus= fDestination.getCompilationUnits();
+			IJavaScriptUnit[] cus= fDestination.getJavaScriptUnits();
 			for (int i= 0; i < cus.length; i++) {
 				types.addAll(Arrays.asList(cus[i].getAllTypes()));
 			}
@@ -242,7 +242,7 @@ public class MoveCuUpdateCreator {
 					continue;
 				if (! iType.getPackageFragment().equals(srcPack))
 					continue;
-				if (cuList.contains(iType.getCompilationUnit()))
+				if (cuList.contains(iType.getJavaScriptUnit()))
 					continue;
 				importEdit.addImport(JavaModelUtil.getFullyQualifiedName(iType));
 		}

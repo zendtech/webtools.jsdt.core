@@ -1192,7 +1192,7 @@ public final class JavaScriptCore extends Plugin {
 	 * from the content type manager, and to add new Java-like extensions to this content type.
 	 *
 	 * @see org.eclipse.core.runtime.content.IContentTypeManager#getContentType(String)
-	 * @see #getJavaLikeExtensions()
+	 * @see #getJavaScriptLikeExtensions()
 	 * @since 3.2
 	 */
 	public static final String JAVA_SOURCE_CONTENT_TYPE = JavaScriptCore.PLUGIN_ID+".jsSource" ; //$NON-NLS-1$
@@ -1264,8 +1264,23 @@ public final class JavaScriptCore extends Plugin {
 	 * @param attributes the mutable marker attribute map (key type: <code>String</code>,
 	 *   value type: <code>String</code>)
 	 * @param element the Java element for which the marker needs to be configured
+	 * @deprecated Use {@link #addJavaScriptElementMarkerAttributes(Map,IJavaScriptElement)} instead
 	 */
 	public static void addJavaElementMarkerAttributes(
+		Map attributes,
+		IJavaScriptElement element) {
+			addJavaScriptElementMarkerAttributes(attributes, element);
+		}
+
+	/**
+	 * Configures the given marker attribute map for the given Java element.
+	 * Used for markers, which denote a Java element rather than a resource.
+	 *
+	 * @param attributes the mutable marker attribute map (key type: <code>String</code>,
+	 *   value type: <code>String</code>)
+	 * @param element the Java element for which the marker needs to be configured
+	 */
+	public static void addJavaScriptElementMarkerAttributes(
 		Map attributes,
 		IJavaScriptElement element) {
 		if (element instanceof IMember)
@@ -1274,7 +1289,18 @@ public final class JavaScriptCore extends Plugin {
 			attributes.put(ATT_HANDLE_ID, element.getHandleIdentifier());
 	}
 
+	/**
+	 * @deprecated Use {@link #addNonJavaScriptResources(Object[],IContainer,int,ArrayList)} instead
+	 */
 	private static void addNonJavaResources(Object[] nonJavaResources,
+			IContainer container,
+			int rootPathSegmentCounts,
+			ArrayList collector) {
+				addNonJavaScriptResources(nonJavaResources, container,
+						rootPathSegmentCounts, collector);
+			}
+
+	private static void addNonJavaScriptResources(Object[] nonJavaResources,
 			IContainer container,
 			int rootPathSegmentCounts,
 			ArrayList collector) {
@@ -1296,7 +1322,7 @@ public final class JavaScriptCore extends Plugin {
 					// ignore
 				}
 				if (members != null) {
-					addNonJavaResources(members, container, rootPathSegmentCounts, collector);
+					addNonJavaScriptResources(members, container, rootPathSegmentCounts, collector);
 				}
 			}
 		}
@@ -1359,7 +1385,7 @@ public final class JavaScriptCore extends Plugin {
 	 * @param element the Java element for which the marker needs to be configured
 	 * @exception CoreException if the <code>IMarker.setAttribute</code> on the marker fails
 	 */
-	public void configureJavaElementMarker(IMarker marker, IJavaScriptElement element)
+	public void configureJavaScriptElementMarker(IMarker marker, IJavaScriptElement element)
 		throws CoreException {
 		if (element instanceof IMember)
 			element = ((IMember) element).getClassFile();
@@ -1408,7 +1434,7 @@ public final class JavaScriptCore extends Plugin {
 	 * with a Java element.
 	 *
 	 * <p>The file must be one of:<ul>
-	 *	<li>a file with one of the {@link JavaScriptCore#getJavaLikeExtensions()
+	 *	<li>a file with one of the {@link JavaScriptCore#getJavaScriptLikeExtensions()
 	 *      Java-like extensions} - the element returned is the corresponding <code>IJavaScriptUnit</code></li>
 	 *	<li>a <code>.class</code> file - the element returned is the corresponding <code>IClassFile</code></li>
 	 *	<li>a <code>.jar</code> file - the element returned is the corresponding <code>IPackageFragmentRoot</code></li>
@@ -1466,7 +1492,7 @@ public final class JavaScriptCore extends Plugin {
 	 * <p>
 	 * The resource must be one of:<ul>
 	 *	<li>a project - the element returned is the corresponding <code>IJavaScriptProject</code></li>
-	 *	<li>a file with one of the {@link JavaScriptCore#getJavaLikeExtensions()
+	 *	<li>a file with one of the {@link JavaScriptCore#getJavaScriptLikeExtensions()
 	 *      Java-like extensions} - the element returned is the corresponding <code>IJavaScriptUnit</code></li>
 	 *	<li>a <code>.class</code> file - the element returned is the corresponding <code>IClassFile</code></li>
 	 *	<li>a <code>.jar</code> file - the element returned is the corresponding <code>IPackageFragmentRoot</code></li>
@@ -1493,7 +1519,7 @@ public final class JavaScriptCore extends Plugin {
 	 *<p>
 	 * The resource must be one of:<ul>
 	 *	<li>a project - the element returned is the corresponding <code>IJavaScriptProject</code></li>
-	 *	<li>a file with one of the {@link JavaScriptCore#getJavaLikeExtensions()
+	 *	<li>a file with one of the {@link JavaScriptCore#getJavaScriptLikeExtensions()
 	 *      Java-like extensions} - the element returned is the corresponding <code>IJavaScriptUnit</code></li>
 	 *	<li>a <code>.class</code> file - the element returned is the corresponding <code>IClassFile</code></li>
 	 *	<li>a <code>.jar</code> file - the element returned is the corresponding <code>IPackageFragmentRoot</code></li>
@@ -1540,7 +1566,7 @@ public final class JavaScriptCore extends Plugin {
 	}
 	/**
 	 * Creates and returns a compilation unit element for
-	 * the given source file (i.e. a file with one of the {@link JavaScriptCore#getJavaLikeExtensions()
+	 * the given source file (i.e. a file with one of the {@link JavaScriptCore#getJavaScriptLikeExtensions()
 	 * Java-like extensions}). Returns <code>null</code> if unable
 	 * to recognize the compilation unit.
 	 *
@@ -1711,9 +1737,48 @@ public final class JavaScriptCore extends Plugin {
 	 *
 	 * @param variableName the name of the classpath variable
 	 * @return the path, or <code>null</code> if none
-	 * @see #setClasspathVariable(String, IPath)
+	 * @see #setIncludepathVariable(String, IPath)
+	 * @deprecated Use {@link #getIncludepathVariable(String)} instead
 	 */
 	public static IPath getClasspathVariable(final String variableName) {
+		return getIncludepathVariable(variableName);
+	}
+
+	/**
+	 * Returns the path held in the given classpath variable.
+	 * Returns <code>null</code> if unable to bind.
+	 * <p>
+	 * Classpath variable values are persisted locally to the workspace, and
+	 * are preserved from session to session.
+	 * <p>
+	 * Note that classpath variables can be contributed registered initializers for,
+	 * using the extension point "org.eclipse.wst.jsdt.core.JsGlobalScopeVariableInitializer".
+	 * If an initializer is registered for a variable, its persisted value will be ignored:
+	 * its initializer will thus get the opportunity to rebind the variable differently on
+	 * each session.
+	 *
+	 * @param variableName the name of the classpath variable
+	 * @return the path, or <code>null</code> if none
+	 * @see #setClasspathVariable(String, IPath)
+	 */
+	/**
+	 * Returns the path held in the given classpath variable.
+	 * Returns <code>null</code> if unable to bind.
+	 * <p>
+	 * Classpath variable values are persisted locally to the workspace, and
+	 * are preserved from session to session.
+	 * <p>
+	 * Note that classpath variables can be contributed registered initializers for,
+	 * using the extension point "org.eclipse.wst.jsdt.core.JsGlobalScopeVariableInitializer".
+	 * If an initializer is registered for a variable, its persisted value will be ignored:
+	 * its initializer will thus get the opportunity to rebind the variable differently on
+	 * each session.
+	 *
+	 * @param variableName the name of the classpath variable
+	 * @return the path, or <code>null</code> if none
+	 * @see #setIncludepathVariable(String, IPath)
+	 */
+	public static IPath getIncludepathVariable(final String variableName) {
 
 	    JavaModelManager manager = JavaModelManager.getJavaModelManager();
 		IPath variablePath = manager.variableGet(variableName);
@@ -1799,8 +1864,20 @@ public final class JavaScriptCore extends Plugin {
 	 * @param variableName
 	 * @return A string if the classpath variable is deprecated, <code>null</code> otherwise.
 	 * @since 3.3
+	 * @deprecated Use {@link #getIncludepathVariableDeprecationMessage(String)} instead
 	 */
 	public static String getClasspathVariableDeprecationMessage(String variableName) {
+		return getIncludepathVariableDeprecationMessage(variableName);
+	}
+
+	/**
+	 * Returns deprecation message of a given classpath variable.
+	 *
+	 * @param variableName
+	 * @return A string if the classpath variable is deprecated, <code>null</code> otherwise.
+	 * @since 3.3
+	 */
+	public static String getIncludepathVariableDeprecationMessage(String variableName) {
 	    return (String) JavaModelManager.getJavaModelManager().deprecatedVariables.get(variableName);
 	}
 
@@ -1881,9 +1958,24 @@ public final class JavaScriptCore extends Plugin {
 	 * <p>
 	 *
 	 * @return the list of classpath variable names
-	 * @see #setClasspathVariable(String, IPath)
+	 * @see #setIncludepathVariable(String, IPath)
+	 * @deprecated Use {@link #getIncludepathVariableNames()} instead
 	 */
 	public static String[] getClasspathVariableNames() {
+		return getIncludepathVariableNames();
+	}
+
+	/**
+	 * Returns the names of all known classpath variables.
+	 * <p>
+	 * Classpath variable values are persisted locally to the workspace, and
+	 * are preserved from session to session.
+	 * <p>
+	 *
+	 * @return the list of classpath variable names
+	 * @see #setIncludepathVariable(String, IPath)
+	 */
+	public static String[] getIncludepathVariableNames() {
 		return JavaModelManager.getJavaModelManager().variableNames();
 	}
 
@@ -2851,7 +2943,7 @@ public final class JavaScriptCore extends Plugin {
 		for (int i = 0, max = elements.length; i < max; i++) {
 			// collect all the java project
 			IJavaScriptElement element = elements[i];
-			IJavaScriptProject javaProject = element.getJavaProject();
+			IJavaScriptProject javaProject = element.getJavaScriptProject();
 			IProject project = javaProject.getProject();
 			State state = null;
 			State currentState = (State) projectsStates.get(project);
@@ -2896,7 +2988,7 @@ public final class JavaScriptCore extends Plugin {
 			IPackageFragmentRoot packageFragmentRoot = (IPackageFragmentRoot) root;
 			int rootPathSegmentCounts = packageFragmentRoot.getPath().segmentCount();
 			try {
-				IIncludePathEntry entry = packageFragmentRoot.getRawClasspathEntry();
+				IIncludePathEntry entry = packageFragmentRoot.getRawIncludepathEntry();
 				IPath entryOutputLocation = entry.getOutputLocation();
 				if (entryOutputLocation != null) {
 					outputLocation = entryOutputLocation;
@@ -2917,7 +3009,7 @@ public final class JavaScriptCore extends Plugin {
 					IPackageFragment fragment = (IPackageFragment) element;
 					IJavaScriptUnit[] compilationUnits = null;
 					try {
-						compilationUnits = fragment.getCompilationUnits();
+						compilationUnits = fragment.getJavaScriptUnits();
 					} catch (JavaScriptModelException e) {
 						// ignore
 					}
@@ -2929,12 +3021,12 @@ public final class JavaScriptCore extends Plugin {
 						// retrieve all non-java resources from the output location using the package fragment path
 						Object[] nonJavaResources = null;
 						try {
-							nonJavaResources = fragment.getNonJavaResources();
+							nonJavaResources = fragment.getNonJavaScriptResources();
 						} catch (JavaScriptModelException e) {
 							// ignore
 						}
 						if (nonJavaResources != null) {
-							addNonJavaResources(nonJavaResources, container, rootPathSegmentCounts, collector);
+							addNonJavaScriptResources(nonJavaResources, container, rootPathSegmentCounts, collector);
 						}
 					}
 					break;
@@ -2953,7 +3045,7 @@ public final class JavaScriptCore extends Plugin {
 						fragment = (IPackageFragment) children[j];
 						IJavaScriptUnit[] units = null;
 						try {
-							units = fragment.getCompilationUnits();
+							units = fragment.getJavaScriptUnits();
 						} catch (JavaScriptModelException e) {
 							// ignore
 						}
@@ -2965,12 +3057,12 @@ public final class JavaScriptCore extends Plugin {
 							// retrieve all non-java resources from the output location using the package fragment path
 							Object[] nonJavaResources = null;
 							try {
-								nonJavaResources = fragment.getNonJavaResources();
+								nonJavaResources = fragment.getNonJavaScriptResources();
 							} catch (JavaScriptModelException e) {
 								// ignore
 							}
 							if (nonJavaResources != null) {
-								addNonJavaResources(nonJavaResources, container, rootPathSegmentCounts, collector);
+								addNonJavaScriptResources(nonJavaResources, container, rootPathSegmentCounts, collector);
 							}
 						}
 					}
@@ -3019,7 +3111,7 @@ public final class JavaScriptCore extends Plugin {
 	 *
 	 * @return the single instance of the Java core plug-in runtime class
 	 */
-	public static JavaScriptCore getJavaCore() {
+	public static JavaScriptCore getJavaScriptCore() {
 		return (JavaScriptCore) getPlugin();
 	}
 
@@ -3033,7 +3125,7 @@ public final class JavaScriptCore extends Plugin {
 	 * @return the list of known Java-like extensions.
 	 * @since 3.2
 	 */
-	public static String[] getJavaLikeExtensions() {
+	public static String[] getJavaScriptLikeExtensions() {
 		return CharOperation.toStrings(Util.getJavaLikeExtensions());
 	}
 
@@ -3100,7 +3192,7 @@ public final class JavaScriptCore extends Plugin {
 	 * @return the resolved library or project classpath entry, or <code>null</code>
 	 *   if the given variable entry could not be resolved to a valid classpath entry
 	 */
-	public static IIncludePathEntry getResolvedClasspathEntry(IIncludePathEntry entry) {
+	public static IIncludePathEntry getResolvedIncludepathEntry(IIncludePathEntry entry) {
 
 		if (entry.getEntryKind() != IIncludePathEntry.CPE_VARIABLE)
 			return entry;
@@ -3203,7 +3295,7 @@ public final class JavaScriptCore extends Plugin {
 
 		// lookup variable
 		String variableName = variablePath.segment(0);
-		IPath resolvedPath = JavaScriptCore.getClasspathVariable(variableName);
+		IPath resolvedPath = JavaScriptCore.getIncludepathVariable(variableName);
 		if (resolvedPath == null)
 			return null;
 
@@ -3302,7 +3394,7 @@ public final class JavaScriptCore extends Plugin {
 				manager.batchContainerInitializations = true;
 
 				// avoid leaking source attachment properties (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=183413)
-				IJavaScriptProject[] projects = manager.getJavaModel().getJavaProjects();
+				IJavaScriptProject[] projects = manager.getJavaModel().getJavaScriptProjects();
 				for (int i = 0, length = projects.length; i < length; i++) {
 					IIncludePathEntry[] classpath;
 					try {
@@ -3386,7 +3478,7 @@ public final class JavaScriptCore extends Plugin {
 					public void run(IProgressMonitor progressMonitor2) throws CoreException {
 						IJavaScriptProject[] projects = null;
 						try {
-							projects = model.getJavaProjects();
+							projects = model.getJavaScriptProjects();
 						} catch (JavaScriptModelException e) {
 							// could not get Java projects: ignore
 						}
@@ -3442,7 +3534,7 @@ public final class JavaScriptCore extends Plugin {
 	 * 	<code>false</code> otherwise.
 	 * @since 3.3
 	 */
-	public static boolean isClasspathVariableReadOnly(String variableName) {
+	public static boolean isIncludepathVariableReadOnly(String variableName) {
 	    return JavaModelManager.getJavaModelManager().readOnlyVariables.contains(variableName);
 	}
 
@@ -3450,10 +3542,10 @@ public final class JavaScriptCore extends Plugin {
 	 * Returns whether the given file name's extension is a Java-like extension.
 	 *
 	 * @return whether the given file name's extension is a Java-like extension
-	 * @see #getJavaLikeExtensions()
+	 * @see #getJavaScriptLikeExtensions()
 	 * @since 3.2
 	 */
-	public static boolean isJavaLikeFileName(String fileName) {
+	public static boolean isJavaScriptLikeFileName(String fileName) {
 		return Util.isJavaLikeFileName(fileName);
 	}
 
@@ -3474,7 +3566,7 @@ public final class JavaScriptCore extends Plugin {
 			if (member.isBinary()){
 				element = member.getClassFile();
 			} else {
-				element = member.getCompilationUnit();
+				element = member.getJavaScriptUnit();
 			}
 		}
 		if (element == null) return false;
@@ -3517,7 +3609,7 @@ public final class JavaScriptCore extends Plugin {
 			if (member.isBinary()){
 				element = member.getClassFile();
 			} else {
-				element = member.getCompilationUnit();
+				element = member.getJavaScriptUnit();
 			}
 		}
 		if (element == null) return false;
@@ -3568,7 +3660,7 @@ public final class JavaScriptCore extends Plugin {
 	 * @return a new classpath attribute
 	 * @since 3.1
 	 */
-	public static IIncludePathAttribute newClasspathAttribute(String name, String value) {
+	public static IIncludePathAttribute newIncludepathAttribute(String name, String value) {
 		return new ClasspathAttribute(name, value);
 	}
 
@@ -4377,12 +4469,12 @@ public final class JavaScriptCore extends Plugin {
 	 * <p>
 	 *
 	 * @param variableName the name of the classpath variable
-	 * @see #setClasspathVariable(String, IPath)
+	 * @see #setIncludepathVariable(String, IPath)
 	 *
-	 * @deprecated Use {@link #removeClasspathVariable(String, IProgressMonitor)} instead
+	 * @deprecated Use {@link #removeIncludepathVariable(String, IProgressMonitor)} instead
 	 */
-	public static void removeClasspathVariable(String variableName) {
-		removeClasspathVariable(variableName, null);
+	public static void removeIncludepathVariable(String variableName) {
+		removeIncludepathVariable(variableName, null);
 	}
 
 	/**
@@ -4397,9 +4489,9 @@ public final class JavaScriptCore extends Plugin {
 	 *
 	 * @param variableName the name of the classpath variable
 	 * @param monitor the progress monitor to report progress
-	 * @see #setClasspathVariable(String, IPath)
+	 * @see #setIncludepathVariable(String, IPath)
 	 */
-	public static void removeClasspathVariable(String variableName, IProgressMonitor monitor) {
+	public static void removeIncludepathVariable(String variableName, IProgressMonitor monitor) {
 		try {
 			SetVariablesOperation operation = new SetVariablesOperation(new String[]{ variableName}, new IPath[]{ null }, true/*update preferences*/);
 			operation.runOperation(monitor);
@@ -4427,7 +4519,7 @@ public final class JavaScriptCore extends Plugin {
 	 * @return the fileName without the Java-like extension
 	 * @since 3.2
 	 */
-	public static String removeJavaLikeExtension(String fileName) {
+	public static String removeJavaScriptLikeExtension(String fileName) {
 		return Util.getNameWithoutJavaLikeExtension(fileName);
 	}
 
@@ -4586,14 +4678,14 @@ public final class JavaScriptCore extends Plugin {
 	 * @param variableName the name of the classpath variable
 	 * @param path the path
 	 * @throws JavaScriptModelException
-	 * @see #getClasspathVariable(String)
+	 * @see #getIncludepathVariable(String)
 	 *
-	 * @deprecated Use {@link #setClasspathVariable(String, IPath, IProgressMonitor)} instead
+	 * @deprecated Use {@link #setIncludepathVariable(String, IPath, IProgressMonitor)} instead
 	 */
-	public static void setClasspathVariable(String variableName, IPath path)
+	public static void setIncludepathVariable(String variableName, IPath path)
 		throws JavaScriptModelException {
 
-		setClasspathVariable(variableName, path, null);
+		setIncludepathVariable(variableName, path, null);
 	}
 
 	/**
@@ -4611,16 +4703,16 @@ public final class JavaScriptCore extends Plugin {
 	 * @param path the path
 	 * @param monitor a monitor to report progress
 	 * @throws JavaScriptModelException
-	 * @see #getClasspathVariable(String)
+	 * @see #getIncludepathVariable(String)
 	 */
-	public static void setClasspathVariable(
+	public static void setIncludepathVariable(
 		String variableName,
 		IPath path,
 		IProgressMonitor monitor)
 		throws JavaScriptModelException {
 
 		if (path == null) Assert.isTrue(false, "Variable path cannot be null"); //$NON-NLS-1$
-		setClasspathVariables(new String[]{variableName}, new IPath[]{ path }, monitor);
+		setIncludepathVariables(new String[]{variableName}, new IPath[]{ path }, monitor);
 	}
 
 	/**
@@ -4645,10 +4737,10 @@ public final class JavaScriptCore extends Plugin {
 	 *       meaning that the corresponding value will be removed
 	 * @param monitor a monitor to report progress
 	 * @throws JavaScriptModelException
-	 * @see #getClasspathVariable(String)
+	 * @see #getIncludepathVariable(String)
 	 * @since 2.0
 	 */
-	public static void setClasspathVariables(
+	public static void setIncludepathVariables(
 		String[] variableNames,
 		IPath[] paths,
 		IProgressMonitor monitor)
@@ -4770,7 +4862,7 @@ public final class JavaScriptCore extends Plugin {
 	}
 	public static String getSystemPath()
 	{
-		URL url=FileLocator.find(getJavaCore().getBundle(),new Path("libraries"),null); //$NON-NLS-1$
+		URL url=FileLocator.find(getJavaScriptCore().getBundle(),new Path("libraries"),null); //$NON-NLS-1$
 		return url.getFile();
 	}
 

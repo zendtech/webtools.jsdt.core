@@ -648,7 +648,7 @@ class DefaultBindingResolver extends BindingResolver {
 				case ASTNode.FIELD_ACCESS :
 				case ASTNode.SUPER_FIELD_ACCESS :
 				case ASTNode.ARRAY_ACCESS :
-				case ASTNode.METHOD_INVOCATION :
+				case ASTNode.FUNCTION_INVOCATION :
 				case ASTNode.SUPER_METHOD_INVOCATION :
 				case ASTNode.CONDITIONAL_EXPRESSION :
 				case ASTNode.MARKER_ANNOTATION :

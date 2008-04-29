@@ -101,7 +101,7 @@ public class CodeTemplateContext extends TemplateContext {
 	public void setCompilationUnitVariables(IJavaScriptUnit cu) {
 		setVariable(CodeTemplateContextType.FILENAME, cu.getElementName());
 		setVariable(CodeTemplateContextType.PACKAGENAME, cu.getParent().getElementName());
-		setVariable(CodeTemplateContextType.PROJECTNAME, cu.getJavaProject().getElementName());
+		setVariable(CodeTemplateContextType.PROJECTNAME, cu.getJavaScriptProject().getElementName());
 	}
 
 }

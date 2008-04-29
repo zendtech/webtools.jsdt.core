@@ -954,8 +954,8 @@ public class PackageExplorerPart extends ViewPart
 		if (original instanceof IJavaScriptElement) {
 			if (original instanceof IJavaScriptUnit) {
 				IJavaScriptUnit cu= (IJavaScriptUnit) original;
-				IJavaScriptProject javaProject= cu.getJavaProject();
-				if (javaProject != null && javaProject.exists() && ! javaProject.isOnClasspath(cu)) {
+				IJavaScriptProject javaProject= cu.getJavaScriptProject();
+				if (javaProject != null && javaProject.exists() && ! javaProject.isOnIncludepath(cu)) {
 					// could be a working copy of a .java file that is not on classpath 
 					IResource resource= cu.getResource();
 					if (resource != null)
@@ -968,7 +968,7 @@ public class PackageExplorerPart extends ViewPart
 		} else if (original instanceof IResource) {
 			IJavaScriptElement je= JavaScriptCore.create((IResource)original);
 			if (je != null && je.exists()) {
-				IJavaScriptProject javaProject= je.getJavaProject();
+				IJavaScriptProject javaProject= je.getJavaScriptProject();
 				if (javaProject != null && javaProject.exists()) {
 					return je;
 				}
@@ -1177,7 +1177,7 @@ public class PackageExplorerPart extends ViewPart
 	
 	private boolean isOnClassPath(IFile file) {
 		IJavaScriptProject jproject= JavaScriptCore.create(file.getProject());
-		return jproject.isOnClasspath(file);
+		return jproject.isOnIncludepath(file);
 	}
 
 	/**

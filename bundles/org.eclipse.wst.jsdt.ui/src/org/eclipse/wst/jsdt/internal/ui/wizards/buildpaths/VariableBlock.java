@@ -253,7 +253,7 @@ public class VariableBlock {
 	public boolean performOk() {
 		ArrayList removedVariables= new ArrayList();
 		ArrayList changedVariables= new ArrayList();
-		removedVariables.addAll(Arrays.asList(JavaScriptCore.getClasspathVariableNames()));
+		removedVariables.addAll(Arrays.asList(JavaScriptCore.getIncludepathVariableNames()));
 
 		// remove all unchanged
 		List changedElements= fVariablesList.getElements();
@@ -263,7 +263,7 @@ public class VariableBlock {
 				changedElements.remove(curr);
 			} else {
 				IPath path= curr.getPath();
-				IPath prevPath= JavaScriptCore.getClasspathVariable(curr.getName());
+				IPath prevPath= JavaScriptCore.getIncludepathVariable(curr.getName());
 				if (prevPath != null && prevPath.equals(path)) {
 					changedElements.remove(curr);
 				} else {
@@ -309,9 +309,9 @@ public class VariableBlock {
 	private boolean doesChangeRequireFullBuild(List removed, List changed) {
 		try {
 			IJavaScriptModel model= JavaScriptCore.create(ResourcesPlugin.getWorkspace().getRoot());
-			IJavaScriptProject[] projects= model.getJavaProjects();
+			IJavaScriptProject[] projects= model.getJavaScriptProjects();
 			for (int i= 0; i < projects.length; i++) {
-				IIncludePathEntry[] entries= projects[i].getRawClasspath();
+				IIncludePathEntry[] entries= projects[i].getRawIncludepath();
 				for (int k= 0; k < entries.length; k++) {
 					IIncludePathEntry curr= entries[k];
 					if (curr.getEntryKind() == IIncludePathEntry.CPE_VARIABLE) {
@@ -372,7 +372,7 @@ public class VariableBlock {
 				paths[k]= null;
 				k++;					
 			}
-			JavaScriptCore.setClasspathVariables(names, paths, new SubProgressMonitor(monitor, 1));
+			JavaScriptCore.setIncludepathVariables(names, paths, new SubProgressMonitor(monitor, 1));
 		}
 	}
 	
@@ -390,12 +390,12 @@ public class VariableBlock {
 	public void refresh(String initSelection) {
 		CPVariableElement initSelectedElement= null;
 		
-		String[] entries= JavaScriptCore.getClasspathVariableNames();
+		String[] entries= JavaScriptCore.getIncludepathVariableNames();
 		ArrayList elements= new ArrayList(entries.length);
 		for (int i= 0; i < entries.length; i++) {
 			String name= entries[i];
 			CPVariableElement elem;
-			IPath entryPath= JavaScriptCore.getClasspathVariable(name);
+			IPath entryPath= JavaScriptCore.getIncludepathVariable(name);
 			if (entryPath != null) {
 				elem= new CPVariableElement(name, entryPath);
 				elements.add(elem);

@@ -596,7 +596,7 @@ public class RenameLinkedMode {
 			 * but make sure implementations don't access outdated Java Model
 			 * (cache all necessary information before starting linked mode).
 			 */
-			IJavaScriptProject project= fJavaElement.getJavaProject();
+			IJavaScriptProject project= fJavaElement.getJavaScriptProject();
 			String sourceLevel= project.getOption(JavaScriptCore.COMPILER_SOURCE, true);
 			String complianceLevel= project.getOption(JavaScriptCore.COMPILER_COMPLIANCE, true);
 			return JavaScriptConventions.validateIdentifier(newName, sourceLevel, complianceLevel).isOK();

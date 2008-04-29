@@ -410,7 +410,7 @@ public void indexLibrary(IIncludePathEntry entry, IProject requestingProject) {
 
 	public void indexLibrary(LibraryFragmentRoot entry, IProject requestingProject) {
 		try {
-			indexLibrary(entry.getRawClasspathEntry(), requestingProject);
+			indexLibrary(entry.getRawIncludepathEntry(), requestingProject);
 		} catch (JavaScriptModelException ex) {
 
 			ex.printStackTrace();

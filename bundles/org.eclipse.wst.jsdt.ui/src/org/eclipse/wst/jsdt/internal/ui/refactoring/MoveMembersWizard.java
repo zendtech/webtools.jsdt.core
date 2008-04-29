@@ -168,15 +168,15 @@ public class MoveMembersWizard extends RefactoringWizard {
 					handleDestinationChanged();
 				}
 				private void handleDestinationChanged() {
-					IStatus status= JavaScriptConventions.validateJavaTypeName(fDestinationField.getText());
+					IStatus status= JavaScriptConventions.validateJavaScriptTypeName(fDestinationField.getText());
 					if (status.getSeverity() == IStatus.ERROR){
 						error(status.getMessage());
 					} else {
 						try {
 							final IType declaring= getMoveProcessor().getDeclaringType();
-							IType resolvedType= declaring.getJavaProject().findType(fDestinationField.getText());
+							IType resolvedType= declaring.getJavaScriptProject().findType(fDestinationField.getText());
 							if (resolvedType == null)
-								resolvedType= declaring.getJavaProject().findType(declaring.getPackageFragment().getElementName(), fDestinationField.getText());
+								resolvedType= declaring.getJavaScriptProject().findType(declaring.getPackageFragment().getElementName(), fDestinationField.getText());
 							IStatus validationStatus= validateDestinationType(resolvedType, fDestinationField.getText());
 							if (validationStatus.isOK()){
 								setErrorMessage(null);
@@ -241,7 +241,7 @@ public class MoveMembersWizard extends RefactoringWizard {
 		}
 	
 		private IJavaScriptSearchScope createWorkspaceSourceScope(){
-			IJavaScriptElement[] project= new IJavaScriptElement[] { getMoveProcessor().getDeclaringType().getJavaProject() };
+			IJavaScriptElement[] project= new IJavaScriptElement[] { getMoveProcessor().getDeclaringType().getJavaScriptProject() };
 			return SearchEngine.createJavaSearchScope(project, IJavaScriptSearchScope.REFERENCED_PROJECTS | IJavaScriptSearchScope.SOURCES);
 		}
 	

@@ -63,7 +63,7 @@ public class SortMembersOperation implements IWorkspaceRunnable {
 
 		private int category(BodyDeclaration bodyDeclaration) {
 			switch (bodyDeclaration.getNodeType()) {
-				case ASTNode.METHOD_DECLARATION:
+				case ASTNode.FUNCTION_DECLARATION:
 					{
 						FunctionDeclaration method= (FunctionDeclaration) bodyDeclaration;
 						if (method.isConstructor()) {
@@ -133,7 +133,7 @@ public class SortMembersOperation implements IWorkspaceRunnable {
 			}
 
 			switch (bodyDeclaration1.getNodeType()) {
-				case ASTNode.METHOD_DECLARATION :
+				case ASTNode.FUNCTION_DECLARATION :
 					{
 						FunctionDeclaration method1= (FunctionDeclaration) bodyDeclaration1;
 						FunctionDeclaration method2= (FunctionDeclaration) bodyDeclaration2;

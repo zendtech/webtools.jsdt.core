@@ -91,7 +91,7 @@ public class ConvertForLoopOperation extends ConvertLoopOperation {
 		if (javaElement == null)
 			return ERROR_STATUS;
 		
-		if (!JavaModelUtil.is50OrHigher(javaElement.getJavaProject()))
+		if (!JavaModelUtil.is50OrHigher(javaElement.getJavaScriptProject()))
 			return ERROR_STATUS;
 		
 		if (!validateInitializers(statement))
@@ -474,7 +474,7 @@ public class ConvertForLoopOperation extends ConvertLoopOperation {
 			return fElementDeclaration.getName().getIdentifier();
 		} else {
 			ForStatement forStatement= getForStatement();
-			IJavaScriptProject javaProject= ((JavaScriptUnit)forStatement.getRoot()).getJavaElement().getJavaProject();
+			IJavaScriptProject javaProject= ((JavaScriptUnit)forStatement.getRoot()).getJavaElement().getJavaScriptProject();
 			String[] proposals= getVariableNameProposals(fArrayAccess.resolveTypeBinding(), javaProject);
 			return proposals[0];
 		}
@@ -507,7 +507,7 @@ public class ConvertForLoopOperation extends ConvertLoopOperation {
 		
 		ForStatement forStatement= getForStatement();
 		
-		IJavaScriptProject javaProject= ((JavaScriptUnit)forStatement.getRoot()).getJavaElement().getJavaProject();
+		IJavaScriptProject javaProject= ((JavaScriptUnit)forStatement.getRoot()).getJavaElement().getJavaScriptProject();
 		String[] proposals= getVariableNameProposals(fArrayAccess.resolveTypeBinding(), javaProject);
 		
 		String parameterName;

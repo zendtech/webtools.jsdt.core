@@ -194,7 +194,7 @@ public class FunctionRefParameter extends ASTNode {
 	 * Method declared on ASTNode.
 	 */
 	final int getNodeType0() {
-		return METHOD_REF_PARAMETER;
+		return FUNCTION_REF_PARAMETER;
 	}
 
 	/* (omit javadoc for this method)

@@ -68,7 +68,7 @@ public class JavaEditorErrorTickUpdater implements IProblemChangedListener {
 			return;
 		}
 		Image newImage;
-		if (jelement instanceof IJavaScriptUnit && !jelement.getJavaProject().isOnClasspath(jelement))
+		if (jelement instanceof IJavaScriptUnit && !jelement.getJavaScriptProject().isOnIncludepath(jelement))
 			newImage= fLabelProvider.getImage(jelement.getResource());
 		else
 			newImage= fLabelProvider.getImage(jelement);

@@ -467,7 +467,7 @@ public class ChangeTypeRefactoring extends ScriptableRefactoring {
 			groupChangesByCompilationUnit(relevantVarsByUnit);
 			final Map arguments= new HashMap();
 			String project= null;
-			IJavaScriptProject javaProject= fCu.getJavaProject();
+			IJavaScriptProject javaProject= fCu.getJavaScriptProject();
 			if (javaProject != null)
 				project= javaProject.getElementName();
 			final String description= RefactoringCoreMessages.ChangeTypeRefactoring_descriptor_description_short;
@@ -604,7 +604,7 @@ public class ChangeTypeRefactoring extends ScriptableRefactoring {
 			} else if (cv instanceof ReturnTypeVariable){
 				ReturnTypeVariable rtv = (ReturnTypeVariable)cv;
 				IFunctionBinding mb= rtv.getMethodBinding();
-				icu= ((IFunction) mb.getJavaElement()).getCompilationUnit();
+				icu= ((IFunction) mb.getJavaElement()).getJavaScriptUnit();
 			}
 			if (!relevantVarsByUnit.containsKey(icu)){
 				relevantVarsByUnit.put(icu, new HashSet/*<ConstraintVariable>*/());
@@ -651,7 +651,7 @@ public class ChangeTypeRefactoring extends ScriptableRefactoring {
 				return ((FieldDeclaration) node).getType();
 			case ASTNode.VARIABLE_DECLARATION_STATEMENT:
 				return ((VariableDeclarationStatement) node).getType();
-			case ASTNode.METHOD_DECLARATION:
+			case ASTNode.FUNCTION_DECLARATION:
 				return ((FunctionDeclaration)node).getReturnType2();
 			case ASTNode.PARAMETERIZED_TYPE:
 				return ((ParameterizedType)node).getType();
@@ -756,7 +756,7 @@ public class ChangeTypeRefactoring extends ScriptableRefactoring {
 	  */
 	private String parameterizedTypeSelected(ParameterizedType pt) {
 		ASTNode parent= pt.getParent();
-		if (parent.getNodeType() == ASTNode.METHOD_DECLARATION){
+		if (parent.getNodeType() == ASTNode.FUNCTION_DECLARATION){
 			fMethodBinding= ((FunctionDeclaration)parent).resolveBinding();
 			fParamIndex= -1;
 			fEffectiveSelectionStart= pt.getStartPosition();
@@ -841,7 +841,7 @@ public class ChangeTypeRefactoring extends ScriptableRefactoring {
 			}
 		} else if (parent.getNodeType() == ASTNode.SINGLE_VARIABLE_DECLARATION) {
 			SingleVariableDeclaration singleVariableDeclaration= (SingleVariableDeclaration) parent;
-			if ((grandParent.getNodeType() == ASTNode.METHOD_DECLARATION)) {
+			if ((grandParent.getNodeType() == ASTNode.FUNCTION_DECLARATION)) {
 				fMethodBinding= ((FunctionDeclaration)grandParent).resolveBinding();
 				setOriginalType(simpleName.resolveTypeBinding());
 				fParamIndex= ((FunctionDeclaration)grandParent).parameters().indexOf(parent);
@@ -855,7 +855,7 @@ public class ChangeTypeRefactoring extends ScriptableRefactoring {
 			if (singleVariableDeclaration.getExtraDimensions() > 0) {
 				return RefactoringCoreMessages.ChangeTypeRefactoring_arraysNotSupported;
 			}
-			if (greatGrandParent != null && greatGrandParent.getNodeType() == ASTNode.METHOD_DECLARATION) {
+			if (greatGrandParent != null && greatGrandParent.getNodeType() == ASTNode.FUNCTION_DECLARATION) {
 				fMethodBinding= ((FunctionDeclaration)greatGrandParent).resolveBinding();
 				fParamIndex= ((FunctionDeclaration)greatGrandParent).parameters().indexOf(grandParent);
 				fParamName= singleVariableDeclaration.getName().getIdentifier();
@@ -863,11 +863,11 @@ public class ChangeTypeRefactoring extends ScriptableRefactoring {
 			} else {
 				setSelectionRanges(singleVariableDeclaration.getName());
 			}
-		} else if (parent.getNodeType() == ASTNode.SIMPLE_TYPE && grandParent.getNodeType() == ASTNode.METHOD_DECLARATION) {
+		} else if (parent.getNodeType() == ASTNode.SIMPLE_TYPE && grandParent.getNodeType() == ASTNode.FUNCTION_DECLARATION) {
 			fMethodBinding= ((FunctionDeclaration)grandParent).resolveBinding();
 			setOriginalType(fMethodBinding.getReturnType());
 			fParamIndex= -1;
-		} else if (parent.getNodeType() == ASTNode.METHOD_DECLARATION && 
+		} else if (parent.getNodeType() == ASTNode.FUNCTION_DECLARATION && 
 				grandParent.getNodeType() == ASTNode.TYPE_DECLARATION) {
 			FunctionDeclaration methodDeclaration= (FunctionDeclaration)parent;
 			if (methodDeclaration.getName().equals(simpleName) || methodDeclaration.thrownExceptions().contains(simpleName)){
@@ -1092,7 +1092,7 @@ public class ChangeTypeRefactoring extends ScriptableRefactoring {
 													IProgressMonitor pm) throws JavaScriptModelException {
 		
 		Collection/*<ITypeBinding>*/ result= new HashSet();
-		IJavaScriptProject project= fCu.getJavaProject();
+		IJavaScriptProject project= fCu.getJavaScriptProject();
 
 		Collection/*<ITypeBinding>*/ allTypes = new HashSet/*<IType>*/();
 		allTypes.addAll(getAllSuperTypes(originalType)); 

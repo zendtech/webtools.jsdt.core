@@ -28,7 +28,7 @@ public class Invocations {
 
 	public static List getArguments(ASTNode invocation) {
 		switch(invocation.getNodeType()) {
-			case ASTNode.METHOD_INVOCATION:
+			case ASTNode.FUNCTION_INVOCATION:
 				return ((FunctionInvocation)invocation).arguments();
 			case ASTNode.SUPER_METHOD_INVOCATION:
 				return ((SuperMethodInvocation)invocation).arguments();
@@ -41,7 +41,7 @@ public class Invocations {
 
 	public static Expression getExpression(ASTNode invocation) {
 		switch(invocation.getNodeType()) {
-			case ASTNode.METHOD_INVOCATION:
+			case ASTNode.FUNCTION_INVOCATION:
 				return ((FunctionInvocation)invocation).getExpression();
 			case ASTNode.SUPER_METHOD_INVOCATION:
 			case ASTNode.CONSTRUCTOR_INVOCATION:
@@ -53,13 +53,13 @@ public class Invocations {
 	
 	public static boolean isInvocation(ASTNode node) {
 		int type= node.getNodeType();
-		return type == ASTNode.METHOD_INVOCATION || type == ASTNode.SUPER_METHOD_INVOCATION || 
+		return type == ASTNode.FUNCTION_INVOCATION || type == ASTNode.SUPER_METHOD_INVOCATION || 
 			type == ASTNode.CONSTRUCTOR_INVOCATION;
 	}
 	
 	public static IFunctionBinding resolveBinding(ASTNode invocation) {
 		switch(invocation.getNodeType()) {
-			case ASTNode.METHOD_INVOCATION:
+			case ASTNode.FUNCTION_INVOCATION:
 				SimpleName name = ((FunctionInvocation)invocation).getName();
 				if (name!=null)
 				return (IFunctionBinding)name.resolveBinding();
@@ -76,7 +76,7 @@ public class Invocations {
 
 	public static boolean isResolvedTypeInferredFromExpectedType(Expression invocation) {
 		switch(invocation.getNodeType()) {
-			case ASTNode.METHOD_INVOCATION:
+			case ASTNode.FUNCTION_INVOCATION:
 				return ((FunctionInvocation) invocation).isResolvedTypeInferredFromExpectedType();
 			case ASTNode.SUPER_METHOD_INVOCATION:
 				return ((SuperMethodInvocation) invocation).isResolvedTypeInferredFromExpectedType();
@@ -89,7 +89,7 @@ public class Invocations {
 
 	public static ChildListPropertyDescriptor getTypeArgumentsProperty(Expression invocation) {
 		switch(invocation.getNodeType()) {
-			case ASTNode.METHOD_INVOCATION:
+			case ASTNode.FUNCTION_INVOCATION:
 				return FunctionInvocation.TYPE_ARGUMENTS_PROPERTY;
 			case ASTNode.SUPER_METHOD_INVOCATION:
 				return SuperMethodInvocation.TYPE_ARGUMENTS_PROPERTY;

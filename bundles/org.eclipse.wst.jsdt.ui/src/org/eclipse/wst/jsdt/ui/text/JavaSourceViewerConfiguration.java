@@ -567,7 +567,7 @@ public class JavaSourceViewerConfiguration extends TextSourceViewerConfiguration
 		if (element == null)
 			return null;
 
-		return element.getJavaProject();
+		return element.getJavaScriptProject();
 	}
 
 	/*

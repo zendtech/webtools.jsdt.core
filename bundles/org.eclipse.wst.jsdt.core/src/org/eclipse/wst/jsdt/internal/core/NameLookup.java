@@ -252,7 +252,7 @@ public class NameLookup implements SuffixConstants {
 					addWorkingCopyBindings(types, bindingsMap[Binding.TYPE]);
 					addWorkingCopyBindings(workingCopy.getFields(), bindingsMap[Binding.VARIABLE]);
 					addWorkingCopyBindings(workingCopy.getFields(), bindingsMap[Binding.LOCAL]);
-					addWorkingCopyBindings(workingCopy.getMethods(), bindingsMap[Binding.METHOD]);
+					addWorkingCopyBindings(workingCopy.getFunctions(), bindingsMap[Binding.METHOD]);
 
 				} catch (JavaScriptModelException e) {
 					// working copy doesn't exist -> ignore
@@ -540,7 +540,7 @@ public class NameLookup implements SuffixConstants {
 		if (!root.isArchive()) {
 			IPackageFragment pkg = root.getPackageFragment(pkgName);
 			try {
-				IJavaScriptUnit[] cus = pkg.getCompilationUnits();
+				IJavaScriptUnit[] cus = pkg.getJavaScriptUnits();
 				for (int j = 0, length = cus.length; j < length; j++) {
 					IJavaScriptUnit cu = cus[j];
 					if (Util.equalsIgnoreJavaLikeExtension(cu.getElementName(), cuName))
@@ -895,15 +895,15 @@ public class NameLookup implements SuffixConstants {
 				found.add(type);
 			}
 			if (javaProject == null) {
-				javaProject = packages[i].getJavaProject();
+				javaProject = packages[i].getJavaScriptProject();
 			} else if (projects == null)  {
-				if (!javaProject.equals(packages[i].getJavaProject())) {
+				if (!javaProject.equals(packages[i].getJavaScriptProject())) {
 					projects = new HashSet(3);
 					projects.add(javaProject);
-					projects.add(packages[i].getJavaProject());
+					projects.add(packages[i].getJavaScriptProject());
 				}
 			} else {
-				projects.add(packages[i].getJavaProject());
+				projects.add(packages[i].getJavaScriptProject());
 			}
 
 		}
@@ -969,15 +969,15 @@ public class NameLookup implements SuffixConstants {
 			}
 			else if (suggestedAnswer == null && considerSecondaryTypes) {
 				if (javaProject == null) {
-					javaProject = packages[i].getJavaProject();
+					javaProject = packages[i].getJavaScriptProject();
 				} else if (projects == null)  {
-					if (!javaProject.equals(packages[i].getJavaProject())) {
+					if (!javaProject.equals(packages[i].getJavaScriptProject())) {
 						projects = new HashSet(3);
 						projects.add(javaProject);
-						projects.add(packages[i].getJavaProject());
+						projects.add(packages[i].getJavaScriptProject());
 					}
 				} else {
-					projects.add(packages[i].getJavaProject());
+					projects.add(packages[i].getJavaScriptProject());
 				}
 			}
 		}
@@ -1061,15 +1061,15 @@ public class NameLookup implements SuffixConstants {
 			}
 			else if (suggestedAnswer == null && considerSecondaryTypes) {
 				if (javaProject == null) {
-					javaProject = packages[i].getJavaProject();
+					javaProject = packages[i].getJavaScriptProject();
 				} else if (projects == null)  {
-					if (!javaProject.equals(packages[i].getJavaProject())) {
+					if (!javaProject.equals(packages[i].getJavaScriptProject())) {
 						projects = new HashSet(3);
 						projects.add(javaProject);
-						projects.add(packages[i].getJavaProject());
+						projects.add(packages[i].getJavaScriptProject());
 					}
 				} else {
-					projects.add(packages[i].getJavaProject());
+					projects.add(packages[i].getJavaScriptProject());
 				}
 			}
 		}
@@ -1147,7 +1147,7 @@ public class NameLookup implements SuffixConstants {
 	public IType findType(String name, IPackageFragment pkg, boolean partialMatch, int acceptFlags, boolean considerSecondaryTypes) {
 		IType type = findType(name, pkg, partialMatch, acceptFlags);
 		if (type == null && considerSecondaryTypes) {
-			type = findSecondaryType(pkg.getElementName(), name, pkg.getJavaProject(), false, null);
+			type = findSecondaryType(pkg.getElementName(), name, pkg.getJavaScriptProject(), false, null);
 		}
 		return type;
 	}
@@ -1645,14 +1645,14 @@ public class NameLookup implements SuffixConstants {
 //						int lastDot = cuName.lastIndexOf('.');
 //						if (lastDot != topLevelTypeName.length() || !topLevelTypeName.regionMatches(0, cuName, 0, lastDot))
 //							continue;
-						IFunction method = classFile.getMethod(name, null);
+						IFunction method = classFile.getFunction(name, null);
 						if (method.exists()) {
 							acceptedCUs.add(classFile);
 							requestor.acceptMethod(method);
 						}
 						break;
 					case Binding.METHOD | Binding.VARIABLE:
-						 method = classFile.getMethod(name, null);
+						 method = classFile.getFunction(name, null);
 						if (method!=null
 							&& method.exists()) {
 								acceptedCUs.add(classFile);
@@ -1680,7 +1680,7 @@ public class NameLookup implements SuffixConstants {
 							}
 							if ((Binding.METHOD & bindingType)!=0)
 							{
-								 method = classFile.getMethod(name, null);
+								 method = classFile.getFunction(name, null);
 									if (method!=null && method.exists()) {
 										acceptedCUs.add(classFile);
 										requestor.acceptMethod(method);
@@ -1854,14 +1854,14 @@ public class NameLookup implements SuffixConstants {
 //							int lastDot = cuName.lastIndexOf('.');
 //							if (lastDot != topLevelTypeName.length() || !topLevelTypeName.regionMatches(0, cuName, 0, lastDot))
 //								continue;
-							IFunction method = ((IJavaScriptUnit) cu).getMethod(name, null);
+							IFunction method = ((IJavaScriptUnit) cu).getFunction(name, null);
 							if (method.exists()) {
 								acceptedCUs.add(cu);
 								requestor.acceptMethod(method);
 							}
 							break;
 						case Binding.METHOD | Binding.VARIABLE:
-							 method = ((IJavaScriptUnit) cu).getMethod(name, null);
+							 method = ((IJavaScriptUnit) cu).getFunction(name, null);
 							if (method!=null)
 								if  (method.exists()) {
 									acceptedCUs.add(cu);
@@ -2272,7 +2272,7 @@ public class NameLookup implements SuffixConstants {
 								if(indexName>-1) {
 									pkgName = pkgName.substring(0,indexName-1);
 								}
-								IJavaScriptUnit file = root.getPackageFragment(pkgName).getCompilationUnit((fileName));
+								IJavaScriptUnit file = root.getPackageFragment(pkgName).getJavaScriptUnit((fileName));
 								return file;
 							}
 						}

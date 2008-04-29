@@ -85,7 +85,7 @@ public class CUPositionCompletionProcessor implements IContentAssistProcessor, I
 			}
 		};
 		if (cuHandle != null)
-			fCompletionRequestor.setJavaProject(cuHandle.getJavaProject());
+			fCompletionRequestor.setJavaProject(cuHandle.getJavaScriptProject());
 	}
 	
 	public void setCompletionContextRequestor(CompletionContextRequestor completionContextRequestor) {

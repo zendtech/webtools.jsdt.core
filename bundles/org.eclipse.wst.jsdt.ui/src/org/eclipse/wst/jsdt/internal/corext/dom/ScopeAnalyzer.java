@@ -325,7 +325,7 @@ public class ScopeAnalyzer {
 	private static ITypeBinding getQualifier(SimpleName selector) {
 		ASTNode parent= selector.getParent();
 		switch (parent.getNodeType()) {
-			case ASTNode.METHOD_INVOCATION:
+			case ASTNode.FUNCTION_INVOCATION:
 				FunctionInvocation decl= (FunctionInvocation) parent;
 				if (selector == decl.getName()) {
 					return getBinding(decl.getExpression());

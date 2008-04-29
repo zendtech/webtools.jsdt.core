@@ -125,7 +125,7 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 			initRoot= JavaModelUtil.getPackageFragmentRoot(elem);
 			try {
 				if (initRoot == null || initRoot.getKind() != IPackageFragmentRoot.K_SOURCE) {
-					IJavaScriptProject jproject= elem.getJavaProject();
+					IJavaScriptProject jproject= elem.getJavaScriptProject();
 					if (jproject != null) {
 							initRoot= null;
 							if (jproject.exists()) {
@@ -194,7 +194,7 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 
 		if (jelem == null || jelem.getElementType() == IJavaScriptElement.JAVA_MODEL) {
 			try {
-				IJavaScriptProject[] projects= JavaScriptCore.create(getWorkspaceRoot()).getJavaProjects();
+				IJavaScriptProject[] projects= JavaScriptCore.create(getWorkspaceRoot()).getJavaScriptProjects();
 				if (projects.length == 1) {
 					jelem= projects[0];
 				}
@@ -340,7 +340,7 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 						}
 						if (fCurrRoot.getKind() == IPackageFragmentRoot.K_BINARY) {
 							status.setWarning(Messages.format(NewWizardMessages.NewContainerWizardPage_warning_inside_classfolder, str)); 
-						} else if (!jproject.isOnClasspath(fCurrRoot)) {
+						} else if (!jproject.isOnIncludepath(fCurrRoot)) {
 							status.setWarning(Messages.format(NewWizardMessages.NewContainerWizardPage_warning_NotOnClassPath, str)); 
 						}		
 					} catch (CoreException e) {
@@ -397,7 +397,7 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 	public IJavaScriptProject getJavaProject() {
 		IPackageFragmentRoot root= getPackageFragmentRoot();
 		if (root != null) {
-			return root.getJavaProject();
+			return root.getJavaScriptProject();
 		}
 		return null;
 	}

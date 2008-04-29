@@ -100,11 +100,11 @@ public void codeComplete(char[] snippet,int insertion,int position,char[][] loca
 		throw new IllegalArgumentException("Completion requestor cannot be null"); //$NON-NLS-1$
 	}
 
-	JavaProject project = (JavaProject) getJavaProject();
+	JavaProject project = (JavaProject) getJavaScriptProject();
 	SearchableEnvironment environment = newSearchableNameEnvironment(owner);
 	CompletionEngine engine = new CompletionEngine(environment, requestor, project.getOptions(true), project);
 
-	String source = getCompilationUnit().getSource();
+	String source = getJavaScriptUnit().getSource();
 	if (source != null && insertion > -1 && insertion < source.length()) {
 
 		char[] prefix = CharOperation.concat(source.substring(0, insertion).toCharArray(), new char[]{'{'});
@@ -180,7 +180,7 @@ public boolean equals(Object o) {
  */
 public IFunction[] findMethods(IFunction method) {
 	try {
-		return findMethods(method, getMethods());
+		return findMethods(method, getFunctions());
 	} catch (JavaScriptModelException e) {
 		// if type doesn't exist, no matching method can exist
 		return null;
@@ -314,7 +314,7 @@ public IJavaScriptElement getHandleFromMemento(String token, MementoTokenizer me
 			}
 			String[] parameters = new String[params.size()];
 			params.toArray(parameters);
-			JavaElement method = (JavaElement)getMethod(selector, parameters);
+			JavaElement method = (JavaElement)getFunction(selector, parameters);
 			switch (token.charAt(0)) {
 				case JEM_TYPE:
 				case JEM_TYPE_PARAMETER:
@@ -381,14 +381,28 @@ public String getKey() {
 }
 /**
  * @see IType#getMethod
+ * @deprecated Use {@link #getFunction(String,String[])} instead
  */
 public IFunction getMethod(String selector, String[] parameterTypeSignatures) {
+	return getFunction(selector, parameterTypeSignatures);
+}
+/**
+ * @see IType#getMethod
+ */
+public IFunction getFunction(String selector, String[] parameterTypeSignatures) {
 	return new SourceMethod(this, selector, parameterTypeSignatures);
 }
 /**
  * @see IType
+ * @deprecated Use {@link #getFunctions()} instead
  */
 public IFunction[] getMethods() throws JavaScriptModelException {
+	return getFunctions();
+}
+/**
+ * @see IType
+ */
+public IFunction[] getFunctions() throws JavaScriptModelException {
 	ArrayList list = getChildrenOfType(METHOD);
 	IFunction[] array= new IFunction[list.size()];
 	list.toArray(array);
@@ -736,7 +750,7 @@ public ITypeHierarchy newTypeHierarchy(IJavaScriptProject project, WorkingCopyOw
 		int index = 0;
 		for (int i = 0; i < length; i++) {
 			IJavaScriptUnit wc = workingCopies[i];
-			if (project.equals(wc.getJavaProject())) {
+			if (project.equals(wc.getJavaScriptProject())) {
 				projectWCs[index++] = wc;
 			}
 		}
@@ -819,7 +833,7 @@ public String[][] resolveType(String typeName) throws JavaScriptModelException {
  */
 public String[][] resolveType(String typeName, WorkingCopyOwner owner) throws JavaScriptModelException {
 	ISourceType info = (ISourceType) getElementInfo();
-	JavaProject project = (JavaProject) getJavaProject();
+	JavaProject project = (JavaProject) getJavaScriptProject();
 	SearchableEnvironment environment = newSearchableNameEnvironment(owner);
 
 	class TypeResolveRequestor implements ISelectionRequestor {
@@ -859,7 +873,7 @@ public String[][] resolveType(String typeName, WorkingCopyOwner owner) throws Ja
 	SelectionEngine engine =
 		new SelectionEngine(environment, requestor, project.getOptions(true));
 
- 	IType[] topLevelTypes = getCompilationUnit().getTypes();
+ 	IType[] topLevelTypes = getJavaScriptUnit().getTypes();
  	int length = topLevelTypes.length;
  	SourceTypeElementInfo[] topLevelInfos = new SourceTypeElementInfo[length];
  	for (int i = 0; i < length; i++) {

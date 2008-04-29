@@ -273,7 +273,7 @@ public class PackagesView extends JavaBrowsingPart{
 	protected boolean isValidInput(Object element) {
 		if (element instanceof IJavaScriptProject || (element instanceof IPackageFragmentRoot && ((IJavaScriptElement)element).getElementName() != IPackageFragmentRoot.DEFAULT_PACKAGEROOT_PATH))
 			try {
-				IJavaScriptProject jProject= ((IJavaScriptElement)element).getJavaProject();
+				IJavaScriptProject jProject= ((IJavaScriptElement)element).getJavaScriptProject();
 				if (jProject != null)
 					return jProject.getProject().hasNature(JavaScriptCore.NATURE_ID);
 			} catch (CoreException ex) {
@@ -293,7 +293,7 @@ public class PackagesView extends JavaBrowsingPart{
 		if (element instanceof IPackageFragment) {
 			IJavaScriptElement parent= ((IPackageFragment)element).getParent();
 			if (parent != null)
-				return super.isValidElement(parent) || super.isValidElement(parent.getJavaProject());
+				return super.isValidElement(parent) || super.isValidElement(parent.getJavaScriptProject());
 		}
 		return false;
 	}
@@ -556,7 +556,7 @@ public class PackagesView extends JavaBrowsingPart{
 		} else if (fLastInputWasProject) {
 			IPackageFragmentRoot packageFragmentRoot= (IPackageFragmentRoot)je.getAncestor(IJavaScriptElement.PACKAGE_FRAGMENT_ROOT);
 			if (!packageFragmentRoot.isExternal())
-				return je.getJavaProject();
+				return je.getJavaScriptProject();
 		}
 
 		return findInputForJavaElement(je.getParent(), canChangeInputType);

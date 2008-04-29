@@ -172,8 +172,16 @@ public IClassFile[] getClassFiles() throws JavaScriptModelException {
 /**
  * A jar package fragment never contains compilation units.
  * @see org.eclipse.wst.jsdt.core.IPackageFragment
+ * @deprecated Use {@link #getJavaScriptUnits()} instead
  */
 public IJavaScriptUnit[] getCompilationUnits() {
+	return getJavaScriptUnits();
+}
+/**
+ * A jar package fragment never contains compilation units.
+ * @see org.eclipse.wst.jsdt.core.IPackageFragment
+ */
+public IJavaScriptUnit[] getJavaScriptUnits() {
 	return NO_COMPILATION_UNITS;
 }
 /**
@@ -187,7 +195,7 @@ public IResource getCorrespondingResource() {
 /**
  * Returns an array of non-java resources contained in the receiver.
  */
-public Object[] getNonJavaResources() throws JavaScriptModelException {
+public Object[] getNonJavaScriptResources() throws JavaScriptModelException {
 	if (this.isDefaultPackage()) {
 		// We don't want to show non java resources of the default package (see PR #1G58NB8)
 		return JavaElementInfo.NO_NON_JAVA_RESOURCES;

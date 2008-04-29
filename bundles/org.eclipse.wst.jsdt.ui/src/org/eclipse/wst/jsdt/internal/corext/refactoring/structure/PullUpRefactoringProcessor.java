@@ -472,8 +472,8 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 		newMethod.modifiers().addAll(ASTNodeFactory.newModifiers(ast, getModifiersWithUpdatedVisibility(sourceMethod, JdtFlags.clearFlag(Modifier.NATIVE | Modifier.ABSTRACT, methodToCreateStubFor.getModifiers()), adjustments, new SubProgressMonitor(monitor, 1), false, status)));
 		newMethod.setName(((SimpleName) ASTNode.copySubtree(ast, methodToCreateStubFor.getName())));
 		final TypeVariableMaplet[] mapping= TypeVariableUtil.composeMappings(TypeVariableUtil.subTypeToSuperType(getDeclaringType(), getDestinationType()), TypeVariableUtil.superTypeToInheritedType(getDestinationType(), ((IType) typeToCreateStubIn.resolveBinding().getJavaElement())));
-		copyReturnType(rewriter.getASTRewrite(), getDeclaringType().getCompilationUnit(), methodToCreateStubFor, newMethod, mapping);
-		copyParameters(rewriter.getASTRewrite(), getDeclaringType().getCompilationUnit(), methodToCreateStubFor, newMethod, mapping);
+		copyReturnType(rewriter.getASTRewrite(), getDeclaringType().getJavaScriptUnit(), methodToCreateStubFor, newMethod, mapping);
+		copyParameters(rewriter.getASTRewrite(), getDeclaringType().getJavaScriptUnit(), methodToCreateStubFor, newMethod, mapping);
 		copyThrownExceptions(methodToCreateStubFor, newMethod);
 		newMethod.setJavadoc(createJavadocForStub(typeToCreateStubIn.getName().getIdentifier(), methodToCreateStubFor, newMethod, newCu, rewriter.getASTRewrite()));
 		ImportRewriteUtil.addImports(rewriter, newMethod, new HashMap(), new HashMap(), false);
@@ -490,7 +490,7 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 				if (type.equals(declaringType))
 					continue;
 				final AbstractTypeDeclaration declaration= ASTNodeSearchUtil.getAbstractTypeDeclarationNode(type, unitRewriter.getRoot());
-				final IJavaScriptUnit unit= type.getCompilationUnit();
+				final IJavaScriptUnit unit= type.getJavaScriptUnit();
 				final IProgressMonitor subMonitor= new SubProgressMonitor(monitor, 1);
 				try {
 					subMonitor.beginTask(RefactoringCoreMessages.PullUpRefactoring_checking, methods.length);
@@ -520,7 +520,7 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 				return true;
 			if (member instanceof IFunction) {
 				final IFunction method= (IFunction) member;
-				final IFunction stub= target.getMethod(method.getElementName(), method.getParameterTypes());
+				final IFunction stub= target.getFunction(method.getElementName(), method.getParameterTypes());
 				if (stub.exists())
 					return true;
 			}
@@ -686,7 +686,7 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 					continue;
 				final String[] keys= { JavaElementLabels.getTextLabel(matchingField, JavaElementLabels.ALL_FULLY_QUALIFIED), JavaElementLabels.getTextLabel(matchingField.getDeclaringType(), JavaElementLabels.ALL_FULLY_QUALIFIED)};
 				final String message= Messages.format(RefactoringCoreMessages.PullUpRefactoring_different_field_type, keys);
-				final RefactoringStatusContext context= JavaStatusContext.create(matchingField.getCompilationUnit(), matchingField.getSourceRange());
+				final RefactoringStatusContext context= JavaStatusContext.create(matchingField.getJavaScriptUnit(), matchingField.getSourceRange());
 				status.addError(message, context);
 			}
 		}
@@ -722,7 +722,7 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 			if (result.hasFatalError())
 				return result;
 			fCompilationUnitRewrites= new HashMap(3);
-			result.merge(checkProjectCompliance(getCompilationUnitRewrite(fCompilationUnitRewrites, getDeclaringType().getCompilationUnit()), getDestinationType(), fMembersToMove));
+			result.merge(checkProjectCompliance(getCompilationUnitRewrite(fCompilationUnitRewrites, getDeclaringType().getJavaScriptUnit()), getDestinationType(), fMembersToMove));
 			fChangeManager= createChangeManager(new SubProgressMonitor(monitor, 1), result);
 			result.merge(Checks.validateModifiesFiles(ResourceUtil.getFiles(fChangeManager.getAllCompilationUnits()), getRefactoring().getValidationContext()));
 			return result;
@@ -929,7 +929,7 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 							continue;
 						final String[] keys= { JavaElementLabels.getTextLabel(matchingMethod, JavaElementLabels.ALL_FULLY_QUALIFIED), JavaElementLabels.getTextLabel(matchingMethod.getDeclaringType(), JavaElementLabels.ALL_FULLY_QUALIFIED)};
 						final String message= Messages.format(RefactoringCoreMessages.PullUpRefactoring_different_method_return_type, keys);
-						final RefactoringStatusContext context= JavaStatusContext.create(matchingMethod.getCompilationUnit(), matchingMethod.getNameRange());
+						final RefactoringStatusContext context= JavaStatusContext.create(matchingMethod.getJavaScriptUnit(), matchingMethod.getNameRange());
 						status.addError(message, context);
 					}
 				}
@@ -951,14 +951,14 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 			return;
 		}
 		try {
-			final IDocument document= new Document(method.getCompilationUnit().getBuffer().getContents());
+			final IDocument document= new Document(method.getJavaScriptUnit().getBuffer().getContents());
 			final ASTRewrite rewrite= ASTRewrite.create(body.getAST());
 			final ITrackedNodePosition position= rewrite.track(body);
 			body.accept(new PullUpAstNodeMapper(sourceRewrite, targetRewrite, rewrite, getDeclaringSuperTypeHierarchy(monitor).getSuperclass(getDeclaringType()), mapping, oldMethod.resolveBinding()));
-			rewrite.rewriteAST(document, method.getJavaProject().getOptions(true)).apply(document, TextEdit.NONE);
+			rewrite.rewriteAST(document, method.getJavaScriptProject().getOptions(true)).apply(document, TextEdit.NONE);
 			String content= document.get(position.getStartPosition(), position.getLength());
 			final String[] lines= Strings.convertIntoLines(content);
-			Strings.trimIndentation(lines, method.getJavaProject(), false);
+			Strings.trimIndentation(lines, method.getJavaScriptProject(), false);
 			content= Strings.concatenate(lines, StubUtility.getLineDelimiterUsed(method));
 			newMethod.setBody((Block) targetRewrite.getASTRewrite().createStringPlaceholder(content, ASTNode.BLOCK));
 		} catch (MalformedTreeException exception) {
@@ -970,7 +970,7 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 
 	private void createAbstractMethod(final IFunction sourceMethod, final CompilationUnitRewrite sourceRewriter, final JavaScriptUnit declaringCuNode, final AbstractTypeDeclaration destination, final TypeVariableMaplet[] mapping, final CompilationUnitRewrite targetRewrite, final Map adjustments, final IProgressMonitor monitor, final RefactoringStatus status) throws JavaScriptModelException {
 		final FunctionDeclaration oldMethod= ASTNodeSearchUtil.getMethodDeclarationNode(sourceMethod, declaringCuNode);
-		if (JavaModelUtil.is50OrHigher(sourceMethod.getJavaProject()) && (fSettings.overrideAnnotation || JavaScriptCore.ERROR.equals(sourceMethod.getJavaProject().getOption(JavaScriptCore.COMPILER_PB_MISSING_OVERRIDE_ANNOTATION, true)))) {
+		if (JavaModelUtil.is50OrHigher(sourceMethod.getJavaScriptProject()) && (fSettings.overrideAnnotation || JavaScriptCore.ERROR.equals(sourceMethod.getJavaScriptProject().getOption(JavaScriptCore.COMPILER_PB_MISSING_OVERRIDE_ANNOTATION, true)))) {
 			final MarkerAnnotation annotation= sourceRewriter.getAST().newMarkerAnnotation();
 			annotation.setTypeName(sourceRewriter.getAST().newSimpleName("Override")); //$NON-NLS-1$
 			sourceRewriter.getASTRewrite().getListRewrite(oldMethod, FunctionDeclaration.MODIFIERS2_PROPERTY).insertFirst(annotation, sourceRewriter.createCategorizedGroupDescription(RefactoringCoreMessages.PullUpRefactoring_add_override_annotation, SET_PULL_UP));
@@ -985,8 +985,8 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 			modifiers&= ~Flags.AccVarargs;
 		newMethod.modifiers().addAll(ASTNodeFactory.newModifiers(targetRewrite.getAST(), modifiers));
 		newMethod.setName(((SimpleName) ASTNode.copySubtree(targetRewrite.getAST(), oldMethod.getName())));
-		copyReturnType(targetRewrite.getASTRewrite(), getDeclaringType().getCompilationUnit(), oldMethod, newMethod, mapping);
-		copyParameters(targetRewrite.getASTRewrite(), getDeclaringType().getCompilationUnit(), oldMethod, newMethod, mapping);
+		copyReturnType(targetRewrite.getASTRewrite(), getDeclaringType().getJavaScriptUnit(), oldMethod, newMethod, mapping);
+		copyParameters(targetRewrite.getASTRewrite(), getDeclaringType().getJavaScriptUnit(), oldMethod, newMethod, mapping);
 		copyThrownExceptions(oldMethod, newMethod);
 		ImportRewriteUtil.addImports(targetRewrite, newMethod, new HashMap(), new HashMap(), false);
 		targetRewrite.getASTRewrite().getListRewrite(destination, destination.getBodyDeclarationsProperty()).insertAt(newMethod, ASTNodes.getInsertionIndex(newMethod, destination.bodyDeclarations()), targetRewrite.createCategorizedGroupDescription(RefactoringCoreMessages.PullUpRefactoring_add_abstract_method, SET_PULL_UP));
@@ -1000,7 +1000,7 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 			final Map arguments= new HashMap();
 			String project= null;
 			final IType declaring= getDeclaringType();
-			final IJavaScriptProject javaProject= declaring.getJavaProject();
+			final IJavaScriptProject javaProject= declaring.getJavaScriptProject();
 			if (javaProject != null)
 				project= javaProject.getElementName();
 			int flags= JavaRefactoringDescriptor.JAR_MIGRATION | JavaRefactoringDescriptor.JAR_REFACTORING | RefactoringDescriptor.STRUCTURAL_CHANGE | RefactoringDescriptor.MULTI_CHANGE;
@@ -1041,9 +1041,9 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 		Assert.isNotNull(status);
 		try {
 			monitor.beginTask(RefactoringCoreMessages.PullUpRefactoring_checking, 24);
-			final IJavaScriptUnit source= getDeclaringType().getCompilationUnit();
+			final IJavaScriptUnit source= getDeclaringType().getJavaScriptUnit();
 			final IType destination= getDestinationType();
-			final IJavaScriptUnit target= destination.getCompilationUnit();
+			final IJavaScriptUnit target= destination.getJavaScriptUnit();
 			final CompilationUnitRewrite sourceRewriter= getCompilationUnitRewrite(fCompilationUnitRewrites, source);
 			final CompilationUnitRewrite targetRewriter= getCompilationUnitRewrite(fCompilationUnitRewrites, target);
 			final Map deleteMap= createMembersToDeleteMap(new SubProgressMonitor(monitor, 1));
@@ -1225,7 +1225,7 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 		final Map result= new HashMap();
 		for (final Iterator iterator= effected.iterator(); iterator.hasNext();) {
 			final IType type= (IType) iterator.next();
-			final IJavaScriptUnit unit= type.getCompilationUnit();
+			final IJavaScriptUnit unit= type.getJavaScriptUnit();
 			if (!result.containsKey(unit))
 				result.put(unit, new ArrayList(1));
 			((List) result.get(unit)).add(type);
@@ -1244,7 +1244,7 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 					fullParamNames[i]= Bindings.getFullyQualifiedName(params[i]);
 				}
 				final String comment= CodeGeneration.getMethodComment(cu, enclosingTypeName, newMethodNode, false, binding.getName(), fullTypeName, fullParamNames, StubUtility.getLineDelimiterUsed(cu));
-				return (JSdoc) rewrite.createStringPlaceholder(comment, ASTNode.JAVADOC);
+				return (JSdoc) rewrite.createStringPlaceholder(comment, ASTNode.JSDOC);
 			}
 		}
 		return null;
@@ -1255,7 +1255,7 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 		final Map result= new HashMap();
 		for (int i= 0; i < membersToDelete.length; i++) {
 			final IMember member= membersToDelete[i];
-			final IJavaScriptUnit cu= member.getCompilationUnit();
+			final IJavaScriptUnit cu= member.getJavaScriptUnit();
 			if (!result.containsKey(cu))
 				result.put(cu, new ArrayList(1));
 			((List) result.get(cu)).add(member);
@@ -1278,15 +1278,15 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 		copyAnnotations(oldMethod, newMethod);
 		newMethod.modifiers().addAll(ASTNodeFactory.newModifiers(ast, modifiers));
 		newMethod.setName(((SimpleName) ASTNode.copySubtree(ast, oldMethod.getName())));
-		copyReturnType(rewrite, getDeclaringType().getCompilationUnit(), oldMethod, newMethod, mapping);
-		copyParameters(rewrite, getDeclaringType().getCompilationUnit(), oldMethod, newMethod, mapping);
+		copyReturnType(rewrite, getDeclaringType().getJavaScriptUnit(), oldMethod, newMethod, mapping);
+		copyParameters(rewrite, getDeclaringType().getJavaScriptUnit(), oldMethod, newMethod, mapping);
 		copyThrownExceptions(oldMethod, newMethod);
 		copyTypeParameters(oldMethod, newMethod);
 		return newMethod;
 	}
 
 	private BodyDeclaration createNewTypeDeclarationNode(final IType type, final AbstractTypeDeclaration oldType, final JavaScriptUnit declaringCuNode, final TypeVariableMaplet[] mapping, final ASTRewrite rewrite) throws JavaScriptModelException {
-		final IJavaScriptUnit declaringCu= getDeclaringType().getCompilationUnit();
+		final IJavaScriptUnit declaringCu= getDeclaringType().getJavaScriptUnit();
 		if (!JdtFlags.isPublic(type) && !JdtFlags.isProtected(type)) {
 			if (mapping.length > 0)
 				return createPlaceholderForTypeDeclaration(oldType, declaringCu, mapping, rewrite, true);
@@ -1330,7 +1330,7 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 	protected RefactoringStatus createWorkingCopyLayer(IProgressMonitor monitor) {
 		try {
 			monitor.beginTask(RefactoringCoreMessages.PullUpRefactoring_checking, 1);
-			IJavaScriptUnit unit= getDeclaringType().getCompilationUnit();
+			IJavaScriptUnit unit= getDeclaringType().getJavaScriptUnit();
 			if (fLayer)
 				unit= unit.findWorkingCopy(fOwner);
 			resetWorkingCopies(unit);
@@ -1386,9 +1386,9 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 		final IType[] allSubtypes= getDestinationTypeHierarchy(monitor).getAllSubtypes(getDestinationType());
 		final Set result= new HashSet(allSubtypes.length);
 		for (int i= 0; i < allSubtypes.length; i++) {
-			result.add(allSubtypes[i].getCompilationUnit());
+			result.add(allSubtypes[i].getJavaScriptUnit());
 		}
-		result.add(getDestinationType().getCompilationUnit());
+		result.add(getDestinationType().getJavaScriptUnit());
 		return (IJavaScriptUnit[]) result.toArray(new IJavaScriptUnit[result.size()]);
 	}
 
@@ -1520,7 +1520,7 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 			final IMember member= members[i];
 			if (member instanceof IFunction) {
 				final IFunction method= (IFunction) member;
-				final IFunction found= MemberCheckUtil.findMethod(method, initial.getMethods());
+				final IFunction found= MemberCheckUtil.findMethod(method, initial.getFunctions());
 				if (found != null)
 					addMatchingMember(result, method, found);
 			} else if (member instanceof IField) {
@@ -1717,7 +1717,7 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 			fAbstractMethods= (IFunction[]) elements.toArray(new IFunction[elements.size()]);
 			IJavaScriptProject project= null;
 			if (fMembersToMove.length > 0)
-				project= fMembersToMove[0].getJavaProject();
+				project= fMembersToMove[0].getJavaScriptProject();
 			fSettings= JavaPreferencesSettings.getCodeGenerationSettings(project);
 			if (!status.isOK())
 				return status;
@@ -1772,7 +1772,7 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 	 * Resets the environment before the first wizard page becomes visible.
 	 */
 	public void resetEnvironment() {
-		IJavaScriptUnit unit= getDeclaringType().getCompilationUnit();
+		IJavaScriptUnit unit= getDeclaringType().getJavaScriptUnit();
 		if (fLayer)
 			unit= unit.findWorkingCopy(fOwner);
 		resetWorkingCopies(unit);
@@ -1838,7 +1838,7 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 			monitor.beginTask("", 100); //$NON-NLS-1$
 			monitor.setTaskName(RefactoringCoreMessages.PullUpRefactoring_checking);
 			final IType declaring= getDeclaringType();
-			final IJavaScriptProject project= declaring.getJavaProject();
+			final IJavaScriptProject project= declaring.getJavaScriptProject();
 			final ASTParser parser= ASTParser.newParser(AST.JLS3);
 			parser.setWorkingCopyOwner(fOwner);
 			parser.setResolveBindings(true);

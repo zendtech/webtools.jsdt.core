@@ -90,7 +90,7 @@ public void acceptPackageFragment(IPackageFragment packageFragment) {
  */
 public void acceptType(IType type) {
 	try {
-		if (this.unitToSkip != null && this.unitToSkip.equals(type.getCompilationUnit())){
+		if (this.unitToSkip != null && this.unitToSkip.equals(type.getJavaScriptUnit())){
 			return;
 		}
 		char[] packageName = type.getPackageFragment().getElementName().toCharArray();
@@ -99,7 +99,7 @@ public void acceptType(IType type) {
 		// determine associated access restriction
 		AccessRestriction accessRestriction = null;
 
-		if (this.checkAccessRestrictions && (isBinary || !type.getJavaProject().equals(this.project))) {
+		if (this.checkAccessRestrictions && (isBinary || !type.getJavaScriptProject().equals(this.project))) {
 			PackageFragmentRoot root = (PackageFragmentRoot)type.getAncestor(IJavaScriptElement.PACKAGE_FRAGMENT_ROOT);
 			ClasspathEntry entry = (ClasspathEntry) this.nameLookup.rootToResolvedEntries.get(root);
 			if (entry != null) { // reverse map always contains resolved CP entry

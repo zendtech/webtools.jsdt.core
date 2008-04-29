@@ -184,7 +184,7 @@ public abstract class CreateElementInCUOperation extends JavaModelOperation {
 			if (parent == null)
 				parent = this.cuAST;
 			insertASTNode(rewriter, parent, child);
-			apply(rewriter, document, cu.getJavaProject().getOptions(true));
+			apply(rewriter, document, cu.getJavaScriptProject().getOptions(true));
 		}
 		worked(1);
 	}

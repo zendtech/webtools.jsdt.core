@@ -970,7 +970,7 @@ public class ChangeSignatureRefactoring extends ScriptableRefactoring implements
 	}
 	
 	private IJavaScriptUnit getCu() {
-		return fMethod.getCompilationUnit();
+		return fMethod.getJavaScriptUnit();
 	}
 	
 	private boolean mustAnalyzeAstOfDeclaringCu() throws JavaScriptModelException{
@@ -1115,7 +1115,7 @@ public class ChangeSignatureRefactoring extends ScriptableRefactoring implements
 				if (newParameterNames.contains(paramNames[j])){
 					String[] args= new String[]{JavaElementUtil.createMethodSignature(fRippleMethods[i]), paramNames[j]};
 					String msg= Messages.format(RefactoringCoreMessages.ChangeSignatureRefactoring_already_has, args); 
-					RefactoringStatusContext context= JavaStatusContext.create(fRippleMethods[i].getCompilationUnit(), fRippleMethods[i].getNameRange());
+					RefactoringStatusContext context= JavaStatusContext.create(fRippleMethods[i].getJavaScriptUnit(), fRippleMethods[i].getNameRange());
 					result.addError(msg, context);
 				}	
 			}
@@ -1178,7 +1178,7 @@ public class ChangeSignatureRefactoring extends ScriptableRefactoring implements
 			list.addAll(Arrays.asList(changes));
 			final Map arguments= new HashMap();
 			String project= null;
-			IJavaScriptProject javaProject= fMethod.getJavaProject();
+			IJavaScriptProject javaProject= fMethod.getJavaScriptProject();
 			if (javaProject != null)
 				project= javaProject.getElementName();
 			int flags= JavaRefactoringDescriptor.JAR_MIGRATION | JavaRefactoringDescriptor.JAR_REFACTORING | RefactoringDescriptor.STRUCTURAL_CHANGE;
@@ -1362,7 +1362,7 @@ public class ChangeSignatureRefactoring extends ScriptableRefactoring implements
 			IType subclass= subclasses[i];
 			if (subclass.isAnonymous())
 				continue;
-			IJavaScriptUnit cu= subclass.getCompilationUnit();
+			IJavaScriptUnit cu= subclass.getJavaScriptUnit();
 			if (! result.containsKey(cu))
 				result.put(cu, new HashSet());
 			((Set)result.get(cu)).add(subclass);
@@ -1469,7 +1469,7 @@ public class ChangeSignatureRefactoring extends ScriptableRefactoring implements
 			return null;
 		else {
 			if (fDefaultValueAdvisor == null)
-				return (Expression) cuRewrite.getASTRewrite().createStringPlaceholder(info.getDefaultValue(), ASTNode.METHOD_INVOCATION);
+				return (Expression) cuRewrite.getASTRewrite().createStringPlaceholder(info.getDefaultValue(), ASTNode.FUNCTION_INVOCATION);
 			else
 				return fDefaultValueAdvisor.createDefaultExpression(nodes, info, parameterInfos, method, false, cuRewrite);
 		}
@@ -1530,7 +1530,7 @@ public class ChangeSignatureRefactoring extends ScriptableRefactoring implements
 
 	private static boolean isReferenceNode(ASTNode node){
 		switch (node.getNodeType()) {
-			case ASTNode.METHOD_INVOCATION :
+			case ASTNode.FUNCTION_INVOCATION :
 			case ASTNode.SUPER_METHOD_INVOCATION :
 			case ASTNode.CLASS_INSTANCE_CREATION :
 			case ASTNode.CONSTRUCTOR_INVOCATION :
@@ -1799,7 +1799,7 @@ public class ChangeSignatureRefactoring extends ScriptableRefactoring implements
 			if (fDefaultValueAdvisor != null && info.isAdded()) {
 				return fDefaultValueAdvisor.createDefaultExpression(nodes, info, parameterInfos, methodDeclaration, true, cuRewrite);
 			}
-			return (Expression) getASTRewrite().createStringPlaceholder(info.getNewName(), ASTNode.METHOD_INVOCATION);
+			return (Expression) getASTRewrite().createStringPlaceholder(info.getNewName(), ASTNode.FUNCTION_INVOCATION);
 		}
 
 		protected SimpleName getMethodNameNode() {
@@ -2138,7 +2138,7 @@ public class ChangeSignatureRefactoring extends ScriptableRefactoring implements
 							first= false;
 							if (! isTopOfRipple)
 								continue;
-							TagElement paramNode= JavadocUtil.createParamTag(newName, fCuRewrite.getRoot().getAST(), fCuRewrite.getCu().getJavaProject());
+							TagElement paramNode= JavadocUtil.createParamTag(newName, fCuRewrite.getRoot().getAST(), fCuRewrite.getCu().getJavaScriptProject());
 							insertTag(paramNode, previousTag, tagsRewrite);
 							previousTag= paramNode;
 						} else {
@@ -2256,7 +2256,7 @@ public class ChangeSignatureRefactoring extends ScriptableRefactoring implements
 			returnNode.setTagName(TagElement.TAG_RETURN);
 			
 			TextElement textElement= getASTRewrite().getAST().newTextElement();
-			String text= StubUtility.getTodoTaskTag(fCuRewrite.getCu().getJavaProject());
+			String text= StubUtility.getTodoTaskTag(fCuRewrite.getCu().getJavaScriptProject());
 			if (text != null)
 				textElement.setText(text); //TODO: use template with {@todo} ...
 			returnNode.fragments().add(textElement);
@@ -2272,7 +2272,7 @@ public class ChangeSignatureRefactoring extends ScriptableRefactoring implements
 			excptNode.fragments().add(nameNode);
 
 			TextElement textElement= getASTRewrite().getAST().newTextElement();
-			String text= StubUtility.getTodoTaskTag(fCuRewrite.getCu().getJavaProject());
+			String text= StubUtility.getTodoTaskTag(fCuRewrite.getCu().getJavaScriptProject());
 			if (text != null)
 				textElement.setText(text); //TODO: use template with {@todo} ...
 			excptNode.fragments().add(textElement);

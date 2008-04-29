@@ -413,7 +413,7 @@ public class LazyJavaCompletionProposal extends AbstractJavaCompletionProposal {
 	protected FormatterPrefs getFormatterPrefs() {
 		if (fFormatterPrefs == null) {
 			IJavaScriptUnit cu= fInvocationContext.getCompilationUnit();
-			fFormatterPrefs= new FormatterPrefs(cu == null ? null : cu.getJavaProject());
+			fFormatterPrefs= new FormatterPrefs(cu == null ? null : cu.getJavaScriptProject());
 		}
 		return fFormatterPrefs;
 	}

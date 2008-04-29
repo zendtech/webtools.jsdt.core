@@ -272,13 +272,13 @@ class FunctionBinding implements IFunctionBinding {
 				String[] parameters = new String[parameterCount];
 				parameterSignatures.toArray(parameters);
 				if (typeRoot!=null)
-					return (JavaElement) typeRoot.getMethod(getName(), parameters);
+					return (JavaElement) typeRoot.getFunction(getName(), parameters);
 				else
-					return (JavaElement) declaringType.getMethod(getName(), parameters);
+					return (JavaElement) declaringType.getFunction(getName(), parameters);
 			} else {
 				// annotation type member declaration
 				AnnotationTypeMemberDeclaration typeMemberDeclaration = (AnnotationTypeMemberDeclaration) node;
-				return (JavaElement) declaringType.getMethod(typeMemberDeclaration.getName().getIdentifier(), CharOperation.NO_STRINGS); // annotation type members don't have parameters
+				return (JavaElement) declaringType.getFunction(typeMemberDeclaration.getName().getIdentifier(), CharOperation.NO_STRINGS); // annotation type members don't have parameters
 			}
 		} else {
 			// case of method not in the created AST, or a binary method
@@ -296,12 +296,12 @@ class FunctionBinding implements IFunctionBinding {
 			for (int i = 0;  i < length; i++) {
 				parameterSignatures[declaringIndex + i] = new String(parameters[i].genericTypeSignature()).replace('/', '.');
 			}
-			IFunction result = declaringType.getMethod(selector, parameterSignatures);
+			IFunction result = declaringType.getFunction(selector, parameterSignatures);
 			if (isBinary)
 				return (JavaElement) result;
 			IFunction[] methods = null;
 			try {
-				methods = declaringType.getMethods();
+				methods = declaringType.getFunctions();
 			} catch (JavaScriptModelException e) {
 				// declaring type doesn't exist
 				return null;

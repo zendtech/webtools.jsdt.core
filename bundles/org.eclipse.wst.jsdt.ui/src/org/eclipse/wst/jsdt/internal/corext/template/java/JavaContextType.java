@@ -277,7 +277,7 @@ public class JavaContextType extends CompilationUnitContextType {
 			if (compilationUnit == null)
 				return "XXX"; //$NON-NLS-1$
 			
-			IJavaScriptProject javaProject= compilationUnit.getJavaProject();
+			IJavaScriptProject javaProject= compilationUnit.getJavaScriptProject();
 			String todoTaskTag= StubUtility.getTodoTaskTag(javaProject);
 			if (todoTaskTag == null)
 				return "XXX"; //$NON-NLS-1$

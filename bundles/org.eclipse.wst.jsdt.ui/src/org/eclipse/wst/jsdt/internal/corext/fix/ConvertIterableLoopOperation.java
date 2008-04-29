@@ -158,7 +158,7 @@ public final class ConvertIterableLoopOperation extends ConvertLoopOperation {
 	}
 	
 	private IJavaScriptProject getJavaProject() {
-		return getRoot().getJavaElement().getJavaProject();
+		return getRoot().getJavaElement().getJavaScriptProject();
 	}
 	
 	private JavaScriptUnit getRoot() {

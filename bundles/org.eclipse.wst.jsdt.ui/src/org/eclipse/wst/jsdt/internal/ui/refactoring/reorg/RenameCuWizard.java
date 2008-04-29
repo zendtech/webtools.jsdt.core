@@ -51,7 +51,7 @@ public class RenameCuWizard extends RenameTypeWizard {
 			protected String getNewName(INameUpdating nameUpdating) {
 				String result= nameUpdating.getNewElementName();
 				// If renaming a CU we have to remove the java file extension
-				return JavaScriptCore.removeJavaLikeExtension(result);
+				return JavaScriptCore.removeJavaScriptLikeExtension(result);
 			}
 		};
 	}

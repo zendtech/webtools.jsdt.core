@@ -124,7 +124,7 @@ protected void codeComplete(org.eclipse.wst.jsdt.internal.compiler.env.ICompilat
 	if (position < -1 || position > buffer.getLength()) {
 		throw new JavaScriptModelException(new JavaModelStatus(IJavaScriptModelStatusConstants.INDEX_OUT_OF_BOUNDS));
 	}
-	JavaProject project = (JavaProject) getJavaProject();
+	JavaProject project = (JavaProject) getJavaScriptProject();
 	SearchableEnvironment environment = newSearchableNameEnvironment(owner);
 
 	// set unit to skip
@@ -149,7 +149,7 @@ protected IJavaScriptElement[] codeSelect(org.eclipse.wst.jsdt.internal.compiler
 		performanceStats.startRun(new String(cu.getFileName()) + " at [" + offset + "," + length + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
-	JavaProject project = (JavaProject)getJavaProject();
+	JavaProject project = (JavaProject)getJavaScriptProject();
 	SearchableEnvironment environment = newSearchableNameEnvironment(owner);
 
 	SelectionRequestor requestor= new SelectionRequestor(environment.nameLookup, this);
@@ -198,7 +198,7 @@ public boolean exists() {
 public String findRecommendedLineSeparator() throws JavaScriptModelException {
 	IBuffer buffer = getBuffer();
 	String source = buffer == null ? null : buffer.getContents();
-	return Util.getLineSeparator(source, getJavaProject());
+	return Util.getLineSeparator(source, getJavaScriptProject());
 }
 protected void generateInfos(Object info, HashMap newElements, IProgressMonitor monitor) throws JavaScriptModelException {
 

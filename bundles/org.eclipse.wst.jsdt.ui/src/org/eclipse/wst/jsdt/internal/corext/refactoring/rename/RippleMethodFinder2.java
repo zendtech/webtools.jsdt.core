@@ -286,7 +286,7 @@ public class RippleMethodFinder2 {
 		final RefactoringSearchEngine2 engine= new RefactoringSearchEngine2(SearchPattern.createPattern(fMethod, IJavaScriptSearchConstants.DECLARATIONS | IJavaScriptSearchConstants.IGNORE_DECLARING_TYPE | IJavaScriptSearchConstants.IGNORE_RETURN_TYPE, SearchPattern.R_ERASURE_MATCH | SearchPattern.R_CASE_SENSITIVE));
 		if (owner != null)
 			engine.setOwner(owner);
-		engine.setScope(RefactoringScopeFactory.createRelatedProjectsScope(fMethod.getJavaProject(), IJavaScriptSearchScope.SOURCES | IJavaScriptSearchScope.APPLICATION_LIBRARIES | IJavaScriptSearchScope.SYSTEM_LIBRARIES));
+		engine.setScope(RefactoringScopeFactory.createRelatedProjectsScope(fMethod.getJavaScriptProject(), IJavaScriptSearchScope.SOURCES | IJavaScriptSearchScope.APPLICATION_LIBRARIES | IJavaScriptSearchScope.SYSTEM_LIBRARIES));
 		engine.setFiltering(false, fExcludeBinaries);
 		engine.setGrouping(false);
 		engine.searchPattern(new SubProgressMonitor(monitor, 1));

@@ -118,7 +118,7 @@ public class EditFilterAction extends BuildpathModifierAction {
 		if (firstElement instanceof IJavaScriptProject) {
 			javaProject= (IJavaScriptProject)firstElement;
 		} else {
-			javaProject= ((IPackageFragmentRoot)firstElement).getJavaProject();
+			javaProject= ((IPackageFragmentRoot)firstElement).getJavaScriptProject();
 		}
 		CPListElement[] existingEntries= CPListElement.createFromExisting(javaProject);
 		CPListElement elementToEdit= findElement((IJavaScriptElement)firstElement, existingEntries);
@@ -159,7 +159,7 @@ public class EditFilterAction extends BuildpathModifierAction {
 				if (packageFragmentRoot.getKind() != IPackageFragmentRoot.K_SOURCE)
 					return false;
 				
-				return packageFragmentRoot.getJavaProject() != null;
+				return packageFragmentRoot.getJavaScriptProject() != null;
 			}
 		} catch (JavaScriptModelException e) {
 		}

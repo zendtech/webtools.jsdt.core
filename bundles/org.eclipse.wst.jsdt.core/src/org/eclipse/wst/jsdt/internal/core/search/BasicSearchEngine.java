@@ -444,7 +444,7 @@ public class BasicSearchEngine {
 	 */
 	private IJavaScriptUnit[] getWorkingCopies(IJavaScriptElement element) {
 		if (element instanceof IMember) {
-			IJavaScriptUnit cu = ((IMember)element).getCompilationUnit();
+			IJavaScriptUnit cu = ((IMember)element).getJavaScriptUnit();
 			if (cu != null && cu.isWorkingCopy()) {
 				IJavaScriptUnit[] copies = getWorkingCopies();
 				int length = copies == null ? 0 : copies.length;
@@ -824,7 +824,7 @@ public class BasicSearchEngine {
 							}
 							case Binding.METHOD:
 							{
-								IFunction[] allMethods = workingCopy.getMethods();
+								IFunction[] allMethods = workingCopy.getFunctions();
 								for (int j = 0, allMethodsLength = allMethods.length; j < allMethodsLength; j++) {
 									IFunction method = allMethods[j];
 									IJavaScriptElement parent = method.getParent();
@@ -1552,7 +1552,7 @@ public class BasicSearchEngine {
 		IResource resource = enclosingElement.getResource();
 		if (enclosingElement instanceof IMember) {
 			IMember member = (IMember) enclosingElement;
-			IJavaScriptUnit cu = member.getCompilationUnit();
+			IJavaScriptUnit cu = member.getJavaScriptUnit();
 			if (cu != null) {
 				resource = cu.getResource();
 			} else if (member.isBinary()) {

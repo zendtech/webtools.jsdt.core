@@ -211,7 +211,7 @@ public class FindStringsToExternalizeAction extends SelectionDispatchAction {
 			if (pack == null)
 				return new ArrayList(0);
 				
-			IJavaScriptUnit[] cus= pack.getCompilationUnits();
+			IJavaScriptUnit[] cus= pack.getJavaScriptUnits();
 	
 			pm.beginTask("", cus.length); //$NON-NLS-1$
 			pm.setTaskName(pack.getElementName());

@@ -489,7 +489,7 @@ public void accept(ISourceType[] sourceTypes, PackageBinding packageBinding, Acc
 		// get source
 		SourceTypeElementInfo elementInfo = (SourceTypeElementInfo) sourceType;
 		IType type = elementInfo.getHandle();
-		ICompilationUnit sourceUnit = (ICompilationUnit) type.getCompilationUnit();
+		ICompilationUnit sourceUnit = (ICompilationUnit) type.getJavaScriptUnit();
 		accept(sourceUnit, accessRestriction);
 	} else {
 		CompilationResult result = new CompilationResult(sourceType.getFileName(), sourceType.getPackageName(), 1, 1, 0);
@@ -645,17 +645,17 @@ private IJavaScriptElement createMethodHandle(IJavaScriptElement parent, String 
 	IFunction methodHandle = null;
 	if (parent instanceof org.eclipse.wst.jsdt.core.IJavaScriptUnit) {
 		org.eclipse.wst.jsdt.core.IJavaScriptUnit compUnit = (org.eclipse.wst.jsdt.core.IJavaScriptUnit ) parent;
-		 methodHandle = compUnit.getMethod(methodName, parameterTypeSignatures);
+		 methodHandle = compUnit.getFunction(methodName, parameterTypeSignatures);
 
 	}
 	else if (parent instanceof ICompilationUnit) {
 		org.eclipse.wst.jsdt.core.IClassFile classFile = (org.eclipse.wst.jsdt.core.IClassFile ) parent;
-		 methodHandle = classFile.getMethod(methodName, parameterTypeSignatures);
+		 methodHandle = classFile.getFunction(methodName, parameterTypeSignatures);
 
 	}
 	else if (parent instanceof IType) {
 		IType type = (IType) parent;
-		 methodHandle = type.getMethod(methodName, parameterTypeSignatures);
+		 methodHandle = type.getFunction(methodName, parameterTypeSignatures);
 
 	}
 	if (methodHandle instanceof SourceMethod) {
@@ -758,7 +758,7 @@ protected boolean createHierarchyResolver(IType focusType, PossibleMatch[] possi
 			}
 		} else {
 			// cache all types in the focus' compilation unit (even secondary types)
-			accept((ICompilationUnit) focusType.getCompilationUnit(), null /*TODO no access restriction*/);
+			accept((ICompilationUnit) focusType.getJavaScriptUnit(), null /*TODO no access restriction*/);
 		}
 	}
 
@@ -1178,7 +1178,7 @@ private void processMetadata(MetadataFile metadataFile) throws CoreException{
 			matchLevel=this.patternLocator.matchMetadataElement(type);
 			if (matchLevel>=PatternLocator.POSSIBLE_MATCH)
 				reportMatching(type, matchLevel, null, 1);
-			IFunction[] methods = type.getMethods();
+			IFunction[] methods = type.getFunctions();
 			for (int methodIndex = 0; methodIndex < methods.length; methodIndex++) {
 				IFunction method=methods[methodIndex];
 				matchLevel=this.patternLocator.matchMetadataElement(method);
@@ -1193,7 +1193,7 @@ private void processMetadata(MetadataFile metadataFile) throws CoreException{
 					reportMatching(field, matchLevel, null, 1);
 			}
 		}
-		IFunction[] methods = metadataFile.getMethods();
+		IFunction[] methods = metadataFile.getFunctions();
 		for (int methodIndex = 0; methodIndex < methods.length; methodIndex++) {
 			IFunction method=methods[methodIndex];
 			matchLevel=this.patternLocator.matchMetadataElement(method);
@@ -1324,7 +1324,7 @@ public void locateMatches(SearchDocument[] searchDocuments) throws CoreException
 
 			// create new parser and lookup environment if this is a new project
 			IResource resource = null;
-			JavaProject javaProject = (JavaProject) openable.getJavaProject();
+			JavaProject javaProject = (JavaProject) openable.getJavaScriptProject();
 			resource = workingCopy != null ? workingCopy.getResource() : openable.getResource();
 			if (resource == null)
 				resource = javaProject.getProject(); // case of a file in an external jar
@@ -1389,7 +1389,7 @@ protected void locatePackageDeclarations(SearchPattern searchPattern, SearchPart
 		boolean isWorkspaceScope = this.scope == JavaModelManager.getJavaModelManager().getWorkspaceScope();
 		IPath[] scopeProjectsAndJars =  isWorkspaceScope ? null : this.scope.enclosingProjectsAndJars();
 		int scopeLength = isWorkspaceScope ? 0 : scopeProjectsAndJars.length;
-		IJavaScriptProject[] projects = JavaModelManager.getJavaModelManager().getJavaModel().getJavaProjects();
+		IJavaScriptProject[] projects = JavaModelManager.getJavaModelManager().getJavaModel().getJavaScriptProjects();
 		SimpleSet packages = new SimpleSet();
 		for (int i = 0, length = projects.length; i < length; i++) {
 			IJavaScriptProject javaProject = projects[i];

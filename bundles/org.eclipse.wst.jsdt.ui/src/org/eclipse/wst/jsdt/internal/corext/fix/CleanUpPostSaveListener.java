@@ -173,7 +173,7 @@ public class CleanUpPostSaveListener implements IPostSaveListener {
 			if (!ActionUtil.isOnBuildPath(unit))
 				return;
 			
-			IProject project= unit.getJavaProject().getProject();
+			IProject project= unit.getJavaScriptProject().getProject();
 			Map settings= CleanUpPreferenceUtil.loadSaveParticipantOptions(new ProjectScope(project));
 			if (settings == null) {
 				IEclipsePreferences contextNode= new InstanceScope().getNode(JavaUI.ID_PLUGIN);
@@ -208,7 +208,7 @@ public class CleanUpPostSaveListener implements IPostSaveListener {
     			do {
     				RefactoringStatus preCondition= new RefactoringStatus();
     				for (int i= 0; i < cleanUps.length; i++) {
-    					RefactoringStatus conditions= cleanUps[i].checkPreConditions(unit.getJavaProject(), new IJavaScriptUnit[] {unit}, new SubProgressMonitor(monitor, 5));
+    					RefactoringStatus conditions= cleanUps[i].checkPreConditions(unit.getJavaScriptProject(), new IJavaScriptUnit[] {unit}, new SubProgressMonitor(monitor, 5));
     					preCondition.merge(conditions);
     				}
     				if (showStatus(preCondition) != Window.OK)
@@ -314,7 +314,7 @@ public class CleanUpPostSaveListener implements IPostSaveListener {
     }
 
 	private JavaScriptUnit createAst(IJavaScriptUnit unit, Map cleanUpOptions, IProgressMonitor monitor) {
-		IJavaScriptProject project= unit.getJavaProject();
+		IJavaScriptProject project= unit.getJavaScriptProject();
 		if (compatibleOptions(project, cleanUpOptions)) {
 			JavaScriptUnit ast= ASTProvider.getASTProvider().getAST(unit, ASTProvider.WAIT_NO, monitor);
 			if (ast != null)
@@ -325,7 +325,7 @@ public class CleanUpPostSaveListener implements IPostSaveListener {
 		parser.setResolveBindings(true);
 		parser.setProject(project);
 		parser.setSource(unit);
-		Map compilerOptions= RefactoringASTParser.getCompilerOptions(unit.getJavaProject());
+		Map compilerOptions= RefactoringASTParser.getCompilerOptions(unit.getJavaScriptProject());
 		compilerOptions.putAll(cleanUpOptions);
 		parser.setCompilerOptions(compilerOptions);
 		

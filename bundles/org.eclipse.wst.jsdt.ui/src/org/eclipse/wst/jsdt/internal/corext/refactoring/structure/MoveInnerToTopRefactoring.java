@@ -526,7 +526,7 @@ public final class MoveInnerToTopRefactoring extends ScriptableRefactoring {
 	private void initialize() throws JavaScriptModelException {
 		fQualifiedTypeName= JavaModelUtil.concatenateName(fType.getPackageFragment().getElementName(), fType.getElementName());
 		fEnclosingInstanceFieldName= getInitialNameForEnclosingInstanceField();
-		fSourceRewrite= new CompilationUnitRewrite(fType.getCompilationUnit());
+		fSourceRewrite= new CompilationUnitRewrite(fType.getJavaScriptUnit());
 		fIsInstanceFieldCreationPossible= !(JdtFlags.isStatic(fType) || fType.isAnnotation() || fType.isEnum());
 		fIsInstanceFieldCreationMandatory= fIsInstanceFieldCreationPossible && isInstanceFieldCreationMandatory();
 		fCreateInstanceField= fIsInstanceFieldCreationMandatory;
@@ -541,9 +541,9 @@ public final class MoveInnerToTopRefactoring extends ScriptableRefactoring {
 		final FieldDeclaration newField= ast.newFieldDeclaration(fragment);
 		newField.modifiers().addAll(ASTNodeFactory.newModifiers(ast, getEnclosingInstanceAccessModifiers()));
 		newField.setType(createEnclosingType(ast));
-		final String comment= CodeGeneration.getFieldComment(fType.getCompilationUnit(), declaration.getName().getIdentifier(), fEnclosingInstanceFieldName, StubUtility.getLineDelimiterUsed(fType.getJavaProject()));
+		final String comment= CodeGeneration.getFieldComment(fType.getJavaScriptUnit(), declaration.getName().getIdentifier(), fEnclosingInstanceFieldName, StubUtility.getLineDelimiterUsed(fType.getJavaScriptProject()));
 		if (comment != null && comment.length() > 0) {
-			final JSdoc doc= (JSdoc) rewrite.createStringPlaceholder(comment, ASTNode.JAVADOC);
+			final JSdoc doc= (JSdoc) rewrite.createStringPlaceholder(comment, ASTNode.JSDOC);
 			newField.setJavadoc(doc);
 		}
 		rewrite.getListRewrite(declaration, declaration.getBodyDeclarationsProperty()).insertFirst(newField, null);
@@ -638,7 +638,7 @@ public final class MoveInnerToTopRefactoring extends ScriptableRefactoring {
 		variable.setType(createEnclosingType(ast));
 		variable.setName(ast.newSimpleName(name));
 		rewrite.getListRewrite(declaration, FunctionDeclaration.PARAMETERS_PROPERTY).insertFirst(variable, null);
-		JavadocUtil.addParamJavadoc(name, declaration, rewrite, fType.getJavaProject(), null);
+		JavadocUtil.addParamJavadoc(name, declaration, rewrite, fType.getJavaScriptProject(), null);
 	}
 
 	private void addSimpleTypeQualification(final CompilationUnitRewrite targetRewrite, final ITypeBinding declaring, final SimpleType simpleType, final TextEditGroup group) {
@@ -674,7 +674,7 @@ public final class MoveInnerToTopRefactoring extends ScriptableRefactoring {
 
 	private RefactoringStatus checkConstructorParameterNames() {
 		RefactoringStatus result= new RefactoringStatus();
-		JavaScriptUnit cuNode= new RefactoringASTParser(AST.JLS3).parse(fType.getCompilationUnit(), false);
+		JavaScriptUnit cuNode= new RefactoringASTParser(AST.JLS3).parse(fType.getJavaScriptUnit(), false);
 		FunctionDeclaration[] nodes= getConstructorDeclarationNodes(findTypeDeclaration(fType, cuNode));
 		for (int i= 0; i < nodes.length; i++) {
 			FunctionDeclaration constructor= nodes[i];
@@ -682,7 +682,7 @@ public final class MoveInnerToTopRefactoring extends ScriptableRefactoring {
 				SingleVariableDeclaration param= (SingleVariableDeclaration) iter.next();
 				if (fEnclosingInstanceFieldName.equals(param.getName().getIdentifier())) {
 					String msg= Messages.format(RefactoringCoreMessages.MoveInnerToTopRefactoring_name_used, new String[] { param.getName().getIdentifier(), fType.getElementName()}); 
-					result.addError(msg, JavaStatusContext.create(fType.getCompilationUnit(), param));
+					result.addError(msg, JavaStatusContext.create(fType.getJavaScriptUnit(), param));
 				}
 			}
 		}
@@ -712,12 +712,12 @@ public final class MoveInnerToTopRefactoring extends ScriptableRefactoring {
 			if (JdtFlags.isStatic(fType))
 				result.merge(checkEnclosingInstanceName(fEnclosingInstanceFieldName));
 
-			if (fType.getPackageFragment().getCompilationUnit((JavaModelUtil.getRenamedCUName(fType.getCompilationUnit(), fType.getElementName()))).exists()) {
-				String message= Messages.format(RefactoringCoreMessages.MoveInnerToTopRefactoring_compilation_Unit_exists, new String[] { (JavaModelUtil.getRenamedCUName(fType.getCompilationUnit(), fType.getElementName())), fType.getPackageFragment().getElementName()});
+			if (fType.getPackageFragment().getJavaScriptUnit((JavaModelUtil.getRenamedCUName(fType.getJavaScriptUnit(), fType.getElementName()))).exists()) {
+				String message= Messages.format(RefactoringCoreMessages.MoveInnerToTopRefactoring_compilation_Unit_exists, new String[] { (JavaModelUtil.getRenamedCUName(fType.getJavaScriptUnit(), fType.getElementName())), fType.getPackageFragment().getElementName()});
 				result.addFatalError(message);
 			}
 			result.merge(checkEnclosingInstanceName(fEnclosingInstanceFieldName));
-			result.merge(Checks.checkCompilationUnitName((JavaModelUtil.getRenamedCUName(fType.getCompilationUnit(), fType.getElementName()))));
+			result.merge(Checks.checkCompilationUnitName((JavaModelUtil.getRenamedCUName(fType.getJavaScriptUnit(), fType.getElementName()))));
 			result.merge(checkConstructorParameterNames());
 			result.merge(checkTypeNameInPackage());
 			fChangeManager= createChangeManager(new SubProgressMonitor(pm, 1), result);
@@ -753,7 +753,7 @@ public final class MoveInnerToTopRefactoring extends ScriptableRefactoring {
 		monitor.beginTask(RefactoringCoreMessages.MoveInnerToTopRefactoring_creating_change, 1);
 		final Map arguments= new HashMap();
 		String project= null;
-		IJavaScriptProject javaProject= fType.getJavaProject();
+		IJavaScriptProject javaProject= fType.getJavaScriptProject();
 		if (javaProject != null)
 			project= javaProject.getElementName();
 		final String description= Messages.format(RefactoringCoreMessages.MoveInnerToTopRefactoring_descriptor_description_short, fType.getElementName());
@@ -815,15 +815,15 @@ public final class MoveInnerToTopRefactoring extends ScriptableRefactoring {
 				ModifierKeyword keyword= null;
 				while ( (type= type.getDeclaringType()) != null) {
 					if ((!adjustor.getAdjustments().containsKey(type)) && (Modifier.isPrivate(type.getFlags())))
-						adjustor.getAdjustments().put(type, new OutgoingMemberVisibilityAdjustment(type, keyword, RefactoringStatus.createWarningStatus(Messages.format(RefactoringCoreMessages.MemberVisibilityAdjustor_change_visibility_type_warning, new String[] { MemberVisibilityAdjustor.getLabel(type), MemberVisibilityAdjustor.getLabel(keyword) }), JavaStatusContext.create(type.getCompilationUnit(), type.getSourceRange()))));
+						adjustor.getAdjustments().put(type, new OutgoingMemberVisibilityAdjustment(type, keyword, RefactoringStatus.createWarningStatus(Messages.format(RefactoringCoreMessages.MemberVisibilityAdjustor_change_visibility_type_warning, new String[] { MemberVisibilityAdjustor.getLabel(type), MemberVisibilityAdjustor.getLabel(keyword) }), JavaStatusContext.create(type.getJavaScriptUnit(), type.getSourceRange()))));
 				}
 			}
 			monitor.worked(1);
 			for (final Iterator iterator= getMergedSet(typeReferences.keySet(), constructorReferences.keySet()).iterator(); iterator.hasNext();) {
 				final IJavaScriptUnit unit= (IJavaScriptUnit) iterator.next();
 				final CompilationUnitRewrite targetRewrite= getCompilationUnitRewrite(unit);
-				createCompilationUnitRewrite(bindings, targetRewrite, typeReferences, constructorReferences, adjustor.getAdjustments().containsKey(fType), fType.getCompilationUnit(), unit, false, status, monitor);
-				if (unit.equals(fType.getCompilationUnit())) {
+				createCompilationUnitRewrite(bindings, targetRewrite, typeReferences, constructorReferences, adjustor.getAdjustments().containsKey(fType), fType.getJavaScriptUnit(), unit, false, status, monitor);
+				if (unit.equals(fType.getJavaScriptUnit())) {
 					try {
 						adjustor.setStatus(new RefactoringStatus());
 						adjustor.rewriteVisibility(targetRewrite.getCu(), new SubProgressMonitor(monitor, 1));
@@ -832,7 +832,7 @@ public final class MoveInnerToTopRefactoring extends ScriptableRefactoring {
 					}
 					fNewSourceOfInputType= createNewSource(targetRewrite, unit);
 					targetRewrite.clearASTAndImportRewrites();
-					createCompilationUnitRewrite(bindings, targetRewrite, typeReferences, constructorReferences, adjustor.getAdjustments().containsKey(fType), fType.getCompilationUnit(), unit, true, status, monitor);
+					createCompilationUnitRewrite(bindings, targetRewrite, typeReferences, constructorReferences, adjustor.getAdjustments().containsKey(fType), fType.getJavaScriptUnit(), unit, true, status, monitor);
 				}
 				adjustor.rewriteVisibility(targetRewrite.getCu(), new SubProgressMonitor(monitor, 1));
 				manager.manage(unit, targetRewrite.createChange());
@@ -846,9 +846,9 @@ public final class MoveInnerToTopRefactoring extends ScriptableRefactoring {
 	private Change createCompilationUnitForMovedType(IProgressMonitor pm) throws CoreException {
 		IJavaScriptUnit newCuWC= null;
 		try {
-			newCuWC= fType.getPackageFragment().getCompilationUnit(JavaModelUtil.getRenamedCUName(fType.getCompilationUnit(), fType.getElementName())).getWorkingCopy(null);
+			newCuWC= fType.getPackageFragment().getJavaScriptUnit(JavaModelUtil.getRenamedCUName(fType.getJavaScriptUnit(), fType.getElementName())).getWorkingCopy(null);
 			String source= createSourceForNewCu(newCuWC, pm);
-			return new CreateCompilationUnitChange(fType.getPackageFragment().getCompilationUnit(JavaModelUtil.getRenamedCUName(fType.getCompilationUnit(), fType.getElementName())), source, null);
+			return new CreateCompilationUnitChange(fType.getPackageFragment().getJavaScriptUnit(JavaModelUtil.getRenamedCUName(fType.getJavaScriptUnit(), fType.getElementName())), source, null);
 		} finally {
 			if (newCuWC != null)
 				newCuWC.discardWorkingCopy();
@@ -879,7 +879,7 @@ public final class MoveInnerToTopRefactoring extends ScriptableRefactoring {
 				}
 				fTypeImports= new HashSet();
 				fStaticImports= new HashSet();
-				ImportRewriteUtil.collectImports(fType.getJavaProject(), declaration, fTypeImports, fStaticImports, false);
+				ImportRewriteUtil.collectImports(fType.getJavaScriptProject(), declaration, fTypeImports, fStaticImports, false);
 				if (binding != null)
 					fTypeImports.remove(binding);
 			}
@@ -930,9 +930,9 @@ public final class MoveInnerToTopRefactoring extends ScriptableRefactoring {
 		final FunctionDeclaration constructor= ast.newFunctionDeclaration();
 		constructor.setConstructor(true);
 		constructor.setName(ast.newSimpleName(declaration.getName().getIdentifier()));
-		final String comment= CodeGeneration.getMethodComment(fType.getCompilationUnit(), fType.getElementName(), fType.getElementName(), getNewConstructorParameterNames(), new String[0], null, null, StubUtility.getLineDelimiterUsed(fType.getJavaProject()));
+		final String comment= CodeGeneration.getMethodComment(fType.getJavaScriptUnit(), fType.getElementName(), fType.getElementName(), getNewConstructorParameterNames(), new String[0], null, null, StubUtility.getLineDelimiterUsed(fType.getJavaScriptProject()));
 		if (comment != null && comment.length() > 0) {
-			final JSdoc doc= (JSdoc) rewrite.createStringPlaceholder(comment, ASTNode.JAVADOC);
+			final JSdoc doc= (JSdoc) rewrite.createStringPlaceholder(comment, ASTNode.JSDOC);
 			constructor.setJavadoc(doc);
 		}
 		if (fCreateInstanceField) {
@@ -1025,7 +1025,7 @@ public final class MoveInnerToTopRefactoring extends ScriptableRefactoring {
 			change= new CompilationUnitChange("", unit); //$NON-NLS-1$
 		final String source= change.getPreviewContent(new NullProgressMonitor());
 		final ASTParser parser= ASTParser.newParser(AST.JLS3);
-		parser.setProject(fType.getJavaProject());
+		parser.setProject(fType.getJavaScriptProject());
 		parser.setResolveBindings(false);
 		parser.setSource(source.toCharArray());
 		final AbstractTypeDeclaration declaration= findTypeDeclaration(fType, (JavaScriptUnit) parser.createAST(null));
@@ -1056,7 +1056,7 @@ public final class MoveInnerToTopRefactoring extends ScriptableRefactoring {
 		Assert.isNotNull(monitor);
 		try {
 			monitor.beginTask("", 2); //$NON-NLS-1$
-			final String separator= StubUtility.getLineDelimiterUsed(fType.getJavaProject());
+			final String separator= StubUtility.getLineDelimiterUsed(fType.getJavaScriptProject());
 			final String block= getAlignedSourceBlock(unit, fNewSourceOfInputType);
 			String content= CodeGeneration.getCompilationUnitContent(unit, null, block, separator);
 			if (content == null || block.startsWith("/*") || block.startsWith("//")) { //$NON-NLS-1$//$NON-NLS-2$
@@ -1098,13 +1098,13 @@ public final class MoveInnerToTopRefactoring extends ScriptableRefactoring {
 	private String getAlignedSourceBlock(final IJavaScriptUnit unit, final String block) {
 		Assert.isNotNull(block);
 		final String[] lines= Strings.convertIntoLines(block);
-		Strings.trimIndentation(lines, unit.getJavaProject(), false);
-		return Strings.concatenate(lines, StubUtility.getLineDelimiterUsed(fType.getJavaProject()));
+		Strings.trimIndentation(lines, unit.getJavaScriptProject(), false);
+		return Strings.concatenate(lines, StubUtility.getLineDelimiterUsed(fType.getJavaScriptProject()));
 	}
 
 	private CompilationUnitRewrite getCompilationUnitRewrite(final IJavaScriptUnit unit) {
 		Assert.isNotNull(unit);
-		if (unit.equals(fType.getCompilationUnit()))
+		if (unit.equals(fType.getJavaScriptUnit()))
 			return fSourceRewrite;
 		return new CompilationUnitRewrite(unit);
 	}
@@ -1570,7 +1570,7 @@ public final class MoveInnerToTopRefactoring extends ScriptableRefactoring {
 					return createInputFatalStatus(element, IJavaRefactorings.CONVERT_MEMBER_TYPE);
 				else {
 					fType= (IType) element;
-					fCodeGenerationSettings= JavaPreferencesSettings.getCodeGenerationSettings(fType.getJavaProject());
+					fCodeGenerationSettings= JavaPreferencesSettings.getCodeGenerationSettings(fType.getJavaScriptProject());
 					try {
 						initialize();
 					} catch (JavaScriptModelException exception) {

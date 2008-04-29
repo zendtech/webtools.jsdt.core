@@ -232,7 +232,7 @@ public class ChangeExceptionsControl extends Composite {
 	}
 	
 	private IType chooseException() {
-		IJavaScriptElement[] elements= new IJavaScriptElement[] { fProject.getJavaProject() };
+		IJavaScriptElement[] elements= new IJavaScriptElement[] { fProject.getJavaScriptProject() };
 		final IJavaScriptSearchScope scope= SearchEngine.createJavaSearchScope(elements);
 		
 		FilteredTypesSelectionDialog dialog= new FilteredTypesSelectionDialog(getShell(), false,

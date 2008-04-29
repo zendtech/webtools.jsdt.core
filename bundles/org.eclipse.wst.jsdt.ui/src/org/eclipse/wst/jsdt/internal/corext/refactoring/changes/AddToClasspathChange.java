@@ -66,8 +66,8 @@ public class AddToClasspathChange extends JDTChange {
 		pm.beginTask(getName(), 1);
 		try {
 			if (validateClasspath()) {
-				getJavaProject().setRawClasspath(getNewClasspathEntries(), new SubProgressMonitor(pm, 1));
-				IPath classpathEntryPath= JavaScriptCore.getResolvedClasspathEntry(fEntryToAdd).getPath();
+				getJavaProject().setRawIncludepath(getNewClasspathEntries(), new SubProgressMonitor(pm, 1));
+				IPath classpathEntryPath= JavaScriptCore.getResolvedIncludepathEntry(fEntryToAdd).getPath();
 				return new DeleteFromClasspathChange(classpathEntryPath, getJavaProject());
 			} else {
 				return new NullChange();
@@ -85,7 +85,7 @@ public class AddToClasspathChange extends JDTChange {
 	}
 	
 	private IIncludePathEntry[] getNewClasspathEntries() throws JavaScriptModelException{
-		IIncludePathEntry[] entries= getJavaProject().getRawClasspath();
+		IIncludePathEntry[] entries= getJavaProject().getRawIncludepath();
 		List cp= new ArrayList(entries.length + 1);
 		cp.addAll(Arrays.asList(entries));
 		cp.add(fEntryToAdd);

@@ -41,7 +41,7 @@ class RecoveredVariableBinding implements IVariableBinding {
 
 	public IFunctionBinding getDeclaringMethod() {
 		ASTNode parent = this.variableDeclaration.getParent();
-		while (parent != null && parent.getNodeType() != ASTNode.METHOD_DECLARATION) {
+		while (parent != null && parent.getNodeType() != ASTNode.FUNCTION_DECLARATION) {
 			parent = parent.getParent();
 		}
 		if (parent != null) {

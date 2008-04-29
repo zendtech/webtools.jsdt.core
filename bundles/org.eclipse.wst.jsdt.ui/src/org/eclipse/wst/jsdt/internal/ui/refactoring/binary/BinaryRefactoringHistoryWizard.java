@@ -127,9 +127,9 @@ public abstract class BinaryRefactoringHistoryWizard extends RefactoringHistoryW
 				final IJavaScriptModel model= JavaScriptCore.create(workspace);
 				if (model != null) {
 					try {
-						final URI uri= getLocationURI(root.getRawClasspathEntry());
+						final URI uri= getLocationURI(root.getRawIncludepathEntry());
 						if (uri != null) {
-							final IJavaScriptProject[] projects= model.getJavaProjects();
+							final IJavaScriptProject[] projects= model.getJavaScriptProjects();
 							final IProgressMonitor subMonitor= new SubProgressMonitor(monitor, 100, SubProgressMonitor.SUPPRESS_SUBTASK_LABEL);
 							try {
 								subMonitor.beginTask(RefactoringMessages.JarImportWizard_prepare_import, projects.length * 100);
@@ -141,11 +141,11 @@ public abstract class BinaryRefactoringHistoryWizard extends RefactoringHistoryW
 										for (int offset= 0; offset < roots.length; offset++) {
 											final IPackageFragmentRoot current= roots[offset];
 											if (!current.equals(root) && current.getKind() == IPackageFragmentRoot.K_BINARY) {
-												final IIncludePathEntry entry= current.getRawClasspathEntry();
+												final IIncludePathEntry entry= current.getRawIncludepathEntry();
 												if (entry.getEntryKind() == IIncludePathEntry.CPE_LIBRARY) {
 													final URI location= getLocationURI(entry);
 													if (uri.equals(location))
-														status.addFatalError(Messages.format(RefactoringMessages.JarImportWizard_error_shared_jar, new String[] { current.getJavaProject().getElementName() }));
+														status.addFatalError(Messages.format(RefactoringMessages.JarImportWizard_error_shared_jar, new String[] { current.getJavaScriptProject().getElementName() }));
 												}
 											}
 											subsubMonitor.worked(1);
@@ -188,8 +188,8 @@ public abstract class BinaryRefactoringHistoryWizard extends RefactoringHistoryW
 	private static void configureClasspath(final IJavaScriptProject project, final IPackageFragmentRoot root, final IFolder folder, final IProgressMonitor monitor) throws IllegalStateException, CoreException {
 		try {
 			monitor.beginTask(RefactoringMessages.JarImportWizard_prepare_import, 200);
-			final IIncludePathEntry entry= root.getRawClasspathEntry();
-			final IIncludePathEntry[] entries= project.getRawClasspath();
+			final IIncludePathEntry entry= root.getRawIncludepathEntry();
+			final IIncludePathEntry[] entries= project.getRawIncludepath();
 			final List list= new ArrayList();
 			list.addAll(Arrays.asList(entries));
 			final IFileStore store= EFS.getLocalFileSystem().getStore(JavaPlugin.getDefault().getStateLocation().append(STUB_FOLDER).append(project.getElementName()));
@@ -202,7 +202,7 @@ public abstract class BinaryRefactoringHistoryWizard extends RefactoringHistoryW
 				if (entries[index].equals(entry))
 					list.add(index, JavaScriptCore.newSourceEntry(folder.getFullPath()));
 			}
-			project.setRawClasspath((IIncludePathEntry[]) list.toArray(new IIncludePathEntry[list.size()]), false, new SubProgressMonitor(monitor, 100, SubProgressMonitor.SUPPRESS_SUBTASK_LABEL));
+			project.setRawIncludepath((IIncludePathEntry[]) list.toArray(new IIncludePathEntry[list.size()]), false, new SubProgressMonitor(monitor, 100, SubProgressMonitor.SUPPRESS_SUBTASK_LABEL));
 		} finally {
 			monitor.done();
 		}
@@ -303,7 +303,7 @@ public abstract class BinaryRefactoringHistoryWizard extends RefactoringHistoryW
 					if (!status.hasFatalError()) {
 						status.merge(checkSourceAttachmentRefactorings(new SubProgressMonitor(monitor, 20, SubProgressMonitor.SUPPRESS_SUBTASK_LABEL)));
 						if (!status.hasFatalError()) {
-							final IJavaScriptProject project= root.getJavaProject();
+							final IJavaScriptProject project= root.getJavaScriptProject();
 							if (project != null) {
 								final IFolder folder= project.getProject().getFolder(SOURCE_FOLDER + String.valueOf(System.currentTimeMillis()));
 								try {
@@ -314,7 +314,7 @@ public abstract class BinaryRefactoringHistoryWizard extends RefactoringHistoryW
 								} catch (CoreException exception) {
 									status.merge(RefactoringStatus.createFatalErrorStatus(exception.getLocalizedMessage()));
 									try {
-										project.setRawClasspath(project.readRawClasspath(), false, new SubProgressMonitor(monitor, 100, SubProgressMonitor.SUPPRESS_SUBTASK_LABEL));
+										project.setRawIncludepath(project.readRawIncludepath(), false, new SubProgressMonitor(monitor, 100, SubProgressMonitor.SUPPRESS_SUBTASK_LABEL));
 									} catch (CoreException throwable) {
 										JavaPlugin.log(throwable);
 									}
@@ -554,14 +554,14 @@ public abstract class BinaryRefactoringHistoryWizard extends RefactoringHistoryW
 		try {
 			monitor.beginTask(RefactoringMessages.JarImportWizard_cleanup_import, 300);
 			if (fJavaProject != null) {
-				final IIncludePathEntry[] entries= fJavaProject.readRawClasspath();
+				final IIncludePathEntry[] entries= fJavaProject.readRawIncludepath();
 				final boolean changed= deconfigureClasspath(entries, new SubProgressMonitor(monitor, 100, SubProgressMonitor.SUPPRESS_SUBTASK_LABEL));
 				final RefactoringHistory history= getRefactoringHistory();
 				final boolean valid= history != null && !history.isEmpty();
 				if (valid)
 					RefactoringCore.getUndoManager().flush();
 				if (valid || changed)
-					fJavaProject.setRawClasspath(entries, changed, new SubProgressMonitor(monitor, 60, SubProgressMonitor.SUPPRESS_SUBTASK_LABEL));
+					fJavaProject.setRawIncludepath(entries, changed, new SubProgressMonitor(monitor, 60, SubProgressMonitor.SUPPRESS_SUBTASK_LABEL));
 			}
 			if (fSourceFolder != null) {
 				final IFileStore store= EFS.getStore(fSourceFolder.getRawLocationURI());
@@ -621,7 +621,7 @@ public abstract class BinaryRefactoringHistoryWizard extends RefactoringHistoryW
 					if (root != null)
 						sourceIdentifier= root.getHandleIdentifier();
 					else {
-						final IJavaScriptProject javaProject= element.getJavaProject();
+						final IJavaScriptProject javaProject= element.getJavaScriptProject();
 						if (javaProject != null)
 							sourceIdentifier= javaProject.getHandleIdentifier();
 					}

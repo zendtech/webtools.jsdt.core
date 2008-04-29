@@ -96,7 +96,7 @@ public final class RefactoringAvailabilityTester {
 				if (isPullUpAvailable(members[index]))
 					list.add(members[index]);
 			}
-			members= type.getMethods();
+			members= type.getFunctions();
 			for (int index= 0; index < members.length; index++) {
 				if (isPullUpAvailable(members[index]))
 					list.add(members[index]);
@@ -118,7 +118,7 @@ public final class RefactoringAvailabilityTester {
 				if (isPushDownAvailable(members[index]))
 					list.add(members[index]);
 			}
-			members= type.getMethods();
+			members= type.getFunctions();
 			for (int index= 0; index < members.length; index++) {
 				if (isPushDownAvailable(members[index]))
 					list.add(members[index]);
@@ -301,7 +301,7 @@ public final class RefactoringAvailabilityTester {
 							return true;
 					} else if (elementType == IJavaScriptElement.TYPE) {
 						IType type= (IType)element;
-						IJavaScriptUnit cu= type.getCompilationUnit();
+						IJavaScriptUnit cu= type.getJavaScriptUnit();
 						if (cu != null && cu.exists())
 							return true;
 					}
@@ -489,7 +489,7 @@ public final class RefactoringAvailabilityTester {
 			return false;
 		} else if (element instanceof IJavaScriptProject) {
 			IJavaScriptProject project= (IJavaScriptProject) element;
-			IIncludePathEntry[] classpathEntries= project.getRawClasspath();
+			IIncludePathEntry[] classpathEntries= project.getRawIncludepath();
 			for (int i= 0; i < classpathEntries.length; i++) {
 				if (classpathEntries[i].getEntryKind() == IIncludePathEntry.CPE_SOURCE)
 					return true;
@@ -685,8 +685,8 @@ public final class RefactoringAvailabilityTester {
 		if (selectedNodes == null || selectedNodes.length != 1)
 			return false;
 		switch (selectedNodes[0].getNodeType()) {
-			case ASTNode.METHOD_DECLARATION:
-			case ASTNode.METHOD_INVOCATION:
+			case ASTNode.FUNCTION_DECLARATION:
+			case ASTNode.FUNCTION_INVOCATION:
 			case ASTNode.SUPER_METHOD_INVOCATION:
 				return true;
 			default:
@@ -1049,7 +1049,7 @@ public final class RefactoringAvailabilityTester {
 			return false;
 		if (isRenameProhibited(type))
 			return false;
-		InferrenceProvider[] inferenceProviders = InferrenceManager.getInstance().getInferenceProviders( (IInferenceFile)type.getCompilationUnit());
+		InferrenceProvider[] inferenceProviders = InferrenceManager.getInstance().getInferenceProviders( (IInferenceFile)type.getJavaScriptUnit());
 		if (inferenceProviders.length>0 && inferenceProviders[0].getRefactoringSupport()!=null)
 		{
 			RefactoringSupport refactoringSupport = inferenceProviders[0].getRefactoringSupport();

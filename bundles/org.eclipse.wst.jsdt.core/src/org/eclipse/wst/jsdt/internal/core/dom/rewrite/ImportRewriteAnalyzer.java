@@ -104,7 +104,7 @@ public final class ImportRewriteAnalyzer {
 
 	private int getSpacesBetweenImportGroups() {
 		try {
-			int num= Integer.parseInt(this.compilationUnit.getJavaProject().getOption(DefaultCodeFormatterConstants.FORMATTER_BLANK_LINES_BETWEEN_IMPORT_GROUPS, true));
+			int num= Integer.parseInt(this.compilationUnit.getJavaScriptProject().getOption(DefaultCodeFormatterConstants.FORMATTER_BLANK_LINES_BETWEEN_IMPORT_GROUPS, true));
 			if (num >= 0)
 				return num;
 		} catch (NumberFormatException e) {
@@ -665,7 +665,7 @@ public final class ImportRewriteAnalyzer {
 
 		final HashSet/*String*/ onDemandConflicts= new HashSet();
 
-		IJavaScriptSearchScope scope= SearchEngine.createJavaSearchScope(new IJavaScriptElement[] { this.compilationUnit.getJavaProject() });
+		IJavaScriptSearchScope scope= SearchEngine.createJavaSearchScope(new IJavaScriptElement[] { this.compilationUnit.getJavaScriptProject() });
 
 		ArrayList/*<char[][]>*/  starImportPackages= new ArrayList();
 		ArrayList/*<char[][]>*/ simpleTypeNames= new ArrayList();

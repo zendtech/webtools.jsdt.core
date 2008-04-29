@@ -237,7 +237,7 @@ import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 				}
 				break;	
 			case RETURN_STATEMENT_VALUE:
-				if (fEnclosingBodyDeclaration.getNodeType() == ASTNode.METHOD_DECLARATION)
+				if (fEnclosingBodyDeclaration.getNodeType() == ASTNode.FUNCTION_DECLARATION)
 					fReturnType= ((FunctionDeclaration)fEnclosingBodyDeclaration).getReturnType2();
 				break;
 			default:
@@ -556,14 +556,14 @@ import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 			}
 			fEnclosingBodyDeclaration= (BodyDeclaration)ASTNodes.getParent(getFirstSelectedNode(), BodyDeclaration.class);
 			if (fEnclosingBodyDeclaration == null || 
-					(fEnclosingBodyDeclaration.getNodeType() != ASTNode.METHOD_DECLARATION && 
+					(fEnclosingBodyDeclaration.getNodeType() != ASTNode.FUNCTION_DECLARATION && 
 					 fEnclosingBodyDeclaration.getNodeType() != ASTNode.INITIALIZER)) {
 				status.addFatalError(RefactoringCoreMessages.ExtractMethodAnalyzer_only_method_body); 
 				break superCall;
 			} else if (ASTNodes.getEnclosingType(fEnclosingBodyDeclaration) == null) {
 				status.addFatalError(RefactoringCoreMessages.ExtractMethodAnalyzer_compile_errors_no_parent_binding);
 				break superCall;
-			} else if (fEnclosingBodyDeclaration.getNodeType() == ASTNode.METHOD_DECLARATION) {
+			} else if (fEnclosingBodyDeclaration.getNodeType() == ASTNode.FUNCTION_DECLARATION) {
 				fEnclosingMethodBinding= ((FunctionDeclaration)fEnclosingBodyDeclaration).resolveBinding();
 			}
 			if (!isSingleExpressionOrStatementSet()) {

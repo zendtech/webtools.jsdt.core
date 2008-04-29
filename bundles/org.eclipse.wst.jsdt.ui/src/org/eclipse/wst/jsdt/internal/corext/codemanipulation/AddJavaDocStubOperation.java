@@ -61,7 +61,7 @@ public class AddJavaDocStubOperation implements IWorkspaceRunnable {
 
 	private String createTypeComment(IType type, String lineDelimiter) throws CoreException {
 		String[] typeParameterNames= StubUtility.getTypeParameterNames(type.getTypeParameters());
-		return CodeGeneration.getTypeComment(type.getCompilationUnit(), type.getTypeQualifiedName('.'), typeParameterNames, lineDelimiter);
+		return CodeGeneration.getTypeComment(type.getJavaScriptUnit(), type.getTypeQualifiedName('.'), typeParameterNames, lineDelimiter);
 	}		
 	
 	private String createMethodComment(IFunction meth, String lineDelimiter) throws CoreException {
@@ -79,7 +79,7 @@ public class AddJavaDocStubOperation implements IWorkspaceRunnable {
 	private String createFieldComment(IField field, String lineDelimiter) throws JavaScriptModelException, CoreException {
 		String typeName= Signature.toString(field.getTypeSignature());
 		String fieldName= field.getElementName();
-		return CodeGeneration.getFieldComment(field.getCompilationUnit(), typeName, fieldName, lineDelimiter);
+		return CodeGeneration.getFieldComment(field.getJavaScriptUnit(), typeName, fieldName, lineDelimiter);
 	}		
 		
 	/**
@@ -124,7 +124,7 @@ public class AddJavaDocStubOperation implements IWorkspaceRunnable {
 	}
 	
 	private void addJavadocComments(IProgressMonitor monitor) throws CoreException {
-		IJavaScriptUnit cu= fMembers[0].getCompilationUnit();
+		IJavaScriptUnit cu= fMembers[0].getJavaScriptUnit();
 		
 		
 		try {
@@ -161,7 +161,7 @@ public class AddJavaDocStubOperation implements IWorkspaceRunnable {
 					}
 				}
 				
-				final IJavaScriptProject project= cu.getJavaProject();
+				final IJavaScriptProject project= cu.getJavaScriptProject();
 				IRegion region= document.getLineInformationOfOffset(memberStartOffset);
 				
 				String line= document.get(region.getOffset(), region.getLength());
@@ -183,7 +183,7 @@ public class AddJavaDocStubOperation implements IWorkspaceRunnable {
 
 	private int getMemberStartOffset(IMember curr, IDocument document) throws JavaScriptModelException {
 		int offset= curr.getSourceRange().getOffset();
-		TokenScanner scanner= new TokenScanner(document, curr.getJavaProject());
+		TokenScanner scanner= new TokenScanner(document, curr.getJavaScriptProject());
 		try {
 			return scanner.getNextStartOffset(offset, true); // read to the first real non comment token
 		} catch (CoreException e) {

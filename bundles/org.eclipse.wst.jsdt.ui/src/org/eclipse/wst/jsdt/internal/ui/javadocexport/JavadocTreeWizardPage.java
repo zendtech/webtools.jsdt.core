@@ -198,7 +198,7 @@ public class JavadocTreeWizardPage extends JavadocWizardPage {
 		IJavaScriptElement[] elements= fStore.getInitialElements();
 		setTreeChecked(elements);
 		if (elements.length > 0) {
-			fInputGroup.setTreeSelection(new StructuredSelection(elements[0].getJavaProject()));
+			fInputGroup.setTreeSelection(new StructuredSelection(elements[0].getJavaScriptProject()));
 		}
 
 		fInputGroup.aboutToOpen();
@@ -602,7 +602,7 @@ public class JavadocTreeWizardPage extends JavadocWizardPage {
 					if (doclet.length() == 0) {
 						fDocletStatus.setError(JavadocExportMessages.JavadocTreeWizardPage_nodocletname_error); 
 
-					} else if (JavaScriptConventions.validateJavaTypeName(doclet).matches(IStatus.ERROR)) {
+					} else if (JavaScriptConventions.validateJavaScriptTypeName(doclet).matches(IStatus.ERROR)) {
 						fDocletStatus.setError(JavadocExportMessages.JavadocTreeWizardPage_invaliddocletname_error); 
 					} else if ((docletPath.length() == 0) || !validDocletPath(docletPath)) {
 						fDocletStatus.setError(JavadocExportMessages.JavadocTreeWizardPage_invaliddocletpath_error); 

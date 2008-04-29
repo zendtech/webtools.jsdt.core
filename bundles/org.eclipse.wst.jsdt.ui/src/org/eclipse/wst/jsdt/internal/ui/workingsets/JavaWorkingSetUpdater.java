@@ -217,7 +217,7 @@ public class JavaWorkingSetUpdater implements IWorkingSetUpdater, IElementChange
 				if (jElement instanceof IJavaScriptProject) {
 					remove= !jElement.exists();
 				} else {
-					IProject project= jElement.getJavaProject().getProject();
+					IProject project= jElement.getJavaScriptProject().getProject();
 					remove= project.isOpen() && !jElement.exists();
 				}
 			} else if (element instanceof IResource) {

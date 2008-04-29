@@ -479,7 +479,7 @@ public class ExtractTempRefactoring extends ScriptableRefactoring {
 	private final JDTRefactoringDescriptor createRefactoringDescriptor() {
 		final Map arguments= new HashMap();
 		String project= null;
-		IJavaScriptProject javaProject= fCu.getJavaProject();
+		IJavaScriptProject javaProject= fCu.getJavaScriptProject();
 		if (javaProject != null)
 			project= javaProject.getElementName();
 		final String description= Messages.format(RefactoringCoreMessages.ExtractTempRefactoring_descriptor_description_short, fTempName);
@@ -741,7 +741,7 @@ public class ExtractTempRefactoring extends ScriptableRefactoring {
 		ASTNode node= getSelectedExpression().getAssociatedNode();
 		do {
 			switch (node.getNodeType()) {
-				case ASTNode.METHOD_DECLARATION:
+				case ASTNode.FUNCTION_DECLARATION:
 					return ((FunctionDeclaration) node).getBody();
 				case ASTNode.INITIALIZER:
 					return ((Initializer) node).getBody();
@@ -882,7 +882,7 @@ public class ExtractTempRefactoring extends ScriptableRefactoring {
 				Expression expression= getSelectedExpression().getAssociatedExpression();
 				if (expression != null) {
 					ITypeBinding binding= expression.resolveTypeBinding();
-					fGuessedTempNames= StubUtility.getVariableNameSuggestions(StubUtility.LOCAL, fCu.getJavaProject(), binding, expression, Arrays.asList(getExcludedVariableNames()));
+					fGuessedTempNames= StubUtility.getVariableNameSuggestions(StubUtility.LOCAL, fCu.getJavaScriptProject(), binding, expression, Arrays.asList(getExcludedVariableNames()));
 				} 
 			} catch (JavaScriptModelException e) {
 			}

@@ -101,7 +101,7 @@ public class OverrideMethodsAction extends SelectionDispatchAction {
 	private boolean canEnable(IStructuredSelection selection) throws JavaScriptModelException {
 		if ((selection.size() == 1) && (selection.getFirstElement() instanceof IType)) {
 			final IType type= (IType) selection.getFirstElement();
-			return type.getCompilationUnit() != null && !type.isInterface();
+			return type.getJavaScriptUnit() != null && !type.isInterface();
 		}
 		if ((selection.size() == 1) && (selection.getFirstElement() instanceof IJavaScriptUnit))
 			return true;
@@ -120,7 +120,7 @@ public class OverrideMethodsAction extends SelectionDispatchAction {
 		final Object[] elements= selection.toArray();
 		if (elements.length == 1 && (elements[0] instanceof IType)) {
 			final IType type= (IType) elements[0];
-			if (type.getCompilationUnit() != null && !type.isInterface()) {
+			if (type.getJavaScriptUnit() != null && !type.isInterface()) {
 				return type;
 			}
 		} else if (elements[0] instanceof IJavaScriptUnit) {
@@ -212,7 +212,7 @@ public class OverrideMethodsAction extends SelectionDispatchAction {
 		IFunctionBinding[] methodToOverride= (IFunctionBinding[]) methods.toArray(new IFunctionBinding[methods.size()]);
 
 		
-		final IEditorPart editor= JavaUI.openInEditor(type.getCompilationUnit());
+		final IEditorPart editor= JavaUI.openInEditor(type.getJavaScriptUnit());
 		final IRewriteTarget target= editor != null ? (IRewriteTarget) editor.getAdapter(IRewriteTarget.class) : null;
 		if (target != null)
 			target.beginCompoundChange();

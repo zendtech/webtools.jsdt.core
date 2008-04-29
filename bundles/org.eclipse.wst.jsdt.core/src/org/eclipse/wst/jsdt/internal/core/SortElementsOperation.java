@@ -150,7 +150,7 @@ public class SortElementsOperation extends JavaModelOperation {
 	 */
 	private String processElement(IJavaScriptUnit unit, char[] source) {
 		Document document = new Document(new String(source));
-		CompilerOptions options = new CompilerOptions(unit.getJavaProject().getOptions(true));
+		CompilerOptions options = new CompilerOptions(unit.getJavaScriptProject().getOptions(true));
 		ASTParser parser = ASTParser.newParser(this.apiLevel);
 		parser.setCompilerOptions(options.getMap());
 		parser.setSource(source);

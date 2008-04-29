@@ -103,7 +103,7 @@ public abstract class JavaElementResourceMapping extends ResourceMapping {
 		public IProject[] getProjects() {
 			IJavaScriptProject[] projects= null;
 			try {
-				projects= fJavaModel.getJavaProjects();
+				projects= fJavaModel.getJavaScriptProjects();
 			} catch (JavaScriptModelException e) {
 				JavaPlugin.log(e);
 				return new IProject[0];
@@ -115,7 +115,7 @@ public abstract class JavaElementResourceMapping extends ResourceMapping {
 			return result;
 		}
 		public ResourceTraversal[] getTraversals(ResourceMappingContext context, IProgressMonitor monitor) throws CoreException {
-			IJavaScriptProject[] projects= fJavaModel.getJavaProjects();
+			IJavaScriptProject[] projects= fJavaModel.getJavaScriptProjects();
 			ResourceTraversal[] result= new ResourceTraversal[projects.length];
 			for (int i= 0; i < projects.length; i++) {
 				result[i]= new ResourceTraversal(new IResource[] {projects[i].getProject()}, IResource.DEPTH_INFINITE, 0);
@@ -153,7 +153,7 @@ public abstract class JavaElementResourceMapping extends ResourceMapping {
 			return fRoot;
 		}
 		public IProject[] getProjects() {
-			return new IProject[] {fRoot.getJavaProject().getProject() };
+			return new IProject[] {fRoot.getJavaScriptProject().getProject() };
 		}
 		public ResourceTraversal[] getTraversals(ResourceMappingContext context, IProgressMonitor monitor) throws CoreException {
 			return new ResourceTraversal[] {
@@ -189,7 +189,7 @@ public abstract class JavaElementResourceMapping extends ResourceMapping {
 			return fPack;
 		}
 		public IProject[] getProjects() {
-			return new IProject[] { fPack.getJavaProject().getProject() };
+			return new IProject[] { fPack.getJavaScriptProject().getProject() };
 		}
 		public ResourceTraversal[] getTraversals(ResourceMappingContext context, IProgressMonitor monitor) throws CoreException {
 			if (context instanceof RemoteResourceMappingContext) {
@@ -250,7 +250,7 @@ public abstract class JavaElementResourceMapping extends ResourceMapping {
 			return fUnit;
 		}
 		public IProject[] getProjects() {
-			return new IProject[] {fUnit.getJavaProject().getProject() };
+			return new IProject[] {fUnit.getJavaScriptProject().getProject() };
 		}
 		public ResourceTraversal[] getTraversals(ResourceMappingContext context, IProgressMonitor monitor) throws CoreException {
 			return new ResourceTraversal[] {
@@ -268,7 +268,7 @@ public abstract class JavaElementResourceMapping extends ResourceMapping {
 			return fClassFile;
 		}
 		public IProject[] getProjects() {
-			return new IProject[] { fClassFile.getJavaProject().getProject() };
+			return new IProject[] { fClassFile.getJavaScriptProject().getProject() };
 		}
 		public ResourceTraversal[] getTraversals(ResourceMappingContext context, IProgressMonitor monitor) throws CoreException {
 			return new ResourceTraversal[] {
@@ -288,7 +288,7 @@ public abstract class JavaElementResourceMapping extends ResourceMapping {
 		public IProject[] getProjects() {
 			Set result= new HashSet();
 			for (int i= 0; i < fFragments.length; i++) {
-				result.add(fFragments[i].getJavaProject().getProject());
+				result.add(fFragments[i].getJavaScriptProject().getProject());
 			}
 			return (IProject[])result.toArray(new IProject[result.size()]);
 		}

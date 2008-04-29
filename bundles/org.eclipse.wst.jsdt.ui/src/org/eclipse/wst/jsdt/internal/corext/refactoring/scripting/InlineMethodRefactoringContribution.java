@@ -94,7 +94,7 @@ public final class InlineMethodRefactoringContribution extends JDTRefactoringCon
 						} catch (JavaScriptModelException exception) {
 							throw new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), 0, Messages.format(RefactoringCoreMessages.InitializableRefactoring_inputs_do_not_exist, new String[] { RefactoringCoreMessages.InlineMethodRefactoring_name, IJavaRefactorings.INLINE_METHOD}), exception));
 						}
-						unit= method.getCompilationUnit();
+						unit= method.getJavaScriptUnit();
 					} else
 						throw new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), 0, Messages.format(RefactoringCoreMessages.InitializableRefactoring_illegal_argument, new Object[] { handle, JDTRefactoringDescriptor.ATTRIBUTE_INPUT}), null));
 					final ASTParser parser= ASTParser.newParser(AST.JLS3);

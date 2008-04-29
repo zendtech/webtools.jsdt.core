@@ -71,7 +71,7 @@ public final class ContributedProcessorDescriptor {
 			}
 		}
 		if (map.isEmpty()) {
-			map.add(IJavaScriptModelMarker.JAVA_MODEL_PROBLEM_MARKER);
+			map.add(IJavaScriptModelMarker.JAVASCRIPT_MODEL_PROBLEM_MARKER);
 			map.add(IJavaScriptModelMarker.BUILDPATH_PROBLEM_MARKER);
 			map.add(IJavaScriptModelMarker.TASK_MARKER);
 		}
@@ -89,7 +89,7 @@ public final class ContributedProcessorDescriptor {
 
 	private boolean matches(IJavaScriptUnit cunit) {
 		if (fRequiredSourceLevel != null) {
-			String current= cunit.getJavaProject().getOption(JavaScriptCore.COMPILER_SOURCE, true);
+			String current= cunit.getJavaScriptProject().getOption(JavaScriptCore.COMPILER_SOURCE, true);
 			if (JavaModelUtil.isVersionLessThan(current, fRequiredSourceLevel)) {
 				return false;
 			}
@@ -106,7 +106,7 @@ public final class ContributedProcessorDescriptor {
 				Expression expression= parser.perform(children[0]);
 				EvaluationContext evalContext= new EvaluationContext(null, cunit);
 				evalContext.addVariable("compilationUnit", cunit); //$NON-NLS-1$
-				IJavaScriptProject javaProject= cunit.getJavaProject();
+				IJavaScriptProject javaProject= cunit.getJavaScriptProject();
 				String[] natures= javaProject.getProject().getDescription().getNatureIds();
 				evalContext.addVariable("projectNatures", Arrays.asList(natures)); //$NON-NLS-1$
 				evalContext.addVariable("sourceLevel", javaProject.getOption(JavaScriptCore.COMPILER_SOURCE, true)); //$NON-NLS-1$

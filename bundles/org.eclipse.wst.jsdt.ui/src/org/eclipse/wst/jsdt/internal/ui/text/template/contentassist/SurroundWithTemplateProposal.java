@@ -64,7 +64,7 @@ public class SurroundWithTemplateProposal extends TemplateProposal {
 		public SurroundWithTemplate(IInvocationContext context, Statement[] selectedNodes, Template template) {
 			super(context.getASTRoot(), selectedNodes);
 			fTemplate= template;
-			fCurrentProject= context.getCompilationUnit().getJavaProject();
+			fCurrentProject= context.getCompilationUnit().getJavaScriptProject();
 		}
 		
 		protected List getVariableDeclarationReadsInside(Statement[] selectedNodes, int maxVariableId) {
@@ -232,7 +232,7 @@ public class SurroundWithTemplateProposal extends TemplateProposal {
 		AssistContext invocationContext= new AssistContext(fCompilationUnit, fContext.getStart(), fContext.getEnd() - fContext.getStart());
 		
 		SurroundWithTemplate surroundWith= new SurroundWithTemplate(invocationContext, fSelectedStatements, fTemplate);
-		Map options= fCompilationUnit.getJavaProject().getOptions(true);
+		Map options= fCompilationUnit.getJavaScriptProject().getOptions(true);
 		
 		surroundWith.getRewrite().rewriteAST(document, options).apply(document);
 		

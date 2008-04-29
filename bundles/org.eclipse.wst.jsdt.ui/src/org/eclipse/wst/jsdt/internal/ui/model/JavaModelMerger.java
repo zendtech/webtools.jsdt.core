@@ -69,7 +69,7 @@ public final class JavaModelMerger extends AbstractResourceMappingMerger {
 		if (model != null) {
 			try {
 				final String name= project.getName();
-				final IJavaScriptProject[] projects= model.getJavaProjects();
+				final IJavaScriptProject[] projects= model.getJavaScriptProjects();
 				for (int index= 0; index < projects.length; index++) {
 					final String[] names= projects[index].getRequiredProjectNames();
 					for (int offset= 0; offset < names.length; offset++) {

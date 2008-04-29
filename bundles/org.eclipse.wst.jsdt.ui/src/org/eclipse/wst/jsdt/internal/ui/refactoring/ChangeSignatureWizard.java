@@ -306,7 +306,7 @@ public class ChangeSignatureWizard extends RefactoringWizard {
 				public void exceptionListChanged() {
 					update(true);
 				}
-			}, getChangeMethodSignatureRefactoring().getMethod().getJavaProject());
+			}, getChangeMethodSignatureRefactoring().getMethod().getJavaScriptProject());
 			cp.setLayoutData(new GridData(GridData.FILL_BOTH));
 			cp.setInput(getChangeMethodSignatureRefactoring().getExceptionInfos());
 			return border;

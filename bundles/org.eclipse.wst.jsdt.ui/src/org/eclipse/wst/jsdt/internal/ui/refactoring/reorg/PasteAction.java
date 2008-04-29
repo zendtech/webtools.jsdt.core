@@ -425,7 +425,7 @@ public class PasteAction extends SelectionDispatchAction{
 			IJavaScriptElement destination= null;
 			if (javaElements.length == 1) {
 				destination= javaElements[0];
-				javaProject= destination.getJavaProject();
+				javaProject= destination.getJavaScriptProject();
 			}
 			fParsedCus= ParsedCu.parse(javaProject, text);
 			
@@ -559,7 +559,7 @@ public class PasteAction extends SelectionDispatchAction{
 						}
 						
 						final String cuName= parsedCu.getTypeName() + JavaModelUtil.DEFAULT_CU_SUFFIX;
-						IJavaScriptUnit cu= destinationPack.getCompilationUnit(cuName);
+						IJavaScriptUnit cu= destinationPack.getJavaScriptUnit(cuName);
 						boolean alreadyExists= cu.exists();
 						if (alreadyExists) {
 							String msg= Messages.format(ReorgMessages.PasteAction_TextPaster_exists, new Object[] {cuName});
@@ -632,7 +632,7 @@ public class PasteAction extends SelectionDispatchAction{
 					IIncludePathEntry jreEntry= JavaScriptCore.newContainerEntry(fVMPath);
 					//IPath outputLocation= BuildPathsBlock.getDefaultOutputLocation(javaProject);
 					IIncludePathEntry[] cpes= new IIncludePathEntry[] { srcEntry, jreEntry };
-					javaProject.setRawClasspath(cpes, null, new SubProgressMonitor(pm, 1));
+					javaProject.setRawIncludepath(cpes, null, new SubProgressMonitor(pm, 1));
 					return javaProject.getPackageFragmentRoot(srcFolder);
 				}
 
@@ -1125,7 +1125,7 @@ public class PasteAction extends SelectionDispatchAction{
 				final CompilationUnitChange result= new CompilationUnitChange(ReorgMessages.PasteAction_change_name, getDestinationCu()); 
 				try {
 					ITextFileBuffer buffer= RefactoringFileBuffers.acquire(getDestinationCu());
-					TextEdit rootEdit= rewrite.rewriteAST(buffer.getDocument(), fDestination.getJavaProject().getOptions(true));
+					TextEdit rootEdit= rewrite.rewriteAST(buffer.getDocument(), fDestination.getJavaScriptProject().getOptions(true));
 					if (getDestinationCu().isWorkingCopy())
 						result.setSaveMode(TextFileChange.LEAVE_DIRTY);
 					TextChangeCompatibility.addTextEdit(result, ReorgMessages.PasteAction_edit_name, rootEdit); 
@@ -1140,7 +1140,7 @@ public class PasteAction extends SelectionDispatchAction{
 					case ASTNode.ANNOTATION_TYPE_DECLARATION:
 					case ASTNode.ENUM_DECLARATION:
 					case ASTNode.TYPE_DECLARATION:
-					case ASTNode.METHOD_DECLARATION:
+					case ASTNode.FUNCTION_DECLARATION:
 					case ASTNode.FIELD_DECLARATION:
 					case ASTNode.INITIALIZER:
 						rewrite.getListRewrite(typeDeclaration, typeDeclaration.getBodyDeclarationsProperty()).insertAt(node, ASTNodes.getInsertionIndex((BodyDeclaration) node, typeDeclaration.bodyDeclarations()), null);
@@ -1203,7 +1203,7 @@ public class PasteAction extends SelectionDispatchAction{
 					case IJavaScriptElement.TYPE:
 						return rewrite.createStringPlaceholder(source.getSource(), ASTNode.TYPE_DECLARATION);
 					case IJavaScriptElement.METHOD:
-						return rewrite.createStringPlaceholder(source.getSource(), ASTNode.METHOD_DECLARATION);
+						return rewrite.createStringPlaceholder(source.getSource(), ASTNode.FUNCTION_DECLARATION);
 					case IJavaScriptElement.FIELD:
 						return rewrite.createStringPlaceholder(source.getSource(), ASTNode.FIELD_DECLARATION);
 					case IJavaScriptElement.INITIALIZER:

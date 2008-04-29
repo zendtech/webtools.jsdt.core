@@ -73,7 +73,7 @@ public class ClasspathValidation {
 		 	for (int i = 0; i < rawClasspath.length; i++) {
 				status = ClasspathEntry.validateClasspathEntry(this.project, rawClasspath[i], false/*src attach*/, true /*recurse in container*/);
 				if (!status.isOK()) {
-					if (status.getCode() == IJavaScriptModelStatusConstants.INVALID_CLASSPATH && ((ClasspathEntry) rawClasspath[i]).isOptional())
+					if (status.getCode() == IJavaScriptModelStatusConstants.INVALID_INCLUDEPATH && ((ClasspathEntry) rawClasspath[i]).isOptional())
 						continue; // ignore this entry
 					this.project.createClasspathProblemMarker(status);
 				}

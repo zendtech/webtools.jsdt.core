@@ -89,7 +89,7 @@ public class UseSupertypeWizard extends RefactoringWizard{
 				}
 				try {
 					if (type.isInterface()) {
-						IType found= type.getJavaProject().findType("java.lang.Object"); //$NON-NLS-1$
+						IType found= type.getJavaScriptProject().findType("java.lang.Object"); //$NON-NLS-1$
 						result.add(found);
 					}
 				} catch (JavaScriptModelException exception) {

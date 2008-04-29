@@ -66,7 +66,7 @@ import org.eclipse.wst.jsdt.ui.CodeGeneration;
 public final class StubUtility2 {
 
 	public static void addOverrideAnnotation(ASTRewrite rewrite, FunctionDeclaration decl, IFunctionBinding binding) {
-		String version= binding.getJavaElement().getJavaProject().getOption(JavaScriptCore.COMPILER_COMPLIANCE, true);
+		String version= binding.getJavaElement().getJavaScriptProject().getOption(JavaScriptCore.COMPILER_COMPLIANCE, true);
 		if (!binding.getDeclaringClass().isInterface() || !JavaModelUtil.isVersionLessThan(version, JavaScriptCore.VERSION_1_6)) {
 			final Annotation marker= rewrite.getAST().newMarkerAnnotation();
 			marker.setTypeName(rewrite.getAST().newSimpleName("Override")); //$NON-NLS-1$
@@ -118,7 +118,7 @@ public final class StubUtility2 {
 				varDecl= (SingleVariableDeclaration) iterator.next();
 				invocation.arguments().add(ast.newSimpleName(varDecl.getName().getIdentifier()));
 			}
-			bodyStatement= ASTNodes.asFormattedString(invocation, 0, delimiter, unit.getJavaProject().getOptions(true));
+			bodyStatement= ASTNodes.asFormattedString(invocation, 0, delimiter, unit.getJavaScriptProject().getOptions(true));
 		}
 
 		if (todo) {
@@ -135,7 +135,7 @@ public final class StubUtility2 {
 		if (settings != null && settings.createComments) {
 			String string= CodeGeneration.getMethodComment(unit, type, decl, binding, delimiter);
 			if (string != null) {
-				JSdoc javadoc= (JSdoc) rewrite.createStringPlaceholder(string, ASTNode.JAVADOC);
+				JSdoc javadoc= (JSdoc) rewrite.createStringPlaceholder(string, ASTNode.JSDOC);
 				decl.setJavadoc(javadoc);
 			}
 		}
@@ -234,7 +234,7 @@ public final class StubUtility2 {
 		if (settings != null && settings.createComments) {
 			String string= CodeGeneration.getMethodComment(unit, typeBinding.getName(), decl, superConstructor, delimiter);
 			if (string != null) {
-				JSdoc javadoc= (JSdoc) rewrite.createStringPlaceholder(string, ASTNode.JAVADOC);
+				JSdoc javadoc= (JSdoc) rewrite.createStringPlaceholder(string, ASTNode.JSDOC);
 				decl.setJavadoc(javadoc);
 			}
 		}
@@ -277,7 +277,7 @@ public final class StubUtility2 {
 
 		List parameters= decl.parameters();
 		ITypeBinding[] params= methodBinding.getParameterTypes();
-		String[] paramNames= StubUtility.suggestArgumentNames(unit.getJavaProject(), methodBinding);
+		String[] paramNames= StubUtility.suggestArgumentNames(unit.getJavaScriptProject(), methodBinding);
 		for (int i= 0; i < params.length; i++) {
 			SingleVariableDeclaration varDecl= ast.newSingleVariableDeclaration();
 			if (params[i].isWildcardType() && !params[i].isUpperbound())
@@ -354,7 +354,7 @@ public final class StubUtility2 {
 			String[] parameterTypesQualifiedNames= StubUtility.getParameterTypeNamesForSeeTag(methodBinding);
 			String string= StubUtility.getMethodComment(unit, qualifiedName, decl, methodBinding.isDeprecated(), linkToMethodName, declaringClassQualifiedName, parameterTypesQualifiedNames, true, delimiter);
 			if (string != null) {
-				JSdoc javadoc= (JSdoc) rewrite.createStringPlaceholder(string, ASTNode.JAVADOC);
+				JSdoc javadoc= (JSdoc) rewrite.createStringPlaceholder(string, ASTNode.JSDOC);
 				decl.setJavadoc(javadoc);
 			}
 		}
@@ -398,7 +398,7 @@ public final class StubUtility2 {
 
 		String delimiter= StubUtility.getLineDelimiterUsed(unit);
 		if (!deferred) {
-			Map options= unit.getJavaProject().getOptions(true);
+			Map options= unit.getJavaScriptProject().getOptions(true);
 
 			Block body= ast.newBlock();
 			decl.setBody(body);
@@ -441,11 +441,11 @@ public final class StubUtility2 {
 		if (settings.createComments) {
 			String string= CodeGeneration.getMethodComment(unit, type, decl, binding, delimiter);
 			if (string != null) {
-				JSdoc javadoc= (JSdoc) rewrite.createStringPlaceholder(string, ASTNode.JAVADOC);
+				JSdoc javadoc= (JSdoc) rewrite.createStringPlaceholder(string, ASTNode.JSDOC);
 				decl.setJavadoc(javadoc);
 			}
 		}
-		if (settings.overrideAnnotation && JavaModelUtil.is50OrHigher(unit.getJavaProject())) {
+		if (settings.overrideAnnotation && JavaModelUtil.is50OrHigher(unit.getJavaScriptProject())) {
 			addOverrideAnnotation(rewrite, decl, binding);
 		}
 
@@ -487,7 +487,7 @@ public final class StubUtility2 {
 
 		String delimiter= StubUtility.getLineDelimiterUsed(unit);
 		if (!deferred) {
-			Map options= unit.getJavaProject().getOptions(true);
+			Map options= unit.getJavaScriptProject().getOptions(true);
 			
 			Block body= ast.newBlock();
 			decl.setBody(body);
@@ -530,11 +530,11 @@ public final class StubUtility2 {
 		if (settings != null && settings.createComments) {
 			String string= CodeGeneration.getMethodComment(unit, type, decl, binding, delimiter);
 			if (string != null) {
-				JSdoc javadoc= (JSdoc) rewrite.createStringPlaceholder(string, ASTNode.JAVADOC);
+				JSdoc javadoc= (JSdoc) rewrite.createStringPlaceholder(string, ASTNode.JSDOC);
 				decl.setJavadoc(javadoc);
 			}
 		}
-		if (settings != null && settings.overrideAnnotation && JavaModelUtil.is50OrHigher(unit.getJavaProject())) {
+		if (settings != null && settings.overrideAnnotation && JavaModelUtil.is50OrHigher(unit.getJavaScriptProject())) {
 			addOverrideAnnotation(rewrite, decl, binding);
 		}
 		return decl;
@@ -543,7 +543,7 @@ public final class StubUtility2 {
 	private static List createParameters(IJavaScriptUnit unit, ImportRewrite imports, AST ast, IFunctionBinding binding, FunctionDeclaration decl, ImportRewriteContext context) {
 		List parameters= decl.parameters();
 		ITypeBinding[] params= binding.getParameterTypes();
-		String[] paramNames= StubUtility.suggestArgumentNames(unit.getJavaProject(), binding);
+		String[] paramNames= StubUtility.suggestArgumentNames(unit.getJavaScriptProject(), binding);
 		for (int i= 0; i < params.length; i++) {
 			SingleVariableDeclaration var= ast.newSingleVariableDeclaration();
 			if (binding.isVarargs() && params[i].isArray() && i == params.length - 1) {
@@ -563,7 +563,7 @@ public final class StubUtility2 {
 	private static List createParameters(IJavaScriptUnit unit, ImportRewrite imports, AST ast, IFunctionBinding binding, FunctionDeclaration decl) {
 		List parameters= decl.parameters();
 		ITypeBinding[] params= binding.getParameterTypes();
-		String[] paramNames= StubUtility.suggestArgumentNames(unit.getJavaProject(), binding);
+		String[] paramNames= StubUtility.suggestArgumentNames(unit.getJavaScriptProject(), binding);
 		for (int i= 0; i < params.length; i++) {
 			SingleVariableDeclaration var= ast.newSingleVariableDeclaration();
 			if (binding.isVarargs() && params[i].isArray() && i == params.length - 1) {
@@ -814,8 +814,8 @@ public final class StubUtility2 {
 	}
 
 	private static String getParameterName(IJavaScriptUnit unit, IVariableBinding binding, String[] excluded) {
-		final String name= NamingConventions.removePrefixAndSuffixForFieldName(unit.getJavaProject(), binding.getName(), binding.getModifiers());
-		return StubUtility.suggestArgumentName(unit.getJavaProject(), name, excluded);
+		final String name= NamingConventions.removePrefixAndSuffixForFieldName(unit.getJavaScriptProject(), binding.getName(), binding.getModifiers());
+		return StubUtility.suggestArgumentName(unit.getJavaScriptProject(), name, excluded);
 	}
 
 	public static IFunctionBinding[] getUnimplementedMethods(ITypeBinding typeBinding) {

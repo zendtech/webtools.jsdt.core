@@ -123,7 +123,7 @@ public class JsGlobalScopeContainer extends PackageFragmentRootContainer {
 			list.add(roots[i]);
 		}
 		if (fContainer != null) {
-			IIncludePathEntry[] classpathEntries= fContainer.getClasspathEntries();
+			IIncludePathEntry[] classpathEntries= fContainer.getIncludepathEntries();
 			if (classpathEntries == null) {
 				// invalid implementation of a classpath container
 				JavaPlugin.log(new IllegalArgumentException("Invalid classpath container implementation: getClasspathEntries() returns null. " + fContainer.getPath())); //$NON-NLS-1$

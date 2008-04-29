@@ -26,7 +26,7 @@ public class ClosedProjectFilter extends ViewerFilter {
 	 */
 	public boolean select(Viewer viewer, Object parent, Object element) {
 		if (element instanceof IJavaScriptElement) 
-			return ((IJavaScriptElement)element).getJavaProject().getProject().isOpen();
+			return ((IJavaScriptElement)element).getJavaScriptProject().getProject().isOpen();
 		if (element instanceof IResource)
 			return ((IResource)element).getProject().isOpen();
 		return true;

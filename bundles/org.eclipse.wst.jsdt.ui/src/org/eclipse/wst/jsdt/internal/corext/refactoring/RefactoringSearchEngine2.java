@@ -280,7 +280,7 @@ public final class RefactoringSearchEngine2 {
 			final IJavaScriptUnit[] units= getAffectedCompilationUnits();
 			for (int index= 0; index < units.length; index++) {
 				unit= units[index];
-				project= unit.getJavaProject();
+				project= unit.getJavaScriptProject();
 				if (project != null) {
 					Set set= (Set) map.get(project);
 					if (set == null) {
@@ -297,7 +297,7 @@ public final class RefactoringSearchEngine2 {
 				group= groups[index];
 				unit= group.getCompilationUnit();
 				if (unit != null) {
-					project= unit.getJavaProject();
+					project= unit.getJavaScriptProject();
 					if (project != null) {
 						Set set= (Set) map.get(project);
 						if (set == null) {

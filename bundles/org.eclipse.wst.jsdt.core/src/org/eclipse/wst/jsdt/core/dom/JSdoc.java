@@ -169,7 +169,7 @@ public class JSdoc extends Comment {
 	 * Method declared on ASTNode.
 	 */
 	final int getNodeType0() {
-		return JAVADOC;
+		return JSDOC;
 	}
 
 	/* (omit javadoc for this method)

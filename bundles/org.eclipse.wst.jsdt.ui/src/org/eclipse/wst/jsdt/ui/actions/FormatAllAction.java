@@ -189,7 +189,7 @@ public class FormatAllAction extends SelectionDispatchAction {
 	}
 	
 	private void collectCompilationUnits(IPackageFragment pack, Collection result) throws JavaScriptModelException {
-		result.addAll(Arrays.asList(pack.getCompilationUnits()));
+		result.addAll(Arrays.asList(pack.getJavaScriptUnits()));
 	}
 
 	private void collectCompilationUnits(IPackageFragmentRoot root, Collection result) throws JavaScriptModelException {
@@ -370,8 +370,8 @@ public class FormatAllAction extends SelectionDispatchAction {
 			for (int i= 0; i < cus.length; i++) {
 				IJavaScriptUnit cu= cus[i];
 				IPath path= cu.getPath();
-				if (lastProject == null || !lastProject.equals(cu.getJavaProject())) {
-					lastProject= cu.getJavaProject();
+				if (lastProject == null || !lastProject.equals(cu.getJavaScriptProject())) {
+					lastProject= cu.getJavaScriptProject();
 					lastOptions= getFomatterSettings(lastProject);
 				}
 				if (monitor.isCanceled()) {

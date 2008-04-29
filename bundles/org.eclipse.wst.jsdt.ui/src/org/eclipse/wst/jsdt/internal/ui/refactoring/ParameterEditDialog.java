@@ -176,7 +176,7 @@ public class ParameterEditDialog extends StatusDialog {
 			return null;
 		String type= fType.getText();
 		
-		RefactoringStatus status= TypeContextChecker.checkParameterTypeSyntax(type, fContext.getCuHandle().getJavaProject());
+		RefactoringStatus status= TypeContextChecker.checkParameterTypeSyntax(type, fContext.getCuHandle().getJavaScriptProject());
 		if (status == null || status.isOK())
 			return createOkStatus();
 		if (status.hasError())

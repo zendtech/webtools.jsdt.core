@@ -42,12 +42,12 @@ public class CodeFormatFix implements IFix {
 			return null;
 		
 		if (format) {
-			Map fomatterSettings= new HashMap(cu.getJavaProject().getOptions(true));
+			Map fomatterSettings= new HashMap(cu.getJavaScriptProject().getOptions(true));
 			
 			String content= cu.getBuffer().getContents();
 			Document document= new Document(content);
 			
-			TextEdit edit= CodeFormatterUtil.reformat(CodeFormatter.K_COMPILATION_UNIT, content, 0, TextUtilities.getDefaultLineDelimiter(document), fomatterSettings);
+			TextEdit edit= CodeFormatterUtil.reformat(CodeFormatter.K_JAVASCRIPT_UNIT, content, 0, TextUtilities.getDefaultLineDelimiter(document), fomatterSettings);
 			if (edit == null || !edit.hasChildren())
 				return null;
 			

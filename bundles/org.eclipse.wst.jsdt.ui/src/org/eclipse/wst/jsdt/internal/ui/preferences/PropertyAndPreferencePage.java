@@ -189,7 +189,7 @@ public abstract class PropertyAndPreferencePage extends PreferencePage implement
 		} else {
 			HashSet projectsWithSpecifics= new HashSet();
 			try {
-				IJavaScriptProject[] projects= JavaScriptCore.create(ResourcesPlugin.getWorkspace().getRoot()).getJavaProjects();
+				IJavaScriptProject[] projects= JavaScriptCore.create(ResourcesPlugin.getWorkspace().getRoot()).getJavaScriptProjects();
 				for (int i= 0; i < projects.length; i++) {
 					IJavaScriptProject curr= projects[i];
 					if (hasProjectSpecificOptions(curr.getProject())) {

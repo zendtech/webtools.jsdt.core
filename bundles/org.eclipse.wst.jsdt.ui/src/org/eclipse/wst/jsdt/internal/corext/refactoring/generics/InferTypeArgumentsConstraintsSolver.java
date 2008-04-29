@@ -350,7 +350,7 @@ public class InferTypeArgumentsConstraintsSolver {
 		if (unresolvedTypes.size() != 0) {
 			TType[] interfaces= (TType[]) unresolvedTypes.toArray(new TType[unresolvedTypes.size()]);
 			HierarchyType firstInterface= (HierarchyType) interfaces[0];
-			IJavaScriptProject javaProject= firstInterface.getJavaElementType().getJavaProject();
+			IJavaScriptProject javaProject= firstInterface.getJavaElementType().getJavaScriptProject();
 			ITypeBinding[] interfaceBindings= TypeEnvironment.createTypeBindings(interfaces, javaProject); //expensive...
 			for (int i= 0; i < interfaceBindings.length; i++) {
 				if (interfaceBindings[i].getDeclaredMethods().length == 0) {

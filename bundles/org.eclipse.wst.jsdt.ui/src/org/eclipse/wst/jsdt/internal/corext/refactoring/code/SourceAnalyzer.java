@@ -443,7 +443,7 @@ class SourceAnalyzer  {
 		fTypesToImport= new ArrayList();
 		fStaticsToImport= new ArrayList();
 		ImportReferencesCollector collector= new ImportReferencesCollector(
-			fTypeRoot.getJavaProject(), null, fTypesToImport, fStaticsToImport);
+			fTypeRoot.getJavaScriptProject(), null, fTypesToImport, fStaticsToImport);
 		body.accept(collector);
 		
 		// Now collect implicit references and name references

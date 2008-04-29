@@ -66,7 +66,7 @@ public final class ImportRewriteUtil {
 		Assert.isNotNull(staticImports);
 		final Set types= new HashSet();
 		final Set members= new HashSet();
-		final ImportReferencesCollector collector= new ImportReferencesCollector(rewrite.getCu().getJavaProject(), null, types, members) {
+		final ImportReferencesCollector collector= new ImportReferencesCollector(rewrite.getCu().getJavaScriptProject(), null, types, members) {
 
 			public final boolean visit(final Block block) {
 				Assert.isNotNull(block);

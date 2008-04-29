@@ -433,7 +433,7 @@ public class ExtractMethodRefactoring extends ScriptableRefactoring {
 		fRewriter= ASTRewrite.create(declaration.getAST());
 		final Map arguments= new HashMap();
 		String project= null;
-		IJavaScriptProject javaProject= fCUnit.getJavaProject();
+		IJavaScriptProject javaProject= fCUnit.getJavaScriptProject();
 		if (javaProject != null)
 			project= javaProject.getElementName();
 		ITypeBinding type= null;
@@ -520,7 +520,7 @@ public class ExtractMethodRefactoring extends ScriptableRefactoring {
 					new TextEdit[] {edit}
 				));
 			}
-			root.addChild(fRewriter.rewriteAST(fDocument, fCUnit.getJavaProject().getOptions(true)));
+			root.addChild(fRewriter.rewriteAST(fDocument, fCUnit.getJavaScriptProject().getOptions(true)));
 		} catch (BadLocationException e) {
 			throw new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.ERROR,
 				e.getMessage(), e));
@@ -822,7 +822,7 @@ public class ExtractMethodRefactoring extends ScriptableRefactoring {
 				String typeName = (enclosingType!=null)?enclosingType.getName().getIdentifier():null;
 				String string= CodeGeneration.getMethodComment(fCUnit, typeName, result, null, lineDelimiter);
 				if (string != null) {
-					JSdoc javadoc= (JSdoc)fRewriter.createStringPlaceholder(string, ASTNode.JAVADOC);
+					JSdoc javadoc= (JSdoc)fRewriter.createStringPlaceholder(string, ASTNode.JSDOC);
 					result.setJavadoc(javadoc);
 				}
 			}

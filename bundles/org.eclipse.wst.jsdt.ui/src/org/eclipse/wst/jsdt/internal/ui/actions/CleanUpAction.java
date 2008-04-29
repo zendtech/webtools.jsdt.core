@@ -264,7 +264,7 @@ public abstract class CleanUpAction extends SelectionDispatchAction {
 	}
 
 	private void collectCompilationUnits(IPackageFragment pack, Collection result) throws JavaScriptModelException {
-		result.addAll(Arrays.asList(pack.getCompilationUnits()));
+		result.addAll(Arrays.asList(pack.getJavaScriptUnits()));
 	}
 
 	private void collectCompilationUnits(IPackageFragmentRoot root, Collection result) throws JavaScriptModelException {

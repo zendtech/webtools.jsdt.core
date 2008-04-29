@@ -112,9 +112,9 @@ public String getAttachedJavadoc(IProgressMonitor monitor) throws JavaScriptMode
 	if (contents == null) return null;
 	int indexAnchor = contents.indexOf(
 			JavadocConstants.ANCHOR_PREFIX_START + this.getElementName() + JavadocConstants.ANCHOR_PREFIX_END);
-	if (indexAnchor == -1) throw new JavaScriptModelException(new JavaModelStatus(IJavaScriptModelStatusConstants.UNKNOWN_JAVADOC_FORMAT, this));
+	if (indexAnchor == -1) throw new JavaScriptModelException(new JavaModelStatus(IJavaScriptModelStatusConstants.UNKNOWN_JSDOC_FORMAT, this));
 	int indexOfEndLink = contents.indexOf(JavadocConstants.ANCHOR_SUFFIX, indexAnchor);
-	if (indexOfEndLink == -1) throw new JavaScriptModelException(new JavaModelStatus(IJavaScriptModelStatusConstants.UNKNOWN_JAVADOC_FORMAT, this));
+	if (indexOfEndLink == -1) throw new JavaScriptModelException(new JavaModelStatus(IJavaScriptModelStatusConstants.UNKNOWN_JSDOC_FORMAT, this));
 	int indexOfNextField = contents.indexOf(JavadocConstants.ANCHOR_PREFIX_START, indexOfEndLink);
 	int indexOfBottom = contents.indexOf(JavadocConstants.CONSTRUCTOR_DETAIL, indexOfEndLink);
 	if (indexOfBottom == -1) {
@@ -124,7 +124,7 @@ public String getAttachedJavadoc(IProgressMonitor monitor) throws JavaScriptMode
 		}
 	}
 	indexOfNextField= Math.min(indexOfNextField, indexOfBottom);
-	if (indexOfNextField == -1) throw new JavaScriptModelException(new JavaModelStatus(IJavaScriptModelStatusConstants.UNKNOWN_JAVADOC_FORMAT, this));
+	if (indexOfNextField == -1) throw new JavaScriptModelException(new JavaModelStatus(IJavaScriptModelStatusConstants.UNKNOWN_JSDOC_FORMAT, this));
 	return contents.substring(indexOfEndLink + JavadocConstants.ANCHOR_SUFFIX_LENGTH, indexOfNextField);
 }
 }

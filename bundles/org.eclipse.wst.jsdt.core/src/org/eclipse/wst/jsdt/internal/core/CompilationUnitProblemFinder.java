@@ -210,7 +210,7 @@ public class CompilationUnitProblemFinder extends Compiler {
 		IProgressMonitor monitor)
 		throws JavaScriptModelException {
 
-		JavaProject project = (JavaProject) unitElement.getJavaProject();
+		JavaProject project = (JavaProject) unitElement.getJavaScriptProject();
 		CancelableNameEnvironment environment = null;
 		CancelableProblemFactory problemFactory = null;
 		CompilationUnitProblemFinder problemFinder = null;
@@ -268,7 +268,7 @@ public class CompilationUnitProblemFinder extends Compiler {
 			if (length > 0) {
 				CategorizedProblem[] categorizedProblems = new CategorizedProblem[length];
 				System.arraycopy(unitProblems, 0, categorizedProblems, 0, length);
-				problems.put(IJavaScriptModelMarker.JAVA_MODEL_PROBLEM_MARKER, categorizedProblems);
+				problems.put(IJavaScriptModelMarker.JAVASCRIPT_MODEL_PROBLEM_MARKER, categorizedProblems);
 			}
 			unitProblems = unitResult.getTasks();
 			length = unitProblems == null ? 0 : unitProblems.length;
@@ -295,7 +295,7 @@ public class CompilationUnitProblemFinder extends Compiler {
 			message.append(lineDelimiter);
 			message.append("----------------------------------- SOURCE END -------------------------------------"); //$NON-NLS-1$
 			Util.log(e, message.toString());
-			throw new JavaScriptModelException(e, IJavaScriptModelStatusConstants.COMPILER_FAILURE);
+			throw new JavaScriptModelException(e, IJavaScriptModelStatusConstants.VALIDATION_FAILURE);
 		} finally {
 			if (environment != null)
 				environment.monitor = null; // don't hold a reference to this external object

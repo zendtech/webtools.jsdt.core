@@ -54,7 +54,7 @@ public class BuildPathSupport {
 	 *         variable is not deprecated
 	 */
 	public static String getDeprecationMessage(String variableName) {
-		String deprecationMessage= JavaScriptCore.getClasspathVariableDeprecationMessage(variableName);
+		String deprecationMessage= JavaScriptCore.getIncludepathVariableDeprecationMessage(variableName);
 		if (deprecationMessage == null	)
 			return null;
 		else
@@ -75,11 +75,11 @@ public class BuildPathSupport {
 		try {
 			// try if the jar itself contains the source
 			IJavaScriptModel jmodel= JavaScriptCore.create(ResourcesPlugin.getWorkspace().getRoot());
-			IJavaScriptProject[] jprojects= jmodel.getJavaProjects();
+			IJavaScriptProject[] jprojects= jmodel.getJavaScriptProjects();
 			for (int i= 0; i < jprojects.length; i++) {
 				IJavaScriptProject curr= jprojects[i];
 				if (!curr.equals(currProject)) {
-					IIncludePathEntry[] entries= curr.getRawClasspath();
+					IIncludePathEntry[] entries= curr.getRawIncludepath();
 					for (int k= 0; k < entries.length; k++) {
 						IIncludePathEntry entry= entries[k];
 						if (entry.getEntryKind() == elem.getEntryKind()
@@ -111,18 +111,18 @@ public class BuildPathSupport {
 		try {
 			// try if the jar itself contains the source
 			IJavaScriptModel jmodel= JavaScriptCore.create(ResourcesPlugin.getWorkspace().getRoot());
-			IJavaScriptProject[] jprojects= jmodel.getJavaProjects();
+			IJavaScriptProject[] jprojects= jmodel.getJavaScriptProjects();
 			for (int i= 0; i < jprojects.length; i++) {
 				IJavaScriptProject curr= jprojects[i];
 				if (!curr.equals(currProject)) {
-					IIncludePathEntry[] entries= curr.getRawClasspath();
+					IIncludePathEntry[] entries= curr.getRawIncludepath();
 					for (int k= 0; k < entries.length; k++) {
 						IIncludePathEntry entry= entries[k];
 						if (entry.getEntryKind() == elem.getEntryKind() && entry.getPath().equals(elem.getPath())) {
 							IIncludePathAttribute[] attributes= entry.getExtraAttributes();
 							for (int n= 0; n < attributes.length; n++) {
 								IIncludePathAttribute attrib= attributes[n];
-								if (IIncludePathAttribute.JAVADOC_LOCATION_ATTRIBUTE_NAME.equals(attrib.getName())) {
+								if (IIncludePathAttribute.JSDOC_LOCATION_ATTRIBUTE_NAME.equals(attrib.getName())) {
 									return attrib.getValue();
 								}
 							}
@@ -146,7 +146,14 @@ public class BuildPathSupport {
 			fOriginal= original;
 		}
 
+		/**
+		 * @deprecated Use {@link #getIncludepathEntries()} instead
+		 */
 		public IIncludePathEntry[] getClasspathEntries() {
+			return getIncludepathEntries();
+		}
+
+		public IIncludePathEntry[] getIncludepathEntries() {
 			return fNewEntries;
 		}
 
@@ -207,7 +214,7 @@ public class BuildPathSupport {
 		if (container == null) {
 			throw new CoreException(new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IStatus.ERROR, "Container " + containerPath + " cannot be resolved", null));  //$NON-NLS-1$//$NON-NLS-2$
 		}
-		IIncludePathEntry[] entries= container.getClasspathEntries();
+		IIncludePathEntry[] entries= container.getIncludepathEntries();
 		IIncludePathEntry[] newEntries= new IIncludePathEntry[entries.length];
 		for (int i= 0; i < entries.length; i++) {
 			IIncludePathEntry curr= entries[i];
@@ -251,7 +258,7 @@ public class BuildPathSupport {
 	}
 
 	private static void updateProjectClasspath(Shell shell, IJavaScriptProject jproject, IIncludePathEntry newEntry, String[] changedAttributes, IProgressMonitor monitor) throws JavaScriptModelException {
-		IIncludePathEntry[] oldClasspath= jproject.getRawClasspath();
+		IIncludePathEntry[] oldClasspath= jproject.getRawIncludepath();
 		int nEntries= oldClasspath.length;
 		ArrayList newEntries= new ArrayList(nEntries + 1);
 		int entryKind= newEntry.getEntryKind();
@@ -275,7 +282,7 @@ public class BuildPathSupport {
 			newEntries.add(newEntry);			
 		}
 		IIncludePathEntry[] newClasspath= (IIncludePathEntry[]) newEntries.toArray(new IIncludePathEntry[newEntries.size()]);
-		jproject.setRawClasspath(newClasspath, monitor);
+		jproject.setRawIncludepath(newClasspath, monitor);
 	}
 	
 	private static boolean putJarOnClasspathDialog(final Shell shell) {

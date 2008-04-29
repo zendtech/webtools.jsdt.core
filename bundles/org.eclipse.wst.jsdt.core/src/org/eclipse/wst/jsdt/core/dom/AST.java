@@ -935,7 +935,7 @@ public final class AST {
 	 * <p>
 	 * The name of the compilation unit must be supplied for resolving bindings.
 	 * This name should be suffixed by a dot ('.') followed by one of the
-	 * {@link JavaScriptCore#getJavaLikeExtensions() Java-like extensions}
+	 * {@link JavaScriptCore#getJavaScriptLikeExtensions() Java-like extensions}
 	 * and match the name of the main
 	 * (public) class or interface declared in the source. For example, if the source
 	 * declares a public class named "Foo", the name of the compilation can be

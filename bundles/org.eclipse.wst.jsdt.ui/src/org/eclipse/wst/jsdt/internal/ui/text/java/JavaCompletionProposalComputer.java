@@ -174,7 +174,7 @@ public class JavaCompletionProposalComputer implements IJavaCompletionProposalCo
 				unit.codeComplete(offset, collector);
 		} catch (JavaScriptModelException x) {
 			Shell shell= viewer.getTextWidget().getShell();
-			if (x.isDoesNotExist() && !unit.getJavaProject().isOnClasspath(unit))
+			if (x.isDoesNotExist() && !unit.getJavaScriptProject().isOnIncludepath(unit))
 				MessageDialog.openInformation(shell, JavaTextMessages.CompletionProcessor_error_notOnBuildPath_title, JavaTextMessages.CompletionProcessor_error_notOnBuildPath_message);
 			else
 				ErrorDialog.openError(shell, JavaTextMessages.CompletionProcessor_error_accessing_title, JavaTextMessages.CompletionProcessor_error_accessing_message, x.getStatus());

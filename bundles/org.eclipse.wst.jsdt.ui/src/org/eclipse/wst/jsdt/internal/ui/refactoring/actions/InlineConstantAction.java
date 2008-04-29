@@ -91,7 +91,7 @@ public class InlineConstantAction extends SelectionDispatchAction {
 			Assert.isTrue(first instanceof IField);
 			
 			IField field= (IField) first;
-			run(field.getNameRange().getOffset(), field.getNameRange().getLength(), field.getCompilationUnit());
+			run(field.getNameRange().getOffset(), field.getNameRange().getLength(), field.getJavaScriptUnit());
 		} catch (JavaScriptModelException e) {
 			ExceptionHandler.handle(e, getShell(), RefactoringMessages.InlineConstantAction_dialog_title, RefactoringMessages.InlineConstantAction_unexpected_exception);	 
 		}

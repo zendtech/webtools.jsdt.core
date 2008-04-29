@@ -163,7 +163,7 @@ class AccessAnalyzer extends ASTVisitor {
 			fReferencingGetter= true;
 			fRewriter.replace(
 				node, 
-				fRewriter.createStringPlaceholder(fGetter + "()", ASTNode.METHOD_INVOCATION), //$NON-NLS-1$
+				fRewriter.createStringPlaceholder(fGetter + "()", ASTNode.FUNCTION_INVOCATION), //$NON-NLS-1$
 				createGroupDescription(READ_ACCESS));
 		}
 		return true;

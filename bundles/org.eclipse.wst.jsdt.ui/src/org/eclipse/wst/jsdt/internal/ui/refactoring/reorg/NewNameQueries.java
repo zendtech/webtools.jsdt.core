@@ -70,7 +70,7 @@ public class NewNameQueries implements INewNameQueries {
 	}
 
 	public INewNameQuery createNewCompilationUnitNameQuery(IJavaScriptUnit cu, String initialSuggestedName) {
-		String[] keys= {JavaScriptCore.removeJavaLikeExtension(cu.getElementName())};
+		String[] keys= {JavaScriptCore.removeJavaScriptLikeExtension(cu.getElementName())};
 		String message= Messages.format(ReorgMessages.ReorgQueries_enterNewNameQuestion, keys); 
 		return createStaticQuery(createCompilationUnitNameValidator(cu), message, initialSuggestedName, getShell());
 	}

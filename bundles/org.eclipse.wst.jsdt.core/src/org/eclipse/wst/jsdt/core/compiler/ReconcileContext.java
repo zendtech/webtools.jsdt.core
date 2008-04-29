@@ -90,8 +90,8 @@ public org.eclipse.wst.jsdt.core.dom.JavaScriptUnit getAST3() throws JavaScriptM
 	if (this.operation.astLevel != AST.JLS3 || !this.operation.resolveBindings) {
 		// create AST (optionally resolving bindings)
 		ASTParser parser = ASTParser.newParser(AST.JLS3);
-		parser.setCompilerOptions(workingCopy.getJavaProject().getOptions(true));
-		if (JavaProject.hasJavaNature(workingCopy.getJavaProject().getProject()))
+		parser.setCompilerOptions(workingCopy.getJavaScriptProject().getOptions(true));
+		if (JavaProject.hasJavaNature(workingCopy.getJavaScriptProject().getProject()))
 			parser.setResolveBindings(true);
 		parser.setStatementsRecovery((this.operation.reconcileFlags & IJavaScriptUnit.ENABLE_STATEMENTS_RECOVERY) != 0);
 		parser.setBindingsRecovery((this.operation.reconcileFlags & IJavaScriptUnit.ENABLE_BINDINGS_RECOVERY) != 0);
@@ -168,7 +168,7 @@ public IJavaScriptUnit getWorkingCopy() {
  */
 public void resetAST() {
 	this.operation.ast = null;
-	putProblems(IJavaScriptModelMarker.JAVA_MODEL_PROBLEM_MARKER, null);
+	putProblems(IJavaScriptModelMarker.JAVASCRIPT_MODEL_PROBLEM_MARKER, null);
 	putProblems(IJavaScriptModelMarker.TASK_MARKER, null);
 }
 

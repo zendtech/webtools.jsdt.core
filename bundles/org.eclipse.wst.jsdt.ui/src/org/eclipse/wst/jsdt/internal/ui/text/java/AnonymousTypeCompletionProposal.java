@@ -110,7 +110,7 @@ public class AnonymousTypeCompletionProposal extends JavaTypeCompletionProposal 
 			int start= 0;
 			int end= 0;
 			ISourceRange range= fSuperType.getSourceRange();
-			final boolean sameUnit= range != null && fCompilationUnit.equals(fSuperType.getCompilationUnit());
+			final boolean sameUnit= range != null && fCompilationUnit.equals(fSuperType.getJavaScriptUnit());
 			final StringBuffer dummy= new StringBuffer();
 			final int length= createDummy(name, dummy);
 			contents.append(fCompilationUnit.getBuffer().getContents());
@@ -147,7 +147,7 @@ public class AnonymousTypeCompletionProposal extends JavaTypeCompletionProposal 
 					binding= declaration.resolveBinding();
 					if (binding != null) {
 						IFunctionBinding[] bindings= StubUtility2.getOverridableMethods(unit.getAST(), binding, true);
-						CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(fSuperType.getJavaProject());
+						CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(fSuperType.getJavaScriptProject());
 						String[] keys= null;
 						if (!fSuperType.isInterface() && !fSuperType.isAnnotation()) {
 							OverrideMethodDialog dialog= new OverrideMethodDialog(JavaPlugin.getActiveWorkbenchShell(), null, type, true);
@@ -196,7 +196,7 @@ public class AnonymousTypeCompletionProposal extends JavaTypeCompletionProposal 
 						}
 						IDocument document= new Document(copy.getBuffer().getContents());
 						try {
-							rewrite.rewriteAST(document, fCompilationUnit.getJavaProject().getOptions(true)).apply(document, TextEdit.UPDATE_REGIONS);
+							rewrite.rewriteAST(document, fCompilationUnit.getJavaScriptProject().getOptions(true)).apply(document, TextEdit.UPDATE_REGIONS);
 							buffer.append(document.get(start, document.getLength() - start - end));
 						} catch (MalformedTreeException exception) {
 							JavaPlugin.log(exception);
@@ -264,7 +264,7 @@ public class AnonymousTypeCompletionProposal extends JavaTypeCompletionProposal 
 
 		// use the code formatter
 		String lineDelim= TextUtilities.getDefaultLineDelimiter(document);
-		final IJavaScriptProject project= fCompilationUnit.getJavaProject();
+		final IJavaScriptProject project= fCompilationUnit.getJavaScriptProject();
 		IRegion region= document.getLineInformationOfOffset(getReplacementOffset());
 		int indent= Strings.computeIndentUnits(document.get(region.getOffset(), region.getLength()), project);
 

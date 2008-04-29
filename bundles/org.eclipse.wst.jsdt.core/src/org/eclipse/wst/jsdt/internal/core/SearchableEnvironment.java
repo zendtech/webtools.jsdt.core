@@ -160,7 +160,7 @@ public class SearchableEnvironment implements INameEnvironment,
 						topLevelType = topLevelType.getEnclosingType();
 					}
 					IType[] types = null;
-					org.eclipse.wst.jsdt.core.IJavaScriptUnit compilationUnit = sourceType.getHandle().getCompilationUnit();
+					org.eclipse.wst.jsdt.core.IJavaScriptUnit compilationUnit = sourceType.getHandle().getJavaScriptUnit();
 					// find all siblings (other types declared in same unit,
 					// since may be used for name resolution)
 					if (compilationUnit!=null)

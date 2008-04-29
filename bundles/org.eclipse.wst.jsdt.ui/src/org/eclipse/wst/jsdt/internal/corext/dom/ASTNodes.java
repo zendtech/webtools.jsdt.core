@@ -644,7 +644,7 @@ public class ASTNodes {
 				return store.getCategoryIndex(MembersOrderPreferenceCache.INIT_INDEX) * 2;
 			case ASTNode.ANNOTATION_TYPE_MEMBER_DECLARATION:
 				return store.getCategoryIndex(MembersOrderPreferenceCache.METHOD_INDEX) * 2;
-			case ASTNode.METHOD_DECLARATION:
+			case ASTNode.FUNCTION_DECLARATION:
 				if (Modifier.isStatic(modifiers)) {
 					return store.getCategoryIndex(MembersOrderPreferenceCache.STATIC_METHODS_INDEX) * 2;
 				}

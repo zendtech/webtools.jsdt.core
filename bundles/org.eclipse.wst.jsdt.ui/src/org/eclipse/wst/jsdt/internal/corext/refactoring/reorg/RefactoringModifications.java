@@ -71,7 +71,7 @@ public abstract class RefactoringModifications {
 			}
 		}
 		// Gather non-java resources
-		Object[] nonJavaResources = source.getNonJavaResources();
+		Object[] nonJavaResources = source.getNonJavaScriptResources();
 		for (int i= 0; i < nonJavaResources.length; i++) {
 			Object element= nonJavaResources[i];
 			if (element instanceof IResource) {

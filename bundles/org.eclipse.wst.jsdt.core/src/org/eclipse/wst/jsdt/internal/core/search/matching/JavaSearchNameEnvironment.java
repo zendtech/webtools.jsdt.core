@@ -97,10 +97,10 @@ private void computeClasspathLocations(IWorkspaceRoot workspaceRoot, JavaProject
 				} else if (root.getKind() == IPackageFragmentRoot.K_SOURCE) {
 					cpLocations[index++] = new ClasspathSourceDirectory((IContainer)target, root.fullExclusionPatternChars(), root.fullInclusionPatternChars());
 				} else  if (target instanceof IContainer){
-					cpLocations[index++] = ClasspathLocation.forBinaryFolder((IContainer) target, false, ((ClasspathEntry) root.getRawClasspathEntry()).getAccessRuleSet());
+					cpLocations[index++] = ClasspathLocation.forBinaryFolder((IContainer) target, false, ((ClasspathEntry) root.getRawIncludepathEntry()).getAccessRuleSet());
 				}
 				else
-					cpLocations[index++] = ClasspathLocation.forLibrary(path.toOSString(), ((ClasspathEntry) root.getRawClasspathEntry()).getAccessRuleSet());
+					cpLocations[index++] = ClasspathLocation.forLibrary(path.toOSString(), ((ClasspathEntry) root.getRawIncludepathEntry()).getAccessRuleSet());
 
 		} catch (CoreException e1) {
 			// problem opening zip file or getting root kind

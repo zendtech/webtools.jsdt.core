@@ -246,5 +246,9 @@ boolean isResolved();
  * @since 2.0
  */
 boolean isSimilar(IFunction method);
+/**
+ * @deprecated Use {@link #getFunction(String,String[])} instead
+ */
 public IFunction getMethod(String selector, String[] parameterTypeSignatures) ;
+public IFunction getFunction(String selector, String[] parameterTypeSignatures) ;
 }

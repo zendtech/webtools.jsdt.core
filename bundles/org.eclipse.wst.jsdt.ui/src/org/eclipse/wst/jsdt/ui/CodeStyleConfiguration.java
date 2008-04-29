@@ -65,7 +65,7 @@ public class CodeStyleConfiguration {
 	}
 	
 	private static ImportRewrite configureImportRewrite(ImportRewrite rewrite) {
-		IJavaScriptProject project= rewrite.getCompilationUnit().getJavaProject();
+		IJavaScriptProject project= rewrite.getCompilationUnit().getJavaScriptProject();
 		String order= PreferenceConstants.getPreference(PreferenceConstants.ORGIMPORTS_IMPORTORDER, project);
 		rewrite.setImportOrder(SEMICOLON_PATTERN.split(order, 0));
 

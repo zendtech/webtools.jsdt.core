@@ -106,7 +106,7 @@ public void codeComplete(char[] snippet,int insertion,int position,char[][] loca
 	if (requestor == null) {
 		throw new IllegalArgumentException("Completion requestor cannot be null"); //$NON-NLS-1$
 	}
-	JavaProject project = (JavaProject) getJavaProject();
+	JavaProject project = (JavaProject) getJavaScriptProject();
 	SearchableEnvironment environment = newSearchableNameEnvironment(owner);
 	CompletionEngine engine = new CompletionEngine(environment, requestor, project.getOptions(true), project);
 
@@ -168,7 +168,7 @@ public boolean equals(Object o) {
  */
 public IFunction[] findMethods(IFunction method) {
 	try {
-		return findMethods(method, getMethods());
+		return findMethods(method, getFunctions());
 	} catch (JavaScriptModelException e) {
 		// if type doesn't exist, no matching method can exist
 		return null;
@@ -376,7 +376,7 @@ public IJavaScriptElement getHandleFromMemento(String token, MementoTokenizer me
 			}
 			String[] parameters = new String[params.size()];
 			params.toArray(parameters);
-			JavaElement method = (JavaElement)getMethod(selector, parameters);
+			JavaElement method = (JavaElement)getFunction(selector, parameters);
 			switch (token.charAt(0)) {
 				case JEM_TYPE:
 				case JEM_TYPE_PARAMETER:
@@ -432,13 +432,31 @@ public String getKey(boolean forceOpen) throws JavaScriptModelException {
 /*
  * @see IType#getMethod(String name, String[] parameterTypeSignatures)
  */
+/**
+ * @deprecated Use {@link #getFunction(String,String[])} instead
+ */
 public IFunction getMethod(String selector, String[] parameterTypeSignatures) {
+	return getFunction(selector, parameterTypeSignatures);
+}
+/*
+ * @see IType#getMethod(String name, String[] parameterTypeSignatures)
+ */
+public IFunction getFunction(String selector, String[] parameterTypeSignatures) {
 	return new BinaryMethod(this, selector, parameterTypeSignatures);
 }
 /*
  * @see IType#getMethods()
  */
+/**
+ * @deprecated Use {@link #getFunctions()} instead
+ */
 public IFunction[] getMethods() throws JavaScriptModelException {
+	return getFunctions();
+}
+/*
+ * @see IType#getMethods()
+ */
+public IFunction[] getFunctions() throws JavaScriptModelException {
 	ArrayList list = getChildrenOfType(METHOD);
 	int size;
 	if ((size = list.size()) == 0) {
@@ -827,7 +845,7 @@ public ITypeHierarchy newTypeHierarchy(IJavaScriptProject project, WorkingCopyOw
 		int index = 0;
 		for (int i = 0; i < length; i++) {
 			IJavaScriptUnit wc = workingCopies[i];
-			if (project.equals(wc.getJavaProject())) {
+			if (project.equals(wc.getJavaScriptProject())) {
 				projectWCs[index++] = wc;
 			}
 		}
@@ -988,7 +1006,7 @@ public String getAttachedJavadoc(IProgressMonitor monitor) throws JavaScriptMode
 	final String contents = getJavadocContents(monitor);
 	if (contents == null) return null;
 	final int indexOfStartOfClassData = contents.indexOf(JavadocConstants.START_OF_CLASS_DATA);
-	if (indexOfStartOfClassData == -1) throw new JavaScriptModelException(new JavaModelStatus(IJavaScriptModelStatusConstants.UNKNOWN_JAVADOC_FORMAT, this));
+	if (indexOfStartOfClassData == -1) throw new JavaScriptModelException(new JavaModelStatus(IJavaScriptModelStatusConstants.UNKNOWN_JSDOC_FORMAT, this));
 	int indexOfNextSummary = contents.indexOf(JavadocConstants.NESTED_CLASS_SUMMARY);
 	if (this.isEnum() && indexOfNextSummary == -1) {
 		// try to find enum constant summary start
@@ -1019,7 +1037,7 @@ public String getAttachedJavadoc(IProgressMonitor monitor) throws JavaScriptMode
 		indexOfNextSummary = contents.indexOf(JavadocConstants.END_OF_CLASS_DATA);
 	}
 	if (indexOfNextSummary == -1) {
-		throw new JavaScriptModelException(new JavaModelStatus(IJavaScriptModelStatusConstants.UNKNOWN_JAVADOC_FORMAT, this));
+		throw new JavaScriptModelException(new JavaModelStatus(IJavaScriptModelStatusConstants.UNKNOWN_JSDOC_FORMAT, this));
 	}
 	/*
 	 * Check out to cut off the hierarchy see 119844
@@ -1036,7 +1054,7 @@ public String getAttachedJavadoc(IProgressMonitor monitor) throws JavaScriptMode
 	return contents.substring(start, indexOfNextSummary);
 }
 public String getJavadocContents(IProgressMonitor monitor) throws JavaScriptModelException {
-	PerProjectInfo projectInfo = JavaModelManager.getJavaModelManager().getPerProjectInfoCheckExistence(this.getJavaProject().getProject());
+	PerProjectInfo projectInfo = JavaModelManager.getJavaModelManager().getPerProjectInfoCheckExistence(this.getJavaScriptProject().getProject());
 	String cachedJavadoc = null;
 	synchronized (projectInfo.javadocCache) {
 		cachedJavadoc = (String) projectInfo.javadocCache.get(this);

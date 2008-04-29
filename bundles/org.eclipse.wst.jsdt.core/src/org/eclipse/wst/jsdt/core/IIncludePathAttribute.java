@@ -14,7 +14,7 @@ import org.eclipse.wst.jsdt.internal.core.ClasspathAttribute;
 
 /**
  * A classpath attribute defines a name/value pair that can be persisted with a classpath entry. Such an attribute
- * can be created using the factory method {@link JavaScriptCore#newClasspathAttribute(String, String) newClasspathAttribute(String name, String value)}.
+ * can be created using the factory method {@link JavaScriptCore#newIncludepathAttribute(String, String) newClasspathAttribute(String name, String value)}.
  * <p>
  * This interface is not intended to be implemented by clients.
  * </p>
@@ -59,7 +59,7 @@ public interface IIncludePathAttribute {
 	 *
 	 * @since 3.1
 	 */
-	String JAVADOC_LOCATION_ATTRIBUTE_NAME = "javadoc_location"; //$NON-NLS-1$
+	String JSDOC_LOCATION_ATTRIBUTE_NAME = "javadoc_location"; //$NON-NLS-1$
 
 	/**
 	 * Constant for the name of the optional attribute. The possible values

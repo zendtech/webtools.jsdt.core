@@ -86,7 +86,7 @@ public final class RenameEnumConstProcessor extends RenameFieldProcessor {
 		if (change != null) {
 			final IField field= getField();
 			String project= null;
-			IJavaScriptProject javaProject= field.getJavaProject();
+			IJavaScriptProject javaProject= field.getJavaScriptProject();
 			if (javaProject != null)
 				project= javaProject.getElementName();
 			int flags= JavaRefactoringDescriptor.JAR_MIGRATION | JavaRefactoringDescriptor.JAR_REFACTORING | RefactoringDescriptor.STRUCTURAL_CHANGE;

@@ -270,14 +270,14 @@ public Member getOuterMostLocalContext() {
 	}
 	return lastLocalContext;
 }
-public ISourceRange getJavadocRange() throws JavaScriptModelException {
+public ISourceRange getJSdocRange() throws JavaScriptModelException {
 	ISourceRange range= this.getSourceRange();
 	if (range == null) return null;
 	IBuffer buf= null;
 	if (this.isBinary()) {
 		buf = this.getClassFile().getBuffer();
 	} else {
-		IJavaScriptUnit compilationUnit = this.getCompilationUnit();
+		IJavaScriptUnit compilationUnit = this.getJavaScriptUnit();
 		if (!compilationUnit.isConsistent()) {
 			return null;
 		}

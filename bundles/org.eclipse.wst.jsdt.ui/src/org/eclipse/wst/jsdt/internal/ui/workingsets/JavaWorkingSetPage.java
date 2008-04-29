@@ -416,7 +416,7 @@ public class JavaWorkingSetPage extends WizardPage implements IWorkingSetPage {
 						for (int i= 0; i < elements.length; i++) {
 							if (elements[i] instanceof IResource) {
 								IJavaScriptElement je= (IJavaScriptElement)((IResource)elements[i]).getAdapter(IJavaScriptElement.class);
-								if (je != null && je.exists() &&  je.getJavaProject().isOnClasspath((IResource)elements[i]))
+								if (je != null && je.exists() &&  je.getJavaScriptProject().isOnIncludepath((IResource)elements[i]))
 									elements[i]= je;
 							}
 						}
@@ -436,7 +436,7 @@ public class JavaWorkingSetPage extends WizardPage implements IWorkingSetPage {
 							elements[i]= project;
 					}
 					if (element instanceof IJavaScriptElement) {
-						IJavaScriptProject jProject= ((IJavaScriptElement)element).getJavaProject();
+						IJavaScriptProject jProject= ((IJavaScriptElement)element).getJavaScriptProject();
 						if (jProject != null && !jProject.getProject().isAccessible()) 
 							elements[i]= jProject.getProject();
 					}

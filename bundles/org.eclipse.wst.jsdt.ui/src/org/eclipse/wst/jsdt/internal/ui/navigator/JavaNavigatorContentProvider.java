@@ -311,7 +311,7 @@ public class JavaNavigatorContentProvider extends
 				if(cElement instanceof IPackageFragmentRoot) {
 					IPackageFragmentRoot root = (IPackageFragmentRoot)cElement;
 					try {
-						Object[] nonJava = root.getNonJavaResources();
+						Object[] nonJava = root.getNonJavaScriptResources();
 						allJavaElements.addAll(Arrays.asList(root.getChildren()));
 						proposedChildren.removeAll(Arrays.asList(nonJava));
 					}
@@ -329,7 +329,7 @@ public class JavaNavigatorContentProvider extends
 						}
 						
 						try {
-							Object[] nonJava = root.getNonJavaResources();
+							Object[] nonJava = root.getNonJavaScriptResources();
 							Object[] children = root.getChildren();
 							allJavaElements.addAll(Arrays.asList(children));
 							proposedChildren.removeAll(Arrays.asList(nonJava));

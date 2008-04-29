@@ -144,11 +144,11 @@ public class NewVariableEntryDialog extends StatusDialog {
 	}
 	
 	private void initializeElements() {
-		String[] entries= JavaScriptCore.getClasspathVariableNames();
+		String[] entries= JavaScriptCore.getIncludepathVariableNames();
 		ArrayList elements= new ArrayList(entries.length);
 		for (int i= 0; i < entries.length; i++) {
 			String name= entries[i];
-			IPath entryPath= JavaScriptCore.getClasspathVariable(name);
+			IPath entryPath= JavaScriptCore.getIncludepathVariable(name);
 			if (entryPath != null) {
 				elements.add(new CPVariableElement(name, entryPath));
 			}

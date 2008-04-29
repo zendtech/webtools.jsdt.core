@@ -154,7 +154,7 @@ protected boolean buildStructure(OpenableElementInfo info, final IProgressMonito
 	// generate structure and compute syntax problems if needed
 	CompilationUnitStructureRequestor requestor = new CompilationUnitStructureRequestor(this, unitInfo, newElements);
 	JavaModelManager.PerWorkingCopyInfo perWorkingCopyInfo = getPerWorkingCopyInfo();
-	IJavaScriptProject project = getJavaProject();
+	IJavaScriptProject project = getJavaScriptProject();
 
 	boolean createAST;
 	boolean resolveBindings;
@@ -424,7 +424,7 @@ public void copy(IJavaScriptElement container, IJavaScriptElement sibling, Strin
 	if (rename != null) {
 		renamings = new String[] {rename};
 	}
-	getJavaModel().copy(elements, containers, null, renamings, force, monitor);
+	getJavaScriptModel().copy(elements, containers, null, renamings, force, monitor);
 }
 /**
  * Returns a new element info for this element.
@@ -471,7 +471,7 @@ public IType createType(String content, IJavaScriptElement sibling, boolean forc
 		String source = ""; //$NON-NLS-1$
 		if (!pkg.isDefaultPackage()) {
 			//not the default package...add the package declaration
-			String lineSeparator = Util.getLineSeparator(null/*no existing source*/, getJavaProject());
+			String lineSeparator = Util.getLineSeparator(null/*no existing source*/, getJavaScriptProject());
 			source = "package " + pkg.getElementName() + ";"  + lineSeparator + lineSeparator; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		CreateCompilationUnitOperation op = new CreateCompilationUnitOperation(pkg, this.name, source, force);
@@ -489,7 +489,7 @@ public IType createType(String content, IJavaScriptElement sibling, boolean forc
  */
 public void delete(boolean force, IProgressMonitor monitor) throws JavaScriptModelException {
 	IJavaScriptElement[] elements= new IJavaScriptElement[] {this};
-	getJavaModel().delete(elements, force, monitor);
+	getJavaScriptModel().delete(elements, force, monitor);
 }
 /**
  * @see org.eclipse.wst.jsdt.core.IWorkingCopy#destroy()
@@ -579,11 +579,11 @@ public IJavaScriptElement[] findElements(IJavaScriptElement element) {
 				break;
 			case IJavaScriptElement.METHOD:
 				if (currentElement instanceof CompilationUnit)
-					currentElement = ((CompilationUnit)currentElement).getMethod(child.getElementName(), ((IFunction)child).getParameterTypes());
+					currentElement = ((CompilationUnit)currentElement).getFunction(child.getElementName(), ((IFunction)child).getParameterTypes());
 				else if (currentElement instanceof SourceMethod)
-						currentElement = ((SourceMethod)currentElement).getMethod(child.getElementName(), ((IFunction)child).getParameterTypes());
+						currentElement = ((SourceMethod)currentElement).getFunction(child.getElementName(), ((IFunction)child).getParameterTypes());
 				else
-					currentElement = ((IType)currentElement).getMethod(child.getElementName(), ((IFunction)child).getParameterTypes());
+					currentElement = ((IType)currentElement).getFunction(child.getElementName(), ((IFunction)child).getParameterTypes());
 				break;
 		}
 
@@ -661,8 +661,16 @@ public IType[] getAllTypes() throws JavaScriptModelException {
 }
 /**
  * @see IMember#getCompilationUnit()
+ * @deprecated Use {@link #getJavaScriptUnit()} instead
  */
 public IJavaScriptUnit getCompilationUnit() {
+	return getJavaScriptUnit();
+}
+
+/**
+ * @see IMember#getJavaScriptUnit()
+ */
+public IJavaScriptUnit getJavaScriptUnit() {
 	return this;
 }
 /**
@@ -781,7 +789,7 @@ public IJavaScriptElement getHandleFromMemento(String token, MementoTokenizer me
 			}
 			String[] parameters = new String[params.size()];
 			params.toArray(parameters);
-			JavaElement method = (JavaElement)getMethod(selector, parameters);
+			JavaElement method = (JavaElement)getFunction(selector, parameters);
 			switch (token.charAt(0)) {
 				case JEM_TYPE:
 				case JEM_TYPE_PARAMETER:
@@ -1096,7 +1104,7 @@ protected IStatus validateCompilationUnit(IResource resource) {
 		if (root.getKind() != IPackageFragmentRoot.K_SOURCE)
 			return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_ELEMENT_TYPES, root);
 	} catch (JavaScriptModelException e) {
-		return e.getJavaModelStatus();
+		return e.getJavaScriptModelStatus();
 	}
 	if (resource != null) {
 		char[][] inclusionPatterns = ((PackageFragmentRoot)root).fullInclusionPatternChars();
@@ -1106,7 +1114,7 @@ protected IStatus validateCompilationUnit(IResource resource) {
 		if (!resource.isAccessible())
 			return new JavaModelStatus(IJavaScriptModelStatusConstants.ELEMENT_DOES_NOT_EXIST, this);
 	}
-	IJavaScriptProject project = getJavaProject();
+	IJavaScriptProject project = getJavaScriptProject();
 	return JavaScriptConventions.validateCompilationUnitName(getElementName(),project.getOption(JavaScriptCore.COMPILER_SOURCE, true), project.getOption(JavaScriptCore.COMPILER_COMPLIANCE, true));
 }
 /*
@@ -1157,7 +1165,7 @@ public void move(IJavaScriptElement container, IJavaScriptElement sibling, Strin
 	if (rename != null) {
 		renamings= new String[] {rename};
 	}
-	getJavaModel().move(elements, containers, null, renamings, force, monitor);
+	getJavaScriptModel().move(elements, containers, null, renamings, force, monitor);
 }
 
 /**
@@ -1303,7 +1311,7 @@ public void rename(String newName, boolean force, IProgressMonitor monitor) thro
 	IJavaScriptElement[] elements= new IJavaScriptElement[] {this};
 	IJavaScriptElement[] dests= new IJavaScriptElement[] {this.getParent()};
 	String[] renamings= new String[] {newName};
-	getJavaModel().rename(elements, dests, renamings, force, monitor);
+	getJavaScriptModel().rename(elements, dests, renamings, force, monitor);
 }
 /*
  * @see IJavaScriptUnit
@@ -1376,10 +1384,24 @@ public IField[] getFields() throws JavaScriptModelException {
 	return array;
 
 }
+/**
+ * @deprecated Use {@link #getFunction(String,String[])} instead
+ */
 public IFunction getMethod(String selector, String[] parameterTypeSignatures) {
+	return getFunction(selector, parameterTypeSignatures);
+}
+
+public IFunction getFunction(String selector, String[] parameterTypeSignatures) {
 	return new SourceMethod(this, selector, parameterTypeSignatures);
 }
+/**
+ * @deprecated Use {@link #getFunctions()} instead
+ */
 public IFunction[] getMethods() throws JavaScriptModelException {
+	return getFunctions();
+}
+
+public IFunction[] getFunctions() throws JavaScriptModelException {
 	ArrayList list = getChildrenOfType(METHOD);
 	IFunction[] array= new IFunction[list.size()];
 	list.toArray(array);
@@ -1414,7 +1436,7 @@ public String getDisplayName() {
 
 		JsGlobalScopeContainerInitializer init = ((IVirtualParent)parent).getContainerInitializer();
 		if(init==null) return super.getDisplayName();
-		return init.getDescription(new Path(getElementName()), getJavaProject());
+		return init.getDescription(new Path(getElementName()), getJavaScriptProject());
 	}
 	return super.getDisplayName();
 }
@@ -1423,7 +1445,7 @@ public String getDisplayName() {
 public URI getHostPath() {
 	if(isVirtual()) {
 		JsGlobalScopeContainerInitializer init = ((IVirtualParent)parent).getContainerInitializer();
-		if(init!=null) return init.getHostPath(new Path(getElementName()), getJavaProject());
+		if(init!=null) return init.getHostPath(new Path(getElementName()), getJavaScriptProject());
 	}
 	return null;
 }
@@ -1436,15 +1458,22 @@ public JsGlobalScopeContainerInitializer getContainerInitializer() {
 }
 
 public LibrarySuperType getCommonSuperType() {
-	IJavaScriptProject javaProject = getJavaProject();
+	IJavaScriptProject javaProject = getJavaScriptProject();
 	if(javaProject!=null && javaProject.exists()) return javaProject.getCommonSuperType();
 	return null;
 }
 
+/**
+ * @deprecated Use {@link #findFunctions(IFunction)} instead
+ */
 public IFunction[] findMethods(IFunction method) {
+	return findFunctions(method);
+}
+
+public IFunction[] findFunctions(IFunction method) {
 	ArrayList list = new ArrayList();
 	try {
-		IFunction[]methods=getMethods();
+		IFunction[]methods=getFunctions();
 		String elementName = method.getElementName();
 		for (int i = 0, length = methods.length; i < length; i++) {
 			IFunction existingMethod = methods[i];

@@ -751,7 +751,7 @@ public final class JavaUI {
 	 * @see #getSharedWorkingCopies()
 	 * @since 2.1
 	 * @deprecated Use {@link JavaScriptCore#getWorkingCopies(org.eclipse.wst.jsdt.core.WorkingCopyOwner)} instead and filter the list
-	 * with {@link IJavaScriptProject#isOnClasspath(IJavaScriptElement)}.
+	 * with {@link IJavaScriptProject#isOnIncludepath(IJavaScriptElement)}.
 	 */
 	public static org.eclipse.wst.jsdt.core.IWorkingCopy[] getSharedWorkingCopiesOnClasspath() {
 		org.eclipse.wst.jsdt.core.IWorkingCopy[] wcs= getSharedWorkingCopies();
@@ -760,7 +760,7 @@ public final class JavaUI {
 			org.eclipse.wst.jsdt.core.IWorkingCopy wc= wcs[i];
 			if (wc instanceof IJavaScriptElement) {
 				IJavaScriptElement je= (IJavaScriptElement)wc;
-				if (je.getJavaProject().isOnClasspath(je)) {
+				if (je.getJavaScriptProject().isOnIncludepath(je)) {
 					result.add(wc);
 				}
 			}

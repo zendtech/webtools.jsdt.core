@@ -99,7 +99,7 @@ public class ResetAction extends BuildpathModifierAction {
 					if (firstElement instanceof IJavaScriptProject) {
 						project= (IJavaScriptProject)firstElement;
 					} else if (firstElement instanceof IPackageFragmentRoot) {
-						project= ((IPackageFragmentRoot)firstElement).getJavaProject();
+						project= ((IPackageFragmentRoot)firstElement).getJavaScriptProject();
 					} else {
 						project= ((CPListElementAttribute)firstElement).getParent().getJavaProject();
 					}
@@ -168,7 +168,7 @@ public class ResetAction extends BuildpathModifierAction {
 	            Object element= iterator.next();
 	            if (element instanceof IJavaScriptProject) {
 	            	IJavaScriptProject project= (IJavaScriptProject)element;
-	            	if (!project.isOnClasspath(project))
+	            	if (!project.isOnIncludepath(project))
 	            		return false;
 	            	
 	            	IIncludePathEntry entry= ClasspathModifier.getClasspathEntryFor(project.getPath(), project, IIncludePathEntry.CPE_SOURCE);

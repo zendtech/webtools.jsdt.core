@@ -306,7 +306,7 @@ public final class JavaRuntime {
 	public static IVMInstall getVMInstall(IJavaScriptProject project) throws CoreException {
 		// check the classpath
 		IVMInstall vm = null;
-		IIncludePathEntry[] classpath = project.getRawClasspath();
+		IIncludePathEntry[] classpath = project.getRawIncludepath();
 		IRuntimeClasspathEntryResolver resolver = null;
 		for (int i = 0; i < classpath.length; i++) {
 			IIncludePathEntry entry = classpath[i];
@@ -1180,7 +1180,7 @@ throw new org.eclipse.wst.jsdt.core.UnimplementedException();
 		if ((projectName == null) || (projectName.trim().length() < 1)) {
 			return null;
 		}			
-		IJavaScriptProject javaProject = getJavaModel().getJavaProject(projectName);
+		IJavaScriptProject javaProject = getJavaModel().getJavaScriptProject(projectName);
 		if (javaProject != null && javaProject.getProject().exists() && !javaProject.getProject().isOpen()) {
 			abort(MessageFormat.format(LaunchingMessages.JavaRuntime_28, new String[] {configuration.getName(), projectName}), IJavaLaunchConfigurationConstants.ERR_PROJECT_CLOSED, null); 
 		}
@@ -1867,7 +1867,7 @@ throw new org.eclipse.wst.jsdt.core.UnimplementedException();
 	 * @since 3.2
 	 */
 	public static IRuntimeClasspathEntry computeJREEntry(IJavaScriptProject project) throws CoreException {
-		IIncludePathEntry[] rawClasspath = project.getRawClasspath();
+		IIncludePathEntry[] rawClasspath = project.getRawIncludepath();
 		IRuntimeClasspathEntryResolver2 resolver = null;
 		for (int i = 0; i < rawClasspath.length; i++) {
 			IIncludePathEntry entry = rawClasspath[i];

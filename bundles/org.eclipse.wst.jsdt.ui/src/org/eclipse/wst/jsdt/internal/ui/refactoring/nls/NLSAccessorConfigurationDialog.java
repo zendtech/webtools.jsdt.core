@@ -255,7 +255,7 @@ public class NLSAccessorConfigurationDialog extends StatusDialog {
 			if (fPkgFragment == null)
 				return new Object[0];
 			List result= new ArrayList(1);
-			Object[] nonjava= fPkgFragment.getNonJavaResources();
+			Object[] nonjava= fPkgFragment.getNonJavaScriptResources();
 			for (int i= 0; i < nonjava.length; i++) {
 				if (isPropertyFile(nonjava[i]))
 					result.add(nonjava[i]);
@@ -294,7 +294,7 @@ public class NLSAccessorConfigurationDialog extends StatusDialog {
 	private void validateAccessorClassName() {
 		String className= fAccessorClassName.getText();
 
-		IStatus status= JavaScriptConventions.validateJavaTypeName(className);
+		IStatus status= JavaScriptConventions.validateJavaScriptTypeName(className);
 		if (status.getSeverity() == IStatus.ERROR) {
 			setInvalid(IDX_ACCESSOR_CLASS, status.getMessage());
 			return;
@@ -347,7 +347,7 @@ public class NLSAccessorConfigurationDialog extends StatusDialog {
 
 		IPath pkgPath= new Path(pkgName.replace('.', IPath.SEPARATOR)).makeRelative();
 
-		IJavaScriptProject project= fRefactoring.getCu().getJavaProject();
+		IJavaScriptProject project= fRefactoring.getCu().getJavaScriptProject();
 		try {
 			IJavaScriptElement element= project.findElement(pkgPath);
 			if (element == null || !element.exists()) {

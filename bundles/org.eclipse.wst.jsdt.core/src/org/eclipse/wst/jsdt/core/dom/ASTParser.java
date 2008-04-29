@@ -388,7 +388,7 @@ public class ASTParser {
 	 * When the parse is successful the result returned includes the ASTs for the
 	 * requested source:
 	 * <ul>
-	 * <li>{@link #K_COMPILATION_UNIT K_COMPILATION_UNIT}: The result node
+	 * <li>{@link #K_JAVASCRIPT_UNIT K_JAVASCRIPT_UNIT}: The result node
 	 * is a {@link JavaScriptUnit}.</li>
 	 * <li>{@link #K_CLASS_BODY_DECLARATIONS K_CLASS_BODY_DECLARATIONS}: The result node
 	 * is a {@link TypeDeclaration} whose
@@ -444,11 +444,11 @@ public class ASTParser {
 	 * </p>
 	 * <p>
 	 * Binding information is only computed when <code>kind</code> is
-     * <code>K_COMPILATION_UNIT</code>.
+     * <code>K_JAVASCRIPT_UNIT</code>.
 	 * </p>
 	 *
 	 * @param kind the kind of construct to parse: one of
-	 * {@link #K_COMPILATION_UNIT},
+	 * {@link #K_JAVASCRIPT_UNIT},
 	 * {@link #K_CLASS_BODY_DECLARATIONS},
 	 * {@link #K_EXPRESSION},
 	 * {@link #K_STATEMENTS}
@@ -520,7 +520,7 @@ public class ASTParser {
 		// clear the raw source
 		this.rawSource = null;
 		if (source != null) {
-			this.project = source.getJavaProject();
+			this.project = source.getJavaScriptProject();
 			Map options = this.project.getOptions(true);
 			options.remove(JavaScriptCore.COMPILER_TASK_TAGS); // no need to parse task tags
 			this.compilerOptions = options;
@@ -584,7 +584,7 @@ public class ASTParser {
 	 * <p>
 	 * The name of the compilation unit must be supplied for resolving bindings.
 	 * This name should be suffixed by a dot ('.') followed by one of the
-	 * {@link JavaScriptCore#getJavaLikeExtensions() Java-like extensions}
+	 * {@link JavaScriptCore#getJavaScriptLikeExtensions() Java-like extensions}
 	 * and match the name of the main (public) class or interface declared in the source.</p>
 	 *
 	 * <p>This name must represent the full path of the unit inside the given project. For example, if the source
@@ -687,7 +687,7 @@ public class ASTParser {
 	 * Note also the following parser parameters are used, regardless of what
 	 * may have been specified:
 	 * <ul>
-	 * <li>The {@linkplain #setKind(int) parser kind} is <code>K_COMPILATION_UNIT</code></li>
+	 * <li>The {@linkplain #setKind(int) parser kind} is <code>K_JAVASCRIPT_UNIT</code></li>
 	 * <li>The {@linkplain #setSourceRange(int,int) source range} is <code>(0, -1)</code></li>
 	 * <li>The {@linkplain #setFocalPosition(int) focal position} is not set</li>
 	 * </ul>
@@ -761,7 +761,7 @@ public class ASTParser {
 	 * may have been specified:
 	 * <ul>
 	 * <li>The {@linkplain #setResolveBindings(boolean) binding resolution flag} is <code>true</code></li>
-	 * <li>The {@linkplain #setKind(int) parser kind} is <code>K_COMPILATION_UNIT</code></li>
+	 * <li>The {@linkplain #setKind(int) parser kind} is <code>K_JAVASCRIPT_UNIT</code></li>
 	 * <li>The {@linkplain #setSourceRange(int,int) source range} is <code>(0, -1)</code></li>
 	 * <li>The {@linkplain #setFocalPosition(int) focal position} is not set</li>
 	 * </ul>
@@ -1117,7 +1117,7 @@ public class ASTParser {
 					compilationUnit.types().add(typeDeclaration);
 				}
 				break;
-			case ASTNode.COMPILATION_UNIT :
+			case ASTNode.JAVASCRIPT_UNIT :
 			{
 				JavaScriptUnit compUnit = (JavaScriptUnit) node;
 				if (problemsCount != 0) {

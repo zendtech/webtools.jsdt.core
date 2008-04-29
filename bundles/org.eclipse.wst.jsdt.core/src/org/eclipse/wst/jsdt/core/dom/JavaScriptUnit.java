@@ -544,7 +544,7 @@ public class JavaScriptUnit extends ASTNode {
 	 * Method declared on ASTNode.
 	 */
 	final int getNodeType0() {
-		return COMPILATION_UNIT;
+		return JAVASCRIPT_UNIT;
 	}
 
 	/**

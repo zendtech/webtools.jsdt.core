@@ -225,7 +225,7 @@ public class ClasspathChange {
 
 			// check if raw classpath has changed
 			if (this.oldRawClasspath != null && !JavaProject.areClasspathsEqual(this.oldRawClasspath, newRawClasspath, this.oldOutputLocation, newOutputLocation)) {
-				delta.changed(this.project, IJavaScriptElementDelta.F_CLASSPATH_CHANGED);
+				delta.changed(this.project, IJavaScriptElementDelta.F_INCLUDEPATH_CHANGED);
 				result |= HAS_DELTA;
 			}
 

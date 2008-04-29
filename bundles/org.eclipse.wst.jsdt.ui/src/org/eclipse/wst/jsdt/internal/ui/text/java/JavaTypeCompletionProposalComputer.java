@@ -120,7 +120,7 @@ public class JavaTypeCompletionProposalComputer extends JavaCompletionProposalCo
 	}
 
 	private IJavaCompletionProposal createTypeProposal(int relevance, String fullyQualifiedType, JavaContentAssistInvocationContext context) throws JavaScriptModelException {
-		IType type= context.getCompilationUnit().getJavaProject().findType(fullyQualifiedType);
+		IType type= context.getCompilationUnit().getJavaScriptProject().findType(fullyQualifiedType);
 		if (type == null)
 			return null;
 		

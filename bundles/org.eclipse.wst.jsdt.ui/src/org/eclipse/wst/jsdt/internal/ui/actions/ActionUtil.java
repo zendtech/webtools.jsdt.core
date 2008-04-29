@@ -83,7 +83,7 @@ public class ActionUtil {
         //fix for bug http://dev.eclipse.org/bugs/show_bug.cgi?id=20051
         if (element.getElementType() == IJavaScriptElement.JAVA_PROJECT)
             return true;
-		IJavaScriptProject project= element.getJavaProject();
+		IJavaScriptProject project= element.getJavaScriptProject();
 		try {
 			//if (!project.isOnClasspath(element))
 			//	return false;

@@ -131,7 +131,7 @@ public IJavaScriptModelStatus verify() {
 	}
 
 	String packageName = this.pkgName == null ? null : Util.concatWith(this.pkgName, '.');
-	IJavaScriptProject project = parentElement.getJavaProject();
+	IJavaScriptProject project = parentElement.getJavaScriptProject();
 	if (this.pkgName == null || (this.pkgName.length > 0 && JavaScriptConventions.validatePackageName(packageName, project.getOption(JavaScriptCore.COMPILER_SOURCE, true), project.getOption(JavaScriptCore.COMPILER_COMPLIANCE, true)).getSeverity() == IStatus.ERROR)) {
 		return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_NAME, packageName);
 	}

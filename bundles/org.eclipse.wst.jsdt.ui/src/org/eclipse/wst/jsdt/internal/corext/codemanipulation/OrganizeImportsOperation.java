@@ -137,7 +137,7 @@ public class OrganizeImportsOperation implements IWorkspaceRunnable {
 			
 			fCurrPackage= (IPackageFragment) cu.getParent();
 			
-			fAllowDefaultPackageImports= cu.getJavaProject().getOption(JavaScriptCore.COMPILER_COMPLIANCE, true).equals(JavaScriptCore.VERSION_1_3);
+			fAllowDefaultPackageImports= cu.getJavaScriptProject().getOption(JavaScriptCore.COMPILER_COMPLIANCE, true).equals(JavaScriptCore.VERSION_1_3);
 			
 			fImportsAdded= new HashSet();
 			fUnresolvedTypes= new HashMap();
@@ -229,7 +229,7 @@ public class OrganizeImportsOperation implements IWorkspaceRunnable {
 					allTypes[i++]= ((String) iter.next()).toCharArray();
 				}
 				final ArrayList typesFound= new ArrayList();
-				final IJavaScriptProject project= fCurrPackage.getJavaProject();
+				final IJavaScriptProject project= fCurrPackage.getJavaScriptProject();
 				IJavaScriptSearchScope scope= SearchEngine.createJavaSearchScope(new IJavaScriptElement[] { project });
 				TypeNameMatchCollector collector= new TypeNameMatchCollector(typesFound);
 				new SearchEngine().searchAllTypeNames(null, allTypes, scope, collector, IJavaScriptSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, monitor);
@@ -517,7 +517,7 @@ public class OrganizeImportsOperation implements IWorkspaceRunnable {
 			}
 		}
 		
-		IJavaScriptProject project= fCompilationUnit.getJavaProject();
+		IJavaScriptProject project= fCompilationUnit.getJavaScriptProject();
 		ImportReferencesCollector.collect(astRoot, project, null, typeReferences, staticReferences);
 
 		return true;

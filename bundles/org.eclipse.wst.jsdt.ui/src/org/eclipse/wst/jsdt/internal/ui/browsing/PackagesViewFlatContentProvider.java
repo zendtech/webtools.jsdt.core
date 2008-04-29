@@ -114,7 +114,7 @@ class PackagesViewFlatContentProvider extends LogicalPackagesProvider implements
 		if (isClassPathChange(delta)) {
 			Object input= fViewer.getInput();
 			if (input != null) {
-				if (fInputIsProject && input.equals(element.getJavaProject())) {
+				if (fInputIsProject && input.equals(element.getJavaScriptProject())) {
 					postRefresh(input);
 					return;
 				} else if (!fInputIsProject && input.equals(element)) {
@@ -169,7 +169,7 @@ class PackagesViewFlatContentProvider extends LogicalPackagesProvider implements
 	private Object findElementToRefresh(IPackageFragment fragment) {
 		if (fViewer.testFindItem(fragment) == null) {
 			if(fInputIsProject)
-				return fragment.getJavaProject();
+				return fragment.getJavaScriptProject();
 			else return fragment.getParent();
 		}
 		return fragment;
@@ -180,7 +180,7 @@ class PackagesViewFlatContentProvider extends LogicalPackagesProvider implements
 	private Object findElementToRefresh(LogicalPackage logicalPackage) {
 		if (fViewer.testFindItem(logicalPackage) == null) {
 			IPackageFragment fragment= logicalPackage.getFragments()[0];
-			return fragment.getJavaProject();
+			return fragment.getJavaScriptProject();
 		}
 		return logicalPackage;
 	}

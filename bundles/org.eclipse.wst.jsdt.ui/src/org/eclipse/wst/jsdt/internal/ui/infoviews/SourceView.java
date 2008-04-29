@@ -406,7 +406,7 @@ public class SourceView extends AbstractInfoView implements IMenuListener {
 			sourceLines[0]= ""; //$NON-NLS-1$
 		IJavaScriptProject project;
 		if (input instanceof IJavaScriptElement)
-			project= ((IJavaScriptElement) input).getJavaProject();
+			project= ((IJavaScriptElement) input).getJavaScriptProject();
 		else
 			project= null;
 		Strings.trimIndentation(sourceLines, project);

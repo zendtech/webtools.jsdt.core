@@ -341,7 +341,7 @@ protected void reportDeclaration(FieldBinding fieldBinding, MatchLocator locator
 	IBinaryType info = null;
 	if (isBinary) {
 		if (resource == null)
-			resource = type.getJavaProject().getProject();
+			resource = type.getJavaScriptProject().getProject();
 		info = locator.getBinaryInfo((org.eclipse.wst.jsdt.internal.core.ClassFile) type.getClassFile(), resource);
 		locator.reportBinaryMemberDeclaration(resource, field, fieldBinding, info, SearchMatch.A_ACCURATE);
 	} else {

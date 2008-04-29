@@ -344,7 +344,7 @@ public class DefaultJavaFoldingStructureProvider implements IJavaFoldingStructur
 			IJavaScriptElementDelta delta= findElement(fInput, e.getDelta());
 			if (delta != null && (delta.getFlags() & (IJavaScriptElementDelta.F_CONTENT | IJavaScriptElementDelta.F_CHILDREN)) != 0) {
 			
-				if (shouldIgnoreDelta(e.getDelta().getCompilationUnitAST(), delta))
+				if (shouldIgnoreDelta(e.getDelta().getJavaScriptUnitAST(), delta))
 					return;
 
 				fUpdatingCount++;

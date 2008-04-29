@@ -274,8 +274,8 @@ public class CodeFormatterUtil {
 					suffix= "> x;"; //$NON-NLS-1$
 					code= CodeFormatter.K_CLASS_BODY_DECLARATIONS;
 					break;
-				case ASTNode.COMPILATION_UNIT:
-					code= CodeFormatter.K_COMPILATION_UNIT;
+				case ASTNode.JAVASCRIPT_UNIT:
+					code= CodeFormatter.K_JAVASCRIPT_UNIT;
 					break;
 				case ASTNode.VARIABLE_DECLARATION_EXPRESSION:
 				case ASTNode.SINGLE_VARIABLE_DECLARATION:
@@ -290,9 +290,9 @@ public class CodeFormatterUtil {
 				case ASTNode.PACKAGE_DECLARATION:
 				case ASTNode.IMPORT_DECLARATION:
 					suffix= "\nclass A {}"; //$NON-NLS-1$
-					code= CodeFormatter.K_COMPILATION_UNIT;
+					code= CodeFormatter.K_JAVASCRIPT_UNIT;
 					break;
-				case ASTNode.JAVADOC:
+				case ASTNode.JSDOC:
 					suffix= "void foo();"; //$NON-NLS-1$
 					code= CodeFormatter.K_CLASS_BODY_DECLARATIONS;
 					break;
@@ -308,20 +308,20 @@ public class CodeFormatterUtil {
 				case ASTNode.MEMBER_VALUE_PAIR:
 					prefix= "@Author("; //$NON-NLS-1$
 					suffix= ") class x {}"; //$NON-NLS-1$
-					code= CodeFormatter.K_COMPILATION_UNIT;
+					code= CodeFormatter.K_JAVASCRIPT_UNIT;
 					break;
 				case ASTNode.MODIFIER:
 					suffix= " class x {}"; //$NON-NLS-1$
-					code= CodeFormatter.K_COMPILATION_UNIT;				
+					code= CodeFormatter.K_JAVASCRIPT_UNIT;				
 					break;
 				case ASTNode.TYPE_PARAMETER:
 					prefix= "class X<"; //$NON-NLS-1$
 					suffix= "> {}"; //$NON-NLS-1$
-					code= CodeFormatter.K_COMPILATION_UNIT;
+					code= CodeFormatter.K_JAVASCRIPT_UNIT;
 					break;
 				case ASTNode.MEMBER_REF:
-				case ASTNode.METHOD_REF:
-				case ASTNode.METHOD_REF_PARAMETER:
+				case ASTNode.FUNCTION_REF:
+				case ASTNode.FUNCTION_REF_PARAMETER:
 				case ASTNode.TAG_ELEMENT:
 				case ASTNode.TEXT_ELEMENT:
 					// Javadoc formatting not yet supported:

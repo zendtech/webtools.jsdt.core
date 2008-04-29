@@ -174,7 +174,7 @@ public class OpenExternalJavadocAction extends SelectionDispatchAction {
 					String message= ActionMessages.OpenExternalJavadocAction_libraries_no_location;	 
 					showMessage(shell, Messages.format(message, new String[] { labelName, root.getElementName() }), false);
 				} else {
-					IJavaScriptElement annotatedElement= element.getJavaProject();
+					IJavaScriptElement annotatedElement= element.getJavaScriptProject();
 					String message= ActionMessages.OpenExternalJavadocAction_source_no_location;	 
 					showMessage(shell, Messages.format(message, new String[] { labelName, annotatedElement.getElementName() }), false);
 				}

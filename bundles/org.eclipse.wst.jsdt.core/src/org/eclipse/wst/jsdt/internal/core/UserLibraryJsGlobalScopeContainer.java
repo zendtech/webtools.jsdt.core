@@ -34,7 +34,17 @@ public class UserLibraryJsGlobalScopeContainer implements IJsGlobalScopeContaine
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.jsdt.core.IJsGlobalScopeContainer#getClasspathEntries()
 	 */
+	/**
+	 * @deprecated Use {@link #getIncludepathEntries()} instead
+	 */
 	public IIncludePathEntry[] getClasspathEntries() {
+		return getIncludepathEntries();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.core.IJsGlobalScopeContainer#getClasspathEntries()
+	 */
+	public IIncludePathEntry[] getIncludepathEntries() {
 		UserLibrary library= getUserLibrary();
 		if (library != null) {
 			return library.getEntries();

@@ -115,7 +115,7 @@ public class InternalCompletionProposal {
 			for(int i = 0;	i< length ; i++){
 				args[i] = new String(paramTypeNames[i]);
 			}
-			IFunction method = type.getMethod(new String(selector),args);
+			IFunction method = type.getFunction(new String(selector),args);
 			try{
 				parameterNames = new char[length][];
 				String[] params = method.getParameterNames();

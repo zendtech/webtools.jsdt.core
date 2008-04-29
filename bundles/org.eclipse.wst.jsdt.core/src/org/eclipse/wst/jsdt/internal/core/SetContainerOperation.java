@@ -64,7 +64,7 @@ public class SetContainerOperation extends ChangeClasspathOperation {
 				if (newContainer == null) newContainer = JavaModelManager.CONTAINER_INITIALIZATION_IN_PROGRESS; // 30920 - prevent infinite loop
 				boolean found = false;
 				if (JavaProject.hasJavaNature(affectedProject.getProject())){
-					IIncludePathEntry[] rawClasspath = affectedProject.getRawClasspath();
+					IIncludePathEntry[] rawClasspath = affectedProject.getRawIncludepath();
 					for (int j = 0, cpLength = rawClasspath.length; j <cpLength; j++) {
 						IIncludePathEntry entry = rawClasspath[j];
 						if (entry.getEntryKind() == IIncludePathEntry.CPE_CONTAINER && entry.getPath().equals(this.containerPath)){
@@ -180,7 +180,7 @@ public class SetContainerOperation extends ChangeClasspathOperation {
 						IJsGlobalScopeContainer container = (IJsGlobalScopeContainer) o;
 						buffer.append(container.getDescription());
 						buffer.append(" {\n"); //$NON-NLS-1$
-						IIncludePathEntry[] entries = container.getClasspathEntries();
+						IIncludePathEntry[] entries = container.getIncludepathEntries();
 						if (entries != null){
 							for (int i = 0; i < entries.length; i++){
 								buffer.append(" 			"); //$NON-NLS-1$

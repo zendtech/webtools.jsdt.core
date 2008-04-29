@@ -87,14 +87,14 @@ public class CPVariableElement {
 	 * @return <code>true</code> iff variable is read-only
 	 */
 	public boolean isReadOnly() {
-		return JavaScriptCore.isClasspathVariableReadOnly(fName);
+		return JavaScriptCore.isIncludepathVariableReadOnly(fName);
 	}
 
 	/**
 	 * @return whether this variable is deprecated
 	 */
 	public boolean isDeprecated() {
-		return JavaScriptCore.getClasspathVariableDeprecationMessage(fName) != null;
+		return JavaScriptCore.getIncludepathVariableDeprecationMessage(fName) != null;
 	}
 
 	/**

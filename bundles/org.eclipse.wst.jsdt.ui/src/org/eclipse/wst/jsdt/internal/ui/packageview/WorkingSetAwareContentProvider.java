@@ -124,7 +124,7 @@ public class WorkingSetAwareContentProvider extends PackageExplorerContentProvid
 	}
 	
 	private IProject getProject(IJavaScriptElement element) {
-		IJavaScriptProject project= element.getJavaProject();
+		IJavaScriptProject project= element.getJavaScriptProject();
 		if (project == null)
 			return null;
 		return project.getProject();

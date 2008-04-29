@@ -185,7 +185,7 @@ public class MethodOverrideTester {
 	 * @throws JavaScriptModelException
 	 */
 	public IFunction findOverriddenMethodInType(IType overriddenType, IFunction overriding) throws JavaScriptModelException {
-		IFunction[] overriddenMethods= overriddenType.getMethods();
+		IFunction[] overriddenMethods= overriddenType.getFunctions();
 		for (int i= 0; i < overriddenMethods.length; i++) {
 			if (isSubsignature(overriding, overriddenMethods[i])) {
 				return overriddenMethods[i];
@@ -202,7 +202,7 @@ public class MethodOverrideTester {
 	 * @throws JavaScriptModelException
 	 */
 	public IFunction findOverridingMethodInType(IType overridingType, IFunction overridden) throws JavaScriptModelException {
-		IFunction[] overridingMethods= overridingType.getMethods();
+		IFunction[] overridingMethods= overridingType.getFunctions();
 		for (int i= 0; i < overridingMethods.length; i++) {
 			if (isSubsignature(overridingMethods[i], overridden)) {
 				return overridingMethods[i];

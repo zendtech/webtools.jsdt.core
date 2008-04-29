@@ -38,7 +38,7 @@ public class CommentFormatCleanUp extends AbstractCleanUp {
 		if (!isEnabled(CleanUpConstants.FORMAT_SOURCE_CODE))
 			return null;
 		
-		HashMap preferences= new HashMap(compilationUnit.getJavaProject().getOptions(true));
+		HashMap preferences= new HashMap(compilationUnit.getJavaScriptProject().getOptions(true));
 		
 		boolean singleLineComment= DefaultCodeFormatterConstants.TRUE.equals(preferences.get(DefaultCodeFormatterConstants.FORMATTER_COMMENT_FORMAT_LINE_COMMENT));
 		boolean blockComment= DefaultCodeFormatterConstants.TRUE.equals(preferences.get(DefaultCodeFormatterConstants.FORMATTER_COMMENT_FORMAT_BLOCK_COMMENT));

@@ -93,7 +93,7 @@ public class ChangeTypeAction extends SelectionDispatchAction {
 			if (member == null || !ActionUtil.isEditable(getShell(), member))
 				return;
 			ISourceRange range= member.getNameRange();
-			RefactoringExecutionStarter.startChangeTypeRefactoring(member.getCompilationUnit(), getShell(), range.getOffset(), range.getLength());
+			RefactoringExecutionStarter.startChangeTypeRefactoring(member.getJavaScriptUnit(), getShell(), range.getOffset(), range.getLength());
 		} catch (CoreException e) {
 			ExceptionHandler.handle(e, RefactoringMessages.ChangeTypeAction_dialog_title, RefactoringMessages.ChangeTypeAction_exception); 
 		}

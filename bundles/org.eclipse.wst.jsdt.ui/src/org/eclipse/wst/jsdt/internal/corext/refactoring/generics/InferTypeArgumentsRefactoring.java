@@ -244,7 +244,7 @@ public class InferTypeArgumentsRefactoring extends ScriptableRefactoring {
 		HashMap/*<IJavaScriptProject, List<JavaElement>>*/ result= new HashMap/*<IJavaScriptProject, List<JavaElement>>*/();
 		for (int i= 0; i < fElements.length; i++) {
 			IJavaScriptElement element= fElements[i];
-			IJavaScriptProject javaProject= element.getJavaProject();
+			IJavaScriptProject javaProject= element.getJavaScriptProject();
 			ArrayList javaElements= (ArrayList) result.get(javaProject);
 			if (javaElements == null) {
 				javaElements= new ArrayList();
@@ -260,7 +260,7 @@ public class InferTypeArgumentsRefactoring extends ScriptableRefactoring {
 		HashSet/*<IJavaScriptProject>*/ checkedProjects= new HashSet/*<IJavaScriptProject>*/();
 		
 		for (int i= 0; i < fElements.length; i++) {
-			IJavaScriptProject javaProject= fElements[i].getJavaProject();
+			IJavaScriptProject javaProject= fElements[i].getJavaScriptProject();
 			if (! checkedProjects.contains(javaProject)) {
 				if (! JavaModelUtil.is50OrHigher(javaProject)) {
 					String message= Messages.format(RefactoringCoreMessages.InferTypeArgumentsRefactoring_not50, javaProject.getElementName()); 
@@ -557,7 +557,7 @@ public class InferTypeArgumentsRefactoring extends ScriptableRefactoring {
 	private IJavaScriptProject getSingleProject() {
 		IJavaScriptProject first= null;
 		for (int index= 0; index < fElements.length; index++) {
-			final IJavaScriptProject project= fElements[index].getJavaProject();
+			final IJavaScriptProject project= fElements[index].getJavaScriptProject();
 			if (project != null) {
 				if (first == null)
 					first= project;

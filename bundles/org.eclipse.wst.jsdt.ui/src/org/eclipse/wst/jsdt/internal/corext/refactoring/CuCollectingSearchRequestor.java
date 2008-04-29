@@ -33,7 +33,7 @@ public abstract class CuCollectingSearchRequestor extends CollectingSearchReques
 			return fScannerCache;
 		
 		fCuCache= unit;
-		IJavaScriptProject project= unit.getJavaProject();
+		IJavaScriptProject project= unit.getJavaScriptProject();
 		String sourceLevel= project.getOption(JavaScriptCore.COMPILER_SOURCE, true);
 		String complianceLevel= project.getOption(JavaScriptCore.COMPILER_COMPLIANCE, true);
 		fScannerCache= ToolFactory.createScanner(false, false, false, sourceLevel, complianceLevel);

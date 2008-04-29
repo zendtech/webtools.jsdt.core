@@ -176,7 +176,7 @@ public class TypeMismatchSubProcessor {
 	public static void addChangeSenderTypeProposals(IInvocationContext context, Expression nodeToCast, ITypeBinding castTypeBinding, boolean isAssignedNode, int relevance, Collection proposals) throws JavaScriptModelException {
 		IBinding callerBinding= null;
 		switch (nodeToCast.getNodeType()) {
-			case ASTNode.METHOD_INVOCATION:
+			case ASTNode.FUNCTION_INVOCATION:
 				callerBinding= ((FunctionInvocation) nodeToCast).resolveMethodBinding();
 				break;
 			case ASTNode.SUPER_METHOD_INVOCATION:

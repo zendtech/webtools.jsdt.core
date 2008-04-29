@@ -123,11 +123,11 @@ public class AddToClasspathAction extends SelectionDispatchAction {
 				private void addToClassPath(IJavaScriptProject project, IPath jarPath, IProgressMonitor monitor) throws JavaScriptModelException {
 					if (monitor.isCanceled())
 						throw new OperationCanceledException();
-					IIncludePathEntry[] entries= project.getRawClasspath();
+					IIncludePathEntry[] entries= project.getRawIncludepath();
 					IIncludePathEntry[] newEntries= new IIncludePathEntry[entries.length + 1];
 					System.arraycopy(entries, 0, newEntries, 0, entries.length);
 					newEntries[entries.length]= JavaScriptCore.newLibraryEntry(jarPath, null, null, false);
-					project.setRawClasspath(newEntries, monitor);
+					project.setRawIncludepath(newEntries, monitor);
 				}
 			};	
 			

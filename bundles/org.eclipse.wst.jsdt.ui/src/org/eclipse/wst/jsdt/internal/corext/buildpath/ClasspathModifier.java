@@ -308,7 +308,7 @@ public class ClasspathModifier {
 	 * @throws JavaScriptModelException
 	 */
 	public static List getExistingEntries(IJavaScriptProject project) throws JavaScriptModelException {
-		IIncludePathEntry[] classpathEntries= project.getRawClasspath();
+		IIncludePathEntry[] classpathEntries= project.getRawIncludepath();
 		ArrayList newClassPath= new ArrayList();
 		for (int i= 0; i < classpathEntries.length; i++) {
 			IIncludePathEntry curr= classpathEntries[i];
@@ -331,13 +331,13 @@ public class ClasspathModifier {
 	 * @throws JavaScriptModelException
 	 */
 	public static CPListElement getClasspathEntry(List elements, IPackageFragmentRoot root) throws JavaScriptModelException {
-		IIncludePathEntry entry= root.getRawClasspathEntry();
+		IIncludePathEntry entry= root.getRawIncludepathEntry();
 		for (int i= 0; i < elements.size(); i++) {
 			CPListElement element= (CPListElement) elements.get(i);
 			if (element.getPath().equals(root.getPath()) && element.getEntryKind() == entry.getEntryKind())
 				return (CPListElement) elements.get(i);
 		}
-		CPListElement newElement= CPListElement.createFromExisting(entry, root.getJavaProject());
+		CPListElement newElement= CPListElement.createFromExisting(entry, root.getJavaScriptProject());
 		elements.add(newElement);
 		return newElement;
 	}
@@ -409,7 +409,7 @@ public class ClasspathModifier {
 	 * @throws JavaScriptModelException
 	 */
 	public static IIncludePathEntry getClasspathEntryFor(IPath path, IJavaScriptProject project, int entryKind) throws JavaScriptModelException {
-		IIncludePathEntry[] entries= project.getRawClasspath();
+		IIncludePathEntry[] entries= project.getRawIncludepath();
 		for (int i= 0; i < entries.length; i++) {
 			IIncludePathEntry entry= entries[i];
 			if (entry.getPath().equals(path) && equalEntryKind(entry, entryKind))
@@ -448,7 +448,7 @@ public class ClasspathModifier {
 		try {
 			monitor.beginTask(NewWizardMessages.ClasspathModifier_Monitor_ContainsPath, 4); 
 			IPackageFragmentRoot root= (IPackageFragmentRoot) selection.getAncestor(IJavaScriptElement.PACKAGE_FRAGMENT_ROOT);
-			IIncludePathEntry entry= root.getRawClasspathEntry();
+			IIncludePathEntry entry= root.getRawIncludepathEntry();
 			if (entry == null)
 				return false;
 			return contains(selection.getPath().removeFirstSegments(root.getPath().segmentCount()), entry.getInclusionPatterns(), new SubProgressMonitor(monitor, 2));
@@ -472,7 +472,7 @@ public class ClasspathModifier {
 			return false;
 		String fragmentName= getName(resource.getFullPath(), root.getPath());
 		fragmentName= completeName(fragmentName);
-		IIncludePathEntry entry= root.getRawClasspathEntry();
+		IIncludePathEntry entry= root.getRawIncludepathEntry();
 		return entry != null && contains(new Path(fragmentName), entry.getExclusionPatterns(), null);
 	}
 
@@ -495,7 +495,7 @@ public class ClasspathModifier {
 			return true;
 		}
 		IPath path= resource.getFullPath().removeFirstSegments(root.getPath().segmentCount());
-		IIncludePathEntry entry= root.getRawClasspathEntry();
+		IIncludePathEntry entry= root.getRawIncludepathEntry();
 		if (entry == null)
 			return true; // there is no build path entry, this is equal to the fact that the parent is excluded
 		while (path.segmentCount() > 0) {
@@ -517,7 +517,7 @@ public class ClasspathModifier {
 	 * @throws JavaScriptModelException
 	 */
 	public static boolean hasDefaultOutputFolder(IPackageFragmentRoot root) throws JavaScriptModelException {
-		return root.getRawClasspathEntry().getOutputLocation() == null;
+		return root.getRawIncludepathEntry().getOutputLocation() == null;
 	}
 
 	/**
@@ -537,7 +537,7 @@ public class ClasspathModifier {
 			IPackageFragmentRoot[] roots= project.getPackageFragmentRoots();
 			monitor.beginTask(NewWizardMessages.ClasspathModifier_Monitor_CheckOutputFolders, roots.length); 
 			for (int i= 0; i < roots.length; i++) {
-				if (roots[i].getRawClasspathEntry().getOutputLocation() != null)
+				if (roots[i].getRawIncludepathEntry().getOutputLocation() != null)
 					return true;
 				monitor.worked(1);
 			}
@@ -618,7 +618,7 @@ public class ClasspathModifier {
 			monitor.beginTask(NewWizardMessages.ClasspathModifier_Monitor_ExamineInputFilters, 4); 
 			IPackageFragmentRoot root= getFragmentRoot(resource, project, new SubProgressMonitor(monitor, 4));
 			if (root != null) {
-				IIncludePathEntry entry= root.getRawClasspathEntry();
+				IIncludePathEntry entry= root.getRawIncludepathEntry();
 				return entry.getInclusionPatterns().length == 0;
 			}
 			return true;
@@ -640,7 +640,7 @@ public class ClasspathModifier {
 	public static boolean filtersSet(IPackageFragmentRoot root) throws JavaScriptModelException {
 		if (root == null)
 			return false;
-		IIncludePathEntry entry= root.getRawClasspathEntry();
+		IIncludePathEntry entry= root.getRawIncludepathEntry();
 		IPath[] inclusions= entry.getInclusionPatterns();
 		IPath[] exclusions= entry.getExclusionPatterns();
 		if (inclusions != null && inclusions.length > 0)
@@ -1021,7 +1021,7 @@ public class ClasspathModifier {
 			if (!status.isOK())
 				throw new JavaScriptModelException(status);
 
-			project.setRawClasspath(entries, outputLocation, new SubProgressMonitor(monitor, 2));
+			project.setRawIncludepath(entries, outputLocation, new SubProgressMonitor(monitor, 2));
 		} finally {
 			monitor.done();
 		}
@@ -1041,7 +1041,7 @@ public class ClasspathModifier {
 			if (!status.isOK())
 				throw new JavaScriptModelException(status);
 
-			cpProject.getJavaProject().setRawClasspath(entries, outputLocation, new SubProgressMonitor(monitor, 2));
+			cpProject.getJavaProject().setRawIncludepath(entries, outputLocation, new SubProgressMonitor(monitor, 2));
 		} finally {
 			monitor.done();
 		}
@@ -1071,7 +1071,7 @@ public class ClasspathModifier {
 			IResource resource= getResource(path, project);
 			if (resource != null) {
 				IJavaScriptElement elem= JavaScriptCore.create(resource);
-				if (elem != null && project.isOnClasspath(elem))
+				if (elem != null && project.isOnIncludepath(elem))
 					result.add(elem);
 				else
 					result.add(resource);
@@ -1134,7 +1134,7 @@ public class ClasspathModifier {
 	 * @return modified string
 	 */
 	private static String completeName(String name) {
-		if (!JavaScriptCore.isJavaLikeFileName(name)) {
+		if (!JavaScriptCore.isJavaScriptLikeFileName(name)) {
 			name= name + "/"; //$NON-NLS-1$
 			name= name.replace('.', '/');
 			return name;
@@ -1198,7 +1198,7 @@ public class ClasspathModifier {
 		if (monitor == null)
 			monitor= new NullProgressMonitor();
 		List srcFolders= new ArrayList();
-		IIncludePathEntry[] cpEntries= project.getRawClasspath();
+		IIncludePathEntry[] cpEntries= project.getRawIncludepath();
 		for (int i= 0; i < cpEntries.length; i++) {
 			IPath cpPath= cpEntries[i].getPath();
 			if (path.isPrefixOf(cpPath) && path.segmentCount() + 1 == cpPath.segmentCount())
@@ -1328,7 +1328,7 @@ public class ClasspathModifier {
 				if (outputLocation.equals(projPath)) {
 					IStatus status2= JavaScriptConventions.validateClasspath(project, entries, outputLocation);
 					if (status2.isOK()) {
-						if (project.isOnClasspath(project)) {
+						if (project.isOnIncludepath(project)) {
 							rootStatus.setInfo(Messages.format(NewWizardMessages.NewSourceFolderWizardPage_warning_ReplaceSFandOL, outputLocation.makeRelative().toString())); 
 						} else {
 							rootStatus.setInfo(Messages.format(NewWizardMessages.NewSourceFolderWizardPage_warning_ReplaceOL, outputLocation.makeRelative().toString())); 

@@ -95,7 +95,7 @@ public class IntroduceFactoryAction extends SelectionDispatchAction {
 				if (!ActionUtil.isEditable(getShell(), method))
 					return;
 				ISourceRange range= method.getNameRange();
-				RefactoringExecutionStarter.startIntroduceFactoryRefactoring(method.getCompilationUnit(), new TextSelection(range.getOffset(), range.getLength()), getShell());
+				RefactoringExecutionStarter.startIntroduceFactoryRefactoring(method.getJavaScriptUnit(), new TextSelection(range.getOffset(), range.getLength()), getShell());
 			}
 		} catch (CoreException e) {
 			ExceptionHandler.handle(e, RefactoringMessages.IntroduceFactoryAction_dialog_title, RefactoringMessages.IntroduceFactoryAction_exception); 

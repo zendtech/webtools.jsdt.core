@@ -97,7 +97,7 @@ public JavaElementDeltaBuilder(IJavaScriptElement javaElement) {
 	this.initialize();
 	this.recordElementInfo(
 		javaElement,
-		(JavaModel)this.javaElement.getJavaModel(),
+		(JavaModel)this.javaElement.getJavaScriptModel(),
 		0);
 }
 /**
@@ -110,7 +110,7 @@ public JavaElementDeltaBuilder(IJavaScriptElement javaElement, int maxDepth) {
 	this.initialize();
 	this.recordElementInfo(
 		javaElement,
-		(JavaModel)this.javaElement.getJavaModel(),
+		(JavaModel)this.javaElement.getJavaScriptModel(),
 		0);
 }
 /**

@@ -98,7 +98,7 @@ public class OverrideCompletionProposal extends JavaTypeCompletionProposal imple
 		parser.setStatementsRecovery(true);
 		parser.setSource(buffer.get().toCharArray());
 		parser.setUnitName(fCompilationUnit.getResource().getFullPath().toString());
-		parser.setProject(fCompilationUnit.getJavaProject());
+		parser.setProject(fCompilationUnit.getJavaScriptProject());
 		final JavaScriptUnit unit= (JavaScriptUnit) parser.createAST(new NullProgressMonitor());
 		ITypeBinding binding= null;
 		ChildListPropertyDescriptor descriptor= null;

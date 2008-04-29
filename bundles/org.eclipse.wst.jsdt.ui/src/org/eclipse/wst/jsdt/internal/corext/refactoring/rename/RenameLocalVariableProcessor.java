@@ -344,7 +344,7 @@ public class RenameLocalVariableProcessor extends JavaRenameProcessor implements
 			if (change != null) {
 				final ISourceRange range= fLocalVariable.getNameRange();
 				String project= null;
-				IJavaScriptProject javaProject= fCu.getJavaProject();
+				IJavaScriptProject javaProject= fCu.getJavaScriptProject();
 				if (javaProject != null)
 					project= javaProject.getElementName();
 				final String header= Messages.format(RefactoringCoreMessages.RenameLocalVariableProcessor_descriptor_description, new String[] { fCurrentName, JavaElementLabels.getElementLabel(fLocalVariable.getParent(), JavaElementLabels.ALL_FULLY_QUALIFIED), fNewName});

@@ -891,7 +891,7 @@ class ExternalizeWizardPage extends UserInputWizardPage {
 		if (fNLSRefactoring == null || fNLSRefactoring.getCu() == null)
 			return false;
 		
-		IJavaScriptProject jp= fNLSRefactoring.getCu().getJavaProject();
+		IJavaScriptProject jp= fNLSRefactoring.getCu().getJavaScriptProject();
 		if (jp == null || !jp.exists())
 			return false;
 		

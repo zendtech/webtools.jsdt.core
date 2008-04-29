@@ -148,7 +148,7 @@ protected void acceptBinaryMethod(
 		char[][][] typeParameterBoundNames,
 		char[] uniqueKey,
 		boolean isConstructor) {
-	IFunction method= type.getMethod(new String(selector), parameterSignatures);
+	IFunction method= type.getFunction(new String(selector), parameterSignatures);
 
 	if (method.exists()) {
 		if (typeParameterNames != null && typeParameterNames.length != 0) {
@@ -583,12 +583,12 @@ protected void acceptSourceMethod(
 	IFunction[] methods = null;
 	try {
 		if (parent instanceof IType)
-			methods = ((IType)parent).getMethods();
+			methods = ((IType)parent).getFunctions();
 		else if (parent instanceof IJavaScriptUnit)
-			methods=((IJavaScriptUnit)parent).getMethods();
+			methods=((IJavaScriptUnit)parent).getFunctions();
 		else if (parent instanceof IClassFile)
 		{
-			methods=((IClassFile)parent).getMethods();
+			methods=((IClassFile)parent).getFunctions();
 		}
 		if (methods!=null)
 			for (int i = 0; i < methods.length; i++) {
@@ -672,12 +672,12 @@ protected void acceptMethodDeclaration(IType type, char[] selector, int start, i
 	IFunction[] methods = null;
 	try {
 		if (type!=null)
-			methods = type.getMethods();
+			methods = type.getFunctions();
 			else
 				if (this.openable instanceof CompilationUnit)
-					methods=((CompilationUnit)this.openable).getMethods();
+					methods=((CompilationUnit)this.openable).getFunctions();
 				else if (this.openable instanceof ClassFile)
-				methods=((ClassFile)this.openable).getMethods();
+				methods=((ClassFile)this.openable).getFunctions();
 		for (int i = 0; i < methods.length; i++) {
 			ISourceRange range = methods[i].getNameRange();
 			if(range.getOffset() <= start
@@ -747,7 +747,7 @@ public void acceptMethodTypeParameter(char[] declaringTypePackageName, char[] fi
 		IFunction[] methods = null;
 
 		try {
-			methods = type.getMethods();
+			methods = type.getFunctions();
 			done : for (int i = 0; i < methods.length; i++) {
 				ISourceRange range = methods[i].getNameRange();
 				if(range.getOffset() >= selectorStart
@@ -981,7 +981,7 @@ protected IJavaScriptElement resolveCompilationUnit(char[] packageName, char[] c
 			false);
 		// iterate type lookup in each package fragment
 		for (int i = 0, length = pkgs == null ? 0 : pkgs.length; i < length; i++) {
-			IJavaScriptUnit compUnit=pkgs[i].getCompilationUnit(cuName);
+			IJavaScriptUnit compUnit=pkgs[i].getJavaScriptUnit(cuName);
 			if (compUnit.exists())
 				return compUnit;
 			IClassFile classFile=pkgs[i].getClassFile(cuName);

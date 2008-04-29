@@ -149,7 +149,7 @@ class JavaStructureDiffViewer extends StructureDiffViewer {
 			if (resource != null) {
 				IJavaScriptElement element= JavaScriptCore.create(resource);
 				if (element != null) {
-					IJavaScriptProject javaProject= element.getJavaProject();
+					IJavaScriptProject javaProject= element.getJavaScriptProject();
 					if (javaProject != null)
 						return javaProject.getOptions(true);
 				}

@@ -202,7 +202,7 @@ public class FunctionInvocation extends Expression {
 	 * Method declared on ASTNode.
 	 */
 	final int getNodeType0() {
-		return METHOD_INVOCATION;
+		return FUNCTION_INVOCATION;
 	}
 
 	/* (omit javadoc for this method)

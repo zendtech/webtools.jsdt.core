@@ -183,7 +183,7 @@ public class TypedSource {
 			ISourceReference reference= (ISourceReference) elem;
 			String source= reference.getSource();
 			if (source != null)
-				return Strings.trimIndentation(source, cu.getJavaProject(), false);
+				return Strings.trimIndentation(source, cu.getJavaScriptProject(), false);
 		}
 		return ""; //$NON-NLS-1$
 	}

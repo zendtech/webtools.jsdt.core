@@ -118,7 +118,7 @@ class JavaTextBufferNode implements ITypedElement, IEncodedStreamContentAccessor
 				
 			case JavaNode.CONSTRUCTOR:
 			case JavaNode.METHOD:
-				return ASTNode.METHOD_DECLARATION;
+				return ASTNode.FUNCTION_DECLARATION;
 				
 			case JavaNode.FIELD:
 				return ASTNode.FIELD_DECLARATION;
@@ -131,7 +131,7 @@ class JavaTextBufferNode implements ITypedElement, IEncodedStreamContentAccessor
 				return ASTNode.IMPORT_DECLARATION;
 
 			case JavaNode.CU:
-			    return ASTNode.COMPILATION_UNIT;
+			    return ASTNode.JAVASCRIPT_UNIT;
 			}
 		}
 		return -1;

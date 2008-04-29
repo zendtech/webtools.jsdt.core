@@ -172,7 +172,7 @@ public abstract class HierarchyProcessor extends SuperTypeRefactoringProcessor {
 
 	protected static RefactoringStatus checkProjectCompliance(CompilationUnitRewrite sourceRewriter, IType destination, IMember[] members) {
 		RefactoringStatus status= new RefactoringStatus();
-		if (!JavaModelUtil.is50OrHigher(destination.getJavaProject())) {
+		if (!JavaModelUtil.is50OrHigher(destination.getJavaScriptProject())) {
 			for (int index= 0; index < members.length; index++) {
 				try {
 					BodyDeclaration decl= ASTNodeSearchUtil.getBodyDeclarationNode(members[index], sourceRewriter.getRoot());
@@ -226,11 +226,11 @@ public abstract class HierarchyProcessor extends SuperTypeRefactoringProcessor {
 	protected static void copyJavadocNode(final ASTRewrite rewrite, final IMember member, final BodyDeclaration oldDeclaration, final BodyDeclaration newDeclaration) throws JavaScriptModelException {
 		final JSdoc predecessor= oldDeclaration.getJavadoc();
 		if (predecessor != null) {
-			final IDocument buffer= new Document(member.getCompilationUnit().getBuffer().getContents());
+			final IDocument buffer= new Document(member.getJavaScriptUnit().getBuffer().getContents());
 			try {
 				final String[] lines= Strings.convertIntoLines(buffer.get(predecessor.getStartPosition(), predecessor.getLength()));
-				Strings.trimIndentation(lines, member.getJavaProject(), false);
-				final JSdoc successor= (JSdoc) rewrite.createStringPlaceholder(Strings.concatenate(lines, TextUtilities.getDefaultLineDelimiter(buffer)), ASTNode.JAVADOC);
+				Strings.trimIndentation(lines, member.getJavaScriptProject(), false);
+				final JSdoc successor= (JSdoc) rewrite.createStringPlaceholder(Strings.concatenate(lines, TextUtilities.getDefaultLineDelimiter(buffer)), ASTNode.JSDOC);
 				newDeclaration.setJavadoc(successor);
 			} catch (BadLocationException exception) {
 				JavaPlugin.log(exception);
@@ -269,9 +269,9 @@ public abstract class HierarchyProcessor extends SuperTypeRefactoringProcessor {
 		if (oldFieldFragment.getInitializer() != null) {
 			Expression newInitializer= null;
 			if (mapping.length > 0)
-				newInitializer= createPlaceholderForExpression(oldFieldFragment.getInitializer(), field.getCompilationUnit(), mapping, rewrite);
+				newInitializer= createPlaceholderForExpression(oldFieldFragment.getInitializer(), field.getJavaScriptUnit(), mapping, rewrite);
 			else
-				newInitializer= createPlaceholderForExpression(oldFieldFragment.getInitializer(), field.getCompilationUnit(), rewrite);
+				newInitializer= createPlaceholderForExpression(oldFieldFragment.getInitializer(), field.getJavaScriptUnit(), rewrite);
 			newFragment.setInitializer(newInitializer);
 		}
 		newFragment.setName(((SimpleName) ASTNode.copySubtree(rewrite.getAST(), oldFieldFragment.getName())));
@@ -283,15 +283,15 @@ public abstract class HierarchyProcessor extends SuperTypeRefactoringProcessor {
 		final Type oldType= oldField.getType();
 		Type newType= null;
 		if (mapping.length > 0) {
-			newType= createPlaceholderForType(oldType, field.getCompilationUnit(), mapping, rewrite);
+			newType= createPlaceholderForType(oldType, field.getJavaScriptUnit(), mapping, rewrite);
 		} else
-			newType= createPlaceholderForType(oldType, field.getCompilationUnit(), rewrite);
+			newType= createPlaceholderForType(oldType, field.getJavaScriptUnit(), rewrite);
 		newField.setType(newType);
 		return newField;
 	}
 
 	protected static Expression createPlaceholderForExpression(final Expression expression, final IJavaScriptUnit declaringCu, final ASTRewrite rewrite) throws JavaScriptModelException {
-		return (Expression) rewrite.createStringPlaceholder(declaringCu.getBuffer().getText(expression.getStartPosition(), expression.getLength()), ASTNode.METHOD_INVOCATION);
+		return (Expression) rewrite.createStringPlaceholder(declaringCu.getBuffer().getText(expression.getStartPosition(), expression.getLength()), ASTNode.FUNCTION_INVOCATION);
 	}
 
 	protected static Expression createPlaceholderForExpression(final Expression expression, final IJavaScriptUnit declaringCu, final TypeVariableMaplet[] mapping, final ASTRewrite rewrite) throws JavaScriptModelException {
@@ -301,8 +301,8 @@ public abstract class HierarchyProcessor extends SuperTypeRefactoringProcessor {
 			final ASTRewrite rewriter= ASTRewrite.create(expression.getAST());
 			final ITrackedNodePosition position= rewriter.track(expression);
 			expression.accept(new TypeVariableMapper(rewriter, mapping));
-			rewriter.rewriteAST(document, declaringCu.getJavaProject().getOptions(true)).apply(document, TextEdit.NONE);
-			result= (Expression) rewrite.createStringPlaceholder(document.get(position.getStartPosition(), position.getLength()), ASTNode.METHOD_INVOCATION);
+			rewriter.rewriteAST(document, declaringCu.getJavaScriptProject().getOptions(true)).apply(document, TextEdit.NONE);
+			result= (Expression) rewrite.createStringPlaceholder(document.get(position.getStartPosition(), position.getLength()), ASTNode.FUNCTION_INVOCATION);
 		} catch (MalformedTreeException exception) {
 			JavaPlugin.log(exception);
 		} catch (BadLocationException exception) {
@@ -318,7 +318,7 @@ public abstract class HierarchyProcessor extends SuperTypeRefactoringProcessor {
 			ModifierRewrite.create(rewriter, bodyDeclaration).setVisibility(Modifier.PROTECTED, null);
 			final ITrackedNodePosition position= rewriter.track(bodyDeclaration);
 			final IDocument document= new Document(declaringCu.getBuffer().getText(declaringCuNode.getStartPosition(), declaringCuNode.getLength()));
-			rewriter.rewriteAST(document, declaringCu.getJavaProject().getOptions(true)).apply(document, TextEdit.UPDATE_REGIONS);
+			rewriter.rewriteAST(document, declaringCu.getJavaScriptProject().getOptions(true)).apply(document, TextEdit.UPDATE_REGIONS);
 			text= document.get(position.getStartPosition(), position.getLength());
 		} catch (BadLocationException exception) {
 			text= getNewText(bodyDeclaration, declaringCu, removeIndentation);
@@ -349,7 +349,7 @@ public abstract class HierarchyProcessor extends SuperTypeRefactoringProcessor {
 					return true;
 				}
 			});
-			rewriter.rewriteAST(document, declaringCu.getJavaProject().getOptions(true)).apply(document, TextEdit.NONE);
+			rewriter.rewriteAST(document, declaringCu.getJavaScriptProject().getOptions(true)).apply(document, TextEdit.NONE);
 			result= (BodyDeclaration) rewrite.createStringPlaceholder(document.get(position.getStartPosition(), position.getLength()), ASTNode.TYPE_DECLARATION);
 		} catch (MalformedTreeException exception) {
 			JavaPlugin.log(exception);
@@ -370,7 +370,7 @@ public abstract class HierarchyProcessor extends SuperTypeRefactoringProcessor {
 			final ASTRewrite rewriter= ASTRewrite.create(declaration.getAST());
 			final ITrackedNodePosition position= rewriter.track(declaration);
 			declaration.accept(new TypeVariableMapper(rewriter, mapping));
-			rewriter.rewriteAST(document, declaringCu.getJavaProject().getOptions(true)).apply(document, TextEdit.NONE);
+			rewriter.rewriteAST(document, declaringCu.getJavaScriptProject().getOptions(true)).apply(document, TextEdit.NONE);
 			result= (SingleVariableDeclaration) rewrite.createStringPlaceholder(document.get(position.getStartPosition(), position.getLength()), ASTNode.SINGLE_VARIABLE_DECLARATION);
 		} catch (MalformedTreeException exception) {
 			JavaPlugin.log(exception);
@@ -391,7 +391,7 @@ public abstract class HierarchyProcessor extends SuperTypeRefactoringProcessor {
 			final ASTRewrite rewriter= ASTRewrite.create(type.getAST());
 			final ITrackedNodePosition position= rewriter.track(type);
 			type.accept(new TypeVariableMapper(rewriter, mapping));
-			rewriter.rewriteAST(document, declaringCu.getJavaProject().getOptions(true)).apply(document, TextEdit.NONE);
+			rewriter.rewriteAST(document, declaringCu.getJavaScriptProject().getOptions(true)).apply(document, TextEdit.NONE);
 			result= (Type) rewrite.createStringPlaceholder(document.get(position.getStartPosition(), position.getLength()), ASTNode.SIMPLE_TYPE);
 		} catch (MalformedTreeException exception) {
 			JavaPlugin.log(exception);
@@ -412,7 +412,7 @@ public abstract class HierarchyProcessor extends SuperTypeRefactoringProcessor {
 			final ASTRewrite rewriter= ASTRewrite.create(bodyDeclaration.getAST());
 			final ITrackedNodePosition position= rewriter.track(bodyDeclaration);
 			bodyDeclaration.accept(new TypeVariableMapper(rewriter, mapping));
-			rewriter.rewriteAST(document, declaringCu.getJavaProject().getOptions(true)).apply(document, TextEdit.NONE);
+			rewriter.rewriteAST(document, declaringCu.getJavaScriptProject().getOptions(true)).apply(document, TextEdit.NONE);
 			result= (BodyDeclaration) rewrite.createStringPlaceholder(document.get(position.getStartPosition(), position.getLength()), ASTNode.TYPE_DECLARATION);
 		} catch (MalformedTreeException exception) {
 			JavaPlugin.log(exception);
@@ -479,7 +479,7 @@ public abstract class HierarchyProcessor extends SuperTypeRefactoringProcessor {
 
 	protected static String getUnindentedText(final String text, final IJavaScriptUnit declaringCu) throws JavaScriptModelException {
 		final String[] lines= Strings.convertIntoLines(text);
-		Strings.trimIndentation(lines, declaringCu.getJavaProject(), false);
+		Strings.trimIndentation(lines, declaringCu.getJavaScriptProject(), false);
 		return Strings.concatenate(lines, StubUtility.getLineDelimiterUsed(declaringCu));
 	}
 
@@ -516,7 +516,7 @@ public abstract class HierarchyProcessor extends SuperTypeRefactoringProcessor {
 		if (members != null) {
 			fMembersToMove= (IMember[]) SourceReferenceUtil.sortByOffset(members);
 			if (layer && fMembersToMove.length > 0) {
-				final IJavaScriptUnit original= fMembersToMove[0].getCompilationUnit();
+				final IJavaScriptUnit original= fMembersToMove[0].getJavaScriptUnit();
 				if (original != null) {
 					try {
 						final IJavaScriptUnit copy= getSharedWorkingCopy(original.getPrimary(), new NullProgressMonitor());
@@ -669,7 +669,7 @@ public abstract class HierarchyProcessor extends SuperTypeRefactoringProcessor {
 		else if (groups.length > 1)
 			return true;
 		final IJavaScriptUnit unit= groups[0].getCompilationUnit();
-		if (!getDeclaringType().getCompilationUnit().equals(unit))
+		if (!getDeclaringType().getJavaScriptUnit().equals(unit))
 			return true;
 		final SearchMatch[] matches= groups[0].getSearchResults();
 		for (int index= 0; index < matches.length; index++) {

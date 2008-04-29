@@ -161,9 +161,9 @@ public class StubCreator {
 			String superSignature= declaringType.getSuperclassTypeSignature();
 			if (superSignature != null) {
 				superSignature= Signature.getTypeErasure(superSignature);
-				final IType superclass= declaringType.getJavaProject().findType(Signature.getSignatureQualifier(superSignature), Signature.getSignatureSimpleName(superSignature));
+				final IType superclass= declaringType.getJavaScriptProject().findType(Signature.getSignatureQualifier(superSignature), Signature.getSignatureSimpleName(superSignature));
 				if (superclass != null) {
-					final IFunction[] superMethods= superclass.getMethods();
+					final IFunction[] superMethods= superclass.getFunctions();
 					IFunction superConstructor= null;
 					final int length= superMethods.length;
 					for (int index= 0; index < length; index++) {

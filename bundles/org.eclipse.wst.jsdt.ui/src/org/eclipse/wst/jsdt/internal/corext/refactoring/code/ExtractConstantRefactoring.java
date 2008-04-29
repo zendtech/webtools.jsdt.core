@@ -220,7 +220,7 @@ public class ExtractConstantRefactoring extends ScriptableRefactoring {
 				Expression expression= getSelectedExpression().getAssociatedExpression();
 				if (expression != null) {
 					ITypeBinding binding= expression.resolveTypeBinding();
-					fGuessedConstNames= StubUtility.getVariableNameSuggestions(StubUtility.CONSTANT_FIELD, fCu.getJavaProject(), binding, expression, Arrays.asList(getExcludedVariableNames()));
+					fGuessedConstNames= StubUtility.getVariableNameSuggestions(StubUtility.CONSTANT_FIELD, fCu.getJavaScriptProject(), binding, expression, Arrays.asList(getExcludedVariableNames()));
 				} 
 			} catch (JavaScriptModelException e) {
 			}
@@ -464,11 +464,11 @@ public class ExtractConstantRefactoring extends ScriptableRefactoring {
 		fieldDeclaration.modifiers().add(ast.newModifier(Modifier.ModifierKeyword.STATIC_KEYWORD));
 		fieldDeclaration.modifiers().add(ast.newModifier(Modifier.ModifierKeyword.FINAL_KEYWORD));
 		
-		boolean createComments= JavaPreferencesSettings.getCodeGenerationSettings(fCu.getJavaProject()).createComments;
+		boolean createComments= JavaPreferencesSettings.getCodeGenerationSettings(fCu.getJavaScriptProject()).createComments;
 		if (createComments) {
 			String comment= CodeGeneration.getFieldComment(fCu, getConstantTypeName(), fConstantName, StubUtility.getLineDelimiterUsed(fCu));
 			if (comment != null && comment.length() > 0) {
-				JSdoc doc= (JSdoc) fCuRewrite.getASTRewrite().createStringPlaceholder(comment, ASTNode.JAVADOC);
+				JSdoc doc= (JSdoc) fCuRewrite.getASTRewrite().createStringPlaceholder(comment, ASTNode.JSDOC);
 				fieldDeclaration.setJavadoc(doc);
 			}
 		}
@@ -524,7 +524,7 @@ public class ExtractConstantRefactoring extends ScriptableRefactoring {
 	public Change createChange(IProgressMonitor monitor) throws CoreException {
 		final Map arguments= new HashMap();
 		String project= null;
-		IJavaScriptProject javaProject= fCu.getJavaProject();
+		IJavaScriptProject javaProject= fCu.getJavaScriptProject();
 		if (javaProject != null)
 			project= javaProject.getElementName();
 		int flags= JavaRefactoringDescriptor.JAR_REFACTORING | JavaRefactoringDescriptor.JAR_SOURCE_ATTACHMENT;

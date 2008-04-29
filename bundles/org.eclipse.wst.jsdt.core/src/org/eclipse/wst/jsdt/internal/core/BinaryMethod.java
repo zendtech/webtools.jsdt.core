@@ -183,7 +183,7 @@ public String[] getParameterNames() throws JavaScriptModelException {
 		}
 		String javadocContents = null;
 		IType declaringType = this.getDeclaringType();
-		PerProjectInfo projectInfo = JavaModelManager.getJavaModelManager().getPerProjectInfoCheckExistence(this.getJavaProject().getProject());
+		PerProjectInfo projectInfo = JavaModelManager.getJavaModelManager().getPerProjectInfoCheckExistence(this.getJavaScriptProject().getProject());
 		synchronized (projectInfo.javadocCache) {
 			javadocContents = (String) projectInfo.javadocCache.get(declaringType);
 			if (javadocContents == null) {
@@ -193,7 +193,7 @@ public String[] getParameterNames() throws JavaScriptModelException {
 		if (javadocContents == null) {
 			long timeOut = 50; // default value
 			try {
-				String option = this.getJavaProject().getOption(JavaScriptCore.TIMEOUT_FOR_PARAMETER_NAME_FROM_ATTACHED_JAVADOC, true);
+				String option = this.getJavaScriptProject().getOption(JavaScriptCore.TIMEOUT_FOR_PARAMETER_NAME_FROM_ATTACHED_JAVADOC, true);
 				if (option != null) {
 					timeOut = Long.parseLong(option);
 				}
@@ -591,7 +591,7 @@ private String extractJavadoc(IType declaringType, String contents) throws JavaS
 	if (genericSignature != null) {
 		genericSignature = CharOperation.replaceOnCopy(genericSignature, '/', '.');
 		anchor = Util.toAnchor(genericSignature, methodName, Flags.isVarargs(this.getFlags()));
-		if (anchor == null) throw new JavaScriptModelException(new JavaModelStatus(IJavaScriptModelStatusConstants.UNKNOWN_JAVADOC_FORMAT, this));
+		if (anchor == null) throw new JavaScriptModelException(new JavaModelStatus(IJavaScriptModelStatusConstants.UNKNOWN_JSDOC_FORMAT, this));
 	} else {
 		anchor = Signature.toString(this.getSignature().replace('/', '.'), methodName, null, true, false, Flags.isVarargs(this.getFlags()));
 	}
@@ -599,7 +599,7 @@ private String extractJavadoc(IType declaringType, String contents) throws JavaS
 		int depth = 0;
 		final String packageFragmentName = declaringType.getPackageFragment().getElementName();
 		// might need to remove a part of the signature corresponding to the synthetic argument
-		final IJavaScriptProject javaProject = declaringType.getJavaProject();
+		final IJavaScriptProject javaProject = declaringType.getJavaScriptProject();
 		char[][] typeNames = CharOperation.splitOn('.', typeQualifiedName.toCharArray());
 		if (!Flags.isStatic(declaringType.getFlags())) depth++;
 		StringBuffer typeName = new StringBuffer();
@@ -631,7 +631,7 @@ private String extractJavadoc(IType declaringType, String contents) throws JavaS
 		return null; // method without javadoc
 	}
 	int indexOfEndLink = contents.indexOf(JavadocConstants.ANCHOR_SUFFIX, indexAnchor);
-	if (indexOfEndLink == -1) throw new JavaScriptModelException(new JavaModelStatus(IJavaScriptModelStatusConstants.UNKNOWN_JAVADOC_FORMAT, this));
+	if (indexOfEndLink == -1) throw new JavaScriptModelException(new JavaModelStatus(IJavaScriptModelStatusConstants.UNKNOWN_JSDOC_FORMAT, this));
 	int indexOfNextMethod = contents.indexOf(JavadocConstants.ANCHOR_PREFIX_START, indexOfEndLink);
 	// find bottom
 	int indexOfBottom = -1;
@@ -643,12 +643,18 @@ private String extractJavadoc(IType declaringType, String contents) throws JavaS
 	} else {
 		indexOfBottom = contents.indexOf(JavadocConstants.END_OF_CLASS_DATA, indexOfEndLink);
 	}
-	if (indexOfBottom == -1) throw new JavaScriptModelException(new JavaModelStatus(IJavaScriptModelStatusConstants.UNKNOWN_JAVADOC_FORMAT, this));
+	if (indexOfBottom == -1) throw new JavaScriptModelException(new JavaModelStatus(IJavaScriptModelStatusConstants.UNKNOWN_JSDOC_FORMAT, this));
 	indexOfNextMethod = Math.min(indexOfNextMethod, indexOfBottom);
-	if (indexOfNextMethod == -1) throw new JavaScriptModelException(new JavaModelStatus(IJavaScriptModelStatusConstants.UNKNOWN_JAVADOC_FORMAT, this));
+	if (indexOfNextMethod == -1) throw new JavaScriptModelException(new JavaModelStatus(IJavaScriptModelStatusConstants.UNKNOWN_JSDOC_FORMAT, this));
 	return contents.substring(indexOfEndLink + JavadocConstants.ANCHOR_SUFFIX_LENGTH, indexOfNextMethod);
 }
+/**
+ * @deprecated Use {@link #getFunction(String,String[])} instead
+ */
 public IFunction getMethod(String selector, String[] parameterTypeSignatures) {
+	return getFunction(selector, parameterTypeSignatures);
+}
+public IFunction getFunction(String selector, String[] parameterTypeSignatures) {
 	// TODO Auto-generated method stub
 	return null;
 }

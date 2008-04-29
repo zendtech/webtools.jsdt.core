@@ -91,7 +91,7 @@ public class DocumentContextFragment extends PackageFragment{
 		if(elementResource!=null && elementResource.exists()) {
 			try {
 				//return createCompilationUnit(resource, null, true, new NullProgressMonitor());
-				IJavaScriptUnit unit = getCompilationUnit(resource);
+				IJavaScriptUnit unit = getJavaScriptUnit(resource);
 				//((JavaScriptUnit)unit).buildStructure(new CompilationUnitElementInfo(), new NullProgressMonitor(), new HashMap(), ((IContainer)getParent().getResource()).findMember(resource));
 				//unit.makeConsistent(new NullProgressMonitor());
 				//((JavaElement)unit).openWhenClosed(new CompilationUnitElementInfo(), new NullProgressMonitor());
@@ -154,7 +154,17 @@ public class DocumentContextFragment extends PackageFragment{
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.jsdt.internal.core.PackageFragment#getCompilationUnit(java.lang.String)
 	 */
+	/**
+	 * @deprecated Use {@link #getJavaScriptUnit(String)} instead
+	 */
 	public IJavaScriptUnit getCompilationUnit(String cuName) {
+		return getJavaScriptUnit(cuName);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.internal.core.PackageFragment#getCompilationUnit(java.lang.String)
+	 */
+	public IJavaScriptUnit getJavaScriptUnit(String cuName) {
 		return  new CompilationUnit(this, cuName, DefaultWorkingCopyOwner.PRIMARY);
 	}
 

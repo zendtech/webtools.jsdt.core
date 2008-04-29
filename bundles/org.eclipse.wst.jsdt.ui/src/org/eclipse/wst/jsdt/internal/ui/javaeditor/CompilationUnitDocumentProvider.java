@@ -1002,7 +1002,7 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 			IIncludePathEntry[] cpEntries= null;
 			IJavaScriptProject jp= findJavaProject(storagePath);
 			if (jp != null)
-				cpEntries= jp.getResolvedClasspath(true);
+				cpEntries= jp.getResolvedIncludepath(true);
 			
 			if (cpEntries == null || cpEntries.length == 0)
 				cpEntries= new IIncludePathEntry[] { JavaRuntime.getDefaultJREContainerEntry() };
@@ -1083,7 +1083,7 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 			IIncludePathEntry[] cpEntries= null;
 			IJavaScriptProject jp= findJavaProject(path);
 			if (jp != null)
-				cpEntries= jp.getResolvedClasspath(true);
+				cpEntries= jp.getResolvedIncludepath(true);
 			
 			if (cpEntries == null || cpEntries.length == 0)
 				cpEntries= new IIncludePathEntry[] { JavaRuntime.getDefaultJREContainerEntry() };
@@ -1115,7 +1115,7 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 		IJavaScriptModel model= JavaScriptCore.create(JavaPlugin.getWorkspace().getRoot());
 		IJavaScriptProject[] projects;
 		try {
-			projects= model.getJavaProjects();
+			projects= model.getJavaScriptProjects();
 		} catch (JavaScriptModelException e) {
 			return null; // ignore - use default JRE
 		}
@@ -1483,7 +1483,7 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
      */
 	protected void notifyPostSaveListeners(final IJavaScriptUnit unit, final CompilationUnitInfo info, final IProgressMonitor monitor) throws CoreException {
 		final IBuffer buffer= unit.getBuffer();
-		IPostSaveListener[] listeners= JavaPlugin.getDefault().getSaveParticipantRegistry().getEnabledPostSaveListeners(unit.getJavaProject().getProject());
+		IPostSaveListener[] listeners= JavaPlugin.getDefault().getSaveParticipantRegistry().getEnabledPostSaveListeners(unit.getJavaScriptProject().getProject());
 		
 		String message= JavaEditorMessages.CompilationUnitDocumentProvider_error_saveParticipantProblem;
 		final MultiStatus errorStatus= new MultiStatus(JavaUI.ID_PLUGIN, IJavaStatusConstants.EDITOR_POST_SAVE_NOTIFICATION, message, null);

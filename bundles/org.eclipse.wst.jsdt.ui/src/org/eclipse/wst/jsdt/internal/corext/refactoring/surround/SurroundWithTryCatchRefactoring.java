@@ -195,7 +195,7 @@ public class SurroundWithTryCatchRefactoring extends Refactoring {
 				root.addChild(edit);
 				result.addTextEditGroup(new TextEditGroup(NN, new TextEdit[] {edit} ));
 			}
-			TextEdit change= fRewriter.rewriteAST(document, fCUnit.getJavaProject().getOptions(true));
+			TextEdit change= fRewriter.rewriteAST(document, fCUnit.getJavaScriptProject().getOptions(true));
 			root.addChild(change);
 			result.addTextEditGroup(new TextEditGroup(NN, new TextEdit[] {change} ));
 			return result;
@@ -223,7 +223,7 @@ public class SurroundWithTryCatchRefactoring extends Refactoring {
 			CatchClause catchClause= getAST().newCatchClause();
 			tryStatement.catchClauses().add(catchClause);
 			SingleVariableDeclaration decl= getAST().newSingleVariableDeclaration();
-			String varName= StubUtility.getExceptionVariableName(fCUnit.getJavaProject());
+			String varName= StubUtility.getExceptionVariableName(fCUnit.getJavaScriptProject());
 			
 			String name= fScope.createName(varName, false);
 			decl.setName(getAST().newSimpleName(name));

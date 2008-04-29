@@ -402,7 +402,7 @@ public class ProjectsWorkbookPage extends BuildPathBasePage {
 		
 		try {
 			ArrayList selectable= new ArrayList();
-			selectable.addAll(Arrays.asList(fCurrJProject.getJavaModel().getJavaProjects()));
+			selectable.addAll(Arrays.asList(fCurrJProject.getJavaScriptModel().getJavaScriptProjects()));
 			selectable.remove(fCurrJProject);
 			
 			List elements= fProjectsList.getElements();

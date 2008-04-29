@@ -74,7 +74,7 @@ public class JavaElementReferenceConverter extends AbstractParameterValueConvert
 		IJavaScriptModel javaModel= JavaScriptCore.create(ResourcesPlugin.getWorkspace().getRoot());
 		assertExists(javaModel);
 
-		IJavaScriptProject javaProject= javaModel.getJavaProject(projectName);
+		IJavaScriptProject javaProject= javaModel.getJavaScriptProject(projectName);
 		assertExists(javaProject);
 
 		final int typeEndPosition= javaElementRef.indexOf(TYPE_END_CHAR);
@@ -112,7 +112,7 @@ public class JavaElementReferenceConverter extends AbstractParameterValueConvert
 				// parameterTypes == null
 			}
 			assertWellFormed(parameterTypes != null);
-			IFunction method= typeRoot.getMethod(methodName, parameterTypes);
+			IFunction method= typeRoot.getFunction(methodName, parameterTypes);
 			assertExists(method);
 			return method;
 		}
@@ -146,7 +146,7 @@ public class JavaElementReferenceConverter extends AbstractParameterValueConvert
 			// parameterTypes == null
 		}
 		assertWellFormed(parameterTypes != null);
-		IFunction method= type.getMethod(methodName, parameterTypes);
+		IFunction method= type.getFunction(methodName, parameterTypes);
 		assertExists(method);
 		return method;
 	}
@@ -187,7 +187,7 @@ public class JavaElementReferenceConverter extends AbstractParameterValueConvert
 
 		IJavaScriptElement javaElement= (IJavaScriptElement) parameterValue;
 
-		IJavaScriptProject javaProject= javaElement.getJavaProject();
+		IJavaScriptProject javaProject= javaElement.getJavaScriptProject();
 		if (javaProject == null) {
 			throw new ParameterValueConversionException("Could not get IJavaScriptProject for element"); //$NON-NLS-1$
 		}
@@ -224,7 +224,7 @@ public class JavaElementReferenceConverter extends AbstractParameterValueConvert
 
 	private StringBuffer composeTypeReference(IType type) {
 		StringBuffer buffer= new StringBuffer();
-		buffer.append(type.getJavaProject().getElementName());
+		buffer.append(type.getJavaScriptProject().getElementName());
 		buffer.append(PROJECT_END_CHAR);
 		buffer.append(type.getFullyQualifiedName());
 		return buffer;

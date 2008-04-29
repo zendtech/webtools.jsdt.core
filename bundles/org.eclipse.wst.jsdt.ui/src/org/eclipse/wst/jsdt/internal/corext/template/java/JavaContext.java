@@ -430,7 +430,7 @@ public class JavaContext extends CompilationUnitContext {
 		try {
 			boolean qualified= type.indexOf('.') != -1;
 			if (!qualified) {
-				IJavaScriptSearchScope searchScope= SearchEngine.createJavaSearchScope(new IJavaScriptElement[] { cu.getJavaProject() });
+				IJavaScriptSearchScope searchScope= SearchEngine.createJavaSearchScope(new IJavaScriptElement[] { cu.getJavaScriptProject() });
 				SimpleName nameNode= null;
 				TypeNameMatch[] matches= findAllTypes(type, searchScope, nameNode, null, cu);
 				if (matches.length != 1) // only add import if we have a single match
@@ -486,7 +486,7 @@ public class JavaContext extends CompilationUnitContext {
 	 * Finds a type by the simple name. From AddImportsOperation
 	 */
 	private TypeNameMatch[] findAllTypes(String simpleTypeName, IJavaScriptSearchScope searchScope, SimpleName nameNode, IProgressMonitor monitor, IJavaScriptUnit cu) throws JavaScriptModelException {
-		boolean is50OrHigher= JavaModelUtil.is50OrHigher(cu.getJavaProject());
+		boolean is50OrHigher= JavaModelUtil.is50OrHigher(cu.getJavaScriptProject());
 		
 		int typeKinds= SimilarElementsRequestor.ALL_TYPES;
 		if (nameNode != null) {

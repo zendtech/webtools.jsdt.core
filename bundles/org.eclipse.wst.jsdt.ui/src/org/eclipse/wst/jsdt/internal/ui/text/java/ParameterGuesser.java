@@ -156,7 +156,7 @@ public class ParameterGuesser {
 		}
 
 		boolean isHierarchyAssignable(Variable rhs) throws JavaScriptModelException {
-			IJavaScriptProject project= fCompilationUnit.getJavaProject();
+			IJavaScriptProject project= fCompilationUnit.getJavaScriptProject();
 			IType paramType= getType(project);
 			IType varType= rhs.getType(project);
 			if (varType == null || paramType == null)
@@ -468,7 +468,7 @@ public class ParameterGuesser {
 		fCompilationUnit= compilationUnit;
 
 
-		IJavaScriptProject project= fCompilationUnit.getJavaProject();
+		IJavaScriptProject project= fCompilationUnit.getJavaScriptProject();
 		String sourceVersion= project == null
 				? JavaScriptCore.getOption(JavaScriptCore.COMPILER_SOURCE)
 				: project.getOption(JavaScriptCore.COMPILER_SOURCE, true);

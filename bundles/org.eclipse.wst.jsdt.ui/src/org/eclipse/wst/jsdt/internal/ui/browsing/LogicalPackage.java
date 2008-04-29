@@ -33,7 +33,7 @@ public class LogicalPackage extends PlatformObject {
 	public LogicalPackage(IPackageFragment fragment){
 		Assert.isNotNull(fragment);
 		fPackages= new HashSet();
-		fJavaProject= fragment.getJavaProject();
+		fJavaProject= fragment.getJavaScriptProject();
 		Assert.isNotNull(fJavaProject);
 		add(fragment);
 		fName= fragment.getElementName();
@@ -48,7 +48,7 @@ public class LogicalPackage extends PlatformObject {
 	}
 
 	public void add(IPackageFragment fragment){
-		Assert.isTrue(fragment != null && fJavaProject.equals(fragment.getJavaProject()));
+		Assert.isTrue(fragment != null && fJavaProject.equals(fragment.getJavaScriptProject()));
 		fPackages.add(fragment);
 	}
 
@@ -81,7 +81,7 @@ public class LogicalPackage extends PlatformObject {
 		if(fragment==null)
 			return false;
 
-		if(fJavaProject.equals(fragment.getJavaProject())){
+		if(fJavaProject.equals(fragment.getJavaScriptProject())){
 			return fName.equals(fragment.getElementName());
 		}
 

@@ -171,8 +171,8 @@ public IJavaScriptElement getPrimaryElement(boolean checkOwner) {
 	}
 	IJavaScriptElement primaryParent = this.parent.getPrimaryElement(false);
 	if (primaryParent instanceof IType)
-		return ((IType)primaryParent).getMethod(this.name, this.parameterTypes);
-	return ((IJavaScriptUnit)primaryParent).getMethod(this.name, this.parameterTypes);
+		return ((IType)primaryParent).getFunction(this.name, this.parameterTypes);
+	return ((IJavaScriptUnit)primaryParent).getFunction(this.name, this.parameterTypes);
 }
 public String[] getRawParameterNames() throws JavaScriptModelException {
 	return getParameterNames();
@@ -321,7 +321,14 @@ protected void toStringName(StringBuffer buffer, int flags) {
 	}
 }
 
+/**
+ * @deprecated Use {@link #getFunction(String,String[])} instead
+ */
 public IFunction getMethod(String selector, String[] parameterTypeSignatures)
+{
+	return getFunction(selector, parameterTypeSignatures);
+}
+public IFunction getFunction(String selector, String[] parameterTypeSignatures)
 {
 	return new SourceMethod(this, selector, parameterTypeSignatures);
 

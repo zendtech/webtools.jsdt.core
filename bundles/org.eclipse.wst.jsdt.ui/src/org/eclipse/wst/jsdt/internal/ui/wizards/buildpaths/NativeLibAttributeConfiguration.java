@@ -68,7 +68,7 @@ public class NativeLibAttributeConfiguration extends ClasspathAttributeConfigura
 	public IIncludePathAttribute performEdit(Shell shell, ClasspathAttributeAccess attribute) {
 		NativeLibrariesDialog dialog= new NativeLibrariesDialog(shell, attribute.getClasspathAttribute().getValue(), attribute.getParentClasspassEntry());
 		if (dialog.open() == Window.OK) {
-			return JavaScriptCore.newClasspathAttribute(JavaRuntime.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY, dialog.getNativeLibraryPath());
+			return JavaScriptCore.newIncludepathAttribute(JavaRuntime.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY, dialog.getNativeLibraryPath());
 		}
 		return null;
 	}
@@ -77,7 +77,7 @@ public class NativeLibAttributeConfiguration extends ClasspathAttributeConfigura
 	 * @see org.eclipse.wst.jsdt.ui.wizards.ClasspathAttributeConfiguration#performRemove(org.eclipse.wst.jsdt.ui.wizards.ClasspathAttributeConfiguration.ClasspathAttributeAccess)
 	 */
 	public IIncludePathAttribute performRemove(ClasspathAttributeAccess attribute) {
-		return JavaScriptCore.newClasspathAttribute(JavaRuntime.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY, null);
+		return JavaScriptCore.newIncludepathAttribute(JavaRuntime.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY, null);
 	}
 
 }

@@ -77,7 +77,7 @@ class ReadOnlyResourceFinder{
 				IPackageFragment pack= (IPackageFragment)javaElement;
 				if (Resources.isReadOnly(packResource))
 					return true;
-				Object[] nonJava= pack.getNonJavaResources();
+				Object[] nonJava= pack.getNonJavaScriptResources();
 				for (int i= 0; i < nonJava.length; i++) {
 					Object object= nonJava[i];
 					if (object instanceof IResource && hasReadOnlyResourcesAndSubResources((IResource)object))
@@ -93,7 +93,7 @@ class ReadOnlyResourceFinder{
 					return false;
 				if (Resources.isReadOnly(pfrResource))
 					return true;
-				Object[] nonJava1= root.getNonJavaResources();
+				Object[] nonJava1= root.getNonJavaScriptResources();
 				for (int i= 0; i < nonJava1.length; i++) {
 					Object object= nonJava1[i];
 					if (object instanceof IResource && hasReadOnlyResourcesAndSubResources((IResource)object))

@@ -181,7 +181,7 @@ public class LocalCorrectionsSubProcessor {
 			ListRewrite clausesRewrite= rewrite.getListRewrite(surroundingTry, TryStatement.CATCH_CLAUSES_PROPERTY);
 			for (int i= 0; i < uncaughtExceptions.length; i++) {
 				ITypeBinding excBinding= uncaughtExceptions[i];
-				String varName= StubUtility.getExceptionVariableName(cu.getJavaProject());
+				String varName= StubUtility.getExceptionVariableName(cu.getJavaScriptProject());
 				SingleVariableDeclaration var= ast.newSingleVariableDeclaration();
 				var.setName(ast.newSimpleName(varName));
 				var.setType(imports.addImport(excBinding, ast));

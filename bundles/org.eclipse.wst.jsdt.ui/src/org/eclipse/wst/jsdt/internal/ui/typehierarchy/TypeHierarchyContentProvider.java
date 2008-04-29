@@ -86,7 +86,7 @@ public abstract class TypeHierarchyContentProvider implements ITreeContentProvid
 	
 	private void addCompatibleMethods(IFunction filterMethod, IType typeToFindIn, List children) throws JavaScriptModelException {
 		boolean filterMethodOverrides= initializeMethodOverrideTester(filterMethod, typeToFindIn);
-		IFunction[] methods= typeToFindIn.getMethods();
+		IFunction[] methods= typeToFindIn.getFunctions();
 		for (int i= 0; i < methods.length; i++) {
 			IFunction curr= methods[i];
 			if (isCompatibleMethod(filterMethod, curr, filterMethodOverrides) && !children.contains(curr)) {
@@ -97,7 +97,7 @@ public abstract class TypeHierarchyContentProvider implements ITreeContentProvid
 	
 	private boolean hasCompatibleMethod(IFunction filterMethod, IType typeToFindIn) throws JavaScriptModelException {
 		boolean filterMethodOverrides= initializeMethodOverrideTester(filterMethod, typeToFindIn);
-		IFunction[] methods= typeToFindIn.getMethods();
+		IFunction[] methods= typeToFindIn.getFunctions();
 		for (int i= 0; i < methods.length; i++) {
 			if (isCompatibleMethod(filterMethod, methods[i], filterMethodOverrides)) {
 				return true;

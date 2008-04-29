@@ -383,7 +383,7 @@ public class ChangeCollector {
 			case IJavaScriptElement.INITIALIZER:
 			case IJavaScriptElement.FIELD:
 			case IJavaScriptElement.METHOD:
-				types = (ArrayList)this.hierarchy.files.get(((IMember)element).getCompilationUnit());
+				types = (ArrayList)this.hierarchy.files.get(((IMember)element).getJavaScriptUnit());
 				if (types != null) {
 					for (int i = 0, length = types.size(); i < length; i++) {
 						IType type = (IType)types.get(i);

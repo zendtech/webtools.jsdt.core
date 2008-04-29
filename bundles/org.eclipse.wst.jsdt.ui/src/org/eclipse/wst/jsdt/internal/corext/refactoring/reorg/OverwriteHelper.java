@@ -203,7 +203,7 @@ class OverwriteHelper {
 	private boolean canOverwrite(IJavaScriptUnit cu) {
 		if (fDestination instanceof IPackageFragment){
 			IPackageFragment destination= (IPackageFragment)fDestination;
-			return ! destination.equals(cu.getParent()) && destination.getCompilationUnit(cu.getElementName()).exists();
+			return ! destination.equals(cu.getParent()) && destination.getJavaScriptUnit(cu.getElementName()).exists();
 		} else {
 			return canOverwrite(ReorgUtils.getResource(cu));
 		}

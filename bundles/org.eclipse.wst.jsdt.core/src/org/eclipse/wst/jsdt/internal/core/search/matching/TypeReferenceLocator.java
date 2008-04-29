@@ -639,7 +639,7 @@ protected void reportDeclaration(ReferenceBinding typeBinding, int maxType, Matc
 	IBinaryType info = null;
 	if (isBinary) {
 		if (resource == null)
-			resource = type.getJavaProject().getProject();
+			resource = type.getJavaScriptProject().getProject();
 		info = locator.getBinaryInfo((org.eclipse.wst.jsdt.internal.core.ClassFile) type.getClassFile(), resource);
 	}
 	while (maxType >= 0 && type != null) {

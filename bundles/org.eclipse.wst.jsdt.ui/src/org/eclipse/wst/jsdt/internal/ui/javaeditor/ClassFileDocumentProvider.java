@@ -105,7 +105,7 @@ public class ClassFileDocumentProvider extends FileDocumentProvider {
 
 			if ((delta.getKind() & IJavaScriptElementDelta.REMOVED) != 0 || (delta.getFlags() & IJavaScriptElementDelta.F_CLOSED) != 0) {
 				// http://dev.eclipse.org/bugs/show_bug.cgi?id=19023
-				if (element.equals(input.getJavaProject()) || element.equals(input)) {
+				if (element.equals(input.getJavaScriptProject()) || element.equals(input)) {
 					handleDeleted(fInput);
 					return true;
 				}
@@ -131,11 +131,11 @@ public class ClassFileDocumentProvider extends FileDocumentProvider {
 				(delta.getFlags() & IJavaScriptElementDelta.F_SOURCEATTACHED) != 0)
 			{
 				IClassFile file= fInput != null ? fInput.getClassFile() : null;
-				IJavaScriptProject project= input != null ? input.getJavaProject() : null;
+				IJavaScriptProject project= input != null ? input.getJavaScriptProject() : null;
 
 				boolean isOnClasspath= false;
 				if (file != null && project != null)
-					isOnClasspath= project.isOnClasspath(file);
+					isOnClasspath= project.isOnIncludepath(file);
 
 				if (isOnClasspath) {
 					fireInputChanged(fInput);

@@ -34,7 +34,7 @@ public class DeleteFromClasspathChange extends JDTChange {
 	private int fEntryKind;
 	
 	public DeleteFromClasspathChange(IPackageFragmentRoot root) {
-		this(root.getPath(), root.getJavaProject());
+		this(root.getPath(), root.getJavaScriptProject());
 	}
 	
 	DeleteFromClasspathChange(IPath pathToDelete, IJavaScriptProject project){
@@ -52,12 +52,12 @@ public class DeleteFromClasspathChange extends JDTChange {
 		pm.beginTask(getName(), 1);
 		try{
 			IJavaScriptProject project= getJavaProject();
-			IIncludePathEntry[] cp= project.getRawClasspath();
+			IIncludePathEntry[] cp= project.getRawIncludepath();
 			IIncludePathEntry[] newCp= new IIncludePathEntry[cp.length-1];
 			int i= 0; 
 			int j= 0;
 			while (j < newCp.length) {
-				IIncludePathEntry current= JavaScriptCore.getResolvedClasspathEntry(cp[i]);
+				IIncludePathEntry current= JavaScriptCore.getResolvedIncludepathEntry(cp[i]);
 				if (current != null && toBeDeleted(current)) {
 					i++;
 					setDeletedEntryProperties(current);
@@ -68,11 +68,11 @@ public class DeleteFromClasspathChange extends JDTChange {
 				j++;
 			}
 			
-			IIncludePathEntry last= JavaScriptCore.getResolvedClasspathEntry(cp[cp.length - 1]);
+			IIncludePathEntry last= JavaScriptCore.getResolvedIncludepathEntry(cp[cp.length - 1]);
 			if (last != null && toBeDeleted(last))
 				setDeletedEntryProperties(last);
 				
-			project.setRawClasspath(newCp, pm);
+			project.setRawIncludepath(newCp, pm);
 			
 			return new AddToClasspathChange(getJavaProject(), fEntryKind, fPath, 
 				fSourceAttachmentPath, fSourceAttachmentRootPath);

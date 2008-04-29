@@ -71,7 +71,7 @@ public class UnimplementedMethodsCompletionProposal extends ASTRewriteCorrection
 		IFunctionBinding[] methods= StubUtility2.getUnimplementedMethods(binding);
 		fMethodsToOverride= methods;
 
-		CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(getCompilationUnit().getJavaProject());
+		CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(getCompilationUnit().getJavaScriptProject());
 		if (binding.isAnonymous()) {
 			settings.createComments= false;
 		}

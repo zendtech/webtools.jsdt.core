@@ -282,9 +282,9 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 	}
 	
 	private IType resolveType(String qualifiedTypeName) throws JavaScriptModelException{
-		IType type= getDeclaringType().getJavaProject().findType(qualifiedTypeName);
+		IType type= getDeclaringType().getJavaScriptProject().findType(qualifiedTypeName);
 		if (type == null)
-			type= getDeclaringType().getJavaProject().findType(getDeclaringType().getPackageFragment().getElementName(), qualifiedTypeName);
+			type= getDeclaringType().getJavaScriptProject().findType(getDeclaringType().getPackageFragment().getElementName(), qualifiedTypeName);
 		return type;
 	}
 	
@@ -299,7 +299,7 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 			if (result.hasFatalError())
 				return result;			
 			
-			fSource= new CompilationUnitRewrite(fMembersToMove[0].getCompilationUnit());
+			fSource= new CompilationUnitRewrite(fMembersToMove[0].getJavaScriptUnit());
 			fSourceBinding= (ITypeBinding)((SimpleName)NodeFinder.perform(fSource.getRoot(), fMembersToMove[0].getDeclaringType().getNameRange())).resolveBinding();
 			fMemberBindings= getMemberBindings();
 			if (fSourceBinding == null || hasUnresolvedMemberBinding()) {
@@ -381,10 +381,10 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 	
 	private IFile[] getAllFilesToModify(List modifiedCus) {
 		Set result= new HashSet();
-		IResource resource= fDestinationType.getCompilationUnit().getResource();
+		IResource resource= fDestinationType.getJavaScriptUnit().getResource();
 		result.add(resource);
 		for (int i= 0; i < fMembersToMove.length; i++) {
-			resource= fMembersToMove[i].getCompilationUnit().getResource();
+			resource= fMembersToMove[i].getJavaScriptUnit().getResource();
 			if (resource != null)
 				result.add(resource);
 		}
@@ -447,7 +447,7 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 				String message= Messages.format(RefactoringCoreMessages.MoveMembersRefactoring_inside, 
 						new String[] {JavaModelUtil.getFullyQualifiedName(type),
 								JavaModelUtil.getFullyQualifiedName(fDestinationType)});
-				RefactoringStatusContext context= JavaStatusContext.create(fDestinationType.getCompilationUnit(), fDestinationType.getNameRange());
+				RefactoringStatusContext context= JavaStatusContext.create(fDestinationType.getJavaScriptUnit(), fDestinationType.getNameRange());
 				result.addFatalError(message, context);
 				return result;
 			}
@@ -682,7 +682,7 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 		monitor.beginTask(RefactoringCoreMessages.MoveMembersRefactoring_creating, 5);
 		final IMember[] members= getMembersToMove();
 		String project= null;
-		final IJavaScriptProject javaProject= getDeclaringType().getJavaProject();
+		final IJavaScriptProject javaProject= getDeclaringType().getJavaScriptProject();
 		if (javaProject != null)
 			project= javaProject.getElementName();
 		String header= null;
@@ -711,7 +711,7 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 		descriptor.setDeprecateDelegate(fDelegateDeprecation);
 		descriptor.setMembers(members);
 		fChange= new DynamicValidationRefactoringChange(descriptor, RefactoringCoreMessages.MoveMembersRefactoring_move_members);
-		fTarget= getCuRewrite(fDestinationType.getCompilationUnit());
+		fTarget= getCuRewrite(fDestinationType.getJavaScriptUnit());
 		ITypeBinding targetBinding= getDestinationBinding();
 		if (targetBinding == null) {
 			status.addFatalError(Messages.format(RefactoringCoreMessages.MoveMembersRefactoring_compile_errors, fTarget.getCu().getElementName()));
@@ -900,7 +900,7 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 		// extract updated members
 		String[] updatedMemberSources= new String[members.length];
 		IDocument document= new Document(fSource.getCu().getBuffer().getContents());
-		TextEdit edit= fSource.getASTRewrite().rewriteAST(document, fSource.getCu().getJavaProject().getOptions(true));
+		TextEdit edit= fSource.getASTRewrite().rewriteAST(document, fSource.getCu().getJavaScriptProject().getOptions(true));
 		edit.apply(document, TextEdit.UPDATE_REGIONS);
 		for (int i= 0; i < members.length; i++) {
 			updatedMemberSources[i]= getUpdatedMember(document, members[i]);
@@ -1060,7 +1060,7 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 				return ScriptableRefactoring.createInputFatalStatus(null, getRefactoring().getName(), IJavaRefactorings.MOVE_STATIC_MEMBERS);
 			IJavaScriptProject project= null;
 			if (fMembersToMove.length > 0)
-				project= fMembersToMove[0].getJavaProject();
+				project= fMembersToMove[0].getJavaScriptProject();
 			fPreferences= JavaPreferencesSettings.getCodeGenerationSettings(project);
 			if (!status.isOK())
 				return status;

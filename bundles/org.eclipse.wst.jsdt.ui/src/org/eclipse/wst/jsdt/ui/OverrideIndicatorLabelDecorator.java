@@ -117,7 +117,7 @@ public class OverrideIndicatorLabelDecorator implements ILabelDecorator, ILightw
 		if (element instanceof IFunction) {
 			try {
 				IFunction method= (IFunction) element;
-				if (!method.getJavaProject().isOnClasspath(method)) {
+				if (!method.getJavaScriptProject().isOnIncludepath(method)) {
 					return 0;
 				}
 				int flags= method.getFlags();

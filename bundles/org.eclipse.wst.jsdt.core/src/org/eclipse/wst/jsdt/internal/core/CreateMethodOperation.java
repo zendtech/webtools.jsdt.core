@@ -76,7 +76,7 @@ protected String[] convertASTMethodTypesToSignatures() {
 }
 protected ASTNode generateElementAST(ASTRewrite rewriter, IDocument document, IJavaScriptUnit cu) throws JavaScriptModelException {
 	ASTNode node = super.generateElementAST(rewriter, document, cu);
-	if (node.getNodeType() != ASTNode.METHOD_DECLARATION)
+	if (node.getNodeType() != ASTNode.FUNCTION_DECLARATION)
 		throw new JavaScriptModelException(new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_CONTENTS));
 	return node;
 }
@@ -87,8 +87,8 @@ protected IJavaScriptElement generateResultHandle() {
 	String[] types = convertASTMethodTypesToSignatures();
 	String name = getASTNodeName();
 	if (getType()!=null)
-		return getType().getMethod(name, types);
-	return getCompilationUnit().getMethod(name,types);
+		return getType().getFunction(name, types);
+	return getCompilationUnit().getFunction(name,types);
 }
 private String getASTNodeName() {
 	return ((FunctionDeclaration) this.createdNode).getName().getIdentifier();
@@ -118,12 +118,12 @@ protected SimpleName rename(ASTNode node, SimpleName newName) {
 				name = getASTNodeName();
 			String[] types = convertASTMethodTypesToSignatures();
 			if (type != null) {
-				if (type.getMethod(name, types).exists())
+				if (type.getFunction(name, types).exists())
 					return new JavaModelStatus(
 							IJavaScriptModelStatusConstants.NAME_COLLISION, Messages
 									.bind(Messages.status_nameCollision, name));
 			} else {
-				if (this.getCompilationUnit().getMethod(name, types).exists())
+				if (this.getCompilationUnit().getFunction(name, types).exists())
 					return new JavaModelStatus(
 							IJavaScriptModelStatusConstants.NAME_COLLISION, Messages
 									.bind(Messages.status_nameCollision, name));

@@ -237,7 +237,7 @@ public class OrganizeImportsAction extends SelectionDispatchAction {
 		
 		IEditingSupport helper= createViewerHelper();
 		try {
-			CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(cu.getJavaProject());
+			CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(cu.getJavaScriptProject());
 			
 			if (fEditor == null && EditorUtility.isOpenInEditor(cu) == null) {
 				IEditorPart editor= JavaUI.openInEditor(cu);

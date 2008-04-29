@@ -40,7 +40,7 @@ public class ProblemLocation implements IProblemLocation {
 		fIsError= JavaMarkerAnnotation.ERROR_ANNOTATION_TYPE.equals(annotation.getType());
 		
 		String markerType= annotation.getMarkerType();
-		fMarkerType= markerType != null ? markerType : IJavaScriptModelMarker.JAVA_MODEL_PROBLEM_MARKER;
+		fMarkerType= markerType != null ? markerType : IJavaScriptModelMarker.JAVASCRIPT_MODEL_PROBLEM_MARKER;
 	}
 
 	public ProblemLocation(int offset, int length, int id, String[] arguments, boolean isError, String markerType) {
@@ -58,7 +58,7 @@ public class ProblemLocation implements IProblemLocation {
 		fOffset= problem.getSourceStart();
 		fLength= problem.getSourceEnd() - fOffset + 1;
 		fIsError= problem.isError();
-		fMarkerType= problem instanceof CategorizedProblem ? ((CategorizedProblem) problem).getMarkerType() : IJavaScriptModelMarker.JAVA_MODEL_PROBLEM_MARKER;
+		fMarkerType= problem instanceof CategorizedProblem ? ((CategorizedProblem) problem).getMarkerType() : IJavaScriptModelMarker.JAVASCRIPT_MODEL_PROBLEM_MARKER;
 	}
 
 

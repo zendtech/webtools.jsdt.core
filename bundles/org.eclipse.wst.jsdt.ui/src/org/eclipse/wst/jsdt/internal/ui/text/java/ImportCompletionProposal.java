@@ -195,7 +195,7 @@ public class ImportCompletionProposal extends AbstractJavaCompletionProposal {
 	 * @return <code>true</code> if Javadoc processing is enabled, <code>false</code> otherwise
 	 */
 	private boolean isJavadocProcessingEnabled() {
-		IJavaScriptProject project= fCompilationUnit.getJavaProject();
+		IJavaScriptProject project= fCompilationUnit.getJavaScriptProject();
 		boolean processJavadoc;
 		if (project == null)
 			processJavadoc= JavaScriptCore.ENABLED.equals(JavaScriptCore.getOption(JavaScriptCore.COMPILER_DOC_COMMENT_SUPPORT));

@@ -67,7 +67,7 @@ public abstract class HierarchyBuilder {
 		JavaProject project = (JavaProject) hierarchy.javaProject();
 
 		IType focusType = hierarchy.getType();
-		org.eclipse.wst.jsdt.core.IJavaScriptUnit unitToLookInside = focusType == null ? null : focusType.getCompilationUnit();
+		org.eclipse.wst.jsdt.core.IJavaScriptUnit unitToLookInside = focusType == null ? null : focusType.getJavaScriptUnit();
 		org.eclipse.wst.jsdt.core.IJavaScriptUnit[] workingCopies = this.hierarchy.workingCopies;
 		org.eclipse.wst.jsdt.core.IJavaScriptUnit[] unitsToLookInside;
 		ICompilationUnit mainFile=null;

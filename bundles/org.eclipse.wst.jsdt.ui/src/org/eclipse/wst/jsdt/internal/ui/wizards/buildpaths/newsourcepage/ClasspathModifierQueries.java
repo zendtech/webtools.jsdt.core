@@ -60,7 +60,7 @@ public class ClasspathModifierQueries {
          * @throws JavaScriptModelException
          */
         public OutputFolderValidator(List newElements, IJavaScriptProject project) throws JavaScriptModelException {
-            fEntries= project.getRawClasspath();
+            fEntries= project.getRawIncludepath();
             fElements= newElements;
         }
         

@@ -93,7 +93,7 @@ public class DeletePackageFragmentRootChange extends AbstractDeleteChange {
 		if (! confirmDeleteIfReferenced())
 			return new NullChange();
 		int resourceUpdateFlags= IResource.KEEP_HISTORY;
-		int jCoreUpdateFlags= IPackageFragmentRoot.ORIGINATING_PROJECT_CLASSPATH | IPackageFragmentRoot.OTHER_REFERRING_PROJECTS_CLASSPATH;
+		int jCoreUpdateFlags= IPackageFragmentRoot.ORIGINATING_PROJECT_INCLUDEPATH | IPackageFragmentRoot.OTHER_REFERRING_PROJECTS_INCLUDEPATH;
 		
 		pm.beginTask("", 2); //$NON-NLS-1$
 		IPackageFragmentRoot root= getRoot();

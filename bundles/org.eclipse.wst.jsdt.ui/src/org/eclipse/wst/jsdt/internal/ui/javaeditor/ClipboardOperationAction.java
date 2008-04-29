@@ -406,7 +406,7 @@ public final class ClipboardOperationAction extends TextEditorAction {
 		ArrayList typeImportsRefs= new ArrayList();
 		ArrayList staticImportsRefs= new ArrayList();
 
-		ImportReferencesCollector.collect(astRoot, inputElement.getJavaProject(), new Region(offset, length), typeImportsRefs, staticImportsRefs);
+		ImportReferencesCollector.collect(astRoot, inputElement.getJavaScriptProject(), new Region(offset, length), typeImportsRefs, staticImportsRefs);
 
 		if (typeImportsRefs.isEmpty() && staticImportsRefs.isEmpty()) {
 			return null;

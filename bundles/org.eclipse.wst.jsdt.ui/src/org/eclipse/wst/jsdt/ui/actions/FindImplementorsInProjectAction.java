@@ -72,8 +72,8 @@ public class FindImplementorsInProjectAction extends FindImplementorsAction {
 			scope= factory.createJavaProjectSearchScope(editor.getEditorInput(), isInsideJRE);
 			description= factory.getProjectScopeDescription(editor.getEditorInput(), isInsideJRE);
 		} else {
-			scope= factory.createJavaProjectSearchScope(element.getJavaProject(), isInsideJRE);
-			description=  factory.getProjectScopeDescription(element.getJavaProject(), isInsideJRE);
+			scope= factory.createJavaProjectSearchScope(element.getJavaScriptProject(), isInsideJRE);
+			description=  factory.getProjectScopeDescription(element.getJavaScriptProject(), isInsideJRE);
 		}
 		return new ElementQuerySpecification(element, getLimitTo(), scope, description);
 	}

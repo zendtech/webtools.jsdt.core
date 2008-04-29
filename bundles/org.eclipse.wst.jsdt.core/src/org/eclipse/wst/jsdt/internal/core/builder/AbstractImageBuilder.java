@@ -334,7 +334,7 @@ protected void compile(SourceFile[] units, SourceFile[] additionalUnits, boolean
 
 protected void createProblemFor(IResource resource, IMember javaElement, String message, String problemSeverity) {
 	try {
-		IMarker marker = resource.createMarker(IJavaScriptModelMarker.JAVA_MODEL_PROBLEM_MARKER);
+		IMarker marker = resource.createMarker(IJavaScriptModelMarker.JAVASCRIPT_MODEL_PROBLEM_MARKER);
 		int severity = problemSeverity.equals(JavaScriptCore.WARNING) ? IMarker.SEVERITY_WARNING : IMarker.SEVERITY_ERROR;
 
 		ISourceRange range = javaElement == null ? null : javaElement.getNameRange();
@@ -618,7 +618,7 @@ protected void storeProblemsFor(SourceFile sourceFile, CategorizedProblem[] prob
 				JavaBuilder.removeProblemsAndTasksFor(javaBuilder.currentProject); // make this the only problem for this project
 				this.keepStoringProblemMarkers = false;
 			}
-			IMarker marker = this.javaBuilder.currentProject.createMarker(IJavaScriptModelMarker.JAVA_MODEL_PROBLEM_MARKER);
+			IMarker marker = this.javaBuilder.currentProject.createMarker(IJavaScriptModelMarker.JAVASCRIPT_MODEL_PROBLEM_MARKER);
 			marker.setAttributes(
 				new String[] {IMarker.MESSAGE, IMarker.SEVERITY, IJavaScriptModelMarker.CATEGORY_ID, IMarker.SOURCE_ID},
 				new Object[] {
@@ -634,7 +634,7 @@ protected void storeProblemsFor(SourceFile sourceFile, CategorizedProblem[] prob
 
 		String markerType = problem.getMarkerType();
 		boolean managedProblem = false;
-		if (IJavaScriptModelMarker.JAVA_MODEL_PROBLEM_MARKER.equals(markerType)
+		if (IJavaScriptModelMarker.JAVASCRIPT_MODEL_PROBLEM_MARKER.equals(markerType)
 				|| (managedProblem = managedMarkerTypes.contains(markerType))) {
 			IMarker marker = resource.createMarker(markerType);
 

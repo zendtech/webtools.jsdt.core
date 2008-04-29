@@ -113,7 +113,7 @@ public final class AddUnimplementedConstructorsOperation implements IWorkspaceRu
 		fApply= apply;
 		fImports= imports;
 		
-		fCreateComments= StubUtility.doAddComments(astRoot.getJavaElement().getJavaProject());
+		fCreateComments= StubUtility.doAddComments(astRoot.getJavaElement().getJavaScriptProject());
 		fVisibility= Modifier.PUBLIC;
 		fOmitSuper= false;
 	}
@@ -204,7 +204,7 @@ public final class AddUnimplementedConstructorsOperation implements IWorkspaceRu
 				// not possible, we checked this in the constructor
 			}
 			
-			final CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(cu.getJavaProject());
+			final CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(cu.getJavaScriptProject());
 			settings.createComments= fCreateComments;
 
 			ASTNode insertion= getNodeToInsertBefore(memberRewriter);

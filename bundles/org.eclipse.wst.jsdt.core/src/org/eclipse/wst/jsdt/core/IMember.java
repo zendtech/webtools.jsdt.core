@@ -46,8 +46,18 @@ IClassFile getClassFile();
  *
  * @return the compilation unit in which this member is declared, or <code>null</code>
  * if this member is not declared in a compilation unit (for example, a binary type)
+ * @deprecated Use {@link #getJavaScriptUnit()} instead
  */
 IJavaScriptUnit getCompilationUnit();
+/**
+ * Returns the compilation unit in which this member is declared, or <code>null</code>
+ * if this member is not declared in a compilation unit (for example, a binary type).
+ * This is a handle-only method.
+ *
+ * @return the compilation unit in which this member is declared, or <code>null</code>
+ * if this member is not declared in a compilation unit (for example, a binary type)
+ */
+IJavaScriptUnit getJavaScriptUnit();
 /**
  * Returns the type in which this member is declared, or <code>null</code>
  * if this member is not declared in a type (for example, a top-level type).
@@ -89,7 +99,7 @@ int getFlags() throws JavaScriptModelException;
  * @see IOpenable#isConsistent()
  * @since 3.2
  */
-ISourceRange getJavadocRange() throws JavaScriptModelException;
+ISourceRange getJSdocRange() throws JavaScriptModelException;
 /**
  * Returns the source range of this member's simple name,
  * or <code>null</code> if this member does not have a name

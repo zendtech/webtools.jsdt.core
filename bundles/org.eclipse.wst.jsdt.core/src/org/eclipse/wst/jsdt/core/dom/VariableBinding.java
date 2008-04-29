@@ -116,7 +116,7 @@ class VariableBinding implements IVariableBinding {
 				switch(node.getNodeType()) {
 					case ASTNode.INITIALIZER :
 						return null;
-					case ASTNode.METHOD_DECLARATION :
+					case ASTNode.FUNCTION_DECLARATION :
 						FunctionDeclaration methodDeclaration = (FunctionDeclaration) node;
 						return methodDeclaration.resolveBinding();
 					default:

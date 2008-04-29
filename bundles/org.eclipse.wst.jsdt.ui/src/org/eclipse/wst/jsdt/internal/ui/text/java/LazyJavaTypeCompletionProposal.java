@@ -282,7 +282,7 @@ public class LazyJavaTypeCompletionProposal extends LazyJavaCompletionProposal {
 	}
 
 	private boolean isJavadocProcessingEnabled() {
-		IJavaScriptProject project= fCompilationUnit.getJavaProject();
+		IJavaScriptProject project= fCompilationUnit.getJavaScriptProject();
 		boolean processJavadoc;
 		if (project == null)
 			processJavadoc= JavaScriptCore.ENABLED.equals(JavaScriptCore.getOption(JavaScriptCore.COMPILER_DOC_COMMENT_SUPPORT));
@@ -329,7 +329,7 @@ public class LazyJavaTypeCompletionProposal extends LazyJavaCompletionProposal {
 	 */
 	protected ProposalInfo computeProposalInfo() {
 		if (fCompilationUnit != null) {
-			IJavaScriptProject project= fCompilationUnit.getJavaProject();
+			IJavaScriptProject project= fCompilationUnit.getJavaScriptProject();
 			if (project != null)
 				return new TypeProposalInfo(project, fProposal);
 		}

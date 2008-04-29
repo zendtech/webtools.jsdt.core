@@ -66,7 +66,7 @@ public class ExceptionAnalyzer extends AbstractExceptionAnalyzer {
 		ExceptionAnalyzer analyzer= new ExceptionAnalyzer(selection);
 		enclosingNode.accept(analyzer);
 		List exceptions= analyzer.getCurrentExceptions();
-		if (enclosingNode.getNodeType() == ASTNode.METHOD_DECLARATION) {
+		if (enclosingNode.getNodeType() == ASTNode.FUNCTION_DECLARATION) {
 			List thrownExceptions= ((FunctionDeclaration)enclosingNode).thrownExceptions();
 			for (Iterator thrown= thrownExceptions.iterator(); thrown.hasNext();) {
 				ITypeBinding thrownException= ((Name)thrown.next()).resolveTypeBinding();

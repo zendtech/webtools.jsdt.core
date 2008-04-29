@@ -49,12 +49,12 @@ public class ExternalJavaProject extends JavaProject {
 		return super.getOption(optionName, inheritJavaCoreOptions);
 	}
 
-	public boolean isOnClasspath(IJavaScriptElement element) {
+	public boolean isOnIncludepath(IJavaScriptElement element) {
 		// since project is external, no element is on classpath (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=61013#c16)
 		return false;
 	}
 
-	public boolean isOnClasspath(IResource resource) {
+	public boolean isOnIncludepath(IResource resource) {
 		// since project is external, no resource is on classpath (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=61013#c16)
 		return false;
 	}

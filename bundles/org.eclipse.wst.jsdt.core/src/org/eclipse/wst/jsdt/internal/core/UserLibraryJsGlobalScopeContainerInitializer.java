@@ -57,7 +57,7 @@ public class UserLibraryJsGlobalScopeContainerInitializer extends JsGlobalScopeC
 		if (isUserLibraryContainer(containerPath)) {
 			String name= containerPath.segment(1);
 			if (containerSuggestion != null) {
-				UserLibrary library= new UserLibrary(containerSuggestion.getClasspathEntries(), containerSuggestion.getKind() == IJsGlobalScopeContainer.K_SYSTEM);
+				UserLibrary library= new UserLibrary(containerSuggestion.getIncludepathEntries(), containerSuggestion.getKind() == IJsGlobalScopeContainer.K_SYSTEM);
 				UserLibraryManager.setUserLibrary(name, library, null); // should use a real progress monitor
 			} else {
 				UserLibraryManager.setUserLibrary(name, null, null); // should use a real progress monitor

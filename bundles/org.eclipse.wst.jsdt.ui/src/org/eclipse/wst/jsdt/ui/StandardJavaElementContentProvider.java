@@ -326,7 +326,7 @@ public class StandardJavaElementContentProvider implements ITreeContentProvider,
 		if (isProjectPackageFragmentRoot(root)) {
 			return fragments;
 		}
-		Object[] nonJavaResources= root.getNonJavaResources();
+		Object[] nonJavaResources= root.getNonJavaScriptResources();
 		if (nonJavaResources == null)
 			return fragments;
 		return concatenate(fragments, nonJavaResources);
@@ -358,7 +358,7 @@ public class StandardJavaElementContentProvider implements ITreeContentProvider,
 				list.add(root);
 			} 
 		}
-		Object[] resources= project.getNonJavaResources();
+		Object[] resources= project.getNonJavaScriptResources();
 		for (int i= 0; i < resources.length; i++) {
 			list.add(resources[i]);
 		}
@@ -369,7 +369,7 @@ public class StandardJavaElementContentProvider implements ITreeContentProvider,
 	 * Note: This method is for internal use only. Clients should not call this method.
 	 */
 	protected Object[] getJavaProjects(IJavaScriptModel jm) throws JavaScriptModelException {
-		return jm.getJavaProjects();
+		return jm.getJavaScriptProjects();
 	}
 	
 	/**
@@ -383,9 +383,9 @@ public class StandardJavaElementContentProvider implements ITreeContentProvider,
 	 */
 	protected Object[] getPackageContent(IPackageFragment fragment) throws JavaScriptModelException {
 		if (fragment.getKind() == IPackageFragmentRoot.K_SOURCE) {
-			return concatenate(fragment.getCompilationUnits(), fragment.getNonJavaResources());
+			return concatenate(fragment.getJavaScriptUnits(), fragment.getNonJavaScriptResources());
 		}
-		return concatenate(fragment.getClassFiles(), fragment.getNonJavaResources());
+		return concatenate(fragment.getClassFiles(), fragment.getNonJavaScriptResources());
 	}
 	
 	/**
@@ -401,7 +401,7 @@ public class StandardJavaElementContentProvider implements ITreeContentProvider,
 		IJavaScriptProject javaProject= JavaScriptCore.create(folder.getProject());
 		if (javaProject == null || !javaProject.exists())
 			return members;
-		boolean isFolderOnClasspath = javaProject.isOnClasspath(folder);
+		boolean isFolderOnClasspath = javaProject.isOnIncludepath(folder);
 		List nonJavaResources= new ArrayList();
 		// Can be on classpath but as a member of non-java resource folder
 		for (int i= 0; i < members.length; i++) {
@@ -414,7 +414,7 @@ public class StandardJavaElementContentProvider implements ITreeContentProvider,
 				if (javaProject.findPackageFragmentRoot(member.getFullPath()) == null) {
 					nonJavaResources.add(member);
 				} 
-			} else if (!javaProject.isOnClasspath(member)) {
+			} else if (!javaProject.isOnIncludepath(member)) {
 				nonJavaResources.add(member);
 			}
 		}
@@ -452,7 +452,7 @@ public class StandardJavaElementContentProvider implements ITreeContentProvider,
 	protected boolean isPackageFragmentEmpty(IJavaScriptElement element) throws JavaScriptModelException {
 		if (element instanceof IPackageFragment) {
 			IPackageFragment fragment= (IPackageFragment)element;
-			if (fragment.exists() && !(fragment.hasChildren() || fragment.getNonJavaResources().length > 0) && fragment.hasSubpackages()) 
+			if (fragment.exists() && !(fragment.hasChildren() || fragment.getNonJavaScriptResources().length > 0) && fragment.hasSubpackages()) 
 				return true;
 		}
 		return false;
@@ -462,7 +462,7 @@ public class StandardJavaElementContentProvider implements ITreeContentProvider,
 	 * Note: This method is for internal use only. Clients should not call this method.
 	 */
 	protected boolean isProjectPackageFragmentRoot(IPackageFragmentRoot root) {
-		IJavaScriptProject javaProject= root.getJavaProject();
+		IJavaScriptProject javaProject= root.getJavaScriptProject();
 		return javaProject != null && javaProject.getPath().equals(root.getPath());
 	}
 	

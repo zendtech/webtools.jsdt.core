@@ -176,7 +176,7 @@ public class ReplaceInvocationsRefactoring extends ScriptableRefactoring {
 			if (fSelectionNode == null)
 				return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReplaceInvocationsRefactoring_select_method_to_apply);
 			
-			if (fSelectionNode.getNodeType() == ASTNode.METHOD_DECLARATION) {
+			if (fSelectionNode.getNodeType() == ASTNode.FUNCTION_DECLARATION) {
 				FunctionDeclaration methodDeclaration= (FunctionDeclaration) fSelectionNode;
 				fTargetProvider= TargetProvider.create(methodDeclaration);
 				fMethodBinding= methodDeclaration.resolveBinding();
@@ -191,7 +191,7 @@ public class ReplaceInvocationsRefactoring extends ScriptableRefactoring {
 			
 		} else {
 			ASTParser parser= ASTParser.newParser(AST.JLS3);
-			parser.setProject(fMethod.getJavaProject());
+			parser.setProject(fMethod.getJavaScriptProject());
 			IBinding[] bindings= parser.createBindings(new IJavaScriptElement[] { fMethod }, null);
 			fMethodBinding= (IFunctionBinding) bindings[0];
 			if (fMethodBinding == null)
@@ -211,7 +211,7 @@ public class ReplaceInvocationsRefactoring extends ScriptableRefactoring {
 		IDocument source;
 		JavaScriptUnit methodDeclarationAstRoot;
 		
-		IJavaScriptUnit methodCu= (method).getCompilationUnit();
+		IJavaScriptUnit methodCu= (method).getJavaScriptUnit();
 		if (methodCu != null) {
 			typeRoot= methodCu;
 			ASTParser parser= ASTParser.newParser(AST.JLS3);
@@ -303,8 +303,8 @@ public class ReplaceInvocationsRefactoring extends ScriptableRefactoring {
 			node= ((ExpressionStatement)node).getExpression();
 		}
 		switch(node.getNodeType()) {
-			case ASTNode.METHOD_DECLARATION:
-			case ASTNode.METHOD_INVOCATION:
+			case ASTNode.FUNCTION_DECLARATION:
+			case ASTNode.FUNCTION_INVOCATION:
 // not yet...
 //			case ASTNode.SUPER_METHOD_INVOCATION:
 //			case ASTNode.CONSTRUCTOR_INVOCATION:
@@ -410,7 +410,7 @@ public class ReplaceInvocationsRefactoring extends ScriptableRefactoring {
 		// TODO: update for fSelectionStart == -1
 		final Map arguments= new HashMap();
 		String project= null;
-		IJavaScriptProject javaProject= fSelectionTypeRoot.getJavaProject();
+		IJavaScriptProject javaProject= fSelectionTypeRoot.getJavaScriptProject();
 		if (javaProject != null)
 			project= javaProject.getElementName();
 		final IFunctionBinding binding= fSourceProvider.getDeclaration().resolveBinding();

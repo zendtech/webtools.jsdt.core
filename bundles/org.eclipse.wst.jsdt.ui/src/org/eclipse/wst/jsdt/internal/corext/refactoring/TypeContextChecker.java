@@ -174,7 +174,7 @@ public class TypeContextChecker {
 			cuString.append(fStubTypeContext.getAfterString());
 			
 			// need a working copy to tell the parser where to resolve (package visible) types
-			IJavaScriptUnit wc= fMethod.getCompilationUnit().getWorkingCopy(new WorkingCopyOwner() {/*subclass*/}, new NullProgressMonitor());
+			IJavaScriptUnit wc= fMethod.getJavaScriptUnit().getWorkingCopy(new WorkingCopyOwner() {/*subclass*/}, new NullProgressMonitor());
 			try {
 				wc.getBuffer().setContents(cuString.toString());
 				JavaScriptUnit compilationUnit= new RefactoringASTParser(AST.JLS3).parse(wc, true);
@@ -321,7 +321,7 @@ public class TypeContextChecker {
 		}
 
 		private static List findTypeInfos(String typeName, IType contextType, IProgressMonitor pm) throws JavaScriptModelException {
-			IJavaScriptSearchScope scope= SearchEngine.createJavaSearchScope(new IJavaScriptProject[]{contextType.getJavaProject()}, true);
+			IJavaScriptSearchScope scope= SearchEngine.createJavaSearchScope(new IJavaScriptProject[]{contextType.getJavaScriptProject()}, true);
 			IPackageFragment currPackage= contextType.getPackageFragment();
 			ArrayList collectedInfos= new ArrayList();
 			TypeNameMatchCollector requestor= new TypeNameMatchCollector(collectedInfos);
@@ -377,7 +377,7 @@ public class TypeContextChecker {
 		private RefactoringStatus checkParameterTypeSyntax(ParameterInfo info) {
 			if (! info.isAdded() && ! info.isTypeNameChanged())
 				return null;
-			return TypeContextChecker.checkParameterTypeSyntax(info.getNewTypeName(), fMethod.getJavaProject());
+			return TypeContextChecker.checkParameterTypeSyntax(info.getNewTypeName(), fMethod.getJavaScriptProject());
 		}
 		
 		private RefactoringStatus checkReturnTypeSyntax() {
@@ -387,7 +387,7 @@ public class TypeContextChecker {
 				return RefactoringStatus.createFatalErrorStatus(msg);
 			}
 			List problemsCollector= new ArrayList(0);
-			Type parsedType= parseType(newTypeName, fMethod.getJavaProject(), problemsCollector);
+			Type parsedType= parseType(newTypeName, fMethod.getJavaScriptProject(), problemsCollector);
 			if (parsedType == null) {
 				String msg= Messages.format(RefactoringCoreMessages.TypeContextChecker_invalid_return_type, new String[]{newTypeName}); 
 				return RefactoringStatus.createFatalErrorStatus(msg);
@@ -670,7 +670,7 @@ public class TypeContextChecker {
 		String epilog= " {} "; //$NON-NLS-1$
 		if (enclosingType != null) {
 			try {
-				IJavaScriptUnit cu= enclosingType.getCompilationUnit();
+				IJavaScriptUnit cu= enclosingType.getJavaScriptUnit();
 				ISourceRange typeSourceRange= enclosingType.getSourceRange();
 				int focalPosition= typeSourceRange.getOffset() + typeSourceRange.getLength() - 1; // before closing brace
 	
@@ -689,7 +689,7 @@ public class TypeContextChecker {
 			}
 			
 		} else if (packageFragment != null) {
-			IJavaScriptUnit cu= packageFragment.getCompilationUnit(JavaTypeCompletionProcessor.DUMMY_CU_NAME);
+			IJavaScriptUnit cu= packageFragment.getJavaScriptUnit(JavaTypeCompletionProcessor.DUMMY_CU_NAME);
 			stubTypeContext= new StubTypeContext(cu, "package " + packageFragment.getElementName() + ";" + prolog, epilog);  //$NON-NLS-1$//$NON-NLS-2$
 			
 		} else {
@@ -750,7 +750,7 @@ public class TypeContextChecker {
 		cuString.append(superClassContext.getAfterString());
 		
 		try {
-			IJavaScriptUnit wc= typeHandle.getCompilationUnit().getWorkingCopy(new WorkingCopyOwner() {/*subclass*/}, new NullProgressMonitor());
+			IJavaScriptUnit wc= typeHandle.getJavaScriptUnit().getWorkingCopy(new WorkingCopyOwner() {/*subclass*/}, new NullProgressMonitor());
 			try {
 				wc.getBuffer().setContents(cuString.toString());
 				JavaScriptUnit compilationUnit= new RefactoringASTParser(AST.JLS3).parse(wc, true);
@@ -788,7 +788,7 @@ public class TypeContextChecker {
 		cuString.append(superInterfaceContext.getAfterString());
 		
 		try {
-			IJavaScriptUnit wc= typeHandle.getCompilationUnit().getWorkingCopy(new WorkingCopyOwner() {/*subclass*/}, new NullProgressMonitor());
+			IJavaScriptUnit wc= typeHandle.getJavaScriptUnit().getWorkingCopy(new WorkingCopyOwner() {/*subclass*/}, new NullProgressMonitor());
 			try {
 				wc.getBuffer().setContents(cuString.toString());
 				JavaScriptUnit compilationUnit= new RefactoringASTParser(AST.JLS3).parse(wc, true);

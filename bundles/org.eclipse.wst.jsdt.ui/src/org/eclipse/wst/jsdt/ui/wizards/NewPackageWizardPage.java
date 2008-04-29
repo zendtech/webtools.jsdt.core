@@ -234,11 +234,11 @@ public class NewPackageWizardPage extends NewContainerWizardPage {
 		}			
 
 		IPackageFragmentRoot root= getPackageFragmentRoot();
-		if (root != null && root.getJavaProject().exists()) {
+		if (root != null && root.getJavaScriptProject().exists()) {
 			IPackageFragment pack= root.getPackageFragment(packName);
 			try {
 				IPath rootPath= root.getPath();
-				IPath outputPath= root.getJavaProject().getOutputLocation();
+				IPath outputPath= root.getJavaScriptProject().getOutputLocation();
 				if (rootPath.isPrefixOf(outputPath) && !rootPath.equals(outputPath)) {
 					// if the bin folder is inside of our root, don't allow to name a package
 					// like the bin folder

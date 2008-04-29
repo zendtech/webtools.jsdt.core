@@ -45,7 +45,7 @@ public class GetterSetterCompletionProposal extends JavaTypeCompletionProposal i
 		}
 
 		IField[] fields= type.getFields();
-		IFunction[] methods= type.getMethods();
+		IFunction[] methods= type.getFunctions();
 		for (int i= 0; i < fields.length; i++) {
 			IField curr= fields[i];
 			if (!JdtFlags.isEnum(curr)) {
@@ -75,7 +75,7 @@ public class GetterSetterCompletionProposal extends JavaTypeCompletionProposal i
 	private final boolean fIsGetter;
 
 	public GetterSetterCompletionProposal(IField field, int start, int length, boolean isGetter, int relevance) throws JavaScriptModelException {
-		super("", field.getCompilationUnit(), start, length, JavaPluginImages.get(JavaPluginImages.IMG_MISC_PUBLIC), getDisplayName(field, isGetter), relevance); //$NON-NLS-1$
+		super("", field.getJavaScriptUnit(), start, length, JavaPluginImages.get(JavaPluginImages.IMG_MISC_PUBLIC), getDisplayName(field, isGetter), relevance); //$NON-NLS-1$
 		Assert.isNotNull(field);
 
 		fField= field;
@@ -107,7 +107,7 @@ public class GetterSetterCompletionProposal extends JavaTypeCompletionProposal i
 	 */
 	protected boolean updateReplacementString(IDocument document, char trigger, int offset, ImportRewrite impRewrite) throws CoreException, BadLocationException {
 
-		CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(fField.getJavaProject());
+		CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(fField.getJavaScriptProject());
 		boolean addComments= settings.createComments;
 		int flags= Flags.AccPublic | (fField.getFlags() & Flags.AccStatic);
 
@@ -127,7 +127,7 @@ public class GetterSetterCompletionProposal extends JavaTypeCompletionProposal i
 		int lineStart= region.getOffset();
 		int indent= Strings.computeIndentUnits(document.get(lineStart, getReplacementOffset() - lineStart), settings.tabWidth, settings.indentWidth);
 
-		String replacement= CodeFormatterUtil.format(CodeFormatter.K_CLASS_BODY_DECLARATIONS, stub, indent, null, lineDelim, fField.getJavaProject());
+		String replacement= CodeFormatterUtil.format(CodeFormatter.K_CLASS_BODY_DECLARATIONS, stub, indent, null, lineDelim, fField.getJavaScriptProject());
 
 		if (replacement.endsWith(lineDelim)) {
 			replacement= replacement.substring(0, replacement.length() - lineDelim.length());

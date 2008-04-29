@@ -223,7 +223,7 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 
 		if ((selection.size() == 1) && (selection.getFirstElement() instanceof IType)) {
 			IType type= (IType) selection.getFirstElement();
-			return type.getCompilationUnit() != null && !type.isInterface() && !type.isLocal();
+			return type.getJavaScriptUnit() != null && !type.isInterface() && !type.isLocal();
 		}
 
 		if ((selection.size() == 1) && (selection.getFirstElement() instanceof IJavaScriptUnit))
@@ -262,7 +262,7 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 			MessageDialog.openInformation(getShell(), DIALOG_TITLE, ActionMessages.AddGetterSetterAction_interface_not_applicable);
 			notifyResult(false);
 			return;
-		} else if (type.getCompilationUnit() == null) {
+		} else if (type.getJavaScriptUnit() == null) {
 			MessageDialog.openInformation(getShell(), DIALOG_TITLE, ActionMessages.AddGetterSetterAction_error_not_in_source_file);
 			notifyResult(false);
 			return;
@@ -322,7 +322,7 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 				setterFields= getSetterOnlyFields(result, keySet);
 				getterSetterFields= getGetterSetterFields(result, keySet);
 			}
-			generate(type, getterFields, setterFields, getterSetterFields, new RefactoringASTParser(AST.JLS3).parse(type.getCompilationUnit(), true), dialog.getElementPosition());
+			generate(type, getterFields, setterFields, getterSetterFields, new RefactoringASTParser(AST.JLS3).parse(type.getJavaScriptUnit(), true), dialog.getElementPosition());
 		}
 		notifyResult(dialogResult == Window.OK);
 	}
@@ -515,11 +515,11 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 
 		IJavaScriptUnit cu= null;
 		if (getterFields.length != 0)
-			cu= getterFields[0].getCompilationUnit();
+			cu= getterFields[0].getJavaScriptUnit();
 		else if (setterFields.length != 0)
-			cu= setterFields[0].getCompilationUnit();
+			cu= setterFields[0].getJavaScriptUnit();
 		else
-			cu= getterSetterFields[0].getCompilationUnit();
+			cu= getterSetterFields[0].getJavaScriptUnit();
 		// open the editor, forces the creation of a working copy
 		run(cu, type, getterFields, setterFields, getterSetterFields, JavaUI.openInEditor(cu), unit, elementPosition);
 	}
@@ -577,7 +577,7 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 			target.beginCompoundChange();
 		}
 		try {
-			CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(cu.getJavaProject());
+			CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(cu.getJavaScriptProject());
 			settings.createComments= fGenerateComment;
 
 			AddGetterSetterOperation op= new AddGetterSetterOperation(type, getterFields, setterFields, getterSetterFields, unit, skipReplaceQuery(), elementPosition, settings, true, false);
@@ -667,11 +667,11 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 
 					if (i == 0) {
 						// remember the cu of the first element
-						cu= fld.getCompilationUnit();
+						cu= fld.getJavaScriptUnit();
 						if (cu == null) {
 							return null;
 						}
-					} else if (!cu.equals(fld.getCompilationUnit())) {
+					} else if (!cu.equals(fld.getJavaScriptUnit())) {
 						// all fields must be in the same CU
 						return null;
 					}
@@ -805,7 +805,7 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 			if (element instanceof IMember)
 			{ IMember member=(IMember) element;
 				return  member.getDeclaringType()!=null ? 
-						member.getDeclaringType() :(Object)member.getCompilationUnit();
+						member.getDeclaringType() :(Object)member.getJavaScriptUnit();
 			}
 			if (element instanceof GetterSetterEntry)
 				return ((GetterSetterEntry) element).field;

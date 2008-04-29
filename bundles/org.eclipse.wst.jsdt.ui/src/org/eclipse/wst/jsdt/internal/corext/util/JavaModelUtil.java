@@ -74,12 +74,12 @@ public final class JavaModelUtil {
 	 * In general, use one of the three *JavaLike*(..) methods in JavaScriptCore or create
 	 * a name from an existing compilation unit with {@link #getRenamedCUName(IJavaScriptUnit, String)}
 	 * <p> 
-	 * Note: Unlike {@link JavaScriptCore#getJavaLikeExtensions()}, this suffix includes a leading ".".
+	 * Note: Unlike {@link JavaScriptCore#getJavaScriptLikeExtensions()}, this suffix includes a leading ".".
 	 * </p>
 	 * 
-	 * @see JavaScriptCore#getJavaLikeExtensions() 
-	 * @see JavaScriptCore#isJavaLikeFileName(String)
-	 * @see JavaScriptCore#removeJavaLikeExtension(String)
+	 * @see JavaScriptCore#getJavaScriptLikeExtensions() 
+	 * @see JavaScriptCore#isJavaScriptLikeFileName(String)
+	 * @see JavaScriptCore#removeJavaScriptLikeExtension(String)
 	 * @see #getRenamedCUName(IJavaScriptUnit, String)
 	 */
 	public static final String DEFAULT_CU_SUFFIX= ".js"; //$NON-NLS-1$
@@ -146,7 +146,7 @@ public final class JavaModelUtil {
 	}
 	
 	private static IType findType(IPackageFragment pack, String fullyQualifiedName) throws JavaScriptModelException{
-		IJavaScriptUnit[] cus= pack.getCompilationUnits();
+		IJavaScriptUnit[] cus= pack.getJavaScriptUnits();
 		for (int i= 0; i < cus.length; i++) {
 			IJavaScriptUnit unit= cus[i];
 			IType type= findType(unit, fullyQualifiedName);
@@ -383,7 +383,7 @@ public final class JavaModelUtil {
 	 * @return The first found method or <code>null</code>, if nothing found
 	 */
 	public static IFunction findMethod(String name, String[] paramTypes, boolean isConstructor, IType type) throws JavaScriptModelException {
-		IFunction[] methods= type.getMethods();
+		IFunction[] methods= type.getFunctions();
 		for (int i= 0; i < methods.length; i++) {
 			if (isSameMethodSignature(name, paramTypes, isConstructor, methods[i])) {
 				return methods[i];
@@ -471,7 +471,7 @@ public final class JavaModelUtil {
 	 * Checks whether the given type has a valid main method or not.
 	 */
 	public static boolean hasMainMethod(IType type) throws JavaScriptModelException {
-		IFunction[] methods= type.getMethods();
+		IFunction[] methods= type.getFunctions();
 		for (int i= 0; i < methods.length; i++) {
 			if (methods[i].isMainMethod()) {
 				return true;
@@ -563,7 +563,7 @@ public final class JavaModelUtil {
 	 * to be removed once the bug is fixed
 	 */
 	private static IFunction toOriginalMethod(IFunction method) {
-		IJavaScriptUnit cu= method.getCompilationUnit();
+		IJavaScriptUnit cu= method.getJavaScriptUnit();
 		if (cu == null || isPrimary(cu)) {
 			return method;
 		}
@@ -605,7 +605,7 @@ public final class JavaModelUtil {
 		JavaScriptModelException je= (JavaScriptModelException)exception;
 		if (!je.isDoesNotExist())
 			return true;
-		IJavaScriptElement[] elements= je.getJavaModelStatus().getElements();
+		IJavaScriptElement[] elements= je.getJavaScriptModelStatus().getElements();
 		for (int i= 0; i < elements.length; i++) {
 			IJavaScriptElement element= elements[i];
 			// if the element is already a compilation unit don't log
@@ -627,7 +627,7 @@ public final class JavaModelUtil {
 		// workaround for 23656
 		IType[] superTypes= SuperTypeHierarchyCache.getTypeHierarchy(type).getAllSupertypes(type);
 		if (type.isInterface()) {
-			IType objekt= type.getJavaProject().findType("java.lang.Object");//$NON-NLS-1$
+			IType objekt= type.getJavaScriptProject().findType("java.lang.Object");//$NON-NLS-1$
 			if (objekt != null) {
 				IType[] superInterfacesAndObject= new IType[superTypes.length + 1];
 				System.arraycopy(superTypes, 0, superInterfacesAndObject, 0, superTypes.length);
@@ -725,10 +725,10 @@ public final class JavaModelUtil {
 	 * <code>null</code> if the container can not be modified.
 	 */
 	public static IIncludePathEntry findEntryInContainer(IJsGlobalScopeContainer container, IPath libPath) {
-		IIncludePathEntry[] entries= container.getClasspathEntries();
+		IIncludePathEntry[] entries= container.getIncludepathEntries();
 		for (int i= 0; i < entries.length; i++) {
 			IIncludePathEntry curr= entries[i];
-			IIncludePathEntry resolved= JavaScriptCore.getResolvedClasspathEntry(curr);
+			IIncludePathEntry resolved= JavaScriptCore.getResolvedIncludepathEntry(curr);
 			if (resolved != null && libPath.equals(resolved.getPath())) {
 				return curr; // return the real entry
 			}
@@ -770,7 +770,7 @@ public final class JavaModelUtil {
 		
 			case IJavaScriptElement.PACKAGE_FRAGMENT:
 				IPackageFragment packageFragment= (IPackageFragment) javaElement;
-				collector.addAll(Arrays.asList(packageFragment.getCompilationUnits()));
+				collector.addAll(Arrays.asList(packageFragment.getJavaScriptUnits()));
 				return;
 			
 			case IJavaScriptElement.COMPILATION_UNIT:
@@ -995,7 +995,7 @@ public final class JavaModelUtil {
 		if (qualifier.equals(packageName)) {
 			return true;
 		}
-		String typeName= JavaScriptCore.removeJavaLikeExtension(cu.getElementName());
+		String typeName= JavaScriptCore.removeJavaScriptLikeExtension(cu.getElementName());
 		String mainTypeName= JavaModelUtil.concatenateName(packageName, typeName);
 		return qualifier.equals(mainTypeName);
 	}

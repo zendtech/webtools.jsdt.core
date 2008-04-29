@@ -72,7 +72,7 @@ public class RefactoringASTParser {
 		fParser.setStatementsRecovery(statementsRecovery);
 		fParser.setSource(newCuSource.toCharArray());
 		fParser.setUnitName(originalCu.getElementName());
-		fParser.setProject(originalCu.getJavaProject());
+		fParser.setProject(originalCu.getJavaScriptProject());
 		fParser.setCompilerOptions(getCompilerOptions(originalCu));
 		JavaScriptUnit newCUNode= (JavaScriptUnit) fParser.createAST(pm);
 		return newCUNode;
@@ -92,7 +92,7 @@ public class RefactoringASTParser {
 		fParser.setSource(newCfSource.toCharArray());
 		String cfName= originalCf.getElementName();
 		fParser.setUnitName(cfName.substring(0, cfName.length() - 6) + JavaModelUtil.DEFAULT_CU_SUFFIX);
-		fParser.setProject(originalCf.getJavaProject());
+		fParser.setProject(originalCf.getJavaScriptProject());
 		fParser.setCompilerOptions(getCompilerOptions(originalCf));
 		JavaScriptUnit newCUNode= (JavaScriptUnit) fParser.createAST(pm);
 		return newCUNode;
@@ -128,7 +128,7 @@ public class RefactoringASTParser {
 	}
 	
 	public static Map getCompilerOptions(IJavaScriptElement element) {
-		IJavaScriptProject project= element.getJavaProject();
+		IJavaScriptProject project= element.getJavaScriptProject();
 		Map options= project.getOptions(true);
 		// turn all errors and warnings into ignore. The customizable set of compiler
 		// options only contains additional Eclipse options. The standard JDK compiler

@@ -127,7 +127,7 @@ public abstract class AbstractSerialVersionOperation extends AbstractLinkedFixRe
 
 			final String comment= CodeGeneration.getFieldComment(fUnit, declaration.getType().toString(), NAME_FIELD, StubUtility.getLineDelimiterUsed(fUnit));
 			if (comment != null && comment.length() > 0) {
-				final JSdoc doc= (JSdoc) rewrite.createStringPlaceholder(comment, ASTNode.JAVADOC);
+				final JSdoc doc= (JSdoc) rewrite.createStringPlaceholder(comment, ASTNode.JSDOC);
 				declaration.setJavadoc(doc);
 			}
 		}

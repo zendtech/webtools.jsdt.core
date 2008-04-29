@@ -120,7 +120,7 @@ public class JDTRefactoringDescriptor extends JavaRefactoringDescriptor {
 	public static String elementToHandle(final String project, final IJavaScriptElement element) {
 		final String handle= element.getHandleIdentifier();
 		if (project != null && !(element instanceof IJavaScriptProject)) {
-			final String id= element.getJavaProject().getHandleIdentifier();
+			final String id= element.getJavaScriptProject().getHandleIdentifier();
 			return handle.substring(id.length());
 		}
 		return handle;
@@ -179,7 +179,7 @@ public class JDTRefactoringDescriptor extends JavaRefactoringDescriptor {
 		else
 			element= JavaScriptCore.create(handle);
 		if (element == null && project != null) {
-			final IJavaScriptProject javaProject= JavaScriptCore.create(ResourcesPlugin.getWorkspace().getRoot()).getJavaProject(project);
+			final IJavaScriptProject javaProject= JavaScriptCore.create(ResourcesPlugin.getWorkspace().getRoot()).getJavaScriptProject(project);
 			final String identifier= javaProject.getHandleIdentifier();
 			if (owner != null)
 				element= JavaScriptCore.create(identifier + handle, owner);
@@ -192,7 +192,7 @@ public class JDTRefactoringDescriptor extends JavaRefactoringDescriptor {
 			if (method.getDeclaringType()!=null)
 				methods=method.getDeclaringType().findMethods(method);
 			else
-				methods=method.getCompilationUnit().findMethods(method);
+				methods=method.getJavaScriptUnit().findFunctions(method);
 			if (methods != null && methods.length > 0)
 				element= methods[0];
 		}

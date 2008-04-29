@@ -32,7 +32,7 @@ public class MoveCompilationUnitChange extends CompilationUnitReorgChange {
 	}
 	
 	private MoveCompilationUnitChange(IPackageFragment oldPackage, String cuName, IPackageFragment newPackage, long stampToRestore) {
-		super(oldPackage.getHandleIdentifier(), newPackage.getHandleIdentifier(), oldPackage.getCompilationUnit(cuName).getHandleIdentifier());
+		super(oldPackage.getHandleIdentifier(), newPackage.getHandleIdentifier(), oldPackage.getJavaScriptUnit(cuName).getHandleIdentifier());
 		fStampToRestore= stampToRestore;
 	}
 	
@@ -60,12 +60,12 @@ public class MoveCompilationUnitChange extends CompilationUnitReorgChange {
 			currentStamp= resource.getModificationStamp();
 		}
 		
-		fUndoable= ! getDestinationPackage().getCompilationUnit(name).exists();
+		fUndoable= ! getDestinationPackage().getJavaScriptUnit(name).exists();
 		
 		// perform the move and restore modification stamp
 		getCu().move(getDestinationPackage(), null, newName, true, pm);
 		if (fStampToRestore != IResource.NULL_STAMP) {
-			IJavaScriptUnit moved= getDestinationPackage().getCompilationUnit(name);
+			IJavaScriptUnit moved= getDestinationPackage().getJavaScriptUnit(name);
 			IResource movedResource= moved.getResource();
 			if (movedResource != null) {
 				movedResource.revertModificationStamp(fStampToRestore);

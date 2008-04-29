@@ -37,7 +37,7 @@ class SearchScopeProjectAction extends SearchScopeAction {
 		}
 		
 		JavaSearchScopeFactory factory= JavaSearchScopeFactory.getInstance();
-		return factory.createJavaProjectSearchScope(method.getJavaProject(), true);
+		return factory.createJavaProjectSearchScope(method.getJavaScriptProject(), true);
 	}
 	
 	/* (non-Javadoc)
@@ -54,7 +54,7 @@ class SearchScopeProjectAction extends SearchScopeAction {
 		IFunction method = this.fGroup.getView().getMethod();
 		if (method != null) {
 			JavaSearchScopeFactory factory= JavaSearchScopeFactory.getInstance();
-			return factory.getProjectScopeDescription(method.getJavaProject(), true);
+			return factory.getProjectScopeDescription(method.getJavaScriptProject(), true);
 		}
 		return ""; //$NON-NLS-1$
 	}

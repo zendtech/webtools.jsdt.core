@@ -312,7 +312,7 @@ public class NewCUCompletionUsingWizardProposal extends ChangeCorrectionProposal
 		node= ASTNodes.getNormalizedNode(node);
 		ASTNode parent= node.getParent();
 		switch (parent.getNodeType()) {
-			case ASTNode.METHOD_DECLARATION:
+			case ASTNode.FUNCTION_DECLARATION:
 				if (node.getLocationInParent() == FunctionDeclaration.THROWN_EXCEPTIONS_PROPERTY) {
 					return ast.resolveWellKnownType("java.lang.Exception"); //$NON-NLS-1$
 				}

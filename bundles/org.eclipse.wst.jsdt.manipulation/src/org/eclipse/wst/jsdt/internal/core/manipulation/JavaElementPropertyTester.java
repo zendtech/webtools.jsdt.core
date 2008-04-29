@@ -95,10 +95,10 @@ public class JavaElementPropertyTester extends PropertyTester {
 		if (method.equals(NAME)) {
 			return Pattern.matches(toString(expectedValue), res.getElementName());
 		} else if (method.equals(IS_IN_JAVA_PROJECT)) {
-			IJavaScriptProject javaProject= res.getJavaProject();
+			IJavaScriptProject javaProject= res.getJavaScriptProject();
 			return javaProject != null && javaProject.exists() && javaProject.getProject().isOpen();
 		} else if (method.equals(IS_IN_JAVA_PROJECT_WITH_NATURE)) {
-			IJavaScriptProject javaProject= res.getJavaProject();
+			IJavaScriptProject javaProject= res.getJavaScriptProject();
 			if (javaProject != null && javaProject.exists() && javaProject.getProject().isOpen() ) {
 				if (expectedValue != null) {
 					try {
@@ -110,9 +110,9 @@ public class JavaElementPropertyTester extends PropertyTester {
 			}
 			return false;
 		} else if (method.equals(IS_ON_CLASSPATH)) {
-			IJavaScriptProject javaProject= res.getJavaProject();
+			IJavaScriptProject javaProject= res.getJavaScriptProject();
 			if (javaProject != null && javaProject.exists()) {
-				return javaProject.isOnClasspath(res);
+				return javaProject.isOnIncludepath(res);
 			}
 			return false;
 		} else if (method.equals(IN_SOURCE_FOLDER)) {
@@ -138,7 +138,7 @@ public class JavaElementPropertyTester extends PropertyTester {
 			}
 			return false;
 		} else if (method.equals(PROJECT_OPTION)) {
-			IJavaScriptProject project= res.getJavaProject();
+			IJavaScriptProject project= res.getJavaScriptProject();
 			if (project != null) {
 				if (args.length == 2) {
 					String current= project.getOption(toString(args[0]), true);
@@ -149,7 +149,7 @@ public class JavaElementPropertyTester extends PropertyTester {
 			}
 			return false;
 		} else if (method.equals(HAS_TYPE_ON_CLASSPATH)) {
-			IJavaScriptProject javaProject= res.getJavaProject();
+			IJavaScriptProject javaProject= res.getJavaScriptProject();
 			if (javaProject != null && javaProject.exists()) {
 				try {
 					return javaProject.findType(toString(expectedValue)) != null;

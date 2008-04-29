@@ -111,7 +111,7 @@ public class TypesView extends JavaBrowsingPart {
 			return super.isValidElement(((IJavaScriptUnit)element).getParent());
 		else if (element instanceof IType) {
 			IType type= (IType)element;
-			return type.getDeclaringType() == null && isValidElement(type.getCompilationUnit());
+			return type.getDeclaringType() == null && isValidElement(type.getJavaScriptUnit());
 		}
 		return false;
 	}

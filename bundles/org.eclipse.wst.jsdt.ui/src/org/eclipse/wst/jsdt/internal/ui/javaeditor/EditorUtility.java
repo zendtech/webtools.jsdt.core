@@ -134,9 +134,9 @@ public class EditorUtility {
 			
 			if(hostElementPath!=null) {
 				/* See if we can resolve the URI on the workspace */
-				IResource realFile = ((IJavaScriptElement)inputElement).getJavaProject().getProject().getWorkspace().getRoot().getFileForLocation(new Path(hostElementPath.getPath()));
+				IResource realFile = ((IJavaScriptElement)inputElement).getJavaScriptProject().getProject().getWorkspace().getRoot().getFileForLocation(new Path(hostElementPath.getPath()));
 				if(realFile==null || !realFile.exists()) {
-					realFile = ((IJavaScriptElement)inputElement).getJavaProject().getProject().getWorkspace().getRoot().findMember(hostElementPath.getPath());
+					realFile = ((IJavaScriptElement)inputElement).getJavaScriptProject().getProject().getWorkspace().getRoot().findMember(hostElementPath.getPath());
 				}
 				if(realFile!=null) return openInEditor((IFile)realFile, activate);
 				return openInEditor(hostElementPath, activate);
@@ -523,7 +523,7 @@ public class EditorUtility {
 					jProject= null;
 			}
 		} else if (input instanceof IClassFileEditorInput) {
-			jProject= ((IClassFileEditorInput)input).getClassFile().getJavaProject();
+			jProject= ((IClassFileEditorInput)input).getClassFile().getJavaScriptProject();
 		}
 		return jProject;
 	}

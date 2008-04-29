@@ -188,7 +188,7 @@ class CodeAssistFavoritesConfigurationBlock extends OptionsConfigurationBlock {
 			if (newText.length() == 0) {
 				status.setError(""); //$NON-NLS-1$
 			} else {
-				IStatus val= JavaScriptConventions.validateJavaTypeName(newText, JavaScriptCore.VERSION_1_3, JavaScriptCore.VERSION_1_3);
+				IStatus val= JavaScriptConventions.validateJavaScriptTypeName(newText, JavaScriptCore.VERSION_1_3, JavaScriptCore.VERSION_1_3);
 				if (val.matches(IStatus.ERROR)) {
 					if (fIsEditingMember) 
 						status.setError(PreferencesMessages.FavoriteStaticMemberInputDialog_error_invalidMemberName);

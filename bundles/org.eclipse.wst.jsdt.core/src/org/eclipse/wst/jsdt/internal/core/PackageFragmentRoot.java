@@ -197,7 +197,7 @@ SourceMapper createSourceMapper(IPath sourcePath, IPath rootPath) {
 	SourceMapper mapper = new SourceMapper(
 		sourcePath,
 		rootPath == null ? null : rootPath.toOSString(),
-		getJavaProject().getOptions(true)); // cannot use workspace options if external jar is 1.5 jar and workspace options are 1.4 options
+		getJavaScriptProject().getOptions(true)); // cannot use workspace options if external jar is 1.5 jar and workspace options are 1.4 options
 	return mapper;
 }
 /*
@@ -256,7 +256,7 @@ protected void computeFolderChildren(IContainer folder, boolean isIncluded, Stri
 		vChildren.add(pkg);
 	}
 	try {
-		JavaProject javaProject = (JavaProject)getJavaProject();
+		JavaProject javaProject = (JavaProject)getJavaScriptProject();
 		JavaModelManager manager = JavaModelManager.getJavaModelManager();
 		IResource[] members = folder.members();
 		boolean hasIncluded = isIncluded;
@@ -342,7 +342,7 @@ public IPackageFragment createPackageFragment(String pkgName, boolean force, IPr
  * 		not exist.
  */
 protected int determineKind(IResource underlyingResource) throws JavaScriptModelException {
-	IIncludePathEntry entry = ((JavaProject)getJavaProject()).getClasspathEntryFor(underlyingResource.getFullPath());
+	IIncludePathEntry entry = ((JavaProject)getJavaScriptProject()).getClasspathEntryFor(underlyingResource.getFullPath());
 	if (entry != null) {
 		return entry.getContentKind();
 	}
@@ -379,7 +379,7 @@ private IIncludePathEntry findSourceAttachmentRecommendation() {
 		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 
 		// try on enclosing project first
-		JavaProject parentProject = (JavaProject) getJavaProject();
+		JavaProject parentProject = (JavaProject) getJavaScriptProject();
 		try {
 			entry = parentProject.getClasspathEntryFor(rootPath);
 			if (entry != null){
@@ -410,8 +410,8 @@ private IIncludePathEntry findSourceAttachmentRecommendation() {
 		}
 
 		// iterate over all projects
-		IJavaScriptModel model = getJavaModel();
-		IJavaScriptProject[] jProjects = model.getJavaProjects();
+		IJavaScriptModel model = getJavaScriptModel();
+		IJavaScriptProject[] jProjects = model.getJavaScriptProjects();
 		for (int i = 0, max = jProjects.length; i < max; i++){
 			JavaProject jProject = (JavaProject) jProjects[i];
 			if (jProject == parentProject) continue; // already done
@@ -457,7 +457,7 @@ private IIncludePathEntry findSourceAttachmentRecommendation() {
 public char[][] fullExclusionPatternChars() {
 	try {
 		if (this.isOpen() && this.getKind() != IPackageFragmentRoot.K_SOURCE) return null;
-		ClasspathEntry entry = (ClasspathEntry)getRawClasspathEntry();
+		ClasspathEntry entry = (ClasspathEntry)getRawIncludepathEntry();
 		if (entry == null) {
 			return null;
 		} else {
@@ -474,7 +474,7 @@ public char[][] fullExclusionPatternChars() {
 public char[][] fullInclusionPatternChars() {
 	try {
 		if (this.isOpen() && this.getKind() != IPackageFragmentRoot.K_SOURCE) return null;
-		ClasspathEntry entry = (ClasspathEntry)getRawClasspathEntry();
+		ClasspathEntry entry = (ClasspathEntry)getRawIncludepathEntry();
 		if (entry == null) {
 			return null;
 		} else {
@@ -538,7 +538,7 @@ protected void getHandleMemento(StringBuffer buff) {
 	IResource underlyingResource = getResource();
 	if (underlyingResource != null) {
 		// internal jar or regular root
-		if (getResource().getProject().equals(getJavaProject().getProject())) {
+		if (getResource().getProject().equals(getJavaScriptProject().getProject())) {
 			path = underlyingResource.getProjectRelativePath();
 		} else {
 			path = underlyingResource.getFullPath();
@@ -561,8 +561,8 @@ public int getKind() throws JavaScriptModelException {
 /**
  * Returns an array of non-java resources contained in the receiver.
  */
-public Object[] getNonJavaResources() throws JavaScriptModelException {
-	return ((PackageFragmentRootInfo) getElementInfo()).getNonJavaResources(getJavaProject(), getResource(), this);
+public Object[] getNonJavaScriptResources() throws JavaScriptModelException {
+	return ((PackageFragmentRootInfo) getElementInfo()).getNonJavaResources(getJavaScriptProject(), getResource(), this);
 }
 
 /**
@@ -605,10 +605,10 @@ public IPath getPath() {
 /*
  * @see IPackageFragmentRoot
  */
-public IIncludePathEntry getRawClasspathEntry() throws JavaScriptModelException {
+public IIncludePathEntry getRawIncludepathEntry() throws JavaScriptModelException {
 
 	IIncludePathEntry rawEntry = null;
-	JavaProject project = (JavaProject)this.getJavaProject();
+	JavaProject project = (JavaProject)this.getJavaScriptProject();
 	project.getResolvedClasspath(); // force the reverse rawEntry cache to be populated
 	Map rootPathToRawEntries = project.getPerProjectInfo().rootPathToRawEntries;
 	if (rootPathToRawEntries != null) {
@@ -620,10 +620,10 @@ public IIncludePathEntry getRawClasspathEntry() throws JavaScriptModelException 
 	return JavaScriptCore.newLibraryEntry(getPath().makeAbsolute(), getPath().makeAbsolute(), getPath().makeAbsolute());
 }
 
-public IIncludePathEntry getResolvedClasspathEntry() throws JavaScriptModelException {
+public IIncludePathEntry getResolvedIncludepathEntry() throws JavaScriptModelException {
 
 	IIncludePathEntry rawEntry = null;
-	JavaProject project = (JavaProject)this.getJavaProject();
+	JavaProject project = (JavaProject)this.getJavaScriptProject();
 	project.getResolvedClasspath(); // force the reverse rawEntry cache to be populated
 	Map rootPathToResolvedEntries = project.getPerProjectInfo().rootPathToResolvedEntries;
 	if (rootPathToResolvedEntries != null) {
@@ -794,14 +794,14 @@ protected IStatus validateOnClasspath() {
 	IPath path = this.getPath();
 	try {
 		// check package fragment root on classpath of its project
-		JavaProject project = (JavaProject) getJavaProject();
+		JavaProject project = (JavaProject) getJavaScriptProject();
 		IIncludePathEntry entry = project.getClasspathEntryFor(path);
 		if (entry != null) {
 			return Status.OK_STATUS;
 		}
 	} catch(JavaScriptModelException e){
 		// could not read classpath, then assume it is outside
-		return e.getJavaModelStatus();
+		return e.getJavaScriptModelStatus();
 	}
 	return new JavaModelStatus(IJavaScriptModelStatusConstants.ELEMENT_NOT_ON_CLASSPATH, this);
 }
@@ -827,7 +827,7 @@ public void move(
 protected void toStringInfo(int tab, StringBuffer buffer, Object info, boolean showResolvedInfo) {
 	buffer.append(this.tabString(tab));
 	IPath path = getPath();
-	if (getJavaProject().getElementName().equals(path.segment(0))) {
+	if (getJavaScriptProject().getElementName().equals(path.segment(0))) {
 	    if (path.segmentCount() == 1) {
 			buffer.append("<project root>"); //$NON-NLS-1$
 	    } else {
@@ -871,13 +871,13 @@ public boolean isLanguageRuntime() {
 	return false;
 }
 
-public IIncludePathAttribute[] getClasspathAttributes() {
-	IJavaScriptProject javaProject = getJavaProject();
+public IIncludePathAttribute[] getIncludepathAttributes() {
+	IJavaScriptProject javaProject = getJavaScriptProject();
 	IIncludePathEntry[] entries=null;
 	IPath rootPath = getPath();
 	if(rootPath==null) return new IIncludePathAttribute[0];
 	try {
-		entries = javaProject.getResolvedClasspath(true);
+		entries = javaProject.getResolvedIncludepath(true);
 	} catch (JavaScriptModelException ex) {}
 
 	IIncludePathAttribute[] attribs=null;
@@ -897,7 +897,7 @@ public JsGlobalScopeContainerInitializer getContainerInitializer() {
 	IIncludePathEntry fClassPathEntry=null;
 
 	try {
-		fClassPathEntry =  getRawClasspathEntry();
+		fClassPathEntry =  getRawIncludepathEntry();
 	} catch (JavaScriptModelException ex) {}
 
 	if(fClassPathEntry==null) return null;

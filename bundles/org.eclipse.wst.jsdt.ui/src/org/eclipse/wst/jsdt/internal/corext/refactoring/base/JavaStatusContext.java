@@ -39,7 +39,7 @@ public abstract class JavaStatusContext extends RefactoringStatusContext {
 			return fMember.isBinary();
 		}
 		public IJavaScriptUnit getCompilationUnit() {
-			return fMember.getCompilationUnit();
+			return fMember.getJavaScriptUnit();
 		}
 		public IClassFile getClassFile() {
 			return fMember.getClassFile();

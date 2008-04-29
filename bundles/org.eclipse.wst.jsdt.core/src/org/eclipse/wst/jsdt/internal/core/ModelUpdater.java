@@ -91,11 +91,11 @@ public class ModelUpdater {
 		switch (elementType) {
 			case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT :
 				// when a root is added, and is on the classpath, the project must be updated
-				this.projectsToUpdate.add(element.getJavaProject());
+				this.projectsToUpdate.add(element.getJavaScriptProject());
 				break;
 			case IJavaScriptElement.PACKAGE_FRAGMENT :
 				// get rid of package fragment cache
-				JavaProject project = (JavaProject) element.getJavaProject();
+				JavaProject project = (JavaProject) element.getJavaScriptProject();
 				project.resetCaches();
 				break;
 		}
@@ -138,11 +138,11 @@ public class ModelUpdater {
 				manager.containerRemove(javaProject);
 				break;
 			case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT :
-				this.projectsToUpdate.add(element.getJavaProject());
+				this.projectsToUpdate.add(element.getJavaScriptProject());
 				break;
 			case IJavaScriptElement.PACKAGE_FRAGMENT :
 				// get rid of package fragment cache
-				JavaProject project = (JavaProject) element.getJavaProject();
+				JavaProject project = (JavaProject) element.getJavaScriptProject();
 				project.resetCaches();
 				break;
 		}

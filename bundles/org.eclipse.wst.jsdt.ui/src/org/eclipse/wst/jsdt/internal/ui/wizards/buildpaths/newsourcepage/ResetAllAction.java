@@ -168,7 +168,7 @@ public class ResetAllAction extends BuildpathModifierAction {
 		if (!project.getOutputLocation().equals(fOutputLocation))
             return true;
       
-		IIncludePathEntry[] currentEntries= project.getRawClasspath();
+		IIncludePathEntry[] currentEntries= project.getRawIncludepath();
         if (currentEntries.length != fEntries.size())
             return true;
         

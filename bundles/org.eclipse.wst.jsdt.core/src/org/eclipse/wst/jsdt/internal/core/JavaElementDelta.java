@@ -352,7 +352,7 @@ private ArrayList getAncestors(IJavaScriptElement element) {
 	parents.trimToSize();
 	return parents;
 }
-public JavaScriptUnit getCompilationUnitAST() {
+public JavaScriptUnit getJavaScriptUnitAST() {
 	return this.ast;
 }
 /**
@@ -684,7 +684,7 @@ protected boolean toDebugString(StringBuffer buffer, int flags) {
 		buffer.append("PRIMARY WORKING COPY"); //$NON-NLS-1$
 		prev = true;
 	}
-	if ((flags & IJavaScriptElementDelta.F_CLASSPATH_CHANGED) != 0) {
+	if ((flags & IJavaScriptElementDelta.F_INCLUDEPATH_CHANGED) != 0) {
 		if (prev)
 			buffer.append(" | "); //$NON-NLS-1$
 		buffer.append("CLASSPATH CHANGED"); //$NON-NLS-1$

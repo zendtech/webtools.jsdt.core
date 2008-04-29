@@ -104,7 +104,7 @@ public class GenericRefactoringHandleTransplanter {
 	}
 	
 	protected IJavaScriptUnit transplantHandle(IPackageFragment parent, IJavaScriptUnit element) {
-		return parent.getCompilationUnit(element.getElementName());
+		return parent.getJavaScriptUnit(element.getElementName());
 	}
 	
 	protected IClassFile transplantHandle(IPackageFragment parent, IClassFile element) {
@@ -135,7 +135,7 @@ public class GenericRefactoringHandleTransplanter {
 	}
 	
 	protected IFunction transplantHandle(IType parent, IFunction element) {
-		return parent.getMethod(element.getElementName(), element.getParameterTypes());
+		return parent.getFunction(element.getElementName(), element.getParameterTypes());
 	}
 	
 	protected IInitializer transplantHandle(IType parent, IInitializer element) {

@@ -240,7 +240,7 @@ public class SortMembersAction extends SelectionDispatchAction {
 			} else if (element instanceof IType) {
 				IType type= (IType) element;
 				if (type.getParent() instanceof IJavaScriptUnit) { // only top level types
-					return type.getCompilationUnit();
+					return type.getJavaScriptUnit();
 				}
 			}
 		}

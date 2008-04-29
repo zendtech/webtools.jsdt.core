@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *
  * TODO missing 2.1 and subsequent contributions
- * COMPILER_FAILURE
+ * VALIDATION_FAILURE
  *******************************************************************************/
 package org.eclipse.wst.jsdt.core;
 
@@ -44,7 +44,7 @@ public interface IJavaScriptModelStatusConstants {
 	/**
 	 * Status constant indicating that a classpath entry was invalid
 	 */
-	public static final int INVALID_CLASSPATH = 964;
+	public static final int INVALID_INCLUDEPATH = 964;
 
 	/**
 	 * Status constant indicating that a variable path was not resolvable
@@ -258,13 +258,13 @@ public interface IJavaScriptModelStatusConstants {
 	  * be read/written successfully.
 	  * @since 2.1
 	  */
-	 public static final int INVALID_CLASSPATH_FILE_FORMAT = 1000;
+	 public static final int INVALID_INCLUDEPATH_FILE_FORMAT = 1000;
 
 	 /**
 	  * Status indicating that a project is involved in a build path cycle.
 	  * @since 2.1
 	  */
-	 public static final int CLASSPATH_CYCLE = 1001;
+	 public static final int INCLUDEPATH_CYCLE = 1001;
 
 	/**
 	 * Status constant indicating that an inclusion or an exclusion pattern got specified
@@ -296,7 +296,7 @@ public interface IJavaScriptModelStatusConstants {
 	 * Status constant indicating that a compiler failure occurred.
 	 * @since 3.0
 	 */
-	public static final int COMPILER_FAILURE	= 1005;
+	public static final int VALIDATION_FAILURE	= 1005;
 	/**
 	 * Status constant indicating that an element is not on its project's claspath.
 	 * @since 3.1
@@ -313,13 +313,13 @@ public interface IJavaScriptModelStatusConstants {
 	 *
 	 * @since 3.2
 	 */
-	public static final int CANNOT_RETRIEVE_ATTACHED_JAVADOC = 1008;
+	public static final int CANNOT_RETRIEVE_ATTACHED_JSDOC = 1008;
 	/**
 	 * <p>Status constant indicating that the attached javadoc content format is unrecognized.</p>
 	 *
 	 * @since 3.2
 	 */
-	public static final int UNKNOWN_JAVADOC_FORMAT = 1009;
+	public static final int UNKNOWN_JSDOC_FORMAT = 1009;
 	/**
 	 * <p>Status constant indicating that the variable is deprecated.</p>
 	 *

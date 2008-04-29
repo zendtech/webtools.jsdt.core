@@ -301,7 +301,7 @@ public class SourceProvider {
 	public TextEdit getDeleteEdit() {
 		final ASTRewrite rewriter= ASTRewrite.create(fDeclaration.getAST());
 		rewriter.remove(fDeclaration, null);
-		return rewriter.rewriteAST(fDocument, fTypeRoot.getJavaProject().getOptions(true));
+		return rewriter.rewriteAST(fDocument, fTypeRoot.getJavaScriptProject().getOptions(true));
 	}
 	
 	public String[] getCodeBlocks(CallContext context) throws CoreException {
@@ -330,7 +330,7 @@ public class SourceProvider {
 			}
 		}
 
-		final TextEdit dummy= rewriter.rewriteAST(fDocument, fTypeRoot.getJavaProject().getOptions(true));
+		final TextEdit dummy= rewriter.rewriteAST(fDocument, fTypeRoot.getJavaScriptProject().getOptions(true));
 		int size= ranges.size();
 		RangeMarker[] markers= new RangeMarker[size];
 		for (int i= 0; i < markers.length; i++) {
@@ -391,7 +391,7 @@ public class SourceProvider {
 				List references= nd.references();
 				for (Iterator refs= references.iterator(); refs.hasNext();) {
 					SimpleName element= (SimpleName) refs.next();
-					ASTNode newNode= rewriter.createStringPlaceholder(newName, ASTNode.METHOD_INVOCATION);
+					ASTNode newNode= rewriter.createStringPlaceholder(newName, ASTNode.FUNCTION_INVOCATION);
 					rewriter.replace(element, newNode, null);
 				}
 			}
@@ -411,7 +411,7 @@ public class SourceProvider {
 				final ClassInstanceCreation inst= (ClassInstanceCreation)node;
 				rewriter.set(inst, ClassInstanceCreation.EXPRESSION_PROPERTY, createReceiver(rewriter, context, inst.resolveConstructorBinding()), null);
 			} else if (node instanceof ThisExpression) {
-				rewriter.replace(node, rewriter.createStringPlaceholder(context.receiver, ASTNode.METHOD_INVOCATION), null);
+				rewriter.replace(node, rewriter.createStringPlaceholder(context.receiver, ASTNode.FUNCTION_INVOCATION), null);
 			} else if (node instanceof FieldAccess) { 
 				final FieldAccess access= (FieldAccess)node;
 				rewriter.set(access, FieldAccess.EXPRESSION_PROPERTY, createReceiver(rewriter, context, access.resolveFieldBinding()), null);
@@ -471,7 +471,7 @@ public class SourceProvider {
 		String receiver= getReceiver(context, method.getModifiers());
 		if (receiver == null)
 			return null;
-		return (Expression)rewriter.createStringPlaceholder(receiver, ASTNode.METHOD_INVOCATION);
+		return (Expression)rewriter.createStringPlaceholder(receiver, ASTNode.FUNCTION_INVOCATION);
 	}
 	
 	private Expression createReceiver(ASTRewrite rewriter, CallContext context, IVariableBinding field) {
@@ -614,9 +614,9 @@ public class SourceProvider {
 			RangeMarker marker= markers[i];
 			String content= fDocument.get(marker.getOffset(), marker.getLength());
 			String lines[]= Strings.convertIntoLines(content);
-			Strings.trimIndentation(lines, fTypeRoot.getJavaProject(), false);
+			Strings.trimIndentation(lines, fTypeRoot.getJavaScriptProject(), false);
 			if (fMarkerMode == STATEMENT_MODE && lines.length == 2 && isSingleControlStatementWithoutBlock()) {
-				lines[1]= CodeFormatterUtil.createIndentString(1, fTypeRoot.getJavaProject()) + lines[1];
+				lines[1]= CodeFormatterUtil.createIndentString(1, fTypeRoot.getJavaScriptProject()) + lines[1];
 			}
 			result[i]= Strings.concatenate(lines, TextUtilities.getDefaultLineDelimiter(fDocument));
 		}

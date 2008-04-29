@@ -63,12 +63,12 @@ public class ConfigureBuildPathAction extends BuildpathModifierAction {
 			IPackageFragmentRoot root= (IPackageFragmentRoot) element.getAncestor(IJavaScriptElement.PACKAGE_FRAGMENT_ROOT);
 			if (root != null) {
 				try {
-					data.put(BuildPathsPropertyPage.DATA_REVEAL_ENTRY, root.getRawClasspathEntry());
+					data.put(BuildPathsPropertyPage.DATA_REVEAL_ENTRY, root.getRawIncludepathEntry());
 				} catch (JavaScriptModelException e) {
 					// ignore
 				}
 			}
-			project= element.getJavaProject().getProject();
+			project= element.getJavaScriptProject().getProject();
 		} else if (firstElement instanceof PackageFragmentRootContainer) {
 			PackageFragmentRootContainer container= (PackageFragmentRootContainer) firstElement;
 			project= container.getJavaProject().getProject();
@@ -92,7 +92,7 @@ public class ConfigureBuildPathAction extends BuildpathModifierAction {
 			if (root != null && root != element && root.isArchive()) {
 				return false;
 			}
-			IJavaScriptProject project= element.getJavaProject();
+			IJavaScriptProject project= element.getJavaScriptProject();
 			if (project == null)
 				return false;
 			

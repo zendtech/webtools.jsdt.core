@@ -60,7 +60,7 @@ public class JavaElementHistoryPageSource extends ElementLocalHistoryPageSource 
 		if (input instanceof IJavaScriptUnit)
 			cu= (IJavaScriptUnit) input;
 		else if (input instanceof IMember)
-			cu= ((IMember)input).getCompilationUnit();
+			cu= ((IMember)input).getJavaScriptUnit();
 			
 		if (cu == null || !cu.exists())
 			return null;

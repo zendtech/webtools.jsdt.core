@@ -69,7 +69,7 @@ public interface IJavaScriptProject extends IParent, IJavaScriptElement, IOpenab
 	 * @return the decoded classpath entry, or <code>null</code> if unable to decode it
 	 * @since 3.2
 	 */
-	IIncludePathEntry decodeClasspathEntry(String encodedEntry);
+	IIncludePathEntry decodeIncludepathEntry(String encodedEntry);
 
 	/**
 	 * Encodes the given classpath entry into a string in the context of this project.
@@ -78,7 +78,7 @@ public interface IJavaScriptProject extends IParent, IJavaScriptElement, IOpenab
 	 * @return the encoded classpath entry
 	 * @since 3.2
 	 */
-	String encodeClasspathEntry(IIncludePathEntry classpathEntry);
+	String encodeIncludepathEntry(IIncludePathEntry classpathEntry);
 
 	/**
 	 * Returns the <code>IJavaScriptElement</code> corresponding to the given
@@ -377,7 +377,7 @@ public interface IJavaScriptProject extends IParent, IJavaScriptElement, IOpenab
 	 * @exception JavaScriptModelException if this element does not exist or if an
 	 *		exception occurs while accessing its corresponding resource
 	 */
-	Object[] getNonJavaResources() throws JavaScriptModelException;
+	Object[] getNonJavaScriptResources() throws JavaScriptModelException;
 
 	/**
 	 * Helper method for returning one option value only. Equivalent to <code>(String)this.getOptions(inheritJavaCoreOptions).get(optionName)</code>
@@ -544,7 +544,7 @@ public interface IJavaScriptProject extends IParent, IJavaScriptElement, IOpenab
 	 *		exception occurs while accessing its corresponding resource
 	 * @see IIncludePathEntry
 	 */
-	IIncludePathEntry[] getRawClasspath() throws JavaScriptModelException;
+	IIncludePathEntry[] getRawIncludepath() throws JavaScriptModelException;
 
 	/**
 	 * Returns the names of the projects that are directly required by this
@@ -591,7 +591,7 @@ public interface IJavaScriptProject extends IParent, IJavaScriptElement, IOpenab
 	 * </ul>
 	 * @see IIncludePathEntry
 	 */
-	IIncludePathEntry[] getResolvedClasspath(boolean ignoreUnresolvedEntry)
+	IIncludePathEntry[] getResolvedIncludepath(boolean ignoreUnresolvedEntry)
 	     throws JavaScriptModelException;
 
 	/**
@@ -610,7 +610,7 @@ public interface IJavaScriptProject extends IParent, IJavaScriptElement, IOpenab
 	 * @param entries the given classpath entries
 	 * @return true if the given classpath entries would result in a cycle, false otherwise
 	 */
-	boolean hasClasspathCycle(IIncludePathEntry[] entries);
+	boolean hasIncludepathCycle(IIncludePathEntry[] entries);
 	/**
 	 * Returns whether the given element is on the classpath of this project,
 	 * that is, referenced from a classpath entry and not explicitly excluded
@@ -623,7 +623,7 @@ public interface IJavaScriptProject extends IParent, IJavaScriptElement, IOpenab
 	 * @see IIncludePathEntry#getExclusionPatterns()
 	 * @since 2.0
 	 */
-	boolean isOnClasspath(IJavaScriptElement element);
+	boolean isOnIncludepath(IJavaScriptElement element);
 	/**
 	 * Returns whether the given resource is on the classpath of this project,
 	 * that is, referenced from a classpath entry and not explicitly excluded
@@ -636,7 +636,7 @@ public interface IJavaScriptProject extends IParent, IJavaScriptElement, IOpenab
 	 * @see IIncludePathEntry#getExclusionPatterns()
 	 * @since 2.1
 	 */
-	boolean isOnClasspath(IResource resource);
+	boolean isOnIncludepath(IResource resource);
 
 	/**
 	 * Creates a new evaluation context.
@@ -804,11 +804,11 @@ public interface IJavaScriptProject extends IParent, IJavaScriptElement, IOpenab
 	 *
 	 * @return the raw classpath from disk for the project, as a list of
 	 * classpath entries
-	 * @see #getRawClasspath()
+	 * @see #getRawIncludepath()
 	 * @see IIncludePathEntry
 	 * @since 3.0
 	 */
-	IIncludePathEntry[] readRawClasspath();
+	IIncludePathEntry[] readRawIncludepath();
 
 	/**
 	 * Helper method for setting one option value only. Equivalent to <code>Map options = this.getOptions(false); map.put(optionName, optionValue); this.setOptions(map)</code>
@@ -875,8 +875,8 @@ public interface IJavaScriptProject extends IParent, IJavaScriptElement, IOpenab
 	 * Sets both the classpath of this project and its default output
 	 * location at once. The classpath is defined using a list of classpath
 	 * entries. In particular such a classpath may contain classpath variable entries.
-	 * Classpath variable entries can be resolved individually ({@link JavaScriptCore#getClasspathVariable(String)}),
-	 * or the full classpath can be resolved at once using the helper method {@link #getResolvedClasspath(boolean)}.
+	 * Classpath variable entries can be resolved individually ({@link JavaScriptCore#getIncludepathVariable(String)}),
+	 * or the full classpath can be resolved at once using the helper method {@link #getResolvedIncludepath(boolean)}.
 	 * <p>
 	 * A classpath variable provides an indirection level for better sharing a classpath. As an example, it allows
 	 * a classpath to no longer refer directly to external JARs located in some user specific location. The classpath
@@ -892,7 +892,7 @@ public interface IJavaScriptProject extends IParent, IJavaScriptElement, IOpenab
 	 * </p><p>
 	 * If a cycle is detected while setting this classpath (and if resources can be modified), an error marker will be added
 	 * to the project closing the cycle.
-	 * To avoid this problem, use {@link #hasClasspathCycle(IIncludePathEntry[])}
+	 * To avoid this problem, use {@link #hasIncludepathCycle(IIncludePathEntry[])}
 	 * before setting the classpath.
 	 * <p>
 	 * This operation acquires a lock on the workspace's root.
@@ -910,12 +910,12 @@ public interface IJavaScriptProject extends IParent, IJavaScriptElement, IOpenab
 	 * @see IIncludePathEntry
 	 * @since 3.2
 	 */
-	void setRawClasspath(IIncludePathEntry[] entries, IPath outputLocation, boolean canModifyResources, IProgressMonitor monitor) throws JavaScriptModelException;
+	void setRawIncludepath(IIncludePathEntry[] entries, IPath outputLocation, boolean canModifyResources, IProgressMonitor monitor) throws JavaScriptModelException;
 
 	/**
 	 * Sets the classpath of this project using a list of classpath entries. In particular such a classpath may contain
-	 * classpath variable entries. Classpath variable entries can be resolved individually ({@link JavaScriptCore#getClasspathVariable(String)}),
-	 * or the full classpath can be resolved at once using the helper method {@link #getResolvedClasspath(boolean)}.
+	 * classpath variable entries. Classpath variable entries can be resolved individually ({@link JavaScriptCore#getIncludepathVariable(String)}),
+	 * or the full classpath can be resolved at once using the helper method {@link #getResolvedIncludepath(boolean)}.
 	 * <p>
 	 * A classpath variable provides an indirection level for better sharing a classpath. As an example, it allows
 	 * a classpath to no longer refer directly to external JARs located in some user specific location. The classpath
@@ -931,7 +931,7 @@ public interface IJavaScriptProject extends IParent, IJavaScriptElement, IOpenab
 	 * </p><p>
 	 * If a cycle is detected while setting this classpath (and if resources can be modified), an error marker will be added
 	 * to the project closing the cycle.
-	 * To avoid this problem, use {@link #hasClasspathCycle(IIncludePathEntry[])}
+	 * To avoid this problem, use {@link #hasIncludepathCycle(IIncludePathEntry[])}
 	 * before setting the classpath.
 	 * <p>
 	 * This operation acquires a lock on the workspace's root.
@@ -948,12 +948,12 @@ public interface IJavaScriptProject extends IParent, IJavaScriptElement, IOpenab
 	 * @see IIncludePathEntry
 	 * @since 3.2
 	 */
-	void setRawClasspath(IIncludePathEntry[] entries, boolean canModifyResources, IProgressMonitor monitor) throws JavaScriptModelException;
+	void setRawIncludepath(IIncludePathEntry[] entries, boolean canModifyResources, IProgressMonitor monitor) throws JavaScriptModelException;
 
 	/**
 	 * Sets the classpath of this project using a list of classpath entries. In particular such a classpath may contain
-	 * classpath variable entries. Classpath variable entries can be resolved individually ({@link JavaScriptCore#getClasspathVariable(String)}),
-	 * or the full classpath can be resolved at once using the helper method {@link #getResolvedClasspath(boolean)}.
+	 * classpath variable entries. Classpath variable entries can be resolved individually ({@link JavaScriptCore#getIncludepathVariable(String)}),
+	 * or the full classpath can be resolved at once using the helper method {@link #getResolvedIncludepath(boolean)}.
 	 * <p>
 	 * A classpath variable provides an indirection level for better sharing a classpath. As an example, it allows
 	 * a classpath to no longer refer directly to external JARs located in some user specific location. The classpath
@@ -965,7 +965,7 @@ public interface IJavaScriptProject extends IParent, IJavaScriptElement, IOpenab
 	 * <p>
 	 * If a cycle is detected while setting this classpath, an error marker will be added
 	 * to the project closing the cycle.
-	 * To avoid this problem, use {@link #hasClasspathCycle(IIncludePathEntry[])}
+	 * To avoid this problem, use {@link #hasIncludepathCycle(IIncludePathEntry[])}
 	 * before setting the classpath.
 	 * <p>
 	 * This operation acquires a lock on the workspace's root.
@@ -980,7 +980,7 @@ public interface IJavaScriptProject extends IParent, IJavaScriptElement, IOpenab
 	 * </ul>
 	 * @see IIncludePathEntry
 	 */
-	void setRawClasspath(IIncludePathEntry[] entries, IProgressMonitor monitor)
+	void setRawIncludepath(IIncludePathEntry[] entries, IProgressMonitor monitor)
 		throws JavaScriptModelException;
 
 	/**
@@ -988,9 +988,9 @@ public interface IJavaScriptProject extends IParent, IJavaScriptElement, IOpenab
 	 * location at once. The classpath is defined using a list of classpath
 	 * entries. In particular, such a classpath may contain classpath variable
 	 * entries. Classpath variable entries can be resolved individually (see
-	 * ({@link JavaScriptCore#getClasspathVariable(String)}), or the full classpath can be
+	 * ({@link JavaScriptCore#getIncludepathVariable(String)}), or the full classpath can be
 	 * resolved at once using the helper method
-	 * {@link #getResolvedClasspath(boolean)}.
+	 * {@link #getResolvedIncludepath(boolean)}.
 	 * <p>
 	 * A classpath variable provides an indirection level for better sharing a
 	 * classpath. As an example, it allows a classpath to no longer refer
@@ -1006,7 +1006,7 @@ public interface IJavaScriptProject extends IParent, IJavaScriptElement, IOpenab
 	 * <p>
 	 * If a cycle is detected while setting this classpath, an error marker will
 	 * be added to the project closing the cycle. To avoid this problem, use
-	 * {@link #hasClasspathCycle(IIncludePathEntry[])} before setting
+	 * {@link #hasIncludepathCycle(IIncludePathEntry[])} before setting
 	 * the classpath.
 	 * </p>
 	 * <p>
@@ -1031,7 +1031,7 @@ public interface IJavaScriptProject extends IParent, IJavaScriptElement, IOpenab
 	 * @see IIncludePathEntry
 	 * @since 2.0
 	 */
-	void setRawClasspath(IIncludePathEntry[] entries, IPath outputLocation, IProgressMonitor monitor)
+	void setRawIncludepath(IIncludePathEntry[] entries, IPath outputLocation, IProgressMonitor monitor)
 		throws JavaScriptModelException;
 	
 	ITypeRoot findTypeRoot(String fullyQualifiedName) throws JavaScriptModelException;

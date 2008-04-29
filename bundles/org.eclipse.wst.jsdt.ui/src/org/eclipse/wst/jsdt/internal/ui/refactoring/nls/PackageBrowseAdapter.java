@@ -58,7 +58,7 @@ public class PackageBrowseAdapter implements IStringButtonAdapter {
 	}
 	public static Object[] createPackageListInput(IJavaScriptUnit cu, String elementNameMatch){
 		try{
-			IJavaScriptProject project= cu.getJavaProject();
+			IJavaScriptProject project= cu.getJavaScriptProject();
 			IPackageFragmentRoot[] roots= project.getPackageFragmentRoots();
 			List result= new ArrayList();
 			HashMap entered =new HashMap();

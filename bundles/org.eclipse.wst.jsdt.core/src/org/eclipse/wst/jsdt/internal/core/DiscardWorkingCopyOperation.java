@@ -30,7 +30,7 @@ public class DiscardWorkingCopyOperation extends JavaModelOperation {
 		JavaModelManager manager = JavaModelManager.getJavaModelManager();
 		int useCount = manager.discardPerWorkingCopyInfo(workingCopy);
 		if (useCount == 0) {
-			IJavaScriptProject javaProject = workingCopy.getJavaProject();
+			IJavaScriptProject javaProject = workingCopy.getJavaScriptProject();
 			if (ExternalJavaProject.EXTERNAL_PROJECT_NAME.equals(javaProject.getElementName())) {
 				manager.removePerProjectInfo((JavaProject) javaProject);
 				manager.containerRemove(javaProject);

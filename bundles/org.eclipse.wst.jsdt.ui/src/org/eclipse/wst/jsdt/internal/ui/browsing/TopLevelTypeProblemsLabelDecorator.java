@@ -40,7 +40,7 @@ class TopLevelTypeProblemsLabelDecorator extends ProblemsLabelDecorator {
 		if (!(sourceElement instanceof IType) || ((IType)sourceElement).getDeclaringType() != null)
 			return false;
 
-		IJavaScriptUnit cu= ((IType)sourceElement).getCompilationUnit();
+		IJavaScriptUnit cu= ((IType)sourceElement).getJavaScriptUnit();
 		if (cu == null)
 			return false;
 		IType[] types= cu.getTypes();

@@ -190,7 +190,7 @@ public class GoToNextPreviousMemberAction extends Action implements IUpdate {
 			IType iType= types[i];
 			addOffset(result, iType.getNameRange().getOffset());
 			addOffset(result, iType.getSourceRange().getOffset() + iType.getSourceRange().getLength());
-			addMemberOffsetList(result, iType.getMethods());
+			addMemberOffsetList(result, iType.getFunctions());
 			addMemberOffsetList(result, iType.getFields());
 			addMemberOffsetList(result, iType.getInitializers());
 		}

@@ -180,7 +180,7 @@ public class EditVariableEntryDialog extends StatusDialog {
 		if (path != null) {
 			String varName= path.segment(0);
 			if (varName != null) {
-				IPath varPath= JavaScriptCore.getClasspathVariable(varName);
+				IPath varPath= JavaScriptCore.getIncludepathVariable(varName);
 				if (varPath != null) {
 					return varPath.append(path.removeFirstSegments(1));
 				}
@@ -201,7 +201,7 @@ public class EditVariableEntryDialog extends StatusDialog {
 			return new Path(varName);
 		}
 		
-		IPath varPath= JavaScriptCore.getClasspathVariable(varName);
+		IPath varPath= JavaScriptCore.getIncludepathVariable(varName);
 		if (varPath != null) {
 			if (varPath.isPrefixOf(path)) {
 				path= path.removeFirstSegments(varPath.segmentCount());
@@ -240,7 +240,7 @@ public class EditVariableEntryDialog extends StatusDialog {
 				status.setError(NewWizardMessages.EditVariableEntryDialog_filename_error_notvalid); 
 				return status;
 			}
-			fFileVariablePath= JavaScriptCore.getClasspathVariable(varName);
+			fFileVariablePath= JavaScriptCore.getIncludepathVariable(varName);
 			if (fFileVariablePath == null) {
 				status.setError(NewWizardMessages.EditVariableEntryDialog_filename_error_varnotexists); 
 				return status;

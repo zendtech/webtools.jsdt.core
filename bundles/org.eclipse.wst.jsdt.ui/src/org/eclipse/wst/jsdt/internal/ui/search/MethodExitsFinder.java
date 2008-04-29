@@ -64,7 +64,7 @@ public class MethodExitsFinder extends ASTVisitor {
 		fAST= root.getAST();
 		
 		if (node instanceof ReturnStatement) {
-			fMethodDeclaration= (FunctionDeclaration)ASTNodes.getParent(node, ASTNode.METHOD_DECLARATION);
+			fMethodDeclaration= (FunctionDeclaration)ASTNodes.getParent(node, ASTNode.FUNCTION_DECLARATION);
 			if (fMethodDeclaration == null)
 				return SearchMessages.MethodExitsFinder_no_return_type_selected;
 			return null;

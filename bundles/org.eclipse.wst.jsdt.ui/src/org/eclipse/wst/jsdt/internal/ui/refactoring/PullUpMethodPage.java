@@ -515,7 +515,7 @@ public class PullUpMethodPage extends UserInputWizardPage {
 
 	private void setSourceViewerContents(String contents) {
 		if (contents != null) {
-			final IJavaScriptProject project= getPullUpRefactoring().getPullUpProcessor().getDestinationType().getJavaProject();
+			final IJavaScriptProject project= getPullUpRefactoring().getPullUpProcessor().getDestinationType().getJavaScriptProject();
 			final String[] lines= Strings.convertIntoLines(contents);
 			if (lines.length > 0) {
 				final int indent= Strings.computeIndentUnits(lines[lines.length - 1], project);

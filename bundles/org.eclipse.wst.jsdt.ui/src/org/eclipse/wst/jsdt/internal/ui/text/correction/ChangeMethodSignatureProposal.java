@@ -292,7 +292,7 @@ public class ChangeMethodSignatureProposal extends LinkedCorrectionProposal {
 				
 				String suggestedName= desc.name;
 				if (suggestedName != null) {
-					favourite= StubUtility.suggestArgumentName(getCompilationUnit().getJavaProject(), suggestedName, excludedNames);
+					favourite= StubUtility.suggestArgumentName(getCompilationUnit().getJavaScriptProject(), suggestedName, excludedNames);
 					addLinkedPositionProposal(nameKey, favourite, null);
 				}
 				
@@ -301,7 +301,7 @@ public class ChangeMethodSignatureProposal extends LinkedCorrectionProposal {
 				}
 				
 				Type type= desc.resultingParamType;
-				String[] suggestedNames= StubUtility.getArgumentNameSuggestions(getCompilationUnit().getJavaProject(), type, excludedNames);
+				String[] suggestedNames= StubUtility.getArgumentNameSuggestions(getCompilationUnit().getJavaScriptProject(), type, excludedNames);
 				for (int k= 0; k < suggestedNames.length; k++) {
 					addLinkedPositionProposal(nameKey, suggestedNames[k], null);
 				}

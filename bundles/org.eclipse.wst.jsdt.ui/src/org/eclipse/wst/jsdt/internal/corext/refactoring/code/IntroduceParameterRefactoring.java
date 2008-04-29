@@ -433,7 +433,7 @@ public class IntroduceParameterRefactoring extends ScriptableRefactoring impleme
 		}
 		else
 			methodName="indirectFunctionCall"; //$NON-NLS-1$
-		String[] proposals= StubUtility.getLocalNameSuggestions(fSourceCU.getJavaProject(), methodName, 0, excludedVariableNames);
+		String[] proposals= StubUtility.getLocalNameSuggestions(fSourceCU.getJavaScriptProject(), methodName, 0, excludedVariableNames);
 		return Arrays.asList(proposals);
 	}
 	
@@ -449,7 +449,7 @@ public class IntroduceParameterRefactoring extends ScriptableRefactoring impleme
 		int typeParamStart= typeName.indexOf("<"); //$NON-NLS-1$
 		if (typeParamStart != -1)
 			typeName= typeName.substring(0, typeParamStart);
-		String[] proposals= StubUtility.getLocalNameSuggestions(fSourceCU.getJavaProject(), typeName, expressionBinding.getDimensions(), excluded);
+		String[] proposals= StubUtility.getLocalNameSuggestions(fSourceCU.getJavaScriptProject(), typeName, expressionBinding.getDimensions(), excluded);
 		return Arrays.asList(proposals);
 	}
 	
@@ -553,7 +553,7 @@ public class IntroduceParameterRefactoring extends ScriptableRefactoring impleme
 				if (element == null || !element.exists() || element.getElementType() != IJavaScriptElement.COMPILATION_UNIT)
 					return createInputFatalStatus(element, IJavaRefactorings.INTRODUCE_PARAMETER);
 				else
-					fSourceCU= ((IFunction) element).getCompilationUnit();
+					fSourceCU= ((IFunction) element).getJavaScriptUnit();
 			} else
 				return RefactoringStatus.createFatalErrorStatus(Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist, JDTRefactoringDescriptor.ATTRIBUTE_INPUT));
 			final String name= extended.getAttribute(ATTRIBUTE_ARGUMENT);

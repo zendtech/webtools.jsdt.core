@@ -34,7 +34,7 @@ public class MovePackageFragmentRootOperation extends CopyPackageFragmentRootOpe
 	 */
 	protected void renameEntryInClasspath(IPath rootPath, IJavaScriptProject project) throws JavaScriptModelException {
 
-		IIncludePathEntry[] classpath = project.getRawClasspath();
+		IIncludePathEntry[] classpath = project.getRawIncludepath();
 		IIncludePathEntry[] newClasspath = null;
 		int cpLength = classpath.length;
 		int newCPIndex = -1;
@@ -89,7 +89,7 @@ public class MovePackageFragmentRootOperation extends CopyPackageFragmentRootOpe
 			}
 			IJavaScriptModelStatus status = JavaScriptConventions.validateClasspath(project, newClasspath, project.getOutputLocation());
 			if (status.isOK())
-				project.setRawClasspath(newClasspath, progressMonitor);
+				project.setRawIncludepath(newClasspath, progressMonitor);
 			// don't update classpath if status is not ok to avoid JavaScriptModelException (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=129991)
 		}
 	}
@@ -131,7 +131,7 @@ public class MovePackageFragmentRootOperation extends CopyPackageFragmentRootOpe
 	protected void executeOperation() throws JavaScriptModelException {
 
 		IPackageFragmentRoot root = (IPackageFragmentRoot)this.getElementToProcess();
-		IIncludePathEntry rootEntry = root.getRawClasspathEntry();
+		IIncludePathEntry rootEntry = root.getRawIncludepathEntry();
 		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 
 		// move resource
@@ -140,14 +140,14 @@ public class MovePackageFragmentRootOperation extends CopyPackageFragmentRootOpe
 		}
 
 		// update refering projects classpath excluding orignating project
-		IJavaScriptProject originatingProject = root.getJavaProject();
-		if ((this.updateModelFlags & IPackageFragmentRoot.OTHER_REFERRING_PROJECTS_CLASSPATH) != 0) {
+		IJavaScriptProject originatingProject = root.getJavaScriptProject();
+		if ((this.updateModelFlags & IPackageFragmentRoot.OTHER_REFERRING_PROJECTS_INCLUDEPATH) != 0) {
 			updateReferringProjectClasspaths(rootEntry.getPath(), originatingProject);
 		}
 
 		boolean isRename = this.destination.segment(0).equals(originatingProject.getElementName());
-		boolean updateOriginating = (this.updateModelFlags & IPackageFragmentRoot.ORIGINATING_PROJECT_CLASSPATH) != 0;
-		boolean updateDestination = (this.updateModelFlags & IPackageFragmentRoot.DESTINATION_PROJECT_CLASSPATH) != 0;
+		boolean updateOriginating = (this.updateModelFlags & IPackageFragmentRoot.ORIGINATING_PROJECT_INCLUDEPATH) != 0;
+		boolean updateDestination = (this.updateModelFlags & IPackageFragmentRoot.DESTINATION_PROJECT_INCLUDEPATH) != 0;
 
 		// update originating classpath
 		if (updateOriginating) {
@@ -243,7 +243,7 @@ public class MovePackageFragmentRootOperation extends CopyPackageFragmentRootOpe
 	 */
 	protected void updateReferringProjectClasspaths(IPath rootPath, IJavaScriptProject projectOfRoot) throws JavaScriptModelException {
 		IJavaScriptModel model = this.getJavaModel();
-		IJavaScriptProject[] projects = model.getJavaProjects();
+		IJavaScriptProject[] projects = model.getJavaScriptProjects();
 		for (int i = 0, length = projects.length; i < length; i++) {
 			IJavaScriptProject project = projects[i];
 			if (project.equals(projectOfRoot)) continue;
@@ -255,7 +255,7 @@ public class MovePackageFragmentRootOperation extends CopyPackageFragmentRootOpe
 	 */
 	protected void removeEntryFromClasspath(IPath rootPath, IJavaScriptProject project) throws JavaScriptModelException {
 
-		IIncludePathEntry[] classpath = project.getRawClasspath();
+		IIncludePathEntry[] classpath = project.getRawIncludepath();
 		IIncludePathEntry[] newClasspath = null;
 		int cpLength = classpath.length;
 		int newCPIndex = -1;
@@ -277,7 +277,7 @@ public class MovePackageFragmentRootOperation extends CopyPackageFragmentRootOpe
 			if (newCPIndex < newClasspath.length) {
 				System.arraycopy(newClasspath, 0, newClasspath = new IIncludePathEntry[newCPIndex], 0, newCPIndex);
 			}
-			project.setRawClasspath(newClasspath, progressMonitor);
+			project.setRawIncludepath(newClasspath, progressMonitor);
 		}
 	}
 }

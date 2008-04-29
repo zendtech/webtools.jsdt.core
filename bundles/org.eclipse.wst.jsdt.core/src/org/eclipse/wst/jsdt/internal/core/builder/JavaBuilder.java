@@ -71,7 +71,7 @@ static ArrayList builtProjects = null;
 public static IMarker[] getProblemsFor(IResource resource) {
 	try {
 		if (resource != null && resource.exists()) {
-			IMarker[] markers = resource.findMarkers(IJavaScriptModelMarker.JAVA_MODEL_PROBLEM_MARKER, false, IResource.DEPTH_INFINITE);
+			IMarker[] markers = resource.findMarkers(IJavaScriptModelMarker.JAVASCRIPT_MODEL_PROBLEM_MARKER, false, IResource.DEPTH_INFINITE);
 			Set markerTypes = JavaModelManager.getJavaModelManager().validationParticipants.managedMarkerTypes();
 			if (markerTypes.isEmpty()) return markers;
 			ArrayList markerList = new ArrayList(5);
@@ -124,7 +124,7 @@ public static void buildFinished() {
 public static void removeProblemsFor(IResource resource) {
 	try {
 		if (resource != null && resource.exists()) {
-			resource.deleteMarkers(IJavaScriptModelMarker.JAVA_MODEL_PROBLEM_MARKER, false, IResource.DEPTH_INFINITE);
+			resource.deleteMarkers(IJavaScriptModelMarker.JAVASCRIPT_MODEL_PROBLEM_MARKER, false, IResource.DEPTH_INFINITE);
 
 			// delete managed markers
 			Set markerTypes = JavaModelManager.getJavaModelManager().validationParticipants.managedMarkerTypes();
@@ -150,7 +150,7 @@ public static void removeTasksFor(IResource resource) {
 public static void removeProblemsAndTasksFor(IResource resource) {
 	try {
 		if (resource != null && resource.exists()) {
-			resource.deleteMarkers(IJavaScriptModelMarker.JAVA_MODEL_PROBLEM_MARKER, false, IResource.DEPTH_INFINITE);
+			resource.deleteMarkers(IJavaScriptModelMarker.JAVASCRIPT_MODEL_PROBLEM_MARKER, false, IResource.DEPTH_INFINITE);
 			resource.deleteMarkers(IJavaScriptModelMarker.TASK_MARKER, false, IResource.DEPTH_INFINITE);
 
 			// delete managed markers
@@ -231,7 +231,7 @@ protected IProject[] build(int kind, Map ignored, IProgressMonitor monitor) thro
 		}
 	} catch (CoreException e) {
 		Util.log(e, "JavaBuilder handling CoreException while building: " + currentProject.getName()); //$NON-NLS-1$
-		IMarker marker = currentProject.createMarker(IJavaScriptModelMarker.JAVA_MODEL_PROBLEM_MARKER);
+		IMarker marker = currentProject.createMarker(IJavaScriptModelMarker.JAVASCRIPT_MODEL_PROBLEM_MARKER);
 		marker.setAttributes(
 			new String[] {IMarker.MESSAGE, IMarker.SEVERITY, IJavaScriptModelMarker.CATEGORY_ID, IMarker.SOURCE_ID},
 			new Object[] {
@@ -243,7 +243,7 @@ protected IProject[] build(int kind, Map ignored, IProgressMonitor monitor) thro
 		);
 	} catch (ImageBuilderInternalException e) {
 		Util.log(e.getThrowable(), "JavaBuilder handling ImageBuilderInternalException while building: " + currentProject.getName()); //$NON-NLS-1$
-		IMarker marker = currentProject.createMarker(IJavaScriptModelMarker.JAVA_MODEL_PROBLEM_MARKER);
+		IMarker marker = currentProject.createMarker(IJavaScriptModelMarker.JAVASCRIPT_MODEL_PROBLEM_MARKER);
 		marker.setAttributes(
 			new String[] {IMarker.MESSAGE, IMarker.SEVERITY, IJavaScriptModelMarker.CATEGORY_ID, IMarker.SOURCE_ID},
 			new Object[] {
@@ -258,7 +258,7 @@ protected IProject[] build(int kind, Map ignored, IProgressMonitor monitor) thro
 		if (DEBUG)
 			System.out.println(Messages.bind(Messages.build_missingSourceFile, e.missingSourceFile));
 		removeProblemsAndTasksFor(currentProject); // make this the only problem for this project
-		IMarker marker = currentProject.createMarker(IJavaScriptModelMarker.JAVA_MODEL_PROBLEM_MARKER);
+		IMarker marker = currentProject.createMarker(IJavaScriptModelMarker.JAVASCRIPT_MODEL_PROBLEM_MARKER);
 		marker.setAttributes(
 			new String[] {IMarker.MESSAGE, IMarker.SEVERITY, IMarker.SOURCE_ID},
 			new Object[] {
@@ -328,7 +328,7 @@ protected void clean(IProgressMonitor monitor) throws CoreException {
 //		new BatchImageBuilder(this, false).cleanOutputFolders(false);
 	} catch (CoreException e) {
 		Util.log(e, "JavaBuilder handling CoreException while cleaning: " + currentProject.getName()); //$NON-NLS-1$
-		IMarker marker = currentProject.createMarker(IJavaScriptModelMarker.JAVA_MODEL_PROBLEM_MARKER);
+		IMarker marker = currentProject.createMarker(IJavaScriptModelMarker.JAVASCRIPT_MODEL_PROBLEM_MARKER);
 		marker.setAttributes(
 			new String[] {IMarker.MESSAGE, IMarker.SEVERITY, IMarker.SOURCE_ID},
 			new Object[] {
@@ -484,7 +484,7 @@ private IProject[] getRequiredProjects(boolean includeBinaryPrerequisites) {
 }
 
 boolean hasBuildpathErrors() throws CoreException {
-//	IMarker[] markers = this.currentProject.findMarkers(IJavaScriptModelMarker.JAVA_MODEL_PROBLEM_MARKER, false, IResource.DEPTH_ZERO);
+//	IMarker[] markers = this.currentProject.findMarkers(IJavaScriptModelMarker.JAVASCRIPT_MODEL_PROBLEM_MARKER, false, IResource.DEPTH_ZERO);
 //	for (int i = 0, l = markers.length; i < l; i++)
 //		if (markers[i].getAttribute(IJavaScriptModelMarker.CATEGORY_ID, -1) == CategorizedProblem.CAT_BUILDPATH)
 //			return true;
@@ -655,13 +655,13 @@ private boolean isWorthBuilding() throws CoreException {
 	if (!abortBuilds) return true;
 
 	// Abort build only if there are classpath errors
-	if (isClasspathBroken(javaProject.getRawClasspath(), currentProject)) {
+	if (isClasspathBroken(javaProject.getRawIncludepath(), currentProject)) {
 		if (DEBUG)
 			System.out.println("Aborted build because project has classpath errors (incomplete or involved in cycle)"); //$NON-NLS-1$
 
 		removeProblemsAndTasksFor(currentProject); // remove all compilation problems
 
-		IMarker marker = currentProject.createMarker(IJavaScriptModelMarker.JAVA_MODEL_PROBLEM_MARKER);
+		IMarker marker = currentProject.createMarker(IJavaScriptModelMarker.JAVASCRIPT_MODEL_PROBLEM_MARKER);
 		marker.setAttributes(
 			new String[] {IMarker.MESSAGE, IMarker.SEVERITY, IJavaScriptModelMarker.CATEGORY_ID, IMarker.SOURCE_ID},
 			new Object[] {
@@ -702,11 +702,11 @@ private boolean isWorthBuilding() throws CoreException {
 					+ " was not built"); //$NON-NLS-1$
 
 			removeProblemsAndTasksFor(currentProject); // make this the only problem for this project
-			IMarker marker = currentProject.createMarker(IJavaScriptModelMarker.JAVA_MODEL_PROBLEM_MARKER);
+			IMarker marker = currentProject.createMarker(IJavaScriptModelMarker.JAVASCRIPT_MODEL_PROBLEM_MARKER);
 			marker.setAttributes(
 				new String[] {IMarker.MESSAGE, IMarker.SEVERITY, IJavaScriptModelMarker.CATEGORY_ID, IMarker.SOURCE_ID},
 				new Object[] {
-					isClasspathBroken(prereq.getRawClasspath(), p)
+					isClasspathBroken(prereq.getRawIncludepath(), p)
 						? Messages.bind(Messages.build_prereqProjectHasClasspathProblems, p.getName())
 						: Messages.bind(Messages.build_prereqProjectMustBeRebuilt, p.getName()),
 					new Integer(IMarker.SEVERITY_ERROR),

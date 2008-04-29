@@ -663,7 +663,7 @@ public class DeltaProcessor {
 				flags |= IJavaScriptElementDelta.F_ARCHIVE_CONTENT_CHANGED;
 				// need also to reset project cache otherwise it will be out-of-date
 				// see bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=162621
-				this.projectCachesToReset.add(element.getJavaProject());
+				this.projectCachesToReset.add(element.getJavaScriptProject());
 			}
 			if (isPrimary) {
 				flags |= IJavaScriptElementDelta.F_PRIMARY_RESOURCE;
@@ -732,7 +732,7 @@ public class DeltaProcessor {
 						PackageFragmentRoot root = this.currentElement.getPackageFragmentRoot();
 						if (root == null) {
 							element =  JavaScriptCore.create(resource);
-						} else if (((JavaProject)root.getJavaProject()).contains(resource)) {
+						} else if (((JavaProject)root.getJavaScriptProject()).contains(resource)) {
 							// create package handle
 							IPath pkgPath = path.removeFirstSegments(root.getPath().segmentCount());
 							String[] pkgName = pkgPath.segments();
@@ -777,7 +777,7 @@ public class DeltaProcessor {
 							// create compilation unit handle
 							// fileName validation has been done in elementType(IResourceDelta, int, boolean)
 							String fileName = path.lastSegment();
-							element = pkgFragment.getCompilationUnit(fileName);
+							element = pkgFragment.getJavaScriptUnit(fileName);
 						} else {
 							// create class file handle
 							// fileName validation has been done in elementType(IResourceDelta, int, boolean)
@@ -1036,7 +1036,7 @@ public class DeltaProcessor {
 			if (delta != null && JavaProject.hasJavaNature((IProject)delta.getResource())) {
 				addToParentInfo(element);
 				if ((delta.getFlags() & IResourceDelta.MOVED_FROM) != 0) {
-					Openable movedFromElement = (Openable)element.getJavaModel().getJavaProject(delta.getMovedFromPath().lastSegment());
+					Openable movedFromElement = (Openable)element.getJavaScriptModel().getJavaScriptProject(delta.getMovedFromPath().lastSegment());
 					currentDelta().movedTo(element, movedFromElement);
 				} else {
 					// Force the project to be closed as it might have been opened
@@ -1123,7 +1123,7 @@ public class DeltaProcessor {
 			switch (elementType) {
 				case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT :
 					// when a root is added, and is on the classpath, the project must be updated
-					JavaProject project = (JavaProject) element.getJavaProject();
+					JavaProject project = (JavaProject) element.getJavaScriptProject();
 
 					// refresh pkg fragment roots and caches of the project (and its dependents)
 					this.rootsToRefresh.add(project);
@@ -1132,7 +1132,7 @@ public class DeltaProcessor {
 					break;
 				case IJavaScriptElement.PACKAGE_FRAGMENT :
 					// reset project's package fragment cache
-					project = (JavaProject) element.getJavaProject();
+					project = (JavaProject) element.getJavaScriptProject();
 					this.projectCachesToReset.add(project);
 
 					break;
@@ -1220,7 +1220,7 @@ public class DeltaProcessor {
 
 				break;
 			case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT :
-				JavaProject project = (JavaProject) element.getJavaProject();
+				JavaProject project = (JavaProject) element.getJavaScriptProject();
 
 				// refresh pkg fragment roots and caches of the project (and its dependents)
 				this.rootsToRefresh.add(project);
@@ -1229,7 +1229,7 @@ public class DeltaProcessor {
 				break;
 			case IJavaScriptElement.PACKAGE_FRAGMENT :
 				// reset package fragment cache
-				project = (JavaProject) element.getJavaProject();
+				project = (JavaProject) element.getJavaScriptProject();
 				this.projectCachesToReset.add(project);
 
 				break;
@@ -1308,7 +1308,7 @@ public class DeltaProcessor {
 
 	private SourceElementParser getSourceElementParser(Openable element) {
 		if (this.sourceElementParserCache == null)
-			this.sourceElementParserCache = this.manager.indexManager.getSourceElementParser(element.getJavaProject(), null/*requestor will be set by indexer*/);
+			this.sourceElementParserCache = this.manager.indexManager.getSourceElementParser(element.getJavaScriptProject(), null/*requestor will be set by indexer*/);
 		return this.sourceElementParserCache;
 	}
 	/*
@@ -2102,7 +2102,7 @@ public class DeltaProcessor {
 							if (parent == null) {
 								// find the parent of the non-java resource to attach to
 								if (this.currentElement == null
-										|| !rootInfo.project.equals(this.currentElement.getJavaProject())) { // note if currentElement is the IJavaScriptModel, getJavaProject() is null
+										|| !rootInfo.project.equals(this.currentElement.getJavaScriptProject())) { // note if currentElement is the IJavaScriptModel, getJavaProject() is null
 									// force the currentProject to be used
 									this.currentElement = rootInfo.project;
 								}
@@ -2412,10 +2412,10 @@ public class DeltaProcessor {
 			case IJavaScriptElement.JAVA_PROJECT :
 				switch (delta.getKind()) {
 					case IResourceDelta.ADDED :
-						indexManager.indexAll(element.getJavaProject().getProject());
+						indexManager.indexAll(element.getJavaScriptProject().getProject());
 						break;
 					case IResourceDelta.REMOVED :
-						indexManager.removeIndexFamily(element.getJavaProject().getProject().getFullPath());
+						indexManager.removeIndexFamily(element.getJavaScriptProject().getProject().getFullPath());
 						// NB: Discarding index jobs belonging to this project was done during PRE_DELETE
 						break;
 					// NB: Update of index if project is opened, closed, or its java nature is added or removed
@@ -2430,13 +2430,13 @@ public class DeltaProcessor {
 					switch (delta.getKind()) {
 						case IResourceDelta.ADDED:
 							// index the new jar
-							indexManager.indexLibrary((LibraryFragmentRoot)element, root.getJavaProject().getProject());
+							indexManager.indexLibrary((LibraryFragmentRoot)element, root.getJavaScriptProject().getProject());
 							break;
 						case IResourceDelta.CHANGED:
 							// first remove the index so that it is forced to be re-indexed
 							indexManager.removeIndex(jarPath);
 							// then index the jar
-							indexManager.indexLibrary((LibraryFragmentRoot)element, root.getJavaProject().getProject());
+							indexManager.indexLibrary((LibraryFragmentRoot)element, root.getJavaScriptProject().getProject());
 							break;
 						case IResourceDelta.REMOVED:
 							// the jar was physically removed: remove the index
@@ -2477,7 +2477,7 @@ public class DeltaProcessor {
 								String name = resource.getName();
 								if (isSource) {
 									if (org.eclipse.wst.jsdt.internal.core.util.Util.isJavaLikeFileName(name)) {
-										Openable cu = (Openable)pkg.getCompilationUnit(name);
+										Openable cu = (Openable)pkg.getJavaScriptUnit(name);
 										this.updateIndex(cu, child);
 									}
 								} else if (org.eclipse.wst.jsdt.internal.compiler.util.Util.isClassFileName(name)) {
@@ -2491,7 +2491,7 @@ public class DeltaProcessor {
 				break;
 			case IJavaScriptElement.CLASS_FILE :
 				IFile file = (IFile) delta.getResource();
-				IJavaScriptProject project = element.getJavaProject();
+				IJavaScriptProject project = element.getJavaScriptProject();
 				IPath binaryFolderPath = element.getPackageFragmentRoot().getPath();
 				// if the class file is part of the binary output, it has been created by
 				// the java builder -> ignore

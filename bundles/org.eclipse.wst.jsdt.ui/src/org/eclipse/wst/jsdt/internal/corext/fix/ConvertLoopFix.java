@@ -106,7 +106,7 @@ public class ConvertLoopFix extends LinkedFix {
 	}
 	
 	public static IFix createCleanUp(JavaScriptUnit compilationUnit, boolean convertForLoops, boolean convertIterableForLoops, boolean makeFinal) {
-		if (!JavaModelUtil.is50OrHigher(compilationUnit.getJavaElement().getJavaProject()))
+		if (!JavaModelUtil.is50OrHigher(compilationUnit.getJavaElement().getJavaScriptProject()))
 			return null;
 		
 		if (!convertForLoops && !convertIterableForLoops)

@@ -287,12 +287,12 @@ public final class ExtractInterfaceProcessor extends SuperTypeRefactoringProcess
 			final RefactoringStatus result= Checks.checkTypeName(name);
 			if (result.hasFatalError())
 				return result;
-			final String unitName= JavaModelUtil.getRenamedCUName(fSubType.getCompilationUnit(), name);
+			final String unitName= JavaModelUtil.getRenamedCUName(fSubType.getJavaScriptUnit(), name);
 			result.merge(Checks.checkCompilationUnitName(unitName));
 			if (result.hasFatalError())
 				return result;
 			final IPackageFragment fragment= fSubType.getPackageFragment();
-			if (fragment.getCompilationUnit(unitName).exists()) {
+			if (fragment.getJavaScriptUnit(unitName).exists()) {
 				result.addFatalError(Messages.format(RefactoringCoreMessages.ExtractInterfaceProcessor_existing_compilation_unit, new String[] { unitName, fragment.getElementName() }));
 				return result;
 			}
@@ -313,7 +313,7 @@ public final class ExtractInterfaceProcessor extends SuperTypeRefactoringProcess
 			monitor.setTaskName(RefactoringCoreMessages.ExtractInterfaceProcessor_creating);
 			final Map arguments= new HashMap();
 			String project= null;
-			final IJavaScriptProject javaProject= fSubType.getJavaProject();
+			final IJavaScriptProject javaProject= fSubType.getJavaScriptProject();
 			if (javaProject != null)
 				project= javaProject.getElementName();
 			int flags= JavaRefactoringDescriptor.JAR_MIGRATION | JavaRefactoringDescriptor.JAR_REFACTORING | RefactoringDescriptor.STRUCTURAL_CHANGE | RefactoringDescriptor.MULTI_CHANGE;
@@ -324,7 +324,7 @@ public final class ExtractInterfaceProcessor extends SuperTypeRefactoringProcess
 				JavaPlugin.log(exception);
 			}
 			final IPackageFragment fragment= fSubType.getPackageFragment();
-			final IJavaScriptUnit cu= fragment.getCompilationUnit(JavaModelUtil.getRenamedCUName(fSubType.getCompilationUnit(), fSuperName));
+			final IJavaScriptUnit cu= fragment.getJavaScriptUnit(JavaModelUtil.getRenamedCUName(fSubType.getJavaScriptUnit(), fSuperName));
 			final IType type= cu.getType(fSuperName);
 			final String description= Messages.format(RefactoringCoreMessages.ExtractInterfaceProcessor_description_descriptor_short, fSuperName);
 			final String header= Messages.format(RefactoringCoreMessages.ExtractInterfaceProcessor_descriptor_description, new String[] { JavaElementLabels.getElementLabel(type, JavaElementLabels.ALL_FULLY_QUALIFIED), JavaElementLabels.getElementLabel(fSubType, JavaElementLabels.ALL_FULLY_QUALIFIED) });
@@ -346,9 +346,9 @@ public final class ExtractInterfaceProcessor extends SuperTypeRefactoringProcess
 			arguments.put(ATTRIBUTE_REPLACE, Boolean.valueOf(fReplace).toString());
 			arguments.put(ATTRIBUTE_INSTANCEOF, Boolean.valueOf(fInstanceOf).toString());
 			final DynamicValidationRefactoringChange change= new DynamicValidationRefactoringChange(descriptor, RefactoringCoreMessages.ExtractInterfaceRefactoring_name, fChangeManager.getAllChanges());
-			final IFile file= ResourceUtil.getFile(fSubType.getCompilationUnit());
+			final IFile file= ResourceUtil.getFile(fSubType.getJavaScriptUnit());
 			if (fSuperSource != null && fSuperSource.length() > 0)
-				change.add(new CreateCompilationUnitChange(fSubType.getPackageFragment().getCompilationUnit(JavaModelUtil.getRenamedCUName(fSubType.getCompilationUnit(), fSuperName)), fSuperSource, file.getCharset(false)));
+				change.add(new CreateCompilationUnitChange(fSubType.getPackageFragment().getJavaScriptUnit(JavaModelUtil.getRenamedCUName(fSubType.getJavaScriptUnit(), fSuperName)), fSuperSource, file.getCharset(false)));
 			monitor.worked(1);
 			return change;
 		} finally {
@@ -377,20 +377,20 @@ public final class ExtractInterfaceProcessor extends SuperTypeRefactoringProcess
 			monitor.setTaskName(RefactoringCoreMessages.ExtractInterfaceProcessor_creating);
 			resetEnvironment();
 			final TextEditBasedChangeManager manager= new TextEditBasedChangeManager();
-			final CompilationUnitRewrite sourceRewrite= new CompilationUnitRewrite(fSubType.getCompilationUnit());
+			final CompilationUnitRewrite sourceRewrite= new CompilationUnitRewrite(fSubType.getJavaScriptUnit());
 			final AbstractTypeDeclaration declaration= ASTNodeSearchUtil.getAbstractTypeDeclarationNode(fSubType, sourceRewrite.getRoot());
 			if (declaration != null) {
 				createTypeSignature(sourceRewrite, declaration, status, new SubProgressMonitor(monitor, 20));
-				final IField[] fields= getExtractedFields(fSubType.getCompilationUnit());
+				final IField[] fields= getExtractedFields(fSubType.getJavaScriptUnit());
 				if (fields.length > 0)
 					ASTNodeDeleteUtil.markAsDeleted(fields, sourceRewrite, sourceRewrite.createCategorizedGroupDescription(RefactoringCoreMessages.ExtractInterfaceProcessor_remove_field_label, SET_EXTRACT_INTERFACE));
 				if (fSubType.isInterface()) {
-					final IFunction[] methods= getExtractedMethods(fSubType.getCompilationUnit());
+					final IFunction[] methods= getExtractedMethods(fSubType.getJavaScriptUnit());
 					if (methods.length > 0)
 						ASTNodeDeleteUtil.markAsDeleted(methods, sourceRewrite, sourceRewrite.createCategorizedGroupDescription(RefactoringCoreMessages.ExtractInterfaceProcessor_remove_method_label, SET_EXTRACT_INTERFACE));
 				}
-				final String name= JavaModelUtil.getRenamedCUName(fSubType.getCompilationUnit(), fSuperName);
-				final IJavaScriptUnit original= fSubType.getPackageFragment().getCompilationUnit(name);
+				final String name= JavaModelUtil.getRenamedCUName(fSubType.getJavaScriptUnit(), fSuperName);
+				final IJavaScriptUnit original= fSubType.getPackageFragment().getJavaScriptUnit(name);
 				final IJavaScriptUnit copy= getSharedWorkingCopy(original.getPrimary(), new SubProgressMonitor(monitor, 20));
 				fSuperSource= createTypeSource(copy, fSubType, fSuperName, sourceRewrite, declaration, status, new SubProgressMonitor(monitor, 40));
 				if (fSuperSource != null) {
@@ -401,7 +401,7 @@ public final class ExtractInterfaceProcessor extends SuperTypeRefactoringProcess
 				if (fReplace)
 					rewriteTypeOccurrences(manager, sourceRewrite, copy, replacements, status, new SubProgressMonitor(monitor, 220));
 				createMethodComments(sourceRewrite, replacements);
-				manager.manage(fSubType.getCompilationUnit(), sourceRewrite.createChange());
+				manager.manage(fSubType.getJavaScriptUnit(), sourceRewrite.createChange());
 			}
 			return manager;
 		} finally {
@@ -436,7 +436,7 @@ public final class ExtractInterfaceProcessor extends SuperTypeRefactoringProcess
 		Assert.isNotNull(targetRewrite);
 		Assert.isNotNull(fragment);
 		final FieldDeclaration field= (FieldDeclaration) fragment.getParent();
-		ImportRewriteUtil.collectImports(fSubType.getJavaProject(), field, fTypeBindings, fStaticBindings, false);
+		ImportRewriteUtil.collectImports(fSubType.getJavaScriptProject(), field, fTypeBindings, fStaticBindings, false);
 		final ASTRewrite rewrite= ASTRewrite.create(field.getAST());
 		final ITrackedNodePosition position= rewrite.track(field);
 		final ListRewrite rewriter= rewrite.getListRewrite(field, FieldDeclaration.FRAGMENTS_PROPERTY);
@@ -451,7 +451,7 @@ public final class ExtractInterfaceProcessor extends SuperTypeRefactoringProcess
 		try {
 			final IDocument document= new Document(buffer.getDocument().get());
 			try {
-				rewrite.rewriteAST(document, unit.getJavaProject().getOptions(true)).apply(document, TextEdit.UPDATE_REGIONS);
+				rewrite.rewriteAST(document, unit.getJavaScriptProject().getOptions(true)).apply(document, TextEdit.UPDATE_REGIONS);
 				targetRewrite.getListRewrite(targetDeclaration, targetDeclaration.getBodyDeclarationsProperty()).insertFirst(targetRewrite.createStringPlaceholder(normalizeText(document.get(position.getStartPosition(), position.getLength())), ASTNode.FIELD_DECLARATION), null);
 			} catch (MalformedTreeException exception) {
 				JavaPlugin.log(exception);
@@ -541,13 +541,13 @@ public final class ExtractInterfaceProcessor extends SuperTypeRefactoringProcess
 					}
 				}
 			}
-			final String comment= CodeGeneration.getMethodComment(fSubType.getCompilationUnit(), fSubType.getElementName(), declaration, false, binding.getName(), string, names, StubUtility.getLineDelimiterUsed(fSubType.getJavaProject()));
+			final String comment= CodeGeneration.getMethodComment(fSubType.getJavaScriptUnit(), fSubType.getElementName(), declaration, false, binding.getName(), string, names, StubUtility.getLineDelimiterUsed(fSubType.getJavaScriptProject()));
 			if (comment != null) {
 				final ASTRewrite rewrite= sourceRewrite.getASTRewrite();
 				if (declaration.getJavadoc() != null) {
-					rewrite.replace(declaration.getJavadoc(), rewrite.createStringPlaceholder(comment, ASTNode.JAVADOC), sourceRewrite.createCategorizedGroupDescription(RefactoringCoreMessages.ExtractInterfaceProcessor_rewrite_comment, SET_EXTRACT_INTERFACE));
+					rewrite.replace(declaration.getJavadoc(), rewrite.createStringPlaceholder(comment, ASTNode.JSDOC), sourceRewrite.createCategorizedGroupDescription(RefactoringCoreMessages.ExtractInterfaceProcessor_rewrite_comment, SET_EXTRACT_INTERFACE));
 				} else if (javadoc) {
-					rewrite.set(declaration, FunctionDeclaration.JAVADOC_PROPERTY, rewrite.createStringPlaceholder(comment, ASTNode.JAVADOC), sourceRewrite.createCategorizedGroupDescription(RefactoringCoreMessages.ExtractInterfaceProcessor_add_comment, SET_EXTRACT_INTERFACE));
+					rewrite.set(declaration, FunctionDeclaration.JAVADOC_PROPERTY, rewrite.createStringPlaceholder(comment, ASTNode.JSDOC), sourceRewrite.createCategorizedGroupDescription(RefactoringCoreMessages.ExtractInterfaceProcessor_add_comment, SET_EXTRACT_INTERFACE));
 				}
 			}
 		}
@@ -569,7 +569,7 @@ public final class ExtractInterfaceProcessor extends SuperTypeRefactoringProcess
 		Assert.isNotNull(sourceRewrite);
 		Assert.isNotNull(replacements);
 		if (fComments && fMembers.length > 0) {
-			final IJavaScriptProject project= fSubType.getJavaProject();
+			final IJavaScriptProject project= fSubType.getJavaScriptProject();
 			final boolean javadoc= project.getOption(JavaScriptCore.COMPILER_DOC_COMMENT_SUPPORT, true).equals(JavaScriptCore.ENABLED);
 			IMember member= null;
 			for (int index= 0; index < fMembers.length; index++) {
@@ -599,7 +599,7 @@ public final class ExtractInterfaceProcessor extends SuperTypeRefactoringProcess
 		Assert.isNotNull(sourceRewrite);
 		Assert.isNotNull(targetRewrite);
 		Assert.isNotNull(declaration);
-		ImportRewriteUtil.collectImports(fSubType.getJavaProject(), declaration, fTypeBindings, fStaticBindings, true);
+		ImportRewriteUtil.collectImports(fSubType.getJavaScriptProject(), declaration, fTypeBindings, fStaticBindings, true);
 		final ASTRewrite rewrite= ASTRewrite.create(declaration.getAST());
 		final ITrackedNodePosition position= rewrite.track(declaration);
 		if (declaration.getBody() != null)
@@ -641,8 +641,8 @@ public final class ExtractInterfaceProcessor extends SuperTypeRefactoringProcess
 		try {
 			final IDocument document= new Document(buffer.getDocument().get());
 			try {
-				rewrite.rewriteAST(document, unit.getJavaProject().getOptions(true)).apply(document, TextEdit.UPDATE_REGIONS);
-				targetRewrite.getListRewrite(targetDeclaration, targetDeclaration.getBodyDeclarationsProperty()).insertFirst(targetRewrite.createStringPlaceholder(normalizeText(document.get(position.getStartPosition(), position.getLength())), ASTNode.METHOD_DECLARATION), null);
+				rewrite.rewriteAST(document, unit.getJavaScriptProject().getOptions(true)).apply(document, TextEdit.UPDATE_REGIONS);
+				targetRewrite.getListRewrite(targetDeclaration, targetDeclaration.getBodyDeclarationsProperty()).insertFirst(targetRewrite.createStringPlaceholder(normalizeText(document.get(position.getStartPosition(), position.getLength())), ASTNode.FUNCTION_DECLARATION), null);
 			} catch (MalformedTreeException exception) {
 				JavaPlugin.log(exception);
 			} catch (BadLocationException exception) {
@@ -879,7 +879,7 @@ public final class ExtractInterfaceProcessor extends SuperTypeRefactoringProcess
 				attribute= JDTRefactoringDescriptor.ATTRIBUTE_ELEMENT + count;
 			}
 			fMembers= (IMember[]) elements.toArray(new IMember[elements.size()]);
-			fSettings= JavaPreferencesSettings.getCodeGenerationSettings(fSubType.getJavaProject());
+			fSettings= JavaPreferencesSettings.getCodeGenerationSettings(fSubType.getJavaScriptProject());
 			if (!status.isOK())
 				return status;
 		} else
@@ -923,7 +923,7 @@ public final class ExtractInterfaceProcessor extends SuperTypeRefactoringProcess
 	protected final String normalizeText(final String code) throws JavaScriptModelException {
 		Assert.isNotNull(code);
 		final String[] lines= Strings.convertIntoLines(code);
-		final IJavaScriptProject project= fSubType.getJavaProject();
+		final IJavaScriptProject project= fSubType.getJavaScriptProject();
 		Strings.trimIndentation(lines, project, false);
 		return Strings.concatenate(lines, StubUtility.getLineDelimiterUsed(project));
 	}
@@ -1020,13 +1020,13 @@ public final class ExtractInterfaceProcessor extends SuperTypeRefactoringProcess
 		try {
 			monitor.beginTask("", 300); //$NON-NLS-1$
 			monitor.setTaskName(RefactoringCoreMessages.ExtractInterfaceProcessor_creating);
-			final IJavaScriptUnit subUnit= getSharedWorkingCopy(fSubType.getCompilationUnit().getPrimary(), new SubProgressMonitor(monitor, 20));
-			final ITextFileBuffer buffer= RefactoringFileBuffers.acquire(fSubType.getCompilationUnit());
+			final IJavaScriptUnit subUnit= getSharedWorkingCopy(fSubType.getJavaScriptUnit().getPrimary(), new SubProgressMonitor(monitor, 20));
+			final ITextFileBuffer buffer= RefactoringFileBuffers.acquire(fSubType.getJavaScriptUnit());
 			final ASTRewrite rewrite= sourceRewrite.getASTRewrite();
 			try {
 				final IDocument document= new Document(buffer.getDocument().get());
 				try {
-					rewrite.rewriteAST(document, fSubType.getJavaProject().getOptions(true)).apply(document, TextEdit.UPDATE_REGIONS);
+					rewrite.rewriteAST(document, fSubType.getJavaScriptProject().getOptions(true)).apply(document, TextEdit.UPDATE_REGIONS);
 				} catch (MalformedTreeException exception) {
 					JavaPlugin.log(exception);
 				} catch (BadLocationException exception) {
@@ -1034,10 +1034,10 @@ public final class ExtractInterfaceProcessor extends SuperTypeRefactoringProcess
 				}
 				subUnit.getBuffer().setContents(document.get());
 			} finally {
-				RefactoringFileBuffers.release(fSubType.getCompilationUnit());
+				RefactoringFileBuffers.release(fSubType.getJavaScriptUnit());
 			}
 			JavaModelUtil.reconcile(subUnit);
-			final IJavaScriptProject project= subUnit.getJavaProject();
+			final IJavaScriptProject project= subUnit.getJavaScriptProject();
 			final ASTParser parser= ASTParser.newParser(AST.JLS3);
 			parser.setWorkingCopyOwner(fOwner);
 			parser.setResolveBindings(true);

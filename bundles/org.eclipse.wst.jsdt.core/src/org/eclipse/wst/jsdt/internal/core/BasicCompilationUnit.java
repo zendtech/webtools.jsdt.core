@@ -79,7 +79,7 @@ public BasicCompilationUnit(char[] contents, char[][] packageName, String fileNa
 private void initEncoding(IJavaScriptElement javaElement) {
 	if (javaElement != null) {
 		try {
-			IJavaScriptProject javaProject = javaElement.getJavaProject();
+			IJavaScriptProject javaProject = javaElement.getJavaScriptProject();
 			switch (javaElement.getElementType()) {
 				case IJavaScriptElement.COMPILATION_UNIT:
 					IFile file = (IFile) javaElement.getResource();
