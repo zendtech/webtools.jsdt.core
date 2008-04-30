@@ -42,7 +42,7 @@ import org.eclipse.wst.jsdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.wst.jsdt.internal.corext.fix.AbstractSerialVersionOperation;
 import org.eclipse.wst.jsdt.internal.corext.fix.LinkedProposalModel;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.wst.jsdt.launching.JavaRuntime;
 
@@ -88,7 +88,7 @@ public final class SerialVersionHashOperation extends AbstractSerialVersionOpera
 //		final String[] entries= computeUserAndBootClasspath(project);
 //		final IRuntimeClasspathEntry[] classpath= new IRuntimeClasspathEntry[entries.length + 2];
 //		classpath[0]= JavaRuntime.newRuntimeContainerClasspathEntry(new Path(JavaRuntime.JRE_CONTAINER), IRuntimeClasspathEntry.STANDARD_CLASSES, project);
-//		classpath[1]= JavaRuntime.newArchiveRuntimeClasspathEntry(Path.fromOSString(FileLocator.toFileURL(JavaPlugin.getDefault().getBundle().getEntry(SERIAL_SUPPORT_JAR)).getFile()));
+//		classpath[1]= JavaRuntime.newArchiveRuntimeClasspathEntry(Path.fromOSString(FileLocator.toFileURL(JavaScriptPlugin.getDefault().getBundle().getEntry(SERIAL_SUPPORT_JAR)).getFile()));
 //		for (int index= 2; index < classpath.length; index++)
 //			classpath[index]= JavaRuntime.newArchiveRuntimeClasspathEntry(Path.fromOSString(entries[index - 2]));
 //		return SerialVersionComputationHelper.computeSerialIDs(classpath, project, qualifiedNames, monitor);
@@ -177,7 +177,7 @@ public final class SerialVersionHashOperation extends AbstractSerialVersionOpera
 				}
 			});
 		} catch (InvocationTargetException exception) {
-			JavaPlugin.log(exception);
+			JavaScriptPlugin.log(exception);
 		} catch (InterruptedException exception) {
 			// Do nothing
 		}

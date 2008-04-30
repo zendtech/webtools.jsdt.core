@@ -111,9 +111,9 @@ import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.SearchUtils;
 import org.eclipse.wst.jsdt.internal.corext.util.Strings;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.preferences.JavaPreferencesSettings;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 import org.eclipse.wst.jsdt.ui.refactoring.IRefactoringProcessorIds;
 
 public final class MoveStaticMembersProcessor extends MoveProcessor implements IDelegateUpdating, IScriptableRefactoring, ICommentProvider {
@@ -687,20 +687,20 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 			project= javaProject.getElementName();
 		String header= null;
 		if (members.length == 1)
-			header= Messages.format(RefactoringCoreMessages.MoveStaticMembersProcessor_descriptor_description_single, new String[] { JavaElementLabels.getElementLabel(members[0], JavaElementLabels.ALL_FULLY_QUALIFIED), JavaElementLabels.getElementLabel(fDestinationType, JavaElementLabels.ALL_FULLY_QUALIFIED) });
+			header= Messages.format(RefactoringCoreMessages.MoveStaticMembersProcessor_descriptor_description_single, new String[] { JavaScriptElementLabels.getElementLabel(members[0], JavaScriptElementLabels.ALL_FULLY_QUALIFIED), JavaScriptElementLabels.getElementLabel(fDestinationType, JavaScriptElementLabels.ALL_FULLY_QUALIFIED) });
 		else
-			header= Messages.format(RefactoringCoreMessages.MoveStaticMembersProcessor_descriptor_description_multi, new String[] { String.valueOf(members.length), JavaElementLabels.getElementLabel(fDestinationType, JavaElementLabels.ALL_FULLY_QUALIFIED) });
+			header= Messages.format(RefactoringCoreMessages.MoveStaticMembersProcessor_descriptor_description_multi, new String[] { String.valueOf(members.length), JavaScriptElementLabels.getElementLabel(fDestinationType, JavaScriptElementLabels.ALL_FULLY_QUALIFIED) });
 		int flags= JavaRefactoringDescriptor.JAR_MIGRATION | JavaRefactoringDescriptor.JAR_REFACTORING | RefactoringDescriptor.STRUCTURAL_CHANGE | RefactoringDescriptor.MULTI_CHANGE;
 		final IType declaring= members[0].getDeclaringType();
 		try {
 			if (declaring.isLocal() || declaring.isAnonymous())
 				flags|= JavaRefactoringDescriptor.JAR_SOURCE_ATTACHMENT;
 		} catch (JavaScriptModelException exception) {
-			JavaPlugin.log(exception);
+			JavaScriptPlugin.log(exception);
 		}
 		final String description= members.length == 1 ? Messages.format(RefactoringCoreMessages.MoveStaticMembersProcessor_description_descriptor_short_multi, members[0].getElementName()) : RefactoringCoreMessages.MoveMembersRefactoring_move_members;
 		final JDTRefactoringDescriptorComment comment= new JDTRefactoringDescriptorComment(project, this, header);
-		comment.addSetting(Messages.format(RefactoringCoreMessages.MoveStaticMembersProcessor_target_element_pattern, JavaElementLabels.getElementLabel(fDestinationType, JavaElementLabels.ALL_FULLY_QUALIFIED)));
+		comment.addSetting(Messages.format(RefactoringCoreMessages.MoveStaticMembersProcessor_target_element_pattern, JavaScriptElementLabels.getElementLabel(fDestinationType, JavaScriptElementLabels.ALL_FULLY_QUALIFIED)));
 		final MoveStaticMembersDescriptor descriptor= new MoveStaticMembersDescriptor();
 		descriptor.setProject(project);
 		descriptor.setDescription(description);
@@ -801,7 +801,7 @@ public final class MoveStaticMembersProcessor extends MoveProcessor implements I
 			}
 			monitor.worked(1);
 		} catch (BadLocationException exception) {
-			JavaPlugin.log(exception);
+			JavaScriptPlugin.log(exception);
 		}
 	}
 	

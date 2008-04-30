@@ -34,7 +34,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionUtil;
 import org.eclipse.wst.jsdt.internal.ui.actions.SelectionConverter;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaEditor;
@@ -43,7 +43,7 @@ import org.eclipse.wst.jsdt.internal.ui.search.JavaSearchScopeFactory;
 import org.eclipse.wst.jsdt.internal.ui.search.SearchMessages;
 import org.eclipse.wst.jsdt.internal.ui.search.SearchUtil;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
 import org.eclipse.wst.jsdt.ui.search.ElementQuerySpecification;
 import org.eclipse.wst.jsdt.ui.search.QuerySpecification;
 
@@ -58,7 +58,7 @@ import org.eclipse.wst.jsdt.ui.search.QuerySpecification;
 public abstract class FindAction extends SelectionDispatchAction {
 
 	// A dummy which can't be selected in the UI
-	private static final IJavaScriptElement RETURN_WITHOUT_BEEP= JavaScriptCore.create(JavaPlugin.getWorkspace().getRoot());
+	private static final IJavaScriptElement RETURN_WITHOUT_BEEP= JavaScriptCore.create(JavaScriptPlugin.getWorkspace().getRoot());
 		
 	private Class[] fValidTypes;
 	private JavaEditor fEditor;	
@@ -118,7 +118,7 @@ public abstract class FindAction extends SelectionDispatchAction {
 
 	private IJavaScriptElement getTypeIfPossible(IJavaScriptElement o, boolean silent) {
 		switch (o.getElementType()) {
-			case IJavaScriptElement.COMPILATION_UNIT:
+			case IJavaScriptElement.JAVASCRIPT_UNIT:
 				if (silent)
 					return o;
 				else
@@ -174,9 +174,9 @@ public abstract class FindAction extends SelectionDispatchAction {
 			return null;
 		String title= SearchMessages.JavaElementAction_typeSelectionDialog_title; 
 		String message = SearchMessages.JavaElementAction_typeSelectionDialog_message; 
-		int flags= (JavaElementLabelProvider.SHOW_DEFAULT);						
+		int flags= (JavaScriptElementLabelProvider.SHOW_DEFAULT);						
 
-		ElementListSelectionDialog dialog= new ElementListSelectionDialog(getShell(), new JavaElementLabelProvider(flags));
+		ElementListSelectionDialog dialog= new ElementListSelectionDialog(getShell(), new JavaScriptElementLabelProvider(flags));
 		dialog.setTitle(title);
 		dialog.setMessage(message);
 		dialog.setElements(types);

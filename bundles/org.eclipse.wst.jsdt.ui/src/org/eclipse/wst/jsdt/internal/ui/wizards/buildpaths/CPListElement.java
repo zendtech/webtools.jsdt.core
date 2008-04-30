@@ -32,9 +32,9 @@ import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.launching.JavaRuntime;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 public class CPListElement {
 	
@@ -139,11 +139,11 @@ public class CPListElement {
 									CPListElement curr= createFromExisting(this, entry, fProject);
 									fChildren.add(curr);
 								} else {
-									JavaPlugin.logErrorMessage("Null entry in container '" + fPath + "'");  //$NON-NLS-1$//$NON-NLS-2$
+									JavaScriptPlugin.logErrorMessage("Null entry in container '" + fPath + "'");  //$NON-NLS-1$//$NON-NLS-2$
 								}
 							}
 						} else {
-							JavaPlugin.logErrorMessage("container returns null as entries: '" + fPath + "'");  //$NON-NLS-1$//$NON-NLS-2$
+							JavaScriptPlugin.logErrorMessage("container returns null as entries: '" + fPath + "'");  //$NON-NLS-1$//$NON-NLS-2$
 						}
 					}
 				} catch (JavaScriptModelException e) {
@@ -362,7 +362,7 @@ public class CPListElement {
 				return true;
 			}
 			if (!curr.isBuiltIn() && !key.equals(CPListElement.JAVADOC) && !key.equals(CPListElement.NATIVE_LIB_PATH)) {
-				return !JavaPlugin.getDefault().getClasspathAttributeConfigurationDescriptors().containsKey(key);
+				return !JavaScriptPlugin.getDefault().getClasspathAttributeConfigurationDescriptors().containsKey(key);
 			}
 		}
 		return false;
@@ -429,7 +429,7 @@ public class CPListElement {
 					return initializer.getAttributeStatus(fPath, fProject, attrib.getKey());
 				}
 			}
-			return new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, JsGlobalScopeContainerInitializer.ATTRIBUTE_READ_ONLY, "", null); //$NON-NLS-1$
+			return new Status(IStatus.ERROR, JavaScriptUI.ID_PLUGIN, JsGlobalScopeContainerInitializer.ATTRIBUTE_READ_ONLY, "", null); //$NON-NLS-1$
 		}
 		return null;
 	}

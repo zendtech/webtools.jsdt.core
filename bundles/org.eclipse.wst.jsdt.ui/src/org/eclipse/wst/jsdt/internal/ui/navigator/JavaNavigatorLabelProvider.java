@@ -26,7 +26,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.internal.ui.navigator.IExtensionStateConstants.Values;
 import org.eclipse.wst.jsdt.internal.ui.packageview.PackageExplorerContentProvider;
 import org.eclipse.wst.jsdt.internal.ui.packageview.PackageExplorerLabelProvider;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 /**
  * Provides the labels for the Project Explorer.
@@ -39,15 +39,15 @@ import org.eclipse.wst.jsdt.ui.JavaElementLabels;
  */
 public class JavaNavigatorLabelProvider implements ICommonLabelProvider {
 
-	private final long LABEL_FLAGS = JavaElementLabels.DEFAULT_QUALIFIED
-			| JavaElementLabels.ROOT_POST_QUALIFIED
-			| JavaElementLabels.APPEND_ROOT_PATH
-			| JavaElementLabels.M_PARAMETER_TYPES
-			| JavaElementLabels.M_PARAMETER_NAMES
-			| JavaElementLabels.M_APP_RETURNTYPE
-			| JavaElementLabels.M_EXCEPTIONS
-			| JavaElementLabels.F_APP_TYPE_SIGNATURE
-			| JavaElementLabels.T_TYPE_PARAMETERS;
+	private final long LABEL_FLAGS = JavaScriptElementLabels.DEFAULT_QUALIFIED
+			| JavaScriptElementLabels.ROOT_POST_QUALIFIED
+			| JavaScriptElementLabels.APPEND_ROOT_PATH
+			| JavaScriptElementLabels.M_PARAMETER_TYPES
+			| JavaScriptElementLabels.M_PARAMETER_NAMES
+			| JavaScriptElementLabels.M_APP_RETURNTYPE
+			| JavaScriptElementLabels.M_EXCEPTIONS
+			| JavaScriptElementLabels.F_APP_TYPE_SIGNATURE
+			| JavaScriptElementLabels.T_TYPE_PARAMETERS;
 
 	private PackageExplorerLabelProvider delegeteLabelProvider;
 
@@ -159,13 +159,13 @@ public class JavaNavigatorLabelProvider implements ICommonLabelProvider {
 	}
 
 	private String formatJavaElementMessage(IJavaScriptElement element) {
-		return JavaElementLabels.getElementLabel(element, LABEL_FLAGS);
+		return JavaScriptElementLabels.getElementLabel(element, LABEL_FLAGS);
 	}
 
 	private String formatResourceMessage(IResource element) {
 		IContainer parent = element.getParent();
 		if (parent != null && parent.getType() != IResource.ROOT)
-			return element.getName() + JavaElementLabels.CONCAT_STRING
+			return element.getName() + JavaScriptElementLabels.CONCAT_STRING
 					+ parent.getFullPath().makeRelative().toString();
 		else
 			return element.getName();

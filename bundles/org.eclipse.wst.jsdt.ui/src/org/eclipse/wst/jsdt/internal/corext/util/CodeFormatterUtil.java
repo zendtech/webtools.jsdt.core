@@ -32,7 +32,7 @@ import org.eclipse.wst.jsdt.core.dom.Expression;
 import org.eclipse.wst.jsdt.core.dom.Statement;
 import org.eclipse.wst.jsdt.core.formatter.CodeFormatter;
 import org.eclipse.wst.jsdt.core.formatter.DefaultCodeFormatterConstants;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 public class CodeFormatterUtil {
 				
@@ -150,7 +150,7 @@ public class CodeFormatterUtil {
 	public static String format(int kind, String string, int offset, int length, int indentationLevel, int[] positions, String lineSeparator, Map options) {
 		TextEdit edit= format2(kind, string, offset, length, indentationLevel, lineSeparator, options);
 		if (edit == null) {
-			//JavaPlugin.logErrorMessage("formatter failed to format (no edit returned). Will use unformatted text instead. kind: " + kind + ", string: " + string); //$NON-NLS-1$ //$NON-NLS-2$
+			//JavaScriptPlugin.logErrorMessage("formatter failed to format (no edit returned). Will use unformatted text instead. kind: " + kind + ", string: " + string); //$NON-NLS-1$ //$NON-NLS-2$
 			return string.substring(offset, offset + length);
 		}
 		String formatted= getOldAPICompatibleResult(string, edit, indentationLevel, positions, lineSeparator, options);
@@ -164,7 +164,7 @@ public class CodeFormatterUtil {
 		
 		TextEdit edit= format2(node, string, indentationLevel, lineSeparator, options);
 		if (edit == null) {
-			//JavaPlugin.logErrorMessage("formatter failed to format (no edit returned). Will use unformatted text instead. node: " + node.getNodeType() + ", string: " + string); //$NON-NLS-1$ //$NON-NLS-2$
+			//JavaScriptPlugin.logErrorMessage("formatter failed to format (no edit returned). Will use unformatted text instead. node: " + node.getNodeType() + ", string: " + string); //$NON-NLS-1$ //$NON-NLS-2$
 			return string;
 		}
 		return getOldAPICompatibleResult(string, edit, indentationLevel, positions, lineSeparator, options);
@@ -206,7 +206,7 @@ public class CodeFormatterUtil {
 			}
 			return doc.get();
 		} catch (BadLocationException e) {
-			JavaPlugin.log(e); // bug in the formatter
+			JavaScriptPlugin.log(e); // bug in the formatter
 			Assert.isTrue(false, "Formatter created edits with wrong positions: " + e.getMessage()); //$NON-NLS-1$
 		}
 		return null;

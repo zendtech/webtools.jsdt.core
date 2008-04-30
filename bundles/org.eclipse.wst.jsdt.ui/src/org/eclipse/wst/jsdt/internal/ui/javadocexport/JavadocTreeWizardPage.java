@@ -54,13 +54,13 @@ import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.JavaScriptConventions;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusInfo;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusUtil;
 import org.eclipse.wst.jsdt.internal.ui.util.SWTUtil;
 import org.eclipse.wst.jsdt.launching.JavaRuntime;
-import org.eclipse.wst.jsdt.ui.JavaElementComparator;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementComparator;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
 
 public class JavadocTreeWizardPage extends JavadocWizardPage {
 
@@ -186,14 +186,14 @@ public class JavadocTreeWizardPage extends JavadocWizardPage {
 		
 		ITreeContentProvider treeContentProvider= new JavadocProjectContentProvider();
 		ITreeContentProvider listContentProvider= new JavadocMemberContentProvider();
-		fInputGroup= new CheckboxTreeAndListGroup(c, this, treeContentProvider, new JavaElementLabelProvider(JavaElementLabelProvider.SHOW_DEFAULT), listContentProvider, new JavaElementLabelProvider(JavaElementLabelProvider.SHOW_DEFAULT), SWT.NONE, convertWidthInCharsToPixels(60), convertHeightInCharsToPixels(10));
+		fInputGroup= new CheckboxTreeAndListGroup(c, this, treeContentProvider, new JavaScriptElementLabelProvider(JavaScriptElementLabelProvider.SHOW_DEFAULT), listContentProvider, new JavaScriptElementLabelProvider(JavaScriptElementLabelProvider.SHOW_DEFAULT), SWT.NONE, convertWidthInCharsToPixels(60), convertHeightInCharsToPixels(10));
 
 		fInputGroup.addCheckStateListener(new ICheckStateListener() {
 			public void checkStateChanged(CheckStateChangedEvent e) {
 				doValidation(TREESTATUS);
 			}
 		});
-		fInputGroup.setTreeComparator(new JavaElementComparator());
+		fInputGroup.setTreeComparator(new JavaScriptElementComparator());
 		
 		IJavaScriptElement[] elements= fStore.getInitialElements();
 		setTreeChecked(elements);
@@ -430,7 +430,7 @@ public class JavadocTreeWizardPage extends JavadocWizardPage {
 					}
 				}
 			} catch (JavaScriptModelException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		}
 		return (IPath[]) res.toArray(new IPath[res.size()]);
@@ -464,7 +464,7 @@ public class JavadocTreeWizardPage extends JavadocWizardPage {
 					}
 				}
 			} catch (CoreException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		}
 		return (IPath[]) res.toArray(new IPath[res.size()]);
@@ -530,7 +530,7 @@ public class JavadocTreeWizardPage extends JavadocWizardPage {
 			}
 
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		return (IJavaScriptElement[]) res.toArray(new IJavaScriptElement[res.size()]);
 	}

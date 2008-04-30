@@ -31,7 +31,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringAvailabilityTester;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringExecutionStarter;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionUtil;
 import org.eclipse.wst.jsdt.internal.ui.actions.SelectionConverter;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.CompilationUnitEditor;
@@ -68,9 +68,9 @@ public class RenameJavaElementAction extends SelectionDispatchAction {
 		} catch (JavaScriptModelException e) {
 			// http://bugs.eclipse.org/bugs/show_bug.cgi?id=19253
 			if (JavaModelUtil.isExceptionToBeLogged(e))
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 		} catch (CoreException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		setEnabled(false);
 	}
@@ -135,7 +135,7 @@ public class RenameJavaElementAction extends SelectionDispatchAction {
 		try {
 			IJavaScriptElement element= getJavaElementFromEditor();
 			if (element != null && isRenameAvailable(element)) {
-				IPreferenceStore store= JavaPlugin.getDefault().getPreferenceStore();
+				IPreferenceStore store= JavaScriptPlugin.getDefault().getPreferenceStore();
 				run(element, store.getBoolean(PreferenceConstants.REFACTOR_LIGHTWEIGHT));
 				return;
 			}
@@ -157,9 +157,9 @@ public class RenameJavaElementAction extends SelectionDispatchAction {
 			return isRenameAvailable(element);
 		} catch (JavaScriptModelException e) {
 			if (JavaModelUtil.isExceptionToBeLogged(e))
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 		} catch (CoreException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		return false;
 	}
@@ -190,13 +190,13 @@ public class RenameJavaElementAction extends SelectionDispatchAction {
 
 	private static boolean isRenameAvailable(IJavaScriptElement element) throws CoreException {
 		switch (element.getElementType()) {
-			case IJavaScriptElement.JAVA_PROJECT:
+			case IJavaScriptElement.JAVASCRIPT_PROJECT:
 				return RefactoringAvailabilityTester.isRenameAvailable((IJavaScriptProject) element);
 			case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
 				return RefactoringAvailabilityTester.isRenameAvailable((IPackageFragmentRoot) element);
 			case IJavaScriptElement.PACKAGE_FRAGMENT:
 				return RefactoringAvailabilityTester.isRenameAvailable((IPackageFragment) element);
-			case IJavaScriptElement.COMPILATION_UNIT:
+			case IJavaScriptElement.JAVASCRIPT_UNIT:
 				return RefactoringAvailabilityTester.isRenameAvailable((IJavaScriptUnit) element);
 			case IJavaScriptElement.TYPE:
 				return RefactoringAvailabilityTester.isRenameAvailable((IType) element);

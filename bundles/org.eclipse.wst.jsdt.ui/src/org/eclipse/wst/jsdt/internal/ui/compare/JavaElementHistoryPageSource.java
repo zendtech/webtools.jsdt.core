@@ -38,7 +38,7 @@ public class JavaElementHistoryPageSource extends ElementLocalHistoryPageSource 
 			return false;
 			
 		switch (je.getElementType()) {
-		case IJavaScriptElement.COMPILATION_UNIT:
+		case IJavaScriptElement.JAVASCRIPT_UNIT:
 		case IJavaScriptElement.TYPE:
 		case IJavaScriptElement.FIELD:
 		case IJavaScriptElement.METHOD:

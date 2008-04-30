@@ -22,7 +22,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.core.formatter.DefaultCodeFormatterConstants;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.ui.text.java.JavaContentAssistInvocationContext;
 
 
@@ -316,7 +316,7 @@ public class LazyJavaCompletionProposal extends AbstractJavaCompletionProposal {
 	}
 
 	protected Image computeImage() {
-		return JavaPlugin.getImageDescriptorRegistry().get(fInvocationContext.getLabelProvider().createImageDescriptor(fProposal));
+		return JavaScriptPlugin.getImageDescriptorRegistry().get(fInvocationContext.getLabelProvider().createImageDescriptor(fProposal));
 	}
 
 	/**

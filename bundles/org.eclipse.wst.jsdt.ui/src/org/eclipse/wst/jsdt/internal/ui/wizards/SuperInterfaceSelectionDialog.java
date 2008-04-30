@@ -31,7 +31,7 @@ import org.eclipse.wst.jsdt.core.search.TypeNameMatch;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.OpenTypeSelectionDialog;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusInfo;
 import org.eclipse.wst.jsdt.ui.wizards.NewTypeWizardPage;
@@ -80,7 +80,7 @@ public class SuperInterfaceSelectionDialog extends OpenTypeSelectionDialog {
 	 * @see org.eclipse.jface.dialogs.Dialog#getDialogBoundsSettings()
 	 */
 	protected IDialogSettings getDialogBoundsSettings() {
-		return JavaPlugin.getDefault().getDialogSettingsSection("DialogBounds_SuperInterfaceSelectionDialog"); //$NON-NLS-1$
+		return JavaScriptPlugin.getDefault().getDialogSettingsSection("DialogBounds_SuperInterfaceSelectionDialog"); //$NON-NLS-1$
 	}
 
 	/* (non-Javadoc)
@@ -181,7 +181,7 @@ public class SuperInterfaceSelectionDialog extends OpenTypeSelectionDialog {
 			// called, because superclass implementation of this class updates
 			// state of the table.
 
-			updateStatus(new Status(IStatus.OK, JavaPlugin.getPluginId(), IStatus.OK, "", null)); //$NON-NLS-1$
+			updateStatus(new Status(IStatus.OK, JavaScriptPlugin.getPluginId(), IStatus.OK, "", null)); //$NON-NLS-1$
 
 			getButton(ADD_ID).setEnabled(false);
 		} else {

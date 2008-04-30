@@ -63,7 +63,7 @@ import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.actions.CopyQualifiedNameAction;
 import org.eclipse.wst.jsdt.internal.ui.dnd.JdtViewerDragAdapter;
@@ -74,7 +74,7 @@ import org.eclipse.wst.jsdt.internal.ui.viewsupport.ColoredViewersManager;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.DecoratingJavaLabelProvider;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.ProblemTableViewer;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.ProblemTreeViewer;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.ui.actions.SelectionDispatchAction;
 import org.eclipse.wst.jsdt.ui.search.IMatchPresentation;
 
@@ -129,7 +129,7 @@ public class JavaSearchResultPage extends AbstractTextSearchViewPage implements 
 	
 	private int fCurrentGrouping;
 	
-	private static final String[] SHOW_IN_TARGETS= new String[] { JavaUI.ID_PACKAGES , IPageLayout.ID_RES_NAV };
+	private static final String[] SHOW_IN_TARGETS= new String[] { JavaScriptUI.ID_PACKAGES , IPageLayout.ID_RES_NAV };
 	public static final IShowInTargetList SHOW_IN_TARGET_LIST= new IShowInTargetList() {
 		public String[] getShowInTargetIds() {
 			return SHOW_IN_TARGETS;
@@ -352,7 +352,7 @@ public class JavaSearchResultPage extends AbstractTextSearchViewPage implements 
 		menuManager.appendToGroup(IContextMenuConstants.GROUP_PROPERTIES, new Action(SearchMessages.JavaSearchResultPage_preferences_label) {
 			public void run() {
 				String pageId= "org.eclipse.search.preferences.SearchPreferencePage"; //$NON-NLS-1$
-				PreferencesUtil.createPreferenceDialogOn(JavaPlugin.getActiveWorkbenchShell(), pageId, null, null).open();
+				PreferencesUtil.createPreferenceDialogOn(JavaScriptPlugin.getActiveWorkbenchShell(), pageId, null, null).open();
 			}
 		});
 	}

@@ -48,14 +48,14 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.structure.MoveStaticMemb
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.FilteredTypesSelectionDialog;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.TextFieldNavigationHandler;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.contentassist.ControlContentAssistHelper;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.contentassist.JavaTypeCompletionProcessor;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.wst.jsdt.internal.ui.util.SWTUtil;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 public class MoveMembersWizard extends RefactoringWizard {
 
@@ -74,7 +74,7 @@ public class MoveMembersWizard extends RefactoringWizard {
 	private static class MoveMembersInputPage extends UserInputWizardPage {
 
 		public static final String PAGE_NAME= "MoveMembersInputPage"; //$NON-NLS-1$
-		private static final long LABEL_FLAGS= JavaElementLabels.ALL_DEFAULT;
+		private static final long LABEL_FLAGS= JavaScriptElementLabels.ALL_DEFAULT;
 
 		private Combo fDestinationField;
 		private Button fLeaveDelegateCheckBox;
@@ -147,7 +147,7 @@ public class MoveMembersWizard extends RefactoringWizard {
 			if (members.length == 1) {
 				label.setText(Messages.format(
 						RefactoringMessages.MoveMembersInputPage_destination_single, 
-						JavaElementLabels.getElementLabel(members[0], LABEL_FLAGS)));
+						JavaScriptElementLabels.getElementLabel(members[0], LABEL_FLAGS)));
 			} else {
 				label.setText(Messages.format(
 						RefactoringMessages.MoveMembersInputPage_destination_multi, 
@@ -185,7 +185,7 @@ public class MoveMembersWizard extends RefactoringWizard {
 								error(validationStatus.getMessage());
 							}
 						} catch(JavaScriptModelException ex) {
-							JavaPlugin.log(ex); //no ui here
+							JavaScriptPlugin.log(ex); //no ui here
 							error(RefactoringMessages.MoveMembersInputPage_invalid_name); 
 						}
 					}
@@ -256,10 +256,10 @@ public class MoveMembersWizard extends RefactoringWizard {
 				public IStatus validate(Object[] selection) {
 					Assert.isTrue(selection.length <= 1);
 					if (selection.length == 0)
-						return new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.OK, RefactoringMessages.MoveMembersInputPage_Invalid_selection, null); 
+						return new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), IStatus.OK, RefactoringMessages.MoveMembersInputPage_Invalid_selection, null); 
 					Object element= selection[0];
 					if (! (element instanceof IType))
-						return new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.OK, RefactoringMessages.MoveMembersInputPage_Invalid_selection, null); 
+						return new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), IStatus.OK, RefactoringMessages.MoveMembersInputPage_Invalid_selection, null); 
 					IType type= (IType)element;
 					return validateDestinationType(type, type.getElementName());
 				}
@@ -280,10 +280,10 @@ public class MoveMembersWizard extends RefactoringWizard {
 	
 		private static IStatus validateDestinationType(IType type, String typeName){
 			if (type == null || ! type.exists())
-				return new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.OK, Messages.format(RefactoringMessages.MoveMembersInputPage_not_found, typeName), null); 
+				return new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), IStatus.OK, Messages.format(RefactoringMessages.MoveMembersInputPage_not_found, typeName), null); 
 			if (type.isBinary())
-				return new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.OK, RefactoringMessages.MoveMembersInputPage_no_binary, null); 
-			return new Status(IStatus.OK, JavaPlugin.getPluginId(), IStatus.OK, "", null); //$NON-NLS-1$
+				return new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), IStatus.OK, RefactoringMessages.MoveMembersInputPage_no_binary, null); 
+			return new Status(IStatus.OK, JavaScriptPlugin.getPluginId(), IStatus.OK, "", null); //$NON-NLS-1$
 		}
 	
 		private MoveStaticMembersProcessor getMoveProcessor() {

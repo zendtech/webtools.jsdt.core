@@ -91,15 +91,15 @@ public JavaModelCache() {
  */
 public Object getInfo(IJavaScriptElement element) {
 	switch (element.getElementType()) {
-		case IJavaScriptElement.JAVA_MODEL:
+		case IJavaScriptElement.JAVASCRIPT_MODEL:
 			return this.modelInfo;
-		case IJavaScriptElement.JAVA_PROJECT:
+		case IJavaScriptElement.JAVASCRIPT_PROJECT:
 			return this.projectCache.get(element);
 		case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
 			return this.rootCache.get(element);
 		case IJavaScriptElement.PACKAGE_FRAGMENT:
 			return this.pkgCache.get(element);
-		case IJavaScriptElement.COMPILATION_UNIT:
+		case IJavaScriptElement.JAVASCRIPT_UNIT:
 		case IJavaScriptElement.CLASS_FILE:
 			return this.openableCache.get(element);
 		case IJavaScriptElement.TYPE:
@@ -129,15 +129,15 @@ protected double getMemoryRatio() {
  */
 protected Object peekAtInfo(IJavaScriptElement element) {
 	switch (element.getElementType()) {
-		case IJavaScriptElement.JAVA_MODEL:
+		case IJavaScriptElement.JAVASCRIPT_MODEL:
 			return this.modelInfo;
-		case IJavaScriptElement.JAVA_PROJECT:
+		case IJavaScriptElement.JAVASCRIPT_PROJECT:
 			return this.projectCache.get(element);
 		case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
 			return this.rootCache.peek(element);
 		case IJavaScriptElement.PACKAGE_FRAGMENT:
 			return this.pkgCache.peek(element);
-		case IJavaScriptElement.COMPILATION_UNIT:
+		case IJavaScriptElement.JAVASCRIPT_UNIT:
 		case IJavaScriptElement.CLASS_FILE:
 			return this.openableCache.peek(element);
 		case IJavaScriptElement.TYPE:
@@ -156,10 +156,10 @@ protected Object peekAtInfo(IJavaScriptElement element) {
  */
 protected void putInfo(IJavaScriptElement element, Object info) {
 	switch (element.getElementType()) {
-		case IJavaScriptElement.JAVA_MODEL:
+		case IJavaScriptElement.JAVASCRIPT_MODEL:
 			this.modelInfo = (JavaModelInfo) info;
 			break;
-		case IJavaScriptElement.JAVA_PROJECT:
+		case IJavaScriptElement.JAVASCRIPT_PROJECT:
 			this.projectCache.put(element, info);
 			this.rootCache.ensureSpaceLimit(((JavaElementInfo) info).children.length, element);
 			break;
@@ -171,7 +171,7 @@ protected void putInfo(IJavaScriptElement element, Object info) {
 			this.pkgCache.put(element, info);
 			this.openableCache.ensureSpaceLimit(((JavaElementInfo) info).children.length, element);
 			break;
-		case IJavaScriptElement.COMPILATION_UNIT:
+		case IJavaScriptElement.JAVASCRIPT_UNIT:
 		case IJavaScriptElement.CLASS_FILE:
 			this.openableCache.put(element, info);
 			break;
@@ -184,10 +184,10 @@ protected void putInfo(IJavaScriptElement element, Object info) {
  */
 protected void removeInfo(JavaElement element) {
 	switch (element.getElementType()) {
-		case IJavaScriptElement.JAVA_MODEL:
+		case IJavaScriptElement.JAVASCRIPT_MODEL:
 			this.modelInfo = null;
 			break;
-		case IJavaScriptElement.JAVA_PROJECT:
+		case IJavaScriptElement.JAVASCRIPT_PROJECT:
 			this.projectCache.remove(element);
 			this.rootCache.resetSpaceLimit((int) (DEFAULT_ROOT_SIZE * getMemoryRatio()), element);
 			break;
@@ -199,7 +199,7 @@ protected void removeInfo(JavaElement element) {
 			this.pkgCache.remove(element);
 			this.openableCache.resetSpaceLimit((int) (DEFAULT_OPENABLE_SIZE * getMemoryRatio()), element);
 			break;
-		case IJavaScriptElement.COMPILATION_UNIT:
+		case IJavaScriptElement.JAVASCRIPT_UNIT:
 		case IJavaScriptElement.CLASS_FILE:
 			this.openableCache.remove(element);
 			break;

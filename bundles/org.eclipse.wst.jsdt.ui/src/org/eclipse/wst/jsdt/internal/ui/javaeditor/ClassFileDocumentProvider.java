@@ -36,9 +36,9 @@ import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.ui.IResourceLocator;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
-import org.eclipse.wst.jsdt.ui.text.IJavaPartitions;
-import org.eclipse.wst.jsdt.ui.text.JavaTextTools;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
+import org.eclipse.wst.jsdt.ui.text.IJavaScriptPartitions;
+import org.eclipse.wst.jsdt.ui.text.JavaScriptTextTools;
 
 
 /**
@@ -242,8 +242,8 @@ public class ClassFileDocumentProvider extends FileDocumentProvider {
 	protected IDocument createDocument(Object element) throws CoreException {
 		IDocument document= super.createDocument(element);
 		if (document != null) {
-			JavaTextTools tools= JavaPlugin.getDefault().getJavaTextTools();
-			tools.setupJavaDocumentPartitioner(document, IJavaPartitions.JAVA_PARTITIONING);
+			JavaScriptTextTools tools= JavaScriptPlugin.getDefault().getJavaTextTools();
+			tools.setupJavaDocumentPartitioner(document, IJavaScriptPartitions.JAVA_PARTITIONING);
 		}
 		return document;
 	}

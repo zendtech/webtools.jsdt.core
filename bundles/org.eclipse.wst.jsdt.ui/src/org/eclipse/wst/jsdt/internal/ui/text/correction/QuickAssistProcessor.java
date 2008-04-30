@@ -95,7 +95,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.code.ExtractTempRefactor
 import org.eclipse.wst.jsdt.internal.corext.refactoring.code.InlineTempRefactoring;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.code.PromoteTempToFieldRefactoring;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.fix.ControlStatementsCleanUp;
 import org.eclipse.wst.jsdt.internal.ui.fix.ConvertLoopCleanUp;
@@ -282,7 +282,7 @@ public class QuickAssistProcessor implements IQuickAssistProcessor {
 			refactoring.setLinkedProposalModel(linkedProposalModel);
 			
 			String label= CorrectionMessages.QuickAssistProcessor_convert_anonym_to_nested;
-			Image image= JavaPlugin.getImageDescriptorRegistry().get(JavaElementImageProvider.getTypeImageDescriptor(true, false, Flags.AccPrivate, false));
+			Image image= JavaScriptPlugin.getImageDescriptorRegistry().get(JavaElementImageProvider.getTypeImageDescriptor(true, false, Flags.AccPrivate, false));
 			RefactoringCorrectionProposal proposal= new RefactoringCorrectionProposal(label, cu, refactoring, 5, image);
 			proposal.setLinkedProposalModel(linkedProposalModel);
 			proposal.setCommandId(CONVERT_ANONYMOUS_TO_LOCAL_ID);

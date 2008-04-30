@@ -20,7 +20,7 @@ import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
 import org.eclipse.wst.jsdt.core.dom.SimpleName;
 import org.eclipse.wst.jsdt.internal.corext.dom.LinkedNodeFinder;
 import org.eclipse.wst.jsdt.internal.corext.dom.NodeFinder;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.ASTProvider;
 /**
@@ -46,7 +46,7 @@ public class RenameNodeCompletionProposal extends CUCorrectionProposal {
 		super.addEdits(doc, root);
 
 		// build a full AST
-		JavaScriptUnit unit= JavaPlugin.getDefault().getASTProvider().getAST(getCompilationUnit(), ASTProvider.WAIT_YES, null);
+		JavaScriptUnit unit= JavaScriptPlugin.getDefault().getASTProvider().getAST(getCompilationUnit(), ASTProvider.WAIT_YES, null);
 
 		ASTNode name= NodeFinder.perform(unit, fOffset, fLength);
 		if (name instanceof SimpleName) {

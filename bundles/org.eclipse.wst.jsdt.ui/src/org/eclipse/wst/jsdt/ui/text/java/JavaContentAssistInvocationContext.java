@@ -20,7 +20,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.template.java.SignatureUtil;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.EditorUtility;
 import org.eclipse.wst.jsdt.internal.ui.text.java.ContentAssistHistory.RHSHistory;
 
@@ -178,11 +178,11 @@ public class JavaContentAssistInvocationContext extends ContentAssistInvocationC
 				char[][] expectedTypes= context.getExpectedTypesSignatures();
 				if (expectedTypes != null && expectedTypes.length > 0) {
 					String expected= SignatureUtil.stripSignatureToFQN(String.valueOf(expectedTypes[0]));
-					fRHSHistory= JavaPlugin.getDefault().getContentAssistHistory().getHistory(expected);
+					fRHSHistory= JavaScriptPlugin.getDefault().getContentAssistHistory().getHistory(expected);
 				}
 			}
 			if (fRHSHistory == null)
-				fRHSHistory= JavaPlugin.getDefault().getContentAssistHistory().getHistory(null);
+				fRHSHistory= JavaScriptPlugin.getDefault().getContentAssistHistory().getHistory(null);
 		}
 		return fRHSHistory;
 	}
@@ -208,7 +208,7 @@ public class JavaContentAssistInvocationContext extends ContentAssistInvocationC
 						try {
 							fType= project.findType(SignatureUtil.stripSignatureToFQN(String.valueOf(expectedTypes[0])));
 						} catch (JavaScriptModelException x) {
-							JavaPlugin.log(x);
+							JavaScriptPlugin.log(x);
 						}
 					}
 				}
@@ -294,7 +294,7 @@ public class JavaContentAssistInvocationContext extends ContentAssistInvocationC
 			if (fLabelProvider == null)
 				fLabelProvider= collector.getLabelProvider();
 		} catch (JavaScriptModelException x) {
-			JavaPlugin.log(x);
+			JavaScriptPlugin.log(x);
 			if (fKeywordProposals == null)
 				fKeywordProposals= new IJavaCompletionProposal[0];
 		}

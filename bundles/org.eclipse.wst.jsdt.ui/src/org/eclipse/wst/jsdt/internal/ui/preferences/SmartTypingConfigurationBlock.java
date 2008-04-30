@@ -32,7 +32,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.formatter.DefaultCodeFormatterConstants;
 import org.eclipse.wst.jsdt.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 
 /**
@@ -190,7 +190,7 @@ class SmartTypingConfigurationBlock extends AbstractConfigurationBlock {
 		// current profile automatically.
 		String linkTooltip= PreferencesMessages.SmartTypingConfigurationBlock_tabs_message_tooltip; 
 		String text;
-		String indentMode= JavaPlugin.getDefault().getCombinedPreferenceStore().getString(DefaultCodeFormatterConstants.FORMATTER_TAB_CHAR);
+		String indentMode= JavaScriptPlugin.getDefault().getCombinedPreferenceStore().getString(DefaultCodeFormatterConstants.FORMATTER_TAB_CHAR);
 		if (JavaScriptCore.TAB.equals(indentMode))
 			text= Messages.format(PreferencesMessages.SmartTypingConfigurationBlock_tabs_message_tab_text, new String[] {Integer.toString(getTabDisplaySize())});
 		else
@@ -208,7 +208,7 @@ class SmartTypingConfigurationBlock extends AbstractConfigurationBlock {
 			}
 		});
 		
-		final IPreferenceStore combinedStore= JavaPlugin.getDefault().getCombinedPreferenceStore();
+		final IPreferenceStore combinedStore= JavaScriptPlugin.getDefault().getCombinedPreferenceStore();
 		final IPropertyChangeListener propertyChangeListener= new IPropertyChangeListener() {
 			private boolean fHasRun= false;
 			public void propertyChange(PropertyChangeEvent event) {
@@ -237,7 +237,7 @@ class SmartTypingConfigurationBlock extends AbstractConfigurationBlock {
 	}
 
 	private String getIndentMode() {
-		String indentMode= JavaPlugin.getDefault().getCombinedPreferenceStore().getString(DefaultCodeFormatterConstants.FORMATTER_TAB_CHAR);
+		String indentMode= JavaScriptPlugin.getDefault().getCombinedPreferenceStore().getString(DefaultCodeFormatterConstants.FORMATTER_TAB_CHAR);
 		
 		if (JavaScriptCore.SPACE.equals(indentMode))
 			return PreferencesMessages.SmartTypingConfigurationBlock_tabs_message_spaces; 

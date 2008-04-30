@@ -41,13 +41,13 @@ import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.internal.corext.util.SuperTypeHierarchyCache;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.text.template.contentassist.PositionBasedCompletionProposal;
 import org.eclipse.wst.jsdt.internal.ui.util.StringMatcher;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.ImageDescriptorRegistry;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.JavaElementImageProvider;
-import org.eclipse.wst.jsdt.ui.JavaElementImageDescriptor;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementImageDescriptor;
 
 /**
  * This class triggers a code-completion that will track all local ane member variables for later
@@ -342,29 +342,29 @@ public class ParameterGuesser {
 			int flags= 0;
 
 			if (Flags.isDeprecated(modifiers))
-				flags |= JavaElementImageDescriptor.DEPRECATED;
+				flags |= JavaScriptElementImageDescriptor.DEPRECATED;
 
 			if (Flags.isStatic(modifiers))
-				flags |= JavaElementImageDescriptor.STATIC;
+				flags |= JavaScriptElementImageDescriptor.STATIC;
 
 			if (Flags.isFinal(modifiers))
-				flags |= JavaElementImageDescriptor.FINAL;
+				flags |= JavaScriptElementImageDescriptor.FINAL;
 
 			if (Flags.isSynchronized(modifiers))
-				flags |= JavaElementImageDescriptor.SYNCHRONIZED;
+				flags |= JavaScriptElementImageDescriptor.SYNCHRONIZED;
 
 			if (Flags.isAbstract(modifiers))
-				flags |= JavaElementImageDescriptor.ABSTRACT;
+				flags |= JavaScriptElementImageDescriptor.ABSTRACT;
 			
 			if (isField) {
 				if (Flags.isVolatile(modifiers))
-					flags |= JavaElementImageDescriptor.VOLATILE;
+					flags |= JavaScriptElementImageDescriptor.VOLATILE;
 	
 				if (Flags.isTransient(modifiers))
-					flags |= JavaElementImageDescriptor.TRANSIENT;
+					flags |= JavaScriptElementImageDescriptor.TRANSIENT;
 			}
 			
-			return new JavaElementImageDescriptor(descriptor, flags, JavaElementImageProvider.SMALL_SIZE);
+			return new JavaScriptElementImageDescriptor(descriptor, flags, JavaElementImageProvider.SMALL_SIZE);
 
 		}
 
@@ -451,7 +451,7 @@ public class ParameterGuesser {
 	private final int fCodeAssistOffset;
 	/** Local and member variables of the compilation unit */
 	private List fVariables;
-	private ImageDescriptorRegistry fRegistry= JavaPlugin.getImageDescriptorRegistry();
+	private ImageDescriptorRegistry fRegistry= JavaScriptPlugin.getImageDescriptorRegistry();
 	private boolean fAllowAutoBoxing;
 
 	/**

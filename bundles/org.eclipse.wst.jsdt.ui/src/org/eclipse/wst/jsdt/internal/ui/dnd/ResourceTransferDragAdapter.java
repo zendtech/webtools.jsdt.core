@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.part.ResourceTransfer;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.internal.ui.IJavaStatusConstants;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIMessages;
 import org.eclipse.wst.jsdt.internal.ui.util.SWTUtil;
 
@@ -105,7 +105,7 @@ public class ResourceTransferDragAdapter extends DragSourceAdapter implements Tr
 	
 	private void handleFinishedDropMove(DragSourceEvent event) {
 		MultiStatus status= new MultiStatus(
-			JavaPlugin.getPluginId(), 
+			JavaScriptPlugin.getPluginId(), 
 			IJavaStatusConstants.INTERNAL_ERROR, 
 			JavaUIMessages.ResourceTransferDragAdapter_cannot_delete_resource,  
 			null);

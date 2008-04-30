@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.ui.dialogs.TypeSelectionExtension;
 
 /**
@@ -50,10 +50,10 @@ public class OpenTypeSelectionDialog extends FilteredTypesSelectionDialog {
 	 * @see org.eclipse.wst.jsdt.internal.ui.dialogs.FilteredTypesSelectionDialog#getDialogSettings()
 	 */
 	protected IDialogSettings getDialogSettings() {
-		IDialogSettings settings= JavaPlugin.getDefault().getDialogSettings().getSection(DIALOG_SETTINGS);
+		IDialogSettings settings= JavaScriptPlugin.getDefault().getDialogSettings().getSection(DIALOG_SETTINGS);
 
 		if (settings == null) {
-			settings= JavaPlugin.getDefault().getDialogSettings().addNewSection(DIALOG_SETTINGS);
+			settings= JavaScriptPlugin.getDefault().getDialogSettings().addNewSection(DIALOG_SETTINGS);
 		}
 
 		return settings;

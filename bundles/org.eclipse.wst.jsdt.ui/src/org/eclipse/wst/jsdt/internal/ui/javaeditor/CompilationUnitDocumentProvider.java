@@ -99,16 +99,16 @@ import org.eclipse.wst.jsdt.core.compiler.IProblem;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaStatusConstants;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.saveparticipant.IPostSaveListener;
 import org.eclipse.wst.jsdt.internal.ui.text.correction.JavaCorrectionProcessor;
 import org.eclipse.wst.jsdt.internal.ui.text.java.IProblemRequestorExtension;
 import org.eclipse.wst.jsdt.internal.ui.text.spelling.JavaSpellingReconcileStrategy;
 import org.eclipse.wst.jsdt.launching.JavaRuntime;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
-import org.eclipse.wst.jsdt.ui.text.IJavaPartitions;
+import org.eclipse.wst.jsdt.ui.text.IJavaScriptPartitions;
 
 
 public class CompilationUnitDocumentProvider extends TextFileDocumentProvider implements ICompilationUnitDocumentProvider {
@@ -866,7 +866,7 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 	public CompilationUnitDocumentProvider() {
 
 		IDocumentProvider provider= new TextFileDocumentProvider();
-		provider= new ForwardingDocumentProvider(IJavaPartitions.JAVA_PARTITIONING, new JavaDocumentSetupParticipant(), provider);
+		provider= new ForwardingDocumentProvider(IJavaScriptPartitions.JAVA_PARTITIONING, new JavaDocumentSetupParticipant(), provider);
 		setParentDocumentProvider(provider);
 
 		fGlobalAnnotationModelListener= new GlobalAnnotationModelListener();
@@ -876,7 +876,7 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 					enableHandlingTemporaryProblems();
 			}
 		};
-		JavaPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(fPropertyListener);
+		JavaScriptPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(fPropertyListener);
 	}
 
 	/**
@@ -1032,7 +1032,7 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 					}
 					cu.getBuffer().setContents(buffer.toString());
 				} catch (IOException e) {
-					JavaPlugin.log(e);
+					JavaScriptPlugin.log(e);
 					return null;
 				} finally {
 					try {
@@ -1050,7 +1050,7 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 			
 			return cu;
 		} catch (CoreException ex) {
-			JavaPlugin.log(ex.getStatus());
+			JavaScriptPlugin.log(ex.getStatus());
 			return null;
 		}
 	}
@@ -1112,7 +1112,7 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 			return null;
 
 		String[] pathSegments= path.segments();
-		IJavaScriptModel model= JavaScriptCore.create(JavaPlugin.getWorkspace().getRoot());
+		IJavaScriptModel model= JavaScriptCore.create(JavaScriptPlugin.getWorkspace().getRoot());
 		IJavaScriptProject[] projects;
 		try {
 			projects= model.getJavaScriptProjects();
@@ -1257,8 +1257,8 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 						}
 					}
 					public void handleException(Throwable ex) {
-						IStatus status= new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IStatus.OK, "Error in JDT Core during reconcile while saving", ex);  //$NON-NLS-1$
-						JavaPlugin.getDefault().getLog().log(status);
+						IStatus status= new Status(IStatus.ERROR, JavaScriptUI.ID_PLUGIN, IStatus.OK, "Error in JDT Core during reconcile while saving", ex);  //$NON-NLS-1$
+						JavaScriptPlugin.getDefault().getLog().log(status);
 					}
 				});
 			} finally {
@@ -1383,7 +1383,7 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 	 * @return <code>true</code> if temporary problems are handled 
 	 */
 	protected boolean isHandlingTemporaryProblems() {
-		IPreferenceStore store= JavaPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore store= JavaScriptPlugin.getDefault().getPreferenceStore();
 		return store.getBoolean(HANDLE_TEMPORARY_PROBLEMS);
 	}
 
@@ -1442,7 +1442,7 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 	 * @see org.eclipse.wst.jsdt.internal.ui.javaeditor.ICompilationUnitDocumentProvider#shutdown()
 	 */
 	public void shutdown() {
-		JavaPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(fPropertyListener);
+		JavaScriptPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(fPropertyListener);
 		Iterator e= getConnectedElementsIterator();
 		while (e.hasNext())
 			disconnect(e.next());
@@ -1483,10 +1483,10 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
      */
 	protected void notifyPostSaveListeners(final IJavaScriptUnit unit, final CompilationUnitInfo info, final IProgressMonitor monitor) throws CoreException {
 		final IBuffer buffer= unit.getBuffer();
-		IPostSaveListener[] listeners= JavaPlugin.getDefault().getSaveParticipantRegistry().getEnabledPostSaveListeners(unit.getJavaScriptProject().getProject());
+		IPostSaveListener[] listeners= JavaScriptPlugin.getDefault().getSaveParticipantRegistry().getEnabledPostSaveListeners(unit.getJavaScriptProject().getProject());
 		
 		String message= JavaEditorMessages.CompilationUnitDocumentProvider_error_saveParticipantProblem;
-		final MultiStatus errorStatus= new MultiStatus(JavaUI.ID_PLUGIN, IJavaStatusConstants.EDITOR_POST_SAVE_NOTIFICATION, message, null);
+		final MultiStatus errorStatus= new MultiStatus(JavaScriptUI.ID_PLUGIN, IJavaStatusConstants.EDITOR_POST_SAVE_NOTIFICATION, message, null);
 		
 		monitor.beginTask(JavaEditorMessages.CompilationUnitDocumentProvider_progressNotifyingSaveParticipants, listeners.length * 5);
 		try {
@@ -1502,7 +1502,7 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 							
 							if (stamp != unit.getResource().getModificationStamp()) {
 								String msg= Messages.format(JavaEditorMessages.CompilationUnitDocumentProvider_error_saveParticipantSavedFile, participantName);
-								errorStatus.add(new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IJavaStatusConstants.EDITOR_POST_SAVE_NOTIFICATION, msg, null));
+								errorStatus.add(new Status(IStatus.ERROR, JavaScriptUI.ID_PLUGIN, IJavaStatusConstants.EDITOR_POST_SAVE_NOTIFICATION, msg, null));
 							}
 
 							if (buffer.hasUnsavedChanges())
@@ -1517,10 +1517,10 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 
 					public void handleException(Throwable ex) {
 						String msg= Messages.format("The save participant ''{0}'' caused an exception: {1}", new String[] { listener.getId(), ex.toString()}); //$NON-NLS-1$
-						JavaPlugin.log(new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IJavaStatusConstants.EDITOR_POST_SAVE_NOTIFICATION, msg, null));
+						JavaScriptPlugin.log(new Status(IStatus.ERROR, JavaScriptUI.ID_PLUGIN, IJavaStatusConstants.EDITOR_POST_SAVE_NOTIFICATION, msg, null));
 						
 						msg= Messages.format(JavaEditorMessages.CompilationUnitDocumentProvider_error_saveParticipantFailed, new String[] { participantName, ex.toString()});
-						errorStatus.add(new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IJavaStatusConstants.EDITOR_POST_SAVE_NOTIFICATION, msg, null));
+						errorStatus.add(new Status(IStatus.ERROR, JavaScriptUI.ID_PLUGIN, IJavaStatusConstants.EDITOR_POST_SAVE_NOTIFICATION, msg, null));
 						
 						// Revert the changes
 						if (info != null && buffer.hasUnsavedChanges()) {
@@ -1528,8 +1528,8 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 								info.fTextFileBuffer.revert(getSubProgressMonitor(monitor, 1));
 							} catch (CoreException e) {
 								msg= Messages.format("Error on revert after failure of save participant ''{0}''.", participantName);  //$NON-NLS-1$
-								IStatus status= new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IJavaStatusConstants.EDITOR_POST_SAVE_NOTIFICATION, msg, ex); 
-								JavaPlugin.getDefault().getLog().log(status);
+								IStatus status= new Status(IStatus.ERROR, JavaScriptUI.ID_PLUGIN, IJavaStatusConstants.EDITOR_POST_SAVE_NOTIFICATION, msg, ex); 
+								JavaScriptPlugin.getDefault().getLog().log(status);
 							}
 
 							if (info.fModel instanceof AbstractMarkerAnnotationModel) {
@@ -1544,8 +1544,8 @@ public class CompilationUnitDocumentProvider extends TextFileDocumentProvider im
 //								buffer.save(getSubProgressMonitor(monitor, 1), true);
 //							} catch (JavaScriptModelException e) {
 //								message= Messages.format("Error reverting changes after failure of save participant ''{0}''.", participantName); //$NON-NLS-1$
-//								IStatus status= new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IStatus.OK, message, ex);
-//								JavaPlugin.getDefault().getLog().log(status);
+//								IStatus status= new Status(IStatus.ERROR, JavaScriptUI.ID_PLUGIN, IStatus.OK, message, ex);
+//								JavaScriptPlugin.getDefault().getLog().log(status);
 //							}
 //						}
 					}

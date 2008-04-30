@@ -32,9 +32,9 @@ import org.eclipse.wst.jsdt.core.search.SearchParticipant;
 import org.eclipse.wst.jsdt.core.search.SearchPattern;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.SearchUtils;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 import org.eclipse.wst.jsdt.ui.search.ElementQuerySpecification;
 import org.eclipse.wst.jsdt.ui.search.IMatchPresentation;
 import org.eclipse.wst.jsdt.ui.search.IQueryParticipant;
@@ -92,7 +92,7 @@ public class JavaSearchQuery implements ISearchQuery {
 					public void handleException(Throwable exception) {
 						ticks[iPrime]= 0;
 						String message= SearchMessages.JavaSearchQuery_error_participant_estimate; 
-						JavaPlugin.log(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), 0, message, exception));
+						JavaScriptPlugin.log(new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), 0, message, exception));
 					}
 
 					public void run() throws Exception {
@@ -109,9 +109,9 @@ public class JavaSearchQuery implements ISearchQuery {
 			
 			if (fPatternData instanceof ElementQuerySpecification) {
 				IJavaScriptElement element= ((ElementQuerySpecification) fPatternData).getElement();
-				stringPattern= JavaElementLabels.getElementLabel(element, JavaElementLabels.ALL_DEFAULT);
+				stringPattern= JavaScriptElementLabels.getElementLabel(element, JavaScriptElementLabels.ALL_DEFAULT);
 				if (!element.exists()) {
-					return new Status(IStatus.ERROR, JavaPlugin.getPluginId(), 0, Messages.format(SearchMessages.JavaSearchQuery_error_element_does_not_exist, stringPattern), null);  
+					return new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), 0, Messages.format(SearchMessages.JavaSearchQuery_error_element_does_not_exist, stringPattern), null);  
 				}
 				pattern= SearchPattern.createPattern(element, fPatternData.getLimitTo(), SearchUtils.GENERICS_AGNOSTIC_MATCH_RULE);
 			} else {
@@ -124,7 +124,7 @@ public class JavaSearchQuery implements ISearchQuery {
 			}
 			
 			if (pattern == null) {
-				return new Status(IStatus.ERROR, JavaPlugin.getPluginId(), 0, Messages.format(SearchMessages.JavaSearchQuery_error_unsupported_pattern, stringPattern), null);  
+				return new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), 0, Messages.format(SearchMessages.JavaSearchQuery_error_unsupported_pattern, stringPattern), null);  
 			}
 			monitor.beginTask(Messages.format(SearchMessages.JavaSearchQuery_task_label, stringPattern), totalTicks); 
 			IProgressMonitor mainSearchPM= new SubProgressMonitor(monitor, 1000);
@@ -143,7 +143,7 @@ public class JavaSearchQuery implements ISearchQuery {
 					public void handleException(Throwable exception) {
 						participantDescriptors[iPrime].getDescriptor().disable();
 						String message= SearchMessages.JavaSearchQuery_error_participant_search; 
-						JavaPlugin.log(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), 0, message, exception));
+						JavaScriptPlugin.log(new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), 0, message, exception));
 					}
 
 					public void run() throws Exception {
@@ -166,7 +166,7 @@ public class JavaSearchQuery implements ISearchQuery {
 			return e.getStatus();
 		}
 		String message= Messages.format(SearchMessages.JavaSearchQuery_status_ok_message, String.valueOf(textResult.getMatchCount())); 
-		return new Status(IStatus.OK, JavaPlugin.getPluginId(), 0, message, null);
+		return new Status(IStatus.OK, JavaScriptPlugin.getPluginId(), 0, message, null);
 	}
 	
 	private int getMatchMode(String pattern) {
@@ -225,8 +225,8 @@ public class JavaSearchQuery implements ISearchQuery {
 	private String getSearchPatternDescription() {
 		if (fPatternData instanceof ElementQuerySpecification) {
 			IJavaScriptElement element= ((ElementQuerySpecification) fPatternData).getElement();
-			return JavaElementLabels.getElementLabel(element, JavaElementLabels.ALL_DEFAULT
-					| JavaElementLabels.ALL_FULLY_QUALIFIED | JavaElementLabels.USE_RESOLVED);
+			return JavaScriptElementLabels.getElementLabel(element, JavaScriptElementLabels.ALL_DEFAULT
+					| JavaScriptElementLabels.ALL_FULLY_QUALIFIED | JavaScriptElementLabels.USE_RESOLVED);
 		} 
 		return ((PatternQuerySpecification) fPatternData).getPattern();
 	}

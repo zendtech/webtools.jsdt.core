@@ -28,13 +28,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusInfo;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.DialogField;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.IListAdapter;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.LayoutUtil;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.ListDialogField;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
 
 public class HistoryListAction extends Action {
 	
@@ -65,7 +65,7 @@ public class HistoryListAction extends Action {
 				}				
 			};
 		
-			JavaElementLabelProvider labelProvider= new JavaElementLabelProvider(JavaElementLabelProvider.SHOW_QUALIFIED | JavaElementLabelProvider.SHOW_ROOT);
+			JavaScriptElementLabelProvider labelProvider= new JavaScriptElementLabelProvider(JavaScriptElementLabelProvider.SHOW_QUALIFIED | JavaScriptElementLabelProvider.SHOW_ROOT);
 			
 			fHistoryList= new ListDialogField(adapter, buttonLabels, labelProvider);
 			fHistoryList.setLabelText(CallHierarchyMessages.HistoryListDialog_label); 
@@ -170,7 +170,7 @@ public class HistoryListAction extends Action {
 	 */
 	public void run() {
 		IFunction[] historyEntries= fView.getHistoryEntries();
-		HistoryListDialog dialog= new HistoryListDialog(JavaPlugin.getActiveWorkbenchShell(), historyEntries);
+		HistoryListDialog dialog= new HistoryListDialog(JavaScriptPlugin.getActiveWorkbenchShell(), historyEntries);
 		if (dialog.open() == Window.OK) {
 			fView.setHistoryEntries(dialog.getRemaining());
 			fView.setMethod(dialog.getResult());

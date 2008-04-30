@@ -30,7 +30,7 @@ import org.eclipse.wst.jsdt.core.search.SearchParticipant;
 import org.eclipse.wst.jsdt.core.search.SearchPattern;
 import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
 import org.eclipse.wst.jsdt.internal.corext.util.SearchUtils;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 class CallerMethodWrapper extends MethodWrapper {
     public CallerMethodWrapper(MethodWrapper parent, MethodCall methodCall) {
@@ -77,7 +77,7 @@ class CallerMethodWrapper extends MethodWrapper {
 			return searchRequestor.getCallers();
 			
 		} catch (CoreException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 			return new HashMap(0);
 		}
 	}

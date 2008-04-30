@@ -97,7 +97,7 @@ protected void addAffectedChild(JavaElementDelta child) {
 
 	// if a child delta is added to a compilation unit delta or below,
 	// it's a fine grained delta
-	if (this.changedElement.getElementType() >= IJavaScriptElement.COMPILATION_UNIT) {
+	if (this.changedElement.getElementType() >= IJavaScriptElement.JAVASCRIPT_UNIT) {
 		this.fineGrained();
 	}
 

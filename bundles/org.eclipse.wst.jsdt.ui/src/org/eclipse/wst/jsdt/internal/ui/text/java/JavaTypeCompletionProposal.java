@@ -22,7 +22,7 @@ import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.core.dom.rewrite.ImportRewrite;
 import org.eclipse.wst.jsdt.internal.corext.codemanipulation.StubUtility;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 
 /**
@@ -92,14 +92,14 @@ public class JavaTypeCompletionProposal extends JavaCompletionProposal {
 				setReplacementOffset(getReplacementOffset() + document.getLength() - oldLen);
 			}
 		} catch (CoreException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		} catch (BadLocationException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 	}
 
 	private boolean allowAddingImports() {
-		IPreferenceStore preferenceStore= JavaPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore preferenceStore= JavaScriptPlugin.getDefault().getPreferenceStore();
 		return preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_ADDIMPORT);
 	}
 

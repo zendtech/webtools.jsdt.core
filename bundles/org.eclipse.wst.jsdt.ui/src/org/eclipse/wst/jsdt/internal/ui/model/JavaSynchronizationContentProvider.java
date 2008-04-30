@@ -59,7 +59,7 @@ import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaElementResourceMapping;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 /**
  * Java-aware synchronization content provider.
@@ -116,7 +116,7 @@ public final class JavaSynchronizationContentProvider extends AbstractSynchroniz
 			try {
 				return mapping.getTraversals(ResourceMappingContext.LOCAL_CONTEXT, new NullProgressMonitor());
 			} catch (final CoreException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			}
 		return new ResourceTraversal[0];
 	}
@@ -142,7 +142,7 @@ public final class JavaSynchronizationContentProvider extends AbstractSynchroniz
 		} catch (final CoreException exception) {
 			// Only log the error for projects that are accessible (i.e. exist and are open)
 			if (project.isAccessible())
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 		}
 		return null;
 	}

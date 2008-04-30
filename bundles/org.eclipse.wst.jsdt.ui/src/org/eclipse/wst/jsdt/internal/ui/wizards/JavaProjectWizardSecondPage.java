@@ -55,7 +55,7 @@ import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusInfo;
 import org.eclipse.wst.jsdt.internal.ui.util.CoreUtility;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.wst.jsdt.launching.JavaRuntime;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 import org.eclipse.wst.jsdt.ui.wizards.JavaCapabilityConfigurationPage;
 
@@ -345,7 +345,7 @@ public class JavaProjectWizardSecondPage extends JavaCapabilityConfigurationPage
 				copyFile(fDotProjectBackup, projectFile, new SubProgressMonitor(monitor, 1));
 			}
 		} catch (IOException e) {
-			IStatus status= new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IStatus.ERROR, NewWizardMessages.JavaProjectWizardSecondPage_problem_restore_project, e); 
+			IStatus status= new Status(IStatus.ERROR, JavaScriptUI.ID_PLUGIN, IStatus.ERROR, NewWizardMessages.JavaProjectWizardSecondPage_problem_restore_project, e); 
 			throw new CoreException(status);
 		}
 		try {
@@ -355,7 +355,7 @@ public class JavaProjectWizardSecondPage extends JavaCapabilityConfigurationPage
 				copyFile(fDotClasspathBackup, classpathFile, new SubProgressMonitor(monitor, 1));
 			}
 		} catch (IOException e) {
-			IStatus status= new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IStatus.ERROR, NewWizardMessages.JavaProjectWizardSecondPage_problem_restore_classpath, e); 
+			IStatus status= new Status(IStatus.ERROR, JavaScriptUI.ID_PLUGIN, IStatus.ERROR, NewWizardMessages.JavaProjectWizardSecondPage_problem_restore_classpath, e); 
 			throw new CoreException(status);
 		}
 	}
@@ -366,7 +366,7 @@ public class JavaProjectWizardSecondPage extends JavaCapabilityConfigurationPage
 			copyFile(source, bak);
 			return bak;
 		} catch (IOException e) {
-			IStatus status= new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IStatus.ERROR, Messages.format(NewWizardMessages.JavaProjectWizardSecondPage_problem_backup, name), e); 
+			IStatus status= new Status(IStatus.ERROR, JavaScriptUI.ID_PLUGIN, IStatus.ERROR, Messages.format(NewWizardMessages.JavaProjectWizardSecondPage_problem_backup, name), e); 
 			throw new CoreException(status);
 		} 
 	}

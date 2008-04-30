@@ -58,9 +58,9 @@ public class SourcePositionComparator extends ViewerComparator {
 						if (!t1.getPackageFragment().equals(t2.getPackageFragment()))
 							return 0;
 
-						IJavaScriptUnit cu1= (IJavaScriptUnit)((IJavaScriptElement)e1).getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+						IJavaScriptUnit cu1= (IJavaScriptUnit)((IJavaScriptElement)e1).getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 						if (cu1 != null) {
-							if (!cu1.equals(((IJavaScriptElement)e2).getAncestor(IJavaScriptElement.COMPILATION_UNIT)))
+							if (!cu1.equals(((IJavaScriptElement)e2).getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT)))
 								return 0;
 						} else {
 							IClassFile cf1= (IClassFile)((IJavaScriptElement)e1).getAncestor(IJavaScriptElement.CLASS_FILE);

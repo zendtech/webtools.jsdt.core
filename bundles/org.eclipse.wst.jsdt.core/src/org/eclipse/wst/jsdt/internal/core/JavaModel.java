@@ -149,7 +149,7 @@ public boolean equals(Object o) {
  * @see IJavaScriptElement
  */
 public int getElementType() {
-	return JAVA_MODEL;
+	return JAVASCRIPT_MODEL;
 }
 /**
  * Flushes the cache of external files known to be existing.
@@ -216,7 +216,7 @@ public IJavaScriptProject getJavaProject(IResource resource) {
  * @see IJavaScriptModel
  */
 public IJavaScriptProject[] getJavaScriptProjects() throws JavaScriptModelException {
-	ArrayList list = getChildrenOfType(JAVA_PROJECT);
+	ArrayList list = getChildrenOfType(JAVASCRIPT_PROJECT);
 	IJavaScriptProject[] array= new IJavaScriptProject[list.size()];
 	list.toArray(array);
 	return array;

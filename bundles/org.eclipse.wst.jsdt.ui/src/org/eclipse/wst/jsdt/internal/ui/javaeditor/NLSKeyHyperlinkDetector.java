@@ -28,7 +28,7 @@ import org.eclipse.wst.jsdt.core.dom.StringLiteral;
 import org.eclipse.wst.jsdt.internal.corext.dom.NodeFinder;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.nls.AccessorClassReference;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.nls.NLSHintHelper;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 
 /**
@@ -55,7 +55,7 @@ public class NLSKeyHyperlinkDetector extends AbstractHyperlinkDetector {
 		if (javaElement == null)
 			return null;
 
-		JavaScriptUnit ast= JavaPlugin.getDefault().getASTProvider().getAST(javaElement, ASTProvider.WAIT_NO, null);
+		JavaScriptUnit ast= JavaScriptPlugin.getDefault().getASTProvider().getAST(javaElement, ASTProvider.WAIT_NO, null);
 		if (ast == null)
 			return null;
 
@@ -88,7 +88,7 @@ public class NLSKeyHyperlinkDetector extends AbstractHyperlinkDetector {
 			return ((IClassFileEditorInput)editorInput).getClassFile();
 
 		if (editor instanceof CompilationUnitEditor)
-			return JavaPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(editorInput);
+			return JavaScriptPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(editorInput);
 
 		return null;
 	}

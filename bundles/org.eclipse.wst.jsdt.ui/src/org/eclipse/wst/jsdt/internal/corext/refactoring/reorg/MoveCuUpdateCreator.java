@@ -57,7 +57,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.util.TextChangeManager;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.SearchUtils;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 public class MoveCuUpdateCreator {
 	
@@ -325,7 +325,7 @@ public class MoveCuUpdateCreator {
 			if (element.getAncestor(IJavaScriptElement.IMPORT_DECLARATION) != null) {
 				super.acceptSearchMatch(TypeReference.createImportReference(element, accuracy, start, length, insideDocComment, res));
 			} else {
-				IJavaScriptUnit unit= (IJavaScriptUnit) element.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+				IJavaScriptUnit unit= (IJavaScriptUnit) element.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 				if (unit != null) {
 					IBuffer buffer= unit.getBuffer();
 					String matchText= buffer.getText(start, length);
@@ -355,7 +355,7 @@ public class MoveCuUpdateCreator {
 					tokenType= fScanner.getNextToken();
 				}
 			} catch (InvalidInputException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 			return lastIdentifierStart;
 		}

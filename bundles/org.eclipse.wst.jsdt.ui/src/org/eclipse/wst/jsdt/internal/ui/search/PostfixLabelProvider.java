@@ -18,7 +18,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptModel;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.ColoredJavaElementLabels;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.ColoredString;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 public class PostfixLabelProvider extends SearchLabelProvider {
 	private ITreeContentProvider fContentProvider;
@@ -49,7 +49,7 @@ public class PostfixLabelProvider extends SearchLabelProvider {
 		Object lastElement= element;
 		while (realParent != null && !(realParent instanceof IJavaScriptModel) && !realParent.equals(visibleParent)) {
 			if (!isSameInformation(realParent, lastElement))  {
-				res.append(JavaElementLabels.CONCAT_STRING).append(internalGetText(realParent));
+				res.append(JavaScriptElementLabels.CONCAT_STRING).append(internalGetText(realParent));
 			}
 			lastElement= realParent;
 			realParent= fContentProvider.getParent(realParent);

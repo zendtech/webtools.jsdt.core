@@ -13,7 +13,7 @@ package org.eclipse.wst.jsdt.internal.ui.wizards;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 
 
@@ -24,7 +24,7 @@ public class NewSourceFolderCreationWizard extends NewElementWizard {
 	public NewSourceFolderCreationWizard() {
 		super();
 		setDefaultPageImageDescriptor(JavaPluginImages.DESC_WIZBAN_NEWSRCFOLDR);
-		setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
+		setDialogSettings(JavaScriptPlugin.getDefault().getDialogSettings());
 		setWindowTitle(NewWizardMessages.NewSourceFolderCreationWizard_title); 
 	}
 

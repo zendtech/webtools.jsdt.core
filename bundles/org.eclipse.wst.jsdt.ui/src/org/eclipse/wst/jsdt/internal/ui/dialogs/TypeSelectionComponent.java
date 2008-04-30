@@ -59,7 +59,7 @@ import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.core.search.SearchEngine;
 import org.eclipse.wst.jsdt.core.search.TypeNameMatch;
 import org.eclipse.wst.jsdt.internal.corext.util.Strings;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIMessages;
 import org.eclipse.wst.jsdt.internal.ui.search.JavaSearchScopeFactory;
@@ -151,7 +151,7 @@ public class TypeSelectionComponent extends Composite implements ITypeSelectionC
 		fInitialFilterText= initialFilter;
 		fTitleLabel= titleLabel;
 		fTypeSelectionExtension= extension;
-		IDialogSettings settings= JavaPlugin.getDefault().getDialogSettings();
+		IDialogSettings settings= JavaScriptPlugin.getDefault().getDialogSettings();
 		fSettings= settings.getSection(DIALOG_SETTINGS);
 		if (fSettings == null) {
 			fSettings= new DialogSettings(DIALOG_SETTINGS);
@@ -386,7 +386,7 @@ public class TypeSelectionComponent extends Composite implements ITypeSelectionC
 		viewMenu.add(fullyQualifyDuplicatesAction);
 		if (fScope == null) {
 			fFilterActionGroup= new WorkingSetFilterActionGroup(getShell(),
-				JavaPlugin.getActivePage(),
+				JavaScriptPlugin.getActivePage(),
 				new IPropertyChangeListener() {
 					public void propertyChange(PropertyChangeEvent event) {
 						IWorkingSet ws= (IWorkingSet)event.getNewValue();

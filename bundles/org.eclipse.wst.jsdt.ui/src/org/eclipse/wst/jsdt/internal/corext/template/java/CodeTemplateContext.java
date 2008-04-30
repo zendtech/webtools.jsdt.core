@@ -25,7 +25,7 @@ import org.eclipse.jface.text.templates.TemplateTranslator;
 import org.eclipse.jface.text.templates.TemplateVariableResolver;
 import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 public class CodeTemplateContext extends TemplateContext {
 	
@@ -33,7 +33,7 @@ public class CodeTemplateContext extends TemplateContext {
 	private IJavaScriptProject fProject;
 
 	public CodeTemplateContext(String contextTypeName, IJavaScriptProject project, String lineDelim) {
-		super(JavaPlugin.getDefault().getCodeTemplateContextRegistry().getContextType(contextTypeName));
+		super(JavaScriptPlugin.getDefault().getCodeTemplateContextRegistry().getContextType(contextTypeName));
 		fLineDelimiter= lineDelim;
 		fProject= project;
 	}

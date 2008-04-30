@@ -24,7 +24,7 @@ import org.eclipse.swt.events.HelpListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionUtil;
 import org.eclipse.wst.jsdt.internal.ui.actions.SelectionConverter;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaEditor;
@@ -53,7 +53,7 @@ public class JavaUIHelp {
 		try {
 			selection= SelectionConverter.getStructuredSelection(part);
 		} catch (JavaScriptModelException ex) {
-			JavaPlugin.log(ex);
+			JavaScriptPlugin.log(ex);
 			selection= StructuredSelection.EMPTY;
 		}
 		Object[] elements= selection.toArray();
@@ -96,7 +96,7 @@ public class JavaUIHelp {
 				}
 				JavadocHelpContext.displayHelp(fContextId, selected);
 			} catch (CoreException x) {
-				JavaPlugin.log(x);
+				JavaScriptPlugin.log(x);
 			}
 		}
 	}
@@ -121,7 +121,7 @@ public class JavaUIHelp {
 					// can happen that the element doesn't exist anymore
 					// but we are still showing it in the user interface
 					if (!e.isDoesNotExist())
-						JavaPlugin.log(e);
+						JavaScriptPlugin.log(e);
 				}
 			}
 			return context;

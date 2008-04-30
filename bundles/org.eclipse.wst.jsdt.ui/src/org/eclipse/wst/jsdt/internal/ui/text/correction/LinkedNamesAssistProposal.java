@@ -39,7 +39,7 @@ import org.eclipse.wst.jsdt.core.dom.SimpleName;
 import org.eclipse.wst.jsdt.internal.corext.dom.LinkedNodeFinder;
 import org.eclipse.wst.jsdt.internal.corext.dom.NodeFinder;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.ASTProvider;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.EditorHighlightingSynchronizer;
@@ -118,7 +118,7 @@ public class LinkedNamesAssistProposal implements IJavaCompletionProposal, IComp
 			Point seletion= viewer.getSelectedRange();
 
 			// get full ast
-			JavaScriptUnit root= JavaPlugin.getDefault().getASTProvider().getAST(fCompilationUnit, ASTProvider.WAIT_YES, null);
+			JavaScriptUnit root= JavaScriptPlugin.getDefault().getASTProvider().getAST(fCompilationUnit, ASTProvider.WAIT_YES, null);
 
 			ASTNode nameNode= NodeFinder.perform(root, fNode.getStartPosition(), fNode.getLength());
 			final int pos= fNode.getStartPosition();
@@ -183,7 +183,7 @@ public class LinkedNamesAssistProposal implements IJavaCompletionProposal, IComp
 			viewer.setSelectedRange(seletion.x, seletion.y); // by default full word is selected, restore original selection
 
 		} catch (BadLocationException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 	}
 
@@ -194,7 +194,7 @@ public class LinkedNamesAssistProposal implements IJavaCompletionProposal, IComp
 	 * @return  the currently active java editor, or <code>null</code>
 	 */
 	private JavaEditor getJavaEditor() {
-		IEditorPart part= JavaPlugin.getActivePage().getActiveEditor();
+		IEditorPart part= JavaScriptPlugin.getActivePage().getActiveEditor();
 		if (part instanceof JavaEditor)
 			return (JavaEditor) part;
 		else

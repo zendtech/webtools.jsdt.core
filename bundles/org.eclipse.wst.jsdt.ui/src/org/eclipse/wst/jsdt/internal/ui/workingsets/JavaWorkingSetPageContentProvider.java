@@ -16,9 +16,9 @@ import org.eclipse.wst.jsdt.core.IJavaScriptModel;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider;
+import org.eclipse.wst.jsdt.ui.StandardJavaScriptElementContentProvider;
 
-class JavaWorkingSetPageContentProvider extends StandardJavaElementContentProvider {
+class JavaWorkingSetPageContentProvider extends StandardJavaScriptElementContentProvider {
 	
 	public boolean hasChildren(Object element) {
 

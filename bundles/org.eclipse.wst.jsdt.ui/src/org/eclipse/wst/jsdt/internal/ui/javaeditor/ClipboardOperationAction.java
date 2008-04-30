@@ -56,7 +56,7 @@ import org.eclipse.wst.jsdt.internal.corext.codemanipulation.ImportReferencesCol
 import org.eclipse.wst.jsdt.internal.corext.codemanipulation.StubUtility;
 import org.eclipse.wst.jsdt.internal.corext.dom.Bindings;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 
 
@@ -386,7 +386,7 @@ public final class ClipboardOperationAction extends TextEditorAction {
 
 
 	private ClipboardData getClipboardData(IJavaScriptElement inputElement, int offset, int length) {
-		JavaScriptUnit astRoot= JavaPlugin.getDefault().getASTProvider().getAST(inputElement, ASTProvider.WAIT_ACTIVE_ONLY, null);
+		JavaScriptUnit astRoot= JavaScriptPlugin.getDefault().getASTProvider().getAST(inputElement, ASTProvider.WAIT_ACTIVE_ONLY, null);
 		if (astRoot == null) {
 			return null;
 		}
@@ -474,7 +474,7 @@ public final class ClipboardOperationAction extends TextEditorAction {
 				fOperationTarget.doOperation(fOperationCode);
 				addImports((IJavaScriptUnit) inputElement, importsData);
 			} catch (CoreException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			} finally {
 				if (target != null) {
 					target.endCompoundChange();

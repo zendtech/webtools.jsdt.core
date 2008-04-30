@@ -77,7 +77,7 @@ import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.QualifiedTypeNameHistory;
 import org.eclipse.wst.jsdt.internal.corext.util.TypeFilter;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.text.correction.ChangeMethodSignatureProposal.ChangeDescription;
 import org.eclipse.wst.jsdt.internal.ui.text.correction.ChangeMethodSignatureProposal.EditDescription;
@@ -86,8 +86,8 @@ import org.eclipse.wst.jsdt.internal.ui.text.correction.ChangeMethodSignaturePro
 import org.eclipse.wst.jsdt.internal.ui.text.correction.ChangeMethodSignatureProposal.SwapDescription;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.BindingLabelProvider;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.JavaElementImageProvider;
-import org.eclipse.wst.jsdt.ui.JavaElementImageDescriptor;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementImageDescriptor;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 import org.eclipse.wst.jsdt.ui.text.java.IInvocationContext;
 import org.eclipse.wst.jsdt.ui.text.java.IProblemLocation;
 
@@ -269,7 +269,7 @@ public class UnresolvedElementsSubProcessor {
 					rewrite.remove(statement, null);
 				}
 				String label= CorrectionMessages.UnresolvedElementsSubProcessor_removestatement_description;
-				Image image= JavaPlugin.getDefault().getWorkbench().getSharedImages().getImage(ISharedImages.IMG_TOOL_DELETE);
+				Image image= JavaScriptPlugin.getDefault().getWorkbench().getSharedImages().getImage(ISharedImages.IMG_TOOL_DELETE);
 				ASTRewriteCorrectionProposal proposal= new ASTRewriteCorrectionProposal(label, cu, rewrite, 4, image);
 				proposals.add(proposal);
 			}
@@ -646,7 +646,7 @@ public class UnresolvedElementsSubProcessor {
 	
 	private static CUCorrectionProposal createTypeRefChangeFullProposal(IJavaScriptUnit cu, ITypeBinding binding, ASTNode node, int relevance) throws CoreException {
 		ASTRewrite rewrite= ASTRewrite.create(node.getAST());
-		String label= Messages.format(CorrectionMessages.UnresolvedElementsSubProcessor_change_full_type_description, BindingLabelProvider.getBindingLabel(binding, JavaElementLabels.ALL_DEFAULT));
+		String label= Messages.format(CorrectionMessages.UnresolvedElementsSubProcessor_change_full_type_description, BindingLabelProvider.getBindingLabel(binding, JavaScriptElementLabels.ALL_DEFAULT));
 		Image image= JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE);
 		
 
@@ -1275,7 +1275,7 @@ public class UnresolvedElementsSubProcessor {
 				ITypeBinding binding= nodeToCast.resolveTypeBinding();
 				if (binding == null || binding.isCastCompatible(castType)) {
 					ASTRewriteCorrectionProposal proposal= TypeMismatchSubProcessor.createCastProposal(context, castType, nodeToCast, 6);
-					String castTypeName= BindingLabelProvider.getBindingLabel(castType, JavaElementLabels.ALL_DEFAULT);
+					String castTypeName= BindingLabelProvider.getBindingLabel(castType, JavaScriptElementLabels.ALL_DEFAULT);
 					String[] arg= new String[] { getArgumentName(cu, arguments, idx), castTypeName};
 					proposal.setDisplayName(Messages.format(CorrectionMessages.UnresolvedElementsSubProcessor_addargumentcast_description, arg));
 					proposals.add(proposal);
@@ -1496,7 +1496,7 @@ public class UnresolvedElementsSubProcessor {
 			if (targetCU != null) {
 				String[] args= new String[] { ASTResolving.getMethodSignature( ASTResolving.getTypeSignature(targetDecl), getParameterTypes(arguments), false) };
 				String label= Messages.format(CorrectionMessages.UnresolvedElementsSubProcessor_createconstructor_description, args);
-				Image image= JavaElementImageProvider.getDecoratedImage(JavaPluginImages.DESC_MISC_PUBLIC, JavaElementImageDescriptor.CONSTRUCTOR, JavaElementImageProvider.SMALL_SIZE);
+				Image image= JavaElementImageProvider.getDecoratedImage(JavaPluginImages.DESC_MISC_PUBLIC, JavaScriptElementImageDescriptor.CONSTRUCTOR, JavaElementImageProvider.SMALL_SIZE);
 				proposals.add(new NewMethodCompletionProposal(label, targetCU, selectedNode, arguments, targetDecl, 5, image));
 			}
 		}

@@ -46,7 +46,7 @@ import org.eclipse.wst.jsdt.internal.corext.dom.GenericVisitor;
 import org.eclipse.wst.jsdt.internal.corext.template.java.CompilationUnitContext;
 import org.eclipse.wst.jsdt.internal.corext.template.java.CompilationUnitContextType;
 import org.eclipse.wst.jsdt.internal.corext.template.java.JavaContextType;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.text.correction.AssistContext;
 import org.eclipse.wst.jsdt.internal.ui.text.correction.SurroundWith;
 import org.eclipse.wst.jsdt.ui.text.java.IInvocationContext;
@@ -156,7 +156,7 @@ public class SurroundWithTemplateProposal extends TemplateProposal {
 			try {
 				templateBuffer= context.evaluate(fTemplate);
 			} catch (TemplateException e1) {
-				JavaPlugin.log(e1);
+				JavaScriptPlugin.log(e1);
 				return null;
 			}
 			
@@ -170,13 +170,13 @@ public class SurroundWithTemplateProposal extends TemplateProposal {
 			return document.get();
 			
 		} catch (MalformedTreeException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		} catch (IllegalArgumentException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		} catch (BadLocationException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		} catch (CoreException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		return null;
 	}
@@ -241,7 +241,7 @@ public class SurroundWithTemplateProposal extends TemplateProposal {
 		String newSelection= document.get(offset, length);
 		
 		//Create the new context
-		CompilationUnitContextType contextType= (CompilationUnitContextType) JavaPlugin.getDefault().getTemplateContextRegistry().getContextType(JavaContextType.NAME);
+		CompilationUnitContextType contextType= (CompilationUnitContextType) JavaScriptPlugin.getDefault().getTemplateContextRegistry().getContextType(JavaContextType.NAME);
 		CompilationUnitContext context= contextType.createContext(document, offset, newSelection.length(), fCompilationUnit);
 		context.setVariable("selection", newSelection); //$NON-NLS-1$
 		context.setForceEvaluation(true);
@@ -249,7 +249,7 @@ public class SurroundWithTemplateProposal extends TemplateProposal {
 	}
 	
 	private void handleException(ITextViewer viewer, Exception e, IRegion region) {
-		JavaPlugin.log(e);
+		JavaScriptPlugin.log(e);
 		openErrorDialog(viewer.getTextWidget().getShell(), e);
 		fSelectedRegion= region;
 	}

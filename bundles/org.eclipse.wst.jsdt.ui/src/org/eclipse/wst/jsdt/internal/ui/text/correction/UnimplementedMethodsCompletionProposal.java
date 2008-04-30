@@ -29,11 +29,11 @@ import org.eclipse.wst.jsdt.internal.corext.codemanipulation.CodeGenerationSetti
 import org.eclipse.wst.jsdt.internal.corext.codemanipulation.ContextSensitiveImportRewriteContext;
 import org.eclipse.wst.jsdt.internal.corext.codemanipulation.StubUtility2;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.preferences.JavaPreferencesSettings;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.BindingLabelProvider;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 public class UnimplementedMethodsCompletionProposal extends ASTRewriteCorrectionProposal {
 
@@ -96,13 +96,13 @@ public class UnimplementedMethodsCompletionProposal extends ASTRewriteCorrection
 			buf.append("</b><ul>"); //$NON-NLS-1$
 			for (int i= 0; i < fMethodsToOverride.length; i++) {
 				buf.append("<li>"); //$NON-NLS-1$
-				buf.append(BindingLabelProvider.getBindingLabel(fMethodsToOverride[i], JavaElementLabels.ALL_FULLY_QUALIFIED));
+				buf.append(BindingLabelProvider.getBindingLabel(fMethodsToOverride[i], JavaScriptElementLabels.ALL_FULLY_QUALIFIED));
 				buf.append("</li>"); //$NON-NLS-1$
 			}
 			buf.append("</ul>"); //$NON-NLS-1$
 			return buf.toString();
 		} catch (CoreException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		return null;
 	}

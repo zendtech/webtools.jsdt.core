@@ -33,7 +33,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJsGlobalScopeContainerInitializerExtension;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.util.JSDScopeUiUtil;
 
@@ -126,7 +126,7 @@ public class JsGlobalScopeContainer extends PackageFragmentRootContainer {
 			IIncludePathEntry[] classpathEntries= fContainer.getIncludepathEntries();
 			if (classpathEntries == null) {
 				// invalid implementation of a classpath container
-				JavaPlugin.log(new IllegalArgumentException("Invalid classpath container implementation: getClasspathEntries() returns null. " + fContainer.getPath())); //$NON-NLS-1$
+				JavaScriptPlugin.log(new IllegalArgumentException("Invalid classpath container implementation: getClasspathEntries() returns null. " + fContainer.getPath())); //$NON-NLS-1$
 			} else {
 				IWorkspaceRoot root= ResourcesPlugin.getWorkspace().getRoot();
 				for (int i= 0; i < classpathEntries.length; i++) {

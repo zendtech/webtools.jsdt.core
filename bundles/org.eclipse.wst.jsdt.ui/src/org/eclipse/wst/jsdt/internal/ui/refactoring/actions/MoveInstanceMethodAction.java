@@ -25,7 +25,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringAvailabilityT
 import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringExecutionStarter;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionUtil;
 import org.eclipse.wst.jsdt.internal.ui.actions.SelectionConverter;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaEditor;
@@ -63,7 +63,7 @@ public final class MoveInstanceMethodAction extends SelectionDispatchAction {
 		} catch (JavaScriptModelException e) {
 			// http://bugs.eclipse.org/bugs/show_bug.cgi?id=19253
 			if (JavaModelUtil.isExceptionToBeLogged(e))
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			setEnabled(false);//no ui
 		}
 	}

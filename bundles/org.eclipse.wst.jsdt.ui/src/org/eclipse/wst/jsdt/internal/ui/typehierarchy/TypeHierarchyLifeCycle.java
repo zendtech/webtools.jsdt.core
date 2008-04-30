@@ -34,7 +34,7 @@ import org.eclipse.wst.jsdt.core.ITypeHierarchyChangedListener;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 /**
  * Manages a type hierarchy, to keep it refreshed, and to allow it to be shared.
@@ -130,7 +130,7 @@ public class TypeHierarchyLifeCycle implements ITypeHierarchyChangedListener, IE
 			}
 		} else {
 			IRegion region= JavaScriptCore.newRegion();
-			if (element.getElementType() == IJavaScriptElement.JAVA_PROJECT) {
+			if (element.getElementType() == IJavaScriptElement.JAVASCRIPT_PROJECT) {
 				// for projects only add the contained source folders
 				IPackageFragmentRoot[] roots= ((IJavaScriptProject) element).getPackageFragmentRoots();
 				for (int i= 0; i < roots.length; i++) {
@@ -215,13 +215,13 @@ public class TypeHierarchyLifeCycle implements ITypeHierarchyChangedListener, IE
 				processTypeDelta((IType) element, changedTypes);
 				processChildrenDelta(delta, changedTypes); // (inner types)
 				break;
-			case IJavaScriptElement.JAVA_MODEL:
-			case IJavaScriptElement.JAVA_PROJECT:
+			case IJavaScriptElement.JAVASCRIPT_MODEL:
+			case IJavaScriptElement.JAVASCRIPT_PROJECT:
 			case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
 			case IJavaScriptElement.PACKAGE_FRAGMENT:
 				processChildrenDelta(delta, changedTypes);
 				break;
-			case IJavaScriptElement.COMPILATION_UNIT:
+			case IJavaScriptElement.JAVASCRIPT_UNIT:
 				IJavaScriptUnit cu= (IJavaScriptUnit)element;
 				if (!JavaModelUtil.isPrimary(cu)) {
 					return;
@@ -236,7 +236,7 @@ public class TypeHierarchyLifeCycle implements ITypeHierarchyChangedListener, IE
 							}
 						}
 					} catch (JavaScriptModelException e) {
-						JavaPlugin.log(e);
+						JavaScriptPlugin.log(e);
 					}
 				} else {
 					processChildrenDelta(delta, changedTypes);

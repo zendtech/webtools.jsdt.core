@@ -1255,8 +1255,8 @@ public class Util {
 	public static final boolean isExcluded(IJavaScriptElement element) {
 		int elementType = element.getElementType();
 		switch (elementType) {
-			case IJavaScriptElement.JAVA_MODEL:
-			case IJavaScriptElement.JAVA_PROJECT:
+			case IJavaScriptElement.JAVASCRIPT_MODEL:
+			case IJavaScriptElement.JAVASCRIPT_PROJECT:
 			case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
 				return false;
 
@@ -1265,7 +1265,7 @@ public class Util {
 				IResource resource = element.getResource();
 				return resource != null && isExcluded(resource, root.fullInclusionPatternChars(), root.fullExclusionPatternChars());
 
-			case IJavaScriptElement.COMPILATION_UNIT:
+			case IJavaScriptElement.JAVASCRIPT_UNIT:
 				root = (PackageFragmentRoot)element.getAncestor(IJavaScriptElement.PACKAGE_FRAGMENT_ROOT);
 				resource = element.getResource();
 				if (resource == null)
@@ -1275,7 +1275,7 @@ public class Util {
 				return isExcluded(element.getParent());
 
 			default:
-				IJavaScriptElement cu = element.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+				IJavaScriptElement cu = element.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 				return cu != null && isExcluded(cu);
 		}
 	}

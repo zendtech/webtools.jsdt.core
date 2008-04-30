@@ -29,7 +29,7 @@ import org.eclipse.wst.jsdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.wst.jsdt.core.dom.rewrite.ImportRewrite;
 import org.eclipse.wst.jsdt.internal.corext.codemanipulation.StubUtility;
 import org.eclipse.wst.jsdt.internal.corext.dom.ASTNodeFactory;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.JavaElementImageProvider;
 
 /**
@@ -46,7 +46,7 @@ public class NewDefiningMethodProposal extends AbstractMethodCompletionProposal 
 		fParamNames= paramNames;
 
 		ImageDescriptor desc= JavaElementImageProvider.getMethodImageDescriptor(binding.isInterface() || binding.isAnnotation(), method.getModifiers());
-		setImage(JavaPlugin.getImageDescriptorRegistry().get(desc));
+		setImage(JavaScriptPlugin.getImageDescriptorRegistry().get(desc));
 	}
 
 	/* (non-Javadoc)

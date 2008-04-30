@@ -23,7 +23,7 @@ import org.eclipse.wst.jsdt.core.IType;
  * This interface is not intended to be implemented by clients.
  * </p>
  *
- * @see JavaUI#ID_TYPE_HIERARCHY
+ * @see JavaScriptUI#ID_TYPE_HIERARCHY
  */
 public interface ITypeHierarchyViewPart extends IViewPart {
 	

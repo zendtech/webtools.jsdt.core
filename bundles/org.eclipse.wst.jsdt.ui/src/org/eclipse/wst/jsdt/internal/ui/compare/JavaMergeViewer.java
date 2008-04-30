@@ -43,13 +43,13 @@ import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.compare.JavaTokenComparator.ITokenComparatorFactory;
 import org.eclipse.wst.jsdt.internal.ui.text.PreferencesAdapter;
-import org.eclipse.wst.jsdt.ui.text.IJavaColorConstants;
-import org.eclipse.wst.jsdt.ui.text.IJavaPartitions;
-import org.eclipse.wst.jsdt.ui.text.JavaSourceViewerConfiguration;
-import org.eclipse.wst.jsdt.ui.text.JavaTextTools;
+import org.eclipse.wst.jsdt.ui.text.IJavaScriptColorConstants;
+import org.eclipse.wst.jsdt.ui.text.IJavaScriptPartitions;
+import org.eclipse.wst.jsdt.ui.text.JavaScriptSourceViewerConfiguration;
+import org.eclipse.wst.jsdt.ui.text.JavaScriptTextTools;
 
 
 public class JavaMergeViewer extends TextMergeViewer {
@@ -57,7 +57,7 @@ public class JavaMergeViewer extends TextMergeViewer {
 	private IPropertyChangeListener fPreferenceChangeListener;
 	private IPreferenceStore fPreferenceStore;
 	private boolean fUseSystemColors;
-	private JavaSourceViewerConfiguration fSourceViewerConfiguration;
+	private JavaScriptSourceViewerConfiguration fSourceViewerConfiguration;
 	private ArrayList fSourceViewer;
 	
 		
@@ -70,7 +70,7 @@ public class JavaMergeViewer extends TextMergeViewer {
 		if (! fUseSystemColors) {
 			RGB bg= createColor(fPreferenceStore, AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND);
 			setBackgroundColor(bg);
-			RGB fg= createColor(fPreferenceStore, IJavaColorConstants.JAVA_DEFAULT);
+			RGB fg= createColor(fPreferenceStore, IJavaScriptColorConstants.JAVA_DEFAULT);
 			setForegroundColor(fg);
 		}
 	}
@@ -141,7 +141,7 @@ public class JavaMergeViewer extends TextMergeViewer {
     	ArrayList stores= new ArrayList(4);
     	if (project != null)
     		stores.add(new EclipsePreferencesAdapter(new ProjectScope(project.getProject()), JavaScriptCore.PLUGIN_ID));
-		stores.add(JavaPlugin.getDefault().getPreferenceStore());
+		stores.add(JavaScriptPlugin.getDefault().getPreferenceStore());
 		stores.add(new PreferencesAdapter(JavaScriptCore.getPlugin().getPluginPreferences()));
 		stores.add(EditorsUI.getPreferenceStore());
 		return new ChainedPreferenceStore((IPreferenceStore[]) stores.toArray(new IPreferenceStore[stores.size()]));
@@ -167,13 +167,13 @@ public class JavaMergeViewer extends TextMergeViewer {
 			} else {
 				RGB bg= createColor(fPreferenceStore, AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND);
 				setBackgroundColor(bg);
-				RGB fg= createColor(fPreferenceStore, IJavaColorConstants.JAVA_DEFAULT);
+				RGB fg= createColor(fPreferenceStore, IJavaScriptColorConstants.JAVA_DEFAULT);
 				setForegroundColor(fg);
 			}
-		} else if (key.equals(IJavaColorConstants.JAVA_DEFAULT)) {
+		} else if (key.equals(IJavaScriptColorConstants.JAVA_DEFAULT)) {
 
 			if (!fUseSystemColors) {
-				RGB fg= createColor(fPreferenceStore, IJavaColorConstants.JAVA_DEFAULT);
+				RGB fg= createColor(fPreferenceStore, IJavaScriptColorConstants.JAVA_DEFAULT);
 				setForegroundColor(fg);
 			}
 		}
@@ -216,7 +216,7 @@ public class JavaMergeViewer extends TextMergeViewer {
 	}
 	
 	protected String getDocumentPartitioning() {
-		return IJavaPartitions.JAVA_PARTITIONING;
+		return IJavaScriptPartitions.JAVA_PARTITIONING;
 	}
 		
 	protected void configureTextViewer(TextViewer textViewer) {
@@ -224,13 +224,13 @@ public class JavaMergeViewer extends TextMergeViewer {
 			if (fSourceViewer == null)
 				fSourceViewer= new ArrayList();
 			fSourceViewer.add(textViewer);
-			JavaTextTools tools= JavaCompareUtilities.getJavaTextTools();
+			JavaScriptTextTools tools= JavaCompareUtilities.getJavaTextTools();
 			if (tools != null)
 				((SourceViewer)textViewer).configure(getSourceViewerConfiguration());
 		}
 	}
 	
-	private JavaSourceViewerConfiguration getSourceViewerConfiguration() {
+	private JavaScriptSourceViewerConfiguration getSourceViewerConfiguration() {
 		if (fSourceViewerConfiguration == null)
 			getPreferenceStore();
 		return fSourceViewerConfiguration;
@@ -410,8 +410,8 @@ public class JavaMergeViewer extends TextMergeViewer {
 		}
 		fPreferenceStore= ps;
 		if (fPreferenceStore != null) {
-			JavaTextTools tools= JavaCompareUtilities.getJavaTextTools();
-			fSourceViewerConfiguration= new JavaSourceViewerConfiguration(tools.getColorManager(), fPreferenceStore, null, getDocumentPartitioning());
+			JavaScriptTextTools tools= JavaCompareUtilities.getJavaTextTools();
+			fSourceViewerConfiguration= new JavaScriptSourceViewerConfiguration(tools.getColorManager(), fPreferenceStore, null, getDocumentPartitioning());
 			fPreferenceChangeListener= new IPropertyChangeListener() {
 				public void propertyChange(PropertyChangeEvent event) {
 					handlePropertyChange(event);

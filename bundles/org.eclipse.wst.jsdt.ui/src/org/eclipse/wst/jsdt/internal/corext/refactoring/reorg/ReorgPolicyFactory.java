@@ -131,8 +131,8 @@ import org.eclipse.wst.jsdt.internal.corext.util.JavaElementResourceMapping;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.Strings;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 public final class ReorgPolicyFactory {
 
@@ -705,8 +705,8 @@ public final class ReorgPolicyFactory {
 
 		public boolean canChildrenBeDestinations(IJavaScriptElement javaElement) {
 			switch (javaElement.getElementType()) {
-				case IJavaScriptElement.JAVA_MODEL:
-				case IJavaScriptElement.JAVA_PROJECT:
+				case IJavaScriptElement.JAVASCRIPT_MODEL:
+				case IJavaScriptElement.JAVASCRIPT_PROJECT:
 				case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
 					return true;
 				default:
@@ -963,7 +963,7 @@ public final class ReorgPolicyFactory {
 					handle= extended.getAttribute(attribute);
 					if (handle != null && !"".equals(handle)) { //$NON-NLS-1$
 						final IJavaScriptElement element= JDTRefactoringDescriptor.handleToElement(extended.getProject(), handle, false);
-						if (element == null || !element.exists() || element.getElementType() != IJavaScriptElement.COMPILATION_UNIT)
+						if (element == null || !element.exists() || element.getElementType() != IJavaScriptElement.JAVASCRIPT_UNIT)
 							status.merge(ScriptableRefactoring.createInputWarningStatus(element, getProcessorId(), getRefactoringId()));
 						else
 							elements.add(element);
@@ -2153,8 +2153,8 @@ public final class ReorgPolicyFactory {
 
 		public boolean canChildrenBeDestinations(IJavaScriptElement javaElement) {
 			switch (javaElement.getElementType()) {
-				case IJavaScriptElement.JAVA_MODEL:
-				case IJavaScriptElement.JAVA_PROJECT:
+				case IJavaScriptElement.JAVASCRIPT_MODEL:
+				case IJavaScriptElement.JAVASCRIPT_PROJECT:
 					return true;
 				default:
 					return false;
@@ -2166,7 +2166,7 @@ public final class ReorgPolicyFactory {
 		}
 
 		public boolean canElementBeDestination(IJavaScriptElement javaElement) {
-			return javaElement.getElementType() == IJavaScriptElement.JAVA_PROJECT;
+			return javaElement.getElementType() == IJavaScriptElement.JAVASCRIPT_PROJECT;
 		}
 
 		public boolean canElementBeDestination(IResource resource) {
@@ -2326,8 +2326,8 @@ public final class ReorgPolicyFactory {
 
 		public boolean canChildrenBeDestinations(IJavaScriptElement javaElement) {
 			switch (javaElement.getElementType()) {
-				case IJavaScriptElement.JAVA_MODEL:
-				case IJavaScriptElement.JAVA_PROJECT:
+				case IJavaScriptElement.JAVASCRIPT_MODEL:
+				case IJavaScriptElement.JAVASCRIPT_PROJECT:
 				case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
 					// can be nested
 					// (with exclusion
@@ -2344,7 +2344,7 @@ public final class ReorgPolicyFactory {
 
 		public boolean canElementBeDestination(IJavaScriptElement javaElement) {
 			switch (javaElement.getElementType()) {
-				case IJavaScriptElement.JAVA_PROJECT:
+				case IJavaScriptElement.JAVASCRIPT_PROJECT:
 				case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
 					return true;
 				default:
@@ -2594,7 +2594,7 @@ public final class ReorgPolicyFactory {
 			Object destination= getJavaElementDestination();
 			if (destination == null)
 				destination= getResourceDestination();
-			return JavaElementLabels.getTextLabel(destination, JavaElementLabels.ALL_FULLY_QUALIFIED);
+			return JavaScriptElementLabels.getTextLabel(destination, JavaScriptElementLabels.ALL_FULLY_QUALIFIED);
 		}
 
 		public String getFilePatterns() {
@@ -2670,7 +2670,7 @@ public final class ReorgPolicyFactory {
 							try {
 								return setDestination(element);
 							} catch (JavaScriptModelException exception) {
-								JavaPlugin.log(exception);
+								JavaScriptPlugin.log(exception);
 								return RefactoringStatus.createFatalErrorStatus(Messages.format(RefactoringCoreMessages.InitializableRefactoring_illegal_argument, new String[] { handle, JDTRefactoringDescriptor.ATTRIBUTE_INPUT}));
 							}
 						}
@@ -2684,7 +2684,7 @@ public final class ReorgPolicyFactory {
 							try {
 								return setDestination(resource);
 							} catch (JavaScriptModelException exception) {
-								JavaPlugin.log(exception);
+								JavaScriptPlugin.log(exception);
 								return RefactoringStatus.createFatalErrorStatus(Messages.format(RefactoringCoreMessages.InitializableRefactoring_illegal_argument, new String[] { handle, JDTRefactoringDescriptor.ATTRIBUTE_INPUT}));
 							}
 						}
@@ -2700,7 +2700,7 @@ public final class ReorgPolicyFactory {
 							try {
 								return setDestination(resource);
 							} catch (JavaScriptModelException exception) {
-								JavaPlugin.log(exception);
+								JavaScriptPlugin.log(exception);
 								return RefactoringStatus.createFatalErrorStatus(Messages.format(RefactoringCoreMessages.InitializableRefactoring_illegal_argument, new String[] { handle, JDTRefactoringDescriptor.ATTRIBUTE_INPUT}));
 							}
 						}
@@ -2790,13 +2790,13 @@ public final class ReorgPolicyFactory {
 		protected static final IJavaScriptUnit getDestinationCu(IJavaScriptElement destination) {
 			if (destination instanceof IJavaScriptUnit)
 				return (IJavaScriptUnit) destination;
-			return (IJavaScriptUnit) destination.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+			return (IJavaScriptUnit) destination.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 		}
 
 		private static IJavaScriptUnit getEnclosingCu(IJavaScriptElement destination) {
 			if (destination instanceof IJavaScriptUnit)
 				return (IJavaScriptUnit) destination;
-			return (IJavaScriptUnit) destination.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+			return (IJavaScriptUnit) destination.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 		}
 
 		private static IType getEnclosingType(IJavaScriptElement destination) {
@@ -3008,7 +3008,7 @@ public final class ReorgPolicyFactory {
 						newDeclaration.setJavadoc((JSdoc) rewrite.createStringPlaceholder(document.get(javadoc.getStartPosition(), javadoc.getLength()), ASTNode.JSDOC));
 				}
 			} catch (BadLocationException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			} finally {
 				if (buffer != null)
 					RefactoringFileBuffers.release(unit);
@@ -3102,7 +3102,7 @@ public final class ReorgPolicyFactory {
 		protected final IJavaScriptUnit getSourceCu() {
 			// all have a common parent, so all must be in the same cu
 			// we checked before that the array in not null and not empty
-			return (IJavaScriptUnit) fJavaElements[0].getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+			return (IJavaScriptUnit) fJavaElements[0].getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 		}
 
 		public RefactoringStatus initialize(RefactoringArguments arguments) {
@@ -3157,7 +3157,7 @@ public final class ReorgPolicyFactory {
 				return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_cannot_modify);
 
 			switch (destination.getElementType()) {
-				case IJavaScriptElement.COMPILATION_UNIT:
+				case IJavaScriptElement.JAVASCRIPT_UNIT:
 					int[] types0= new int[] { IJavaScriptElement.FIELD, IJavaScriptElement.INITIALIZER, IJavaScriptElement.METHOD};
 					if (ReorgUtils.hasElementsOfType(getJavaElements(), types0))
 						return RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_cannot);
@@ -3300,7 +3300,7 @@ public final class ReorgPolicyFactory {
 		IResource[] resources= selectionComputer.getActualResourcesToReorg();
 		IJavaScriptElement[] javaElements= selectionComputer.getActualJavaElementsToReorg();
 
-		if ((resources.length + javaElements.length == 0) || containsNull(resources) || containsNull(javaElements) || ReorgUtils.isArchiveMember(javaElements) || ReorgUtils.hasElementsOfType(javaElements, IJavaScriptElement.JAVA_PROJECT) || ReorgUtils.hasElementsOfType(javaElements, IJavaScriptElement.JAVA_MODEL) || ReorgUtils.hasElementsOfType(resources, IResource.PROJECT | IResource.ROOT) || !new ParentChecker(resources, javaElements).haveCommonParent())
+		if ((resources.length + javaElements.length == 0) || containsNull(resources) || containsNull(javaElements) || ReorgUtils.isArchiveMember(javaElements) || ReorgUtils.hasElementsOfType(javaElements, IJavaScriptElement.JAVASCRIPT_PROJECT) || ReorgUtils.hasElementsOfType(javaElements, IJavaScriptElement.JAVASCRIPT_MODEL) || ReorgUtils.hasElementsOfType(resources, IResource.PROJECT | IResource.ROOT) || !new ParentChecker(resources, javaElements).haveCommonParent())
 			return NO;
 
 		if (ReorgUtils.hasElementsOfType(javaElements, IJavaScriptElement.PACKAGE_FRAGMENT)) {
@@ -3321,8 +3321,8 @@ public final class ReorgPolicyFactory {
 				return new MovePackageFragmentRootsPolicy(ArrayTypeConverter.toPackageFragmentRootArray(javaElements));
 		}
 
-		if (ReorgUtils.hasElementsOfType(resources, IResource.FILE | IResource.FOLDER) || ReorgUtils.hasElementsOfType(javaElements, IJavaScriptElement.COMPILATION_UNIT)) {
-			if (ReorgUtils.hasElementsNotOfType(javaElements, IJavaScriptElement.COMPILATION_UNIT))
+		if (ReorgUtils.hasElementsOfType(resources, IResource.FILE | IResource.FOLDER) || ReorgUtils.hasElementsOfType(javaElements, IJavaScriptElement.JAVASCRIPT_UNIT)) {
+			if (ReorgUtils.hasElementsNotOfType(javaElements, IJavaScriptElement.JAVASCRIPT_UNIT))
 				return NO;
 			if (ReorgUtils.hasElementsNotOfType(resources, IResource.FILE | IResource.FOLDER))
 				return NO;
@@ -3335,7 +3335,7 @@ public final class ReorgPolicyFactory {
 		if (hasElementsSmallerThanCuOrClassFile(javaElements)) {
 			// assertions guaranteed by common parent
 			Assert.isTrue(resources.length == 0);
-			Assert.isTrue(!ReorgUtils.hasElementsOfType(javaElements, IJavaScriptElement.COMPILATION_UNIT));
+			Assert.isTrue(!ReorgUtils.hasElementsOfType(javaElements, IJavaScriptElement.JAVASCRIPT_UNIT));
 			Assert.isTrue(!ReorgUtils.hasElementsOfType(javaElements, IJavaScriptElement.CLASS_FILE));
 			Assert.isTrue(!hasElementsLargerThanCuOrClassFile(javaElements));
 			if (copy)

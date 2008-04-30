@@ -60,7 +60,7 @@ public class CopyModifications extends RefactoringModifications {
 			case IJavaScriptElement.PACKAGE_FRAGMENT:
 				copy((IPackageFragment)element, javaArgs, resourceArgs);
 				break;
-			case IJavaScriptElement.COMPILATION_UNIT:
+			case IJavaScriptElement.JAVASCRIPT_UNIT:
 				copy((IJavaScriptUnit)element, javaArgs, resourceArgs);
 				break;
 			default:

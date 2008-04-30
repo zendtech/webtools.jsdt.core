@@ -34,7 +34,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.reorg.ReorgUtils;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.util.JavaElementUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.MessageWizardPage;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.RefactoringMessages;
 
@@ -94,7 +94,7 @@ public class DeleteWizard extends RefactoringWizard {
 			} catch (JavaScriptModelException e) {
 				// http://bugs.eclipse.org/bugs/show_bug.cgi?id=19253
 				if (JavaModelUtil.isExceptionToBeLogged(e))
-					JavaPlugin.log(e);
+					JavaScriptPlugin.log(e);
 				setPageComplete(false);
 				if (e.isDoesNotExist())
 					return RefactoringMessages.DeleteWizard_12; 

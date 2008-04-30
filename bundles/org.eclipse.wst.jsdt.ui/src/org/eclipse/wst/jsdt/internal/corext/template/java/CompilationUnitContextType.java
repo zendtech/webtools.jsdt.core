@@ -132,7 +132,7 @@ public abstract class CompilationUnitContextType extends TemplateContextType {
 
 	protected static class Project extends EnclosingJavaElement {
 		public Project() {
-			super("enclosing_project", JavaTemplateMessages.CompilationUnitContextType_variable_description_enclosing_project, IJavaScriptElement.JAVA_PROJECT);  //$NON-NLS-1$
+			super("enclosing_project", JavaTemplateMessages.CompilationUnitContextType_variable_description_enclosing_project, IJavaScriptElement.JAVASCRIPT_PROJECT);  //$NON-NLS-1$
 		}
 	}	
 /*

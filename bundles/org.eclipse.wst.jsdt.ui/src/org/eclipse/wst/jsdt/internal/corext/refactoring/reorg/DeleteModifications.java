@@ -75,9 +75,9 @@ public class DeleteModifications extends RefactoringModifications {
 	
 	public void delete(IJavaScriptElement element) throws CoreException {
 		switch(element.getElementType()) {
-			case IJavaScriptElement.JAVA_MODEL:
+			case IJavaScriptElement.JAVASCRIPT_MODEL:
 				return;
-			case IJavaScriptElement.JAVA_PROJECT:
+			case IJavaScriptElement.JAVASCRIPT_PROJECT:
 				fDelete.add(element);
 				if (element.getResource() != null)
 					getResourceModifications().addDelete(element.getResource());
@@ -100,7 +100,7 @@ public class DeleteModifications extends RefactoringModifications {
 				fDelete.add(element);
 				fPackagesToDelete.add(element);
 				return;
-			case IJavaScriptElement.COMPILATION_UNIT:
+			case IJavaScriptElement.JAVASCRIPT_UNIT:
 				fDelete.add(element);
 				IType[] types= ((IJavaScriptUnit)element).getTypes();
 				fDelete.addAll(Arrays.asList(types));

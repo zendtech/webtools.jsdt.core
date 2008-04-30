@@ -50,7 +50,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.util.RefactoringASTParse
 import org.eclipse.wst.jsdt.internal.corext.template.java.CodeTemplateContextType;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIMessages;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.CompilationUnitEditor;
@@ -109,7 +109,7 @@ public class OverrideMethodDialog extends SourceActionDialog {
 		 * Constructor for OverrideMethodContentProvider.
 		 */
 		public OverrideMethodContentProvider() {
-			IDialogSettings dialogSettings= JavaPlugin.getDefault().getDialogSettings();
+			IDialogSettings dialogSettings= JavaScriptPlugin.getDefault().getDialogSettings();
 			fSettings= dialogSettings.getSection(SETTINGS_SECTION);
 			if (fSettings == null) {
 				fSettings= dialogSettings.addNewSection(SETTINGS_SECTION);

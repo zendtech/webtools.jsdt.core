@@ -57,7 +57,7 @@ import org.eclipse.wst.jsdt.core.dom.TypeDeclaration;
 import org.eclipse.wst.jsdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.wst.jsdt.internal.corext.dom.NodeFinder;
 import org.eclipse.wst.jsdt.internal.corext.util.Strings;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.SelectionConverter;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaEditor;
 
@@ -90,7 +90,7 @@ abstract class JavaHistoryActionImpl /* extends Action implements IActionDelegat
 		try {
 			states= file.getHistory(null);
 		} catch (CoreException ex) {
-			JavaPlugin.log(ex);
+			JavaScriptPlugin.log(ex);
 		}
 		
 		int count= 1;
@@ -108,7 +108,7 @@ abstract class JavaHistoryActionImpl /* extends Action implements IActionDelegat
 	final Shell getShell() {
 		if (fEditor != null)
 			return fEditor.getEditorSite().getShell();
-		return JavaPlugin.getActiveWorkbenchShell();
+		return JavaScriptPlugin.getActiveWorkbenchShell();
 	}
 	
 	/**
@@ -136,7 +136,7 @@ abstract class JavaHistoryActionImpl /* extends Action implements IActionDelegat
 	 * Returns true if the given file is open in an editor.
 	 */
 	final boolean beingEdited(IFile file) {
-		IDocumentProvider dp= JavaPlugin.getDefault().getCompilationUnitDocumentProvider();
+		IDocumentProvider dp= JavaScriptPlugin.getDefault().getCompilationUnitDocumentProvider();
 		FileEditorInput input= new FileEditorInput(file);	
 		return dp.getDocument(input) != null;
 	}
@@ -191,13 +191,13 @@ abstract class JavaHistoryActionImpl /* extends Action implements IActionDelegat
 			TextEdit res= rewriter.rewriteAST(document, options);
 			edit.addChildren(res.removeChildren());
 		} catch (IllegalArgumentException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 			
 		try {
 			new RewriteSessionEditProcessor(document, edit, TextEdit.UPDATE_REGIONS).performEdits();
 		} catch (BadLocationException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		
 		IRunnableWithProgress r= new IRunnableWithProgress() {
@@ -231,7 +231,7 @@ abstract class JavaHistoryActionImpl /* extends Action implements IActionDelegat
 	
 	final JavaEditor getEditor(IFile file) {
 		FileEditorInput fei= new FileEditorInput(file);
-		IWorkbench workbench= JavaPlugin.getDefault().getWorkbench();
+		IWorkbench workbench= JavaScriptPlugin.getDefault().getWorkbench();
 		IWorkbenchWindow[] windows= workbench.getWorkbenchWindows();
 		for (int i= 0; i < windows.length; i++) {
 			IWorkbenchPage[] pages= windows[i].getPages();

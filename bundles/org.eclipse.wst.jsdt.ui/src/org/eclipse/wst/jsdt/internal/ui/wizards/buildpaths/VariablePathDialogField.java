@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusInfo;
 import org.eclipse.wst.jsdt.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.IStringButtonAdapter;
@@ -187,7 +187,7 @@ public class VariablePathDialogField extends StringButtonDialogField {
 		if (fBrowseVariableButton != null) {
 			return fBrowseVariableButton.getShell();
 		}
-		return JavaPlugin.getActiveWorkbenchShell();
+		return JavaScriptPlugin.getActiveWorkbenchShell();
 	}
 
 	private void chooseVariablePressed() {

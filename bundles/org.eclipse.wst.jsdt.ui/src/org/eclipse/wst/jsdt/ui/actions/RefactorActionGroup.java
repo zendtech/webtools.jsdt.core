@@ -44,7 +44,7 @@ import org.eclipse.ui.operations.UndoRedoActionGroup;
 import org.eclipse.ui.part.Page;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.internal.ui.IUIConstants;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionMessages;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionUtil;
 import org.eclipse.wst.jsdt.internal.ui.actions.ExtractSuperClassAction;
@@ -650,11 +650,11 @@ public class RefactorActionGroup extends ActionGroup {
 			IClassFileEditorInput extended= (IClassFileEditorInput) input;
 			return extended.getClassFile();
 		}
-		return JavaPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(input);
+		return JavaScriptPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(input);
 	}
 	
 	private IDocument getDocument() {
-		return JavaPlugin.getDefault().getCompilationUnitDocumentProvider().
+		return JavaScriptPlugin.getDefault().getCompilationUnitDocumentProvider().
 			getDocument(fEditor.getEditorInput());
 	}
 	

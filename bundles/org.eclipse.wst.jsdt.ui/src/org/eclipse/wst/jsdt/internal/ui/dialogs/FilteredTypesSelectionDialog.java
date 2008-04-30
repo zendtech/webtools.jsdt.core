@@ -84,7 +84,7 @@ import org.eclipse.wst.jsdt.internal.corext.util.Strings;
 import org.eclipse.wst.jsdt.internal.corext.util.TypeFilter;
 import org.eclipse.wst.jsdt.internal.corext.util.TypeInfoRequestorAdapter;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIMessages;
 import org.eclipse.wst.jsdt.internal.ui.preferences.TypeFilterPreferencePage;
 import org.eclipse.wst.jsdt.internal.ui.search.JavaSearchScopeFactory;
@@ -100,8 +100,8 @@ import org.eclipse.wst.jsdt.launching.IVMInstall;
 import org.eclipse.wst.jsdt.launching.IVMInstallType;
 import org.eclipse.wst.jsdt.launching.JavaRuntime;
 import org.eclipse.wst.jsdt.launching.LibraryLocation;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.ui.dialogs.ITypeInfoFilterExtension;
 import org.eclipse.wst.jsdt.ui.dialogs.ITypeInfoImageProvider;
 import org.eclipse.wst.jsdt.ui.dialogs.ITypeSelectionComponent;
@@ -271,10 +271,10 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 	 * @see org.eclipse.ui.dialogs.AbstractSearchDialog#getDialogSettings()
 	 */
 	protected IDialogSettings getDialogSettings() {
-		IDialogSettings settings= JavaPlugin.getDefault().getDialogSettings().getSection(DIALOG_SETTINGS);
+		IDialogSettings settings= JavaScriptPlugin.getDefault().getDialogSettings().getSection(DIALOG_SETTINGS);
 
 		if (settings == null) {
-			settings= JavaPlugin.getDefault().getDialogSettings().addNewSection(DIALOG_SETTINGS);
+			settings= JavaScriptPlugin.getDefault().getDialogSettings().addNewSection(DIALOG_SETTINGS);
 		}
 
 		return settings;
@@ -302,7 +302,7 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 				settings.put(WORKINGS_SET_SETTINGS, writer.getBuffer().toString());
 			} catch (IOException e) {
 				// don't do anything. Simply don't store the settings
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		}
 	}
@@ -331,7 +331,7 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 					fFilterActionGroup.restoreState(memento);
 				} catch (WorkbenchException e) {
 					// don't do anything. Simply don't restore the settings
-					JavaPlugin.log(e);
+					JavaScriptPlugin.log(e);
 				}
 			}
 			IWorkingSet ws= fFilterActionGroup.getWorkingSet();
@@ -365,7 +365,7 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 			menuManager.add(fShowContainerForDuplicatesAction);
 		}
 		if (fAllowScopeSwitching) {
-			fFilterActionGroup= new WorkingSetFilterActionGroup(getShell(), JavaPlugin.getActivePage(), new IPropertyChangeListener() {
+			fFilterActionGroup= new WorkingSetFilterActionGroup(getShell(), JavaScriptPlugin.getActivePage(), new IPropertyChangeListener() {
 				public void propertyChange(PropertyChangeEvent event) {
 					IWorkingSet ws= (IWorkingSet) event.getNewValue();
 					if (ws == null || (ws.isAggregateWorkingSet() && ws.isEmpty())) {
@@ -430,7 +430,7 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 				} else {
 					TypeNameMatch typeInfo= (TypeNameMatch) newResult.get(i);
 					IPackageFragmentRoot root= typeInfo.getPackageFragmentRoot();
-					String containerName= JavaElementLabels.getElementLabel(root, JavaElementLabels.ROOT_QUALIFIED);
+					String containerName= JavaScriptElementLabels.getElementLabel(root, JavaScriptElementLabels.ROOT_QUALIFIED);
 					String message= Messages.format(JavaUIMessages.FilteredTypesSelectionDialog_dialogMessage, new String[] { typeInfo.getFullyQualifiedName(), containerName });
 					MessageDialog.openError(getShell(), fTitle, message);
 					getSelectionHistory().remove(typeInfo);
@@ -459,7 +459,7 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 	 */
 	public int open() {
 		if (getInitialPattern() == null) {
-			IWorkbenchWindow window= JavaPlugin.getActiveWorkbenchWindow();
+			IWorkbenchWindow window= JavaScriptPlugin.getActiveWorkbenchWindow();
 			if (window != null) {
 				ISelection selection= window.getSelectionService().getSelection();
 				if (selection instanceof ITextSelection) {
@@ -622,16 +622,16 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 	protected IStatus validateItem(Object item) {
 
 		if (item == null)
-			return new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.ERROR, "", null); //$NON-NLS-1$
+			return new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), IStatus.ERROR, "", null); //$NON-NLS-1$
 
 		if (fValidator != null) {
 			IType type= ((TypeNameMatch) item).getType();
 			if (!type.exists())
-				return new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.ERROR, Messages.format(JavaUIMessages.FilteredTypesSelectionDialog_error_type_doesnot_exist, ((TypeNameMatch) item).getFullyQualifiedName()), null);
+				return new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), IStatus.ERROR, Messages.format(JavaUIMessages.FilteredTypesSelectionDialog_error_type_doesnot_exist, ((TypeNameMatch) item).getFullyQualifiedName()), null);
 			Object[] elements= { type };
 			return fValidator.validate(elements);
 		} else
-			return new Status(IStatus.OK, JavaPlugin.getPluginId(), IStatus.OK, "", null); //$NON-NLS-1$
+			return new Status(IStatus.OK, JavaScriptPlugin.getPluginId(), IStatus.OK, "", null); //$NON-NLS-1$
 	}
 
 	/**
@@ -653,7 +653,7 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 			if (fgFirstTime) {
 				// Join the initialize after load job.
 				IJobManager manager= Job.getJobManager();
-				manager.join(JavaUI.ID_PLUGIN, monitor);
+				manager.join(JavaScriptUI.ID_PLUGIN, monitor);
 			}
 			OpenTypeHistory history= OpenTypeHistory.getInstance();
 			if (fgFirstTime || history.isEmpty()) {
@@ -807,7 +807,7 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 
 			ImageDescriptor iD= JavaElementImageProvider.getTypeImageDescriptor(isInnerType(type), false, type.getModifiers(), false);
 			
-			return JavaPlugin.getImageDescriptorRegistry().get(iD);
+			return JavaScriptPlugin.getImageDescriptorRegistry().get(iD);
 		}
 
 		/*
@@ -974,7 +974,7 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 			StringBuffer result= new StringBuffer();
 			result.append(type.getSimpleTypeName());
 			String containerName= type.getTypeContainerName();
-			result.append(JavaElementLabels.CONCAT_STRING);
+			result.append(JavaScriptElementLabels.CONCAT_STRING);
 			if (containerName.length() > 0) {
 				result.append(containerName);
 			} else {
@@ -988,10 +988,10 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 			result.append(type.getSimpleTypeName());
 			String containerName= type.getTypeContainerName();
 			if (containerName.length() > 0) {
-				result.append(JavaElementLabels.CONCAT_STRING);
+				result.append(JavaScriptElementLabels.CONCAT_STRING);
 				result.append(containerName);
 			}
-			result.append(JavaElementLabels.CONCAT_STRING);
+			result.append(JavaScriptElementLabels.CONCAT_STRING);
 			result.append(getContainerName(type));
 			return result.toString();
 		}
@@ -1007,9 +1007,9 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 				String lastTCN= getTypeContainerName(last);
 				if (currentTCN.equals(lastTCN)) {
 					if (currentTN.equals(lastTN)) {
-						result.append(JavaElementLabels.CONCAT_STRING);
+						result.append(JavaScriptElementLabels.CONCAT_STRING);
 						result.append(currentTCN);
-						result.append(JavaElementLabels.CONCAT_STRING);
+						result.append(JavaScriptElementLabels.CONCAT_STRING);
 						result.append(getContainerName(current));
 						return result.toString();
 					}
@@ -1022,9 +1022,9 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 				String nextTCN= getTypeContainerName(next);
 				if (currentTCN.equals(nextTCN)) {
 					if (currentTN.equals(nextTN)) {
-						result.append(JavaElementLabels.CONCAT_STRING);
+						result.append(JavaScriptElementLabels.CONCAT_STRING);
 						result.append(currentTCN);
-						result.append(JavaElementLabels.CONCAT_STRING);
+						result.append(JavaScriptElementLabels.CONCAT_STRING);
 						result.append(getContainerName(current));
 						return result.toString();
 					}
@@ -1033,10 +1033,10 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 				}
 			}
 			if (qualifications > 0) {
-				result.append(JavaElementLabels.CONCAT_STRING);
+				result.append(JavaScriptElementLabels.CONCAT_STRING);
 				result.append(currentTCN);
 				if (fFullyQualifyDuplicates) {
-					result.append(JavaElementLabels.CONCAT_STRING);
+					result.append(JavaScriptElementLabels.CONCAT_STRING);
 					result.append(getContainerName(current));
 				}
 			}
@@ -1048,7 +1048,7 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 			String containerName= type.getTypeContainerName();
 			if (containerName.length() > 0) {
 				result.append(containerName);
-				result.append(JavaElementLabels.CONCAT_STRING);
+				result.append(JavaScriptElementLabels.CONCAT_STRING);
 			}
 			result.append(getContainerName(type));
 			return result.toString();
@@ -1090,7 +1090,7 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 					return lib;
 			}
 			StringBuffer buf= new StringBuffer();
-			JavaElementLabels.getPackageFragmentRootLabel(root, JavaElementLabels.ROOT_QUALIFIED | JavaElementLabels.ROOT_VARIABLE, buf);
+			JavaScriptElementLabels.getPackageFragmentRootLabel(root, JavaScriptElementLabels.ROOT_QUALIFIED | JavaScriptElementLabels.ROOT_VARIABLE, buf);
 			return buf.toString();
 		}
 	}
@@ -1559,7 +1559,7 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 					return lib;
 			}
 			StringBuffer buf= new StringBuffer();
-			JavaElementLabels.getPackageFragmentRootLabel(root, JavaElementLabels.ROOT_QUALIFIED | JavaElementLabels.ROOT_VARIABLE, buf);
+			JavaScriptElementLabels.getPackageFragmentRootLabel(root, JavaScriptElementLabels.ROOT_QUALIFIED | JavaScriptElementLabels.ROOT_VARIABLE, buf);
 			return buf.toString();
 		}
 
@@ -1568,7 +1568,7 @@ public class FilteredTypesSelectionDialog extends FilteredItemsSelectionDialog i
 				if (type.getPackageFragmentRoot().getKind() == IPackageFragmentRoot.K_SOURCE)
 					return 0;
 			} catch (JavaScriptModelException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 			return 1;
 		}

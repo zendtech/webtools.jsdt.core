@@ -30,7 +30,7 @@ import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 /**
  * Java-aware synchronization compare adapter.
@@ -136,7 +136,7 @@ public final class JavaSynchronizationCompareAdapter extends AbstractSynchroniza
 						result.add(mapping);
 				}
 			} catch (CoreException event) {
-				JavaPlugin.log(event);
+				JavaScriptPlugin.log(event);
 			}
 		}
 		return (ResourceMapping[]) result.toArray(new ResourceMapping[result.size()]);

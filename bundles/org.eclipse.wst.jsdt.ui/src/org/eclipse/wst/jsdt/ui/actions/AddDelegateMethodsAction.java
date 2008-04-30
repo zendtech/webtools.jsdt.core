@@ -70,7 +70,7 @@ import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionMessages;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionUtil;
 import org.eclipse.wst.jsdt.internal.ui.actions.SelectionConverter;
@@ -83,7 +83,7 @@ import org.eclipse.wst.jsdt.internal.ui.util.BusyIndicatorRunnableContext;
 import org.eclipse.wst.jsdt.internal.ui.util.ElementValidator;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.BindingLabelProvider;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 import com.ibm.icu.text.Collator;
 
@@ -429,7 +429,7 @@ public class AddDelegateMethodsAction extends SelectionDispatchAction {
 							return null;
 						}
 					} catch (JavaScriptModelException exception) {
-						JavaPlugin.log(exception);
+						JavaScriptPlugin.log(exception);
 						return null;
 					}
 
@@ -521,7 +521,7 @@ public class AddDelegateMethodsAction extends SelectionDispatchAction {
 		} catch (JavaScriptModelException e) {
 			// http://bugs.eclipse.org/bugs/show_bug.cgi?id=19253
 			if (JavaModelUtil.isExceptionToBeLogged(e))
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			setEnabled(false);
 		}
 	}
@@ -570,7 +570,7 @@ public class AddDelegateMethodsAction extends SelectionDispatchAction {
 					if (object[index] instanceof IBinding[])
 						tuples.add(object[index]);
 				}
-				IEditorPart part= JavaUI.openInEditor(type);
+				IEditorPart part= JavaScriptUI.openInEditor(type);
 				IRewriteTarget target= (IRewriteTarget) part.getAdapter(IRewriteTarget.class);
 				try {
 					if (target != null)
@@ -586,7 +586,7 @@ public class AddDelegateMethodsAction extends SelectionDispatchAction {
 						methodKeys[index]= tuple[1].getKey();
 					}
 					AddDelegateMethodsOperation operation= new AddDelegateMethodsOperation(type, dialog.getElementPosition(), provider.getCompilationUnit(), variableKeys, methodKeys, settings, true, false);
-					IRunnableContext context= JavaPlugin.getActiveWorkbenchWindow();
+					IRunnableContext context= JavaScriptPlugin.getActiveWorkbenchWindow();
 					if (context == null)
 						context= new BusyIndicatorRunnableContext();
 					try {

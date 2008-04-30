@@ -64,7 +64,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.binary.StubCreationOpera
 import org.eclipse.wst.jsdt.internal.corext.refactoring.tagging.IScriptableRefactoring;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.RefactoringMessages;
 import org.eclipse.wst.jsdt.internal.ui.util.CoreUtility;
 
@@ -192,7 +192,7 @@ public abstract class BinaryRefactoringHistoryWizard extends RefactoringHistoryW
 			final IIncludePathEntry[] entries= project.getRawIncludepath();
 			final List list= new ArrayList();
 			list.addAll(Arrays.asList(entries));
-			final IFileStore store= EFS.getLocalFileSystem().getStore(JavaPlugin.getDefault().getStateLocation().append(STUB_FOLDER).append(project.getElementName()));
+			final IFileStore store= EFS.getLocalFileSystem().getStore(JavaScriptPlugin.getDefault().getStateLocation().append(STUB_FOLDER).append(project.getElementName()));
 			if (store.fetchInfo(EFS.NONE, new SubProgressMonitor(monitor, 25, SubProgressMonitor.SUPPRESS_SUBTASK_LABEL)).exists())
 				store.delete(EFS.NONE, new SubProgressMonitor(monitor, 25, SubProgressMonitor.SUPPRESS_SUBTASK_LABEL));
 			store.mkdir(EFS.NONE, new SubProgressMonitor(monitor, 25, SubProgressMonitor.SUPPRESS_SUBTASK_LABEL));
@@ -316,7 +316,7 @@ public abstract class BinaryRefactoringHistoryWizard extends RefactoringHistoryW
 									try {
 										project.setRawIncludepath(project.readRawIncludepath(), false, new SubProgressMonitor(monitor, 100, SubProgressMonitor.SUPPRESS_SUBTASK_LABEL));
 									} catch (CoreException throwable) {
-										JavaPlugin.log(throwable);
+										JavaScriptPlugin.log(throwable);
 									}
 								} finally {
 									if (!status.hasFatalError()) {
@@ -366,7 +366,7 @@ public abstract class BinaryRefactoringHistoryWizard extends RefactoringHistoryW
 			try {
 				return root.getSourceAttachmentPath() != null;
 			} catch (JavaScriptModelException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			}
 		}
 		return false;
@@ -575,7 +575,7 @@ public abstract class BinaryRefactoringHistoryWizard extends RefactoringHistoryW
 				try {
 					fJavaProject.getResource().refreshLocal(IResource.DEPTH_INFINITE, new SubProgressMonitor(monitor, 100, SubProgressMonitor.SUPPRESS_SUBTASK_LABEL));
 				} catch (CoreException exception) {
-					JavaPlugin.log(exception);
+					JavaScriptPlugin.log(exception);
 				}
 			}
 		} finally {
@@ -652,7 +652,7 @@ public abstract class BinaryRefactoringHistoryWizard extends RefactoringHistoryW
 					try {
 						CoreUtility.enableAutoBuild(fAutoBuild);
 					} catch (CoreException exception) {
-						JavaPlugin.log(exception);
+						JavaScriptPlugin.log(exception);
 					}
 				}
 			}
@@ -682,7 +682,7 @@ public abstract class BinaryRefactoringHistoryWizard extends RefactoringHistoryW
 					try {
 						fSourceFolder.refreshLocal(IResource.DEPTH_INFINITE, new SubProgressMonitor(monitor, 100, SubProgressMonitor.SUPPRESS_SUBTASK_LABEL));
 					} catch (CoreException exception) {
-						JavaPlugin.log(exception);
+						JavaScriptPlugin.log(exception);
 					}
 				}
 			}

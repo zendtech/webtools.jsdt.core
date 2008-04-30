@@ -52,7 +52,7 @@ protected char getHandleMementoDelimiter() {
  * @see JavaElement#getPrimaryElement(boolean)
  */
 public IJavaScriptElement getPrimaryElement(boolean checkOwner) {
-	CompilationUnit cu = (CompilationUnit)getAncestor(COMPILATION_UNIT);
+	CompilationUnit cu = (CompilationUnit)getAncestor(JAVASCRIPT_UNIT);
 	if (checkOwner && cu.isPrimary()) return this;
 	return cu.getPackageDeclaration(this.name);
 }

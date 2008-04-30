@@ -50,7 +50,7 @@ class PackagesViewFlatContentProvider extends LogicalPackagesProvider implements
 
 			try {
 				switch (type) {
-					case IJavaScriptElement.JAVA_PROJECT :
+					case IJavaScriptElement.JAVASCRIPT_PROJECT :
 						IJavaScriptProject project= (IJavaScriptProject) element;
 						IPackageFragment[] children= getPackageFragments(project.getPackageFragments());
 						if(isInCompoundState()) {

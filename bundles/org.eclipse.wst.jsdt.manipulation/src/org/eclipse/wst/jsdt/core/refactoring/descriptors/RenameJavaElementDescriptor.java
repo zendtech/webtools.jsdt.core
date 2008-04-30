@@ -281,7 +281,7 @@ public final class RenameJavaElementDescriptor extends JavaRefactoringDescriptor
 	 * Sets the Java element to be renamed.
 	 * <p>
 	 * Note: If the Java element to be renamed is of type
-	 * {@link IJavaScriptElement#JAVA_PROJECT}, clients are required to to set the
+	 * {@link IJavaScriptElement#JAVASCRIPT_PROJECT}, clients are required to to set the
 	 * project name to <code>null</code>.
 	 * </p>
 	 * 
@@ -347,7 +347,7 @@ public final class RenameJavaElementDescriptor extends JavaRefactoringDescriptor
 	 * Sets the project name of this refactoring.
 	 * <p>
 	 * Note: If the Java element to be renamed is of type
-	 * {@link IJavaScriptElement#JAVA_PROJECT}, clients are required to to set the
+	 * {@link IJavaScriptElement#JAVASCRIPT_PROJECT}, clients are required to to set the
 	 * project name to <code>null</code>.
 	 * </p>
 	 * <p>
@@ -498,7 +498,7 @@ public final class RenameJavaElementDescriptor extends JavaRefactoringDescriptor
 			status.merge(RefactoringStatus.createFatalErrorStatus(DescriptorMessages.RenameJavaElementDescriptor_no_java_element));
 		else {
 			final int type= fJavaElement.getElementType();
-			if (type == IJavaScriptElement.JAVA_PROJECT && getProject() != null)
+			if (type == IJavaScriptElement.JAVASCRIPT_PROJECT && getProject() != null)
 				status.merge(RefactoringStatus.createFatalErrorStatus(DescriptorMessages.RenameJavaElementDescriptor_project_constraint));
 			if (type == IJavaScriptElement.PACKAGE_FRAGMENT_ROOT && fReferences)
 				status.merge(RefactoringStatus.createFatalErrorStatus(DescriptorMessages.RenameJavaElementDescriptor_reference_constraint));

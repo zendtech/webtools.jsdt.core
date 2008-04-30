@@ -20,7 +20,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.MethodOverrideTester;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.SourcePositionComparator;
-import org.eclipse.wst.jsdt.ui.JavaElementComparator;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementComparator;
 
 /**
   */
@@ -31,11 +31,11 @@ public abstract class AbstractHierarchyViewerSorter extends ViewerComparator {
 	private static final int INTERFACE= 3;
 	private static final int ANONYM= 4;
 	
-	private JavaElementComparator fNormalSorter;
+	private JavaScriptElementComparator fNormalSorter;
 	private SourcePositionComparator fSourcePositonSorter;
 	
 	public AbstractHierarchyViewerSorter() {
-		fNormalSorter= new JavaElementComparator();
+		fNormalSorter= new JavaScriptElementComparator();
 		fSourcePositonSorter= new SourcePositionComparator();
 	}
 	

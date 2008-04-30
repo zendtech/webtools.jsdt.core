@@ -48,9 +48,9 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.structure.UseSuperTypeRe
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.SuperTypeHierarchyCache;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 public class UseSupertypeWizard extends RefactoringWizard{
 
@@ -93,7 +93,7 @@ public class UseSupertypeWizard extends RefactoringWizard{
 						result.add(found);
 					}
 				} catch (JavaScriptModelException exception) {
-					JavaPlugin.log(exception);
+					JavaScriptPlugin.log(exception);
 				}
 				return result;
 			}	
@@ -129,7 +129,7 @@ public class UseSupertypeWizard extends RefactoringWizard{
 		private TreeViewer fTreeViewer; 
 		private final Map fFileCount;  //IType -> Integer
 		private final static String MESSAGE= RefactoringMessages.UseSupertypeInputPage_Select_supertype; 
-		private JavaElementLabelProvider fLabelProvider;
+		private JavaScriptElementLabelProvider fLabelProvider;
 		private IDialogSettings fSettings;
 		
 		public UseSupertypeInputPage() {
@@ -165,7 +165,7 @@ public class UseSupertypeWizard extends RefactoringWizard{
 			Label label= new Label(composite, SWT.NONE);
 			label.setText(Messages.format(
 					RefactoringMessages.UseSupertypeInputPage_Select_supertype_to_use, 
-					JavaElementLabels.getElementLabel(getUseSupertypeProcessor().getSubType(), JavaElementLabels.T_FULLY_QUALIFIED)));
+					JavaScriptElementLabels.getElementLabel(getUseSupertypeProcessor().getSubType(), JavaScriptElementLabels.T_FULLY_QUALIFIED)));
 			label.setLayoutData(new GridData());
 		
 			addTreeViewer(composite);
@@ -213,7 +213,7 @@ public class UseSupertypeWizard extends RefactoringWizard{
 						if (kind1 - kind2 != 0)
 							return kind1 - kind2;
 					} catch (JavaScriptModelException exception) {
-						JavaPlugin.log(exception);
+						JavaScriptPlugin.log(exception);
 					}
 					return getComparator().compare(type1.getElementName(), type2.getElementName());
 				}
@@ -234,7 +234,7 @@ public class UseSupertypeWizard extends RefactoringWizard{
 			try {
 				fTreeViewer.setInput(SuperTypeHierarchyCache.getTypeHierarchy(getUseSupertypeProcessor().getSubType()));
 			} catch (JavaScriptModelException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			}
 			fTreeViewer.expandAll();
 			final TreeItem[] items= tree.getItems();
@@ -307,7 +307,7 @@ public class UseSupertypeWizard extends RefactoringWizard{
 			super.dispose();
 		}
 	
-		private static class UseSupertypeLabelProvider extends JavaElementLabelProvider{
+		private static class UseSupertypeLabelProvider extends JavaScriptElementLabelProvider{
 			private final Map fFileCount;
 			private UseSupertypeLabelProvider(Map fileCount){
 				fFileCount= fileCount;

@@ -37,7 +37,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.WorkbenchRunnableAdapter;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusUtil;
 import org.eclipse.wst.jsdt.internal.ui.util.BusyIndicatorRunnableContext;
@@ -95,7 +95,7 @@ public class BuildPathsPropertyPage extends PropertyPage implements IStatusChang
 	}	
 	
 	private IDialogSettings getSettings() {
-		IDialogSettings javaSettings= JavaPlugin.getDefault().getDialogSettings();
+		IDialogSettings javaSettings= JavaScriptPlugin.getDefault().getDialogSettings();
 		IDialogSettings pageSettings= javaSettings.getSection(PAGE_SETTINGS);
 		if (pageSettings == null) {
 			pageSettings= javaSettings.addNewSection(PAGE_SETTINGS);
@@ -194,7 +194,7 @@ public class BuildPathsPropertyPage extends PropertyPage implements IStatusChang
 		try {
 			return proj.hasNature(JavaScriptCore.NATURE_ID);
 		} catch (CoreException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		return false;
 	}

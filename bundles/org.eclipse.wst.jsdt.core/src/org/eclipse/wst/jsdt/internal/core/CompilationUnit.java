@@ -534,7 +534,7 @@ public boolean exists() {
  */
 public IJavaScriptElement[] findElements(IJavaScriptElement element) {
 	ArrayList children = new ArrayList();
-	while (element != null && element.getElementType() != IJavaScriptElement.COMPILATION_UNIT) {
+	while (element != null && element.getElementType() != IJavaScriptElement.JAVASCRIPT_UNIT) {
 		children.add(element);
 		element = element.getParent();
 	}
@@ -554,7 +554,7 @@ public IJavaScriptElement[] findElements(IJavaScriptElement element) {
 				break;
 			case IJavaScriptElement.TYPE:
 				switch (currentElement.getElementType()) {
-					case IJavaScriptElement.COMPILATION_UNIT:
+					case IJavaScriptElement.JAVASCRIPT_UNIT:
 						currentElement = ((IJavaScriptUnit)currentElement).getType(child.getElementName());
 						break;
 					case IJavaScriptElement.TYPE:
@@ -725,7 +725,7 @@ public String getElementName() {
  * @see IJavaScriptElement
  */
 public int getElementType() {
-	return COMPILATION_UNIT;
+	return JAVASCRIPT_UNIT;
 }
 /**
  * @see org.eclipse.wst.jsdt.internal.compiler.env.IDependent#getFileName()
@@ -867,7 +867,7 @@ public char[] getMainTypeName(){
 public IJavaScriptElement getOriginal(IJavaScriptElement workingCopyElement) {
 	// backward compatibility
 	if (!isWorkingCopy()) return null;
-	CompilationUnit cu = (CompilationUnit)workingCopyElement.getAncestor(COMPILATION_UNIT);
+	CompilationUnit cu = (CompilationUnit)workingCopyElement.getAncestor(JAVASCRIPT_UNIT);
 	if (cu == null || !this.owner.equals(cu.owner)) {
 		return null;
 	}

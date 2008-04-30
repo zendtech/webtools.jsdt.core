@@ -38,7 +38,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.packageview.PackageFragmentRootContainer;
 import org.eclipse.wst.jsdt.internal.ui.preferences.MembersOrderPreferenceCache;
 
@@ -53,13 +53,13 @@ import org.eclipse.wst.jsdt.internal.ui.preferences.MembersOrderPreferenceCache;
  * 
  * @since 3.3
  */
-public class JavaElementComparator extends ViewerComparator {
+public class JavaScriptElementComparator extends ViewerComparator {
 	
 	private static final int PROJECTS= 1;
 	private static final int PACKAGEFRAGMENTROOTS= 2;
 	private static final int PACKAGEFRAGMENT= 3;
 
-	private static final int COMPILATIONUNITS= 4;
+	private static final int JAVASCRIPTUNITS= 4;
 	private static final int CLASSFILES= 5;
 	
 	private static final int RESOURCEFOLDERS= 7;
@@ -81,9 +81,9 @@ public class JavaElementComparator extends ViewerComparator {
 	/**
 	 * Constructor.
 	 */
-	public JavaElementComparator() {	
+	public JavaScriptElementComparator() {	
 		super(null); // delay initialization of collator
-		fMemberOrderCache= JavaPlugin.getDefault().getMemberOrderPreferenceCache();
+		fMemberOrderCache= JavaScriptPlugin.getDefault().getMemberOrderPreferenceCache();
 	}
 		
 	/* (non-Javadoc)
@@ -138,17 +138,17 @@ public class JavaElementComparator extends ViewerComparator {
 						return PACKAGEFRAGMENT;
 					case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT :
 						return PACKAGEFRAGMENTROOTS;
-					case IJavaScriptElement.JAVA_PROJECT :
+					case IJavaScriptElement.JAVASCRIPT_PROJECT :
 						return PROJECTS;
 					case IJavaScriptElement.CLASS_FILE :
 						return CLASSFILES;
-					case IJavaScriptElement.COMPILATION_UNIT :
-						return COMPILATIONUNITS;
+					case IJavaScriptElement.JAVASCRIPT_UNIT :
+						return JAVASCRIPTUNITS;
 				}
 
 			} catch (JavaScriptModelException e) {
 				if (!e.isDoesNotExist())
-					JavaPlugin.log(e);
+					JavaScriptPlugin.log(e);
 			}
 			return JAVAELEMENTS;
 		} else if (element instanceof IFile) {

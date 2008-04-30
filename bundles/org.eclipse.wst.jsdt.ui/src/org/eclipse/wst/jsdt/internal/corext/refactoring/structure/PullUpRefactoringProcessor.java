@@ -121,10 +121,10 @@ import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.Strings;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.preferences.JavaPreferencesSettings;
 import org.eclipse.wst.jsdt.ui.CodeGeneration;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 /**
  * Refactoring processor for the pull up refactoring.
@@ -399,7 +399,7 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 					fMembersToMove= new IMember[0];
 				}
 			} catch (JavaScriptModelException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			}
 		}
 	}
@@ -564,10 +564,10 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 
 			boolean isAccessible= pulledUpList.contains(field) || deletedList.contains(field) || canBeAccessedFrom(field, destination, hierarchy) || Flags.isEnum(field.getFlags());
 			if (!isAccessible) {
-				final String message= Messages.format(RefactoringCoreMessages.PullUpRefactoring_field_not_accessible, new String[] { JavaElementLabels.getTextLabel(field, JavaElementLabels.ALL_FULLY_QUALIFIED), JavaElementLabels.getTextLabel(destination, JavaElementLabels.ALL_FULLY_QUALIFIED)});
+				final String message= Messages.format(RefactoringCoreMessages.PullUpRefactoring_field_not_accessible, new String[] { JavaScriptElementLabels.getTextLabel(field, JavaScriptElementLabels.ALL_FULLY_QUALIFIED), JavaScriptElementLabels.getTextLabel(destination, JavaScriptElementLabels.ALL_FULLY_QUALIFIED)});
 				result.addError(message, JavaStatusContext.create(field));
 			} else if (getSkippedSuperTypes(new SubProgressMonitor(monitor, 1)).contains(field.getDeclaringType())) {
-				final String message= Messages.format(RefactoringCoreMessages.PullUpRefactoring_field_cannot_be_accessed, new String[] { JavaElementLabels.getTextLabel(field, JavaElementLabels.ALL_FULLY_QUALIFIED), JavaElementLabels.getTextLabel(destination, JavaElementLabels.ALL_FULLY_QUALIFIED)});
+				final String message= Messages.format(RefactoringCoreMessages.PullUpRefactoring_field_cannot_be_accessed, new String[] { JavaScriptElementLabels.getTextLabel(field, JavaScriptElementLabels.ALL_FULLY_QUALIFIED), JavaScriptElementLabels.getTextLabel(destination, JavaScriptElementLabels.ALL_FULLY_QUALIFIED)});
 				result.addError(message, JavaStatusContext.create(field));
 			}
 		}
@@ -591,10 +591,10 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 				continue;
 			boolean isAccessible= pulledUpList.contains(method) || deletedList.contains(method) || declaredAbstractList.contains(method) || canBeAccessedFrom(method, destination, hierarchy);
 			if (!isAccessible) {
-				final String message= Messages.format(RefactoringCoreMessages.PullUpRefactoring_method_not_accessible, new String[] { JavaElementLabels.getTextLabel(method, JavaElementLabels.ALL_FULLY_QUALIFIED), JavaElementLabels.getTextLabel(destination, JavaElementLabels.ALL_FULLY_QUALIFIED)});
+				final String message= Messages.format(RefactoringCoreMessages.PullUpRefactoring_method_not_accessible, new String[] { JavaScriptElementLabels.getTextLabel(method, JavaScriptElementLabels.ALL_FULLY_QUALIFIED), JavaScriptElementLabels.getTextLabel(destination, JavaScriptElementLabels.ALL_FULLY_QUALIFIED)});
 				result.addError(message, JavaStatusContext.create(method));
 			} else if (getSkippedSuperTypes(new SubProgressMonitor(monitor, 1)).contains(method.getDeclaringType())) {
-				final String[] keys= { JavaElementLabels.getTextLabel(method, JavaElementLabels.ALL_FULLY_QUALIFIED), JavaElementLabels.getTextLabel(destination, JavaElementLabels.ALL_FULLY_QUALIFIED)};
+				final String[] keys= { JavaScriptElementLabels.getTextLabel(method, JavaScriptElementLabels.ALL_FULLY_QUALIFIED), JavaScriptElementLabels.getTextLabel(destination, JavaScriptElementLabels.ALL_FULLY_QUALIFIED)};
 				final String message= Messages.format(RefactoringCoreMessages.PullUpRefactoring_method_cannot_be_accessed, keys);
 				result.addError(message, JavaStatusContext.create(method));
 			}
@@ -614,7 +614,7 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 				continue;
 
 			if (!canBeAccessedFrom(type, destination, hierarchy) && !pulledUpList.contains(type)) {
-				final String message= Messages.format(RefactoringCoreMessages.PullUpRefactoring_type_not_accessible, new String[] { JavaElementLabels.getTextLabel(type, JavaElementLabels.ALL_FULLY_QUALIFIED), JavaElementLabels.getTextLabel(destination, JavaElementLabels.ALL_FULLY_QUALIFIED)});
+				final String message= Messages.format(RefactoringCoreMessages.PullUpRefactoring_type_not_accessible, new String[] { JavaScriptElementLabels.getTextLabel(type, JavaScriptElementLabels.ALL_FULLY_QUALIFIED), JavaScriptElementLabels.getTextLabel(destination, JavaScriptElementLabels.ALL_FULLY_QUALIFIED)});
 				result.addError(message, JavaStatusContext.create(type));
 			}
 		}
@@ -646,9 +646,9 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 				final IFunction method= ((IFunction) member);
 				if (method.getDeclaringType().getPackageFragment().equals(fDestinationType.getPackageFragment())) {
 					if (JdtFlags.isPrivate(method))
-						result.addError(Messages.format(RefactoringCoreMessages.PullUpRefactoring_lower_default_visibility, new String[] { JavaElementLabels.getTextLabel(method, JavaElementLabels.ALL_FULLY_QUALIFIED), JavaElementLabels.getTextLabel(method.getDeclaringType(), JavaElementLabels.ALL_FULLY_QUALIFIED)}), JavaStatusContext.create(method));
+						result.addError(Messages.format(RefactoringCoreMessages.PullUpRefactoring_lower_default_visibility, new String[] { JavaScriptElementLabels.getTextLabel(method, JavaScriptElementLabels.ALL_FULLY_QUALIFIED), JavaScriptElementLabels.getTextLabel(method.getDeclaringType(), JavaScriptElementLabels.ALL_FULLY_QUALIFIED)}), JavaStatusContext.create(method));
 				} else if (!JdtFlags.isPublic(method) && !JdtFlags.isProtected(method))
-					result.addError(Messages.format(RefactoringCoreMessages.PullUpRefactoring_lower_protected_visibility, new String[] { JavaElementLabels.getTextLabel(method, JavaElementLabels.ALL_FULLY_QUALIFIED), JavaElementLabels.getTextLabel(method.getDeclaringType(), JavaElementLabels.ALL_FULLY_QUALIFIED)}), JavaStatusContext.create(method));
+					result.addError(Messages.format(RefactoringCoreMessages.PullUpRefactoring_lower_protected_visibility, new String[] { JavaScriptElementLabels.getTextLabel(method, JavaScriptElementLabels.ALL_FULLY_QUALIFIED), JavaScriptElementLabels.getTextLabel(method.getDeclaringType(), JavaScriptElementLabels.ALL_FULLY_QUALIFIED)}), JavaStatusContext.create(method));
 			}
 		}
 	}
@@ -656,7 +656,7 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 	protected RefactoringStatus checkDeclaringSuperTypes(final IProgressMonitor monitor) throws JavaScriptModelException {
 		final RefactoringStatus result= new RefactoringStatus();
 		if (getCandidateTypes(result, monitor).length == 0 && !result.hasFatalError()) {
-			final String msg= Messages.format(RefactoringCoreMessages.PullUpRefactoring_not_this_type, new String[] { JavaElementLabels.getTextLabel(getDeclaringType(), JavaElementLabels.ALL_FULLY_QUALIFIED)});
+			final String msg= Messages.format(RefactoringCoreMessages.PullUpRefactoring_not_this_type, new String[] { JavaScriptElementLabels.getTextLabel(getDeclaringType(), JavaScriptElementLabels.ALL_FULLY_QUALIFIED)});
 			return RefactoringStatus.createFatalErrorStatus(msg);
 		}
 		return result;
@@ -684,7 +684,7 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 					continue;
 				if (type.equals(Signature.toString(matchingField.getTypeSignature())))
 					continue;
-				final String[] keys= { JavaElementLabels.getTextLabel(matchingField, JavaElementLabels.ALL_FULLY_QUALIFIED), JavaElementLabels.getTextLabel(matchingField.getDeclaringType(), JavaElementLabels.ALL_FULLY_QUALIFIED)};
+				final String[] keys= { JavaScriptElementLabels.getTextLabel(matchingField, JavaScriptElementLabels.ALL_FULLY_QUALIFIED), JavaScriptElementLabels.getTextLabel(matchingField.getDeclaringType(), JavaScriptElementLabels.ALL_FULLY_QUALIFIED)};
 				final String message= Messages.format(RefactoringCoreMessages.PullUpRefactoring_different_field_type, keys);
 				final RefactoringStatusContext context= JavaStatusContext.create(matchingField.getJavaScriptUnit(), matchingField.getSourceRange());
 				status.addError(message, context);
@@ -814,7 +814,7 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 		final IField fieldInType= type.getField(iField.getElementName());
 		if (!fieldInType.exists())
 			return null;
-		final String[] keys= { JavaElementLabels.getTextLabel(fieldInType, JavaElementLabels.ALL_FULLY_QUALIFIED), JavaElementLabels.getTextLabel(type, JavaElementLabels.ALL_FULLY_QUALIFIED)};
+		final String[] keys= { JavaScriptElementLabels.getTextLabel(fieldInType, JavaScriptElementLabels.ALL_FULLY_QUALIFIED), JavaScriptElementLabels.getTextLabel(type, JavaScriptElementLabels.ALL_FULLY_QUALIFIED)};
 		final String msg= Messages.format(RefactoringCoreMessages.PullUpRefactoring_Field_declared_in_class, keys);
 		final RefactoringStatusContext context= JavaStatusContext.create(fieldInType);
 		return RefactoringStatus.createWarningStatus(msg, context);
@@ -824,7 +824,7 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 		final IFunction methodInType= JavaModelUtil.findMethod(iMethod.getElementName(), iMethod.getParameterTypes(), iMethod.isConstructor(), type);
 		if (methodInType == null || !methodInType.exists())
 			return null;
-		final String[] keys= { JavaElementLabels.getTextLabel(methodInType, JavaElementLabels.ALL_FULLY_QUALIFIED), JavaElementLabels.getTextLabel(type, JavaElementLabels.ALL_FULLY_QUALIFIED)};
+		final String[] keys= { JavaScriptElementLabels.getTextLabel(methodInType, JavaScriptElementLabels.ALL_FULLY_QUALIFIED), JavaScriptElementLabels.getTextLabel(type, JavaScriptElementLabels.ALL_FULLY_QUALIFIED)};
 		final String msg= Messages.format(RefactoringCoreMessages.PullUpRefactoring_Method_declared_in_class, keys);
 		final RefactoringStatusContext context= JavaStatusContext.create(methodInType);
 		return RefactoringStatus.createWarningStatus(msg, context);
@@ -852,7 +852,7 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 		final IType typeInType= type.getType(iType.getElementName());
 		if (!typeInType.exists())
 			return null;
-		final String[] keys= { JavaElementLabels.getTextLabel(typeInType, JavaElementLabels.ALL_FULLY_QUALIFIED), JavaElementLabels.getTextLabel(type, JavaElementLabels.ALL_FULLY_QUALIFIED)};
+		final String[] keys= { JavaScriptElementLabels.getTextLabel(typeInType, JavaScriptElementLabels.ALL_FULLY_QUALIFIED), JavaScriptElementLabels.getTextLabel(type, JavaScriptElementLabels.ALL_FULLY_QUALIFIED)};
 		final String msg= Messages.format(RefactoringCoreMessages.PullUpRefactoring_Type_declared_in_class, keys);
 		final RefactoringStatusContext context= JavaStatusContext.create(typeInType);
 		return RefactoringStatus.createWarningStatus(msg, context);
@@ -927,7 +927,7 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 							continue;
 						if (returnType.equals(Signature.toString(Signature.getReturnType(matchingMethod.getSignature()).toString())))
 							continue;
-						final String[] keys= { JavaElementLabels.getTextLabel(matchingMethod, JavaElementLabels.ALL_FULLY_QUALIFIED), JavaElementLabels.getTextLabel(matchingMethod.getDeclaringType(), JavaElementLabels.ALL_FULLY_QUALIFIED)};
+						final String[] keys= { JavaScriptElementLabels.getTextLabel(matchingMethod, JavaScriptElementLabels.ALL_FULLY_QUALIFIED), JavaScriptElementLabels.getTextLabel(matchingMethod.getDeclaringType(), JavaScriptElementLabels.ALL_FULLY_QUALIFIED)};
 						final String message= Messages.format(RefactoringCoreMessages.PullUpRefactoring_different_method_return_type, keys);
 						final RefactoringStatusContext context= JavaStatusContext.create(matchingMethod.getJavaScriptUnit(), matchingMethod.getNameRange());
 						status.addError(message, context);
@@ -962,9 +962,9 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 			content= Strings.concatenate(lines, StubUtility.getLineDelimiterUsed(method));
 			newMethod.setBody((Block) targetRewrite.getASTRewrite().createStringPlaceholder(content, ASTNode.BLOCK));
 		} catch (MalformedTreeException exception) {
-			JavaPlugin.log(exception);
+			JavaScriptPlugin.log(exception);
 		} catch (BadLocationException exception) {
-			JavaPlugin.log(exception);
+			JavaScriptPlugin.log(exception);
 		}
 	}
 
@@ -1008,12 +1008,12 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 				if (declaring.isLocal() || declaring.isAnonymous())
 					flags|= JavaRefactoringDescriptor.JAR_SOURCE_ATTACHMENT;
 			} catch (JavaScriptModelException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			}
 			final String description= fMembersToMove.length == 1 ? Messages.format(RefactoringCoreMessages.PullUpRefactoring_descriptor_description_short, new String[] { fMembersToMove[0].getElementName(), fDestinationType.getElementName()}) : Messages.format(RefactoringCoreMessages.PullUpRefactoring_descriptor_description_short_multiple, fDestinationType.getElementName());
-			final String header= fMembersToMove.length == 1 ? Messages.format(RefactoringCoreMessages.PullUpRefactoring_descriptor_description_full, new String[] { JavaElementLabels.getElementLabel(fMembersToMove[0], JavaElementLabels.ALL_FULLY_QUALIFIED), JavaElementLabels.getElementLabel(declaring, JavaElementLabels.ALL_FULLY_QUALIFIED), JavaElementLabels.getElementLabel(fDestinationType, JavaElementLabels.ALL_FULLY_QUALIFIED)}) : Messages.format(RefactoringCoreMessages.PullUpRefactoring_descriptor_description, new String[] { JavaElementLabels.getElementLabel(declaring, JavaElementLabels.ALL_FULLY_QUALIFIED), JavaElementLabels.getElementLabel(fDestinationType, JavaElementLabels.ALL_FULLY_QUALIFIED)});
+			final String header= fMembersToMove.length == 1 ? Messages.format(RefactoringCoreMessages.PullUpRefactoring_descriptor_description_full, new String[] { JavaScriptElementLabels.getElementLabel(fMembersToMove[0], JavaScriptElementLabels.ALL_FULLY_QUALIFIED), JavaScriptElementLabels.getElementLabel(declaring, JavaScriptElementLabels.ALL_FULLY_QUALIFIED), JavaScriptElementLabels.getElementLabel(fDestinationType, JavaScriptElementLabels.ALL_FULLY_QUALIFIED)}) : Messages.format(RefactoringCoreMessages.PullUpRefactoring_descriptor_description, new String[] { JavaScriptElementLabels.getElementLabel(declaring, JavaScriptElementLabels.ALL_FULLY_QUALIFIED), JavaScriptElementLabels.getElementLabel(fDestinationType, JavaScriptElementLabels.ALL_FULLY_QUALIFIED)});
 			final JDTRefactoringDescriptorComment comment= new JDTRefactoringDescriptorComment(project, this, header);
-			comment.addSetting(Messages.format(RefactoringCoreMessages.MoveStaticMembersProcessor_target_element_pattern, JavaElementLabels.getElementLabel(fDestinationType, JavaElementLabels.ALL_FULLY_QUALIFIED)));
+			comment.addSetting(Messages.format(RefactoringCoreMessages.MoveStaticMembersProcessor_target_element_pattern, JavaScriptElementLabels.getElementLabel(fDestinationType, JavaScriptElementLabels.ALL_FULLY_QUALIFIED)));
 			addSuperTypeSettings(comment, true);
 			final JDTRefactoringDescriptor descriptor= new JDTRefactoringDescriptor(IJavaRefactorings.PULL_UP, project, description, comment.asString(), arguments, flags);
 			arguments.put(JDTRefactoringDescriptor.ATTRIBUTE_INPUT, descriptor.elementToHandle(fDestinationType));
@@ -1115,7 +1115,7 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 								final FunctionDeclaration oldMethod= ASTNodeSearchUtil.getMethodDeclarationNode((IFunction) member, root);
 								if (oldMethod != null) {
 									if (JdtFlags.isStatic(member) && fDestinationType.isInterface())
-										status.merge(RefactoringStatus.createErrorStatus(Messages.format(RefactoringCoreMessages.PullUpRefactoring_moving_static_method_to_interface, new String[] { JavaElementLabels.getTextLabel(member, JavaElementLabels.ALL_FULLY_QUALIFIED)}), JavaStatusContext.create(member)));
+										status.merge(RefactoringStatus.createErrorStatus(Messages.format(RefactoringCoreMessages.PullUpRefactoring_moving_static_method_to_interface, new String[] { JavaScriptElementLabels.getTextLabel(member, JavaScriptElementLabels.ALL_FULLY_QUALIFIED)}), JavaStatusContext.create(member)));
 									final FunctionDeclaration newMethod= createNewMethodDeclarationNode(sourceRewriter, rewrite, ((IFunction) member), oldMethod, root, mapping, adjustments, new SubProgressMonitor(subsub, 1), status);
 									rewriter.getListRewrite(declaration, declaration.getBodyDeclarationsProperty()).insertAt(newMethod, ASTNodes.getInsertionIndex(newMethod, declaration.bodyDeclarations()), rewrite.createCategorizedGroupDescription(RefactoringCoreMessages.HierarchyRefactoring_add_member, SET_PULL_UP));
 									ImportRewriteUtil.addImports(rewrite, oldMethod, new HashMap(), new HashMap(), false);
@@ -1869,7 +1869,7 @@ public class PullUpRefactoringProcessor extends HierarchyProcessor {
 							}
 						}
 					} catch (JavaScriptModelException exception) {
-						JavaPlugin.log(exception);
+						JavaScriptPlugin.log(exception);
 						status.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ExtractInterfaceProcessor_internal_error));
 					}
 				}

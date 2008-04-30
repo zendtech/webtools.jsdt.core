@@ -50,7 +50,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.wst.jsdt.internal.ui.util.SelectionUtil;
 import org.eclipse.wst.jsdt.ui.IContextMenuConstants;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 import org.eclipse.wst.jsdt.ui.actions.SelectionDispatchAction;
 
 /**
@@ -61,17 +61,17 @@ import org.eclipse.wst.jsdt.ui.actions.SelectionDispatchAction;
 public abstract class AbstractInfoView extends ViewPart implements ISelectionListener, IMenuListener, IPropertyChangeListener {
 
 
-	/** JavaElementLabels flags used for the title */
-	private final long TITLE_FLAGS=  JavaElementLabels.ALL_FULLY_QUALIFIED
-		| JavaElementLabels.M_PRE_RETURNTYPE | JavaElementLabels.M_PARAMETER_TYPES | JavaElementLabels.M_PARAMETER_NAMES | JavaElementLabels.M_EXCEPTIONS
-		| JavaElementLabels.F_PRE_TYPE_SIGNATURE | JavaElementLabels.M_PRE_TYPE_PARAMETERS | JavaElementLabels.T_TYPE_PARAMETERS
-		| JavaElementLabels.USE_RESOLVED;
-	private final long LOCAL_VARIABLE_TITLE_FLAGS= TITLE_FLAGS & ~JavaElementLabels.F_FULLY_QUALIFIED | JavaElementLabels.F_POST_QUALIFIED;
+	/** JavaScriptElementLabels flags used for the title */
+	private final long TITLE_FLAGS=  JavaScriptElementLabels.ALL_FULLY_QUALIFIED
+		| JavaScriptElementLabels.M_PRE_RETURNTYPE | JavaScriptElementLabels.M_PARAMETER_TYPES | JavaScriptElementLabels.M_PARAMETER_NAMES | JavaScriptElementLabels.M_EXCEPTIONS
+		| JavaScriptElementLabels.F_PRE_TYPE_SIGNATURE | JavaScriptElementLabels.M_PRE_TYPE_PARAMETERS | JavaScriptElementLabels.T_TYPE_PARAMETERS
+		| JavaScriptElementLabels.USE_RESOLVED;
+	private final long LOCAL_VARIABLE_TITLE_FLAGS= TITLE_FLAGS & ~JavaScriptElementLabels.F_FULLY_QUALIFIED | JavaScriptElementLabels.F_POST_QUALIFIED;
 	
-	/** JavaElementLabels flags used for the tool tip text */
-	private static final long TOOLTIP_LABEL_FLAGS= JavaElementLabels.DEFAULT_QUALIFIED | JavaElementLabels.ROOT_POST_QUALIFIED | JavaElementLabels.APPEND_ROOT_PATH |
-			JavaElementLabels.M_PARAMETER_TYPES | JavaElementLabels.M_PARAMETER_NAMES | JavaElementLabels.M_APP_RETURNTYPE | JavaElementLabels.M_EXCEPTIONS |
-			JavaElementLabels.F_APP_TYPE_SIGNATURE | JavaElementLabels.T_TYPE_PARAMETERS;
+	/** JavaScriptElementLabels flags used for the tool tip text */
+	private static final long TOOLTIP_LABEL_FLAGS= JavaScriptElementLabels.DEFAULT_QUALIFIED | JavaScriptElementLabels.ROOT_POST_QUALIFIED | JavaScriptElementLabels.APPEND_ROOT_PATH |
+			JavaScriptElementLabels.M_PARAMETER_TYPES | JavaScriptElementLabels.M_PARAMETER_NAMES | JavaScriptElementLabels.M_APP_RETURNTYPE | JavaScriptElementLabels.M_EXCEPTIONS |
+			JavaScriptElementLabels.F_APP_TYPE_SIGNATURE | JavaScriptElementLabels.T_TYPE_PARAMETERS;
 
 
 	/*
@@ -547,7 +547,7 @@ public abstract class AbstractInfoView extends ViewPart implements ISelectionLis
 		else
 			flags= TITLE_FLAGS;
 		
-		setContentDescription(JavaElementLabels.getElementLabel(inputElement, flags));
-		setTitleToolTip(JavaElementLabels.getElementLabel(inputElement, TOOLTIP_LABEL_FLAGS));
+		setContentDescription(JavaScriptElementLabels.getElementLabel(inputElement, flags));
+		setTitleToolTip(JavaScriptElementLabels.getElementLabel(inputElement, TOOLTIP_LABEL_FLAGS));
 	}
 }

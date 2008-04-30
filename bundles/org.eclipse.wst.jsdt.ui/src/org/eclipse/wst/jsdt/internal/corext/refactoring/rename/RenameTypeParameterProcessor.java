@@ -60,9 +60,9 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.tagging.IReferenceUpdati
 import org.eclipse.wst.jsdt.internal.corext.refactoring.util.RefactoringASTParser;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.util.ResourceUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.RefactoringSaveHelper;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 /**
  * Rename processor to rename type parameters.
@@ -252,7 +252,7 @@ public final class RenameTypeParameterProcessor extends JavaRenameProcessor impl
 			if (method.getTypeParameter(name).exists())
 				result.addFatalError(RefactoringCoreMessages.RenameTypeParameterRefactoring_method_type_parameter_already_defined);
 		} else {
-			JavaPlugin.logErrorMessage("Unexpected sub-type of IMember: " + member.getClass().getName()); //$NON-NLS-1$
+			JavaScriptPlugin.logErrorMessage("Unexpected sub-type of IMember: " + member.getClass().getName()); //$NON-NLS-1$
 			Assert.isTrue(false);
 		}
 		return result;
@@ -268,7 +268,7 @@ public final class RenameTypeParameterProcessor extends JavaRenameProcessor impl
 				if (javaProject != null)
 					project= javaProject.getElementName();
 				final String description= Messages.format(RefactoringCoreMessages.RenameTypeParameterProcessor_descriptor_description_short, fTypeParameter.getElementName());
-				final String header= Messages.format(RefactoringCoreMessages.RenameTypeParameterProcessor_descriptor_description, new String[] { fTypeParameter.getElementName(), JavaElementLabels.getElementLabel(fTypeParameter.getDeclaringMember(), JavaElementLabels.ALL_FULLY_QUALIFIED), getNewElementName()});
+				final String header= Messages.format(RefactoringCoreMessages.RenameTypeParameterProcessor_descriptor_description, new String[] { fTypeParameter.getElementName(), JavaScriptElementLabels.getElementLabel(fTypeParameter.getDeclaringMember(), JavaScriptElementLabels.ALL_FULLY_QUALIFIED), getNewElementName()});
 				final String comment= new JDTRefactoringDescriptorComment(project, this, header).asString();
 				final RenameJavaElementDescriptor descriptor= new RenameJavaElementDescriptor(IJavaRefactorings.RENAME_TYPE_PARAMETER);
 				descriptor.setProject(project);
@@ -311,7 +311,7 @@ public final class RenameTypeParameterProcessor extends JavaRenameProcessor impl
 			} else if (member instanceof IType) {
 				declaration= ASTNodeSearchUtil.getAbstractTypeDeclarationNode((IType) member, root);
 			} else {
-				JavaPlugin.logErrorMessage("Unexpected sub-type of IMember: " + member.getClass().getName()); //$NON-NLS-1$
+				JavaScriptPlugin.logErrorMessage("Unexpected sub-type of IMember: " + member.getClass().getName()); //$NON-NLS-1$
 				Assert.isTrue(false);
 			}
 			monitor.worked(1);
@@ -350,7 +350,7 @@ public final class RenameTypeParameterProcessor extends JavaRenameProcessor impl
 			final IFunction method= (IFunction) member;
 			return method.getTypeParameter(getNewElementName());
 		} else {
-			JavaPlugin.logErrorMessage("Unexpected sub-type of IMember: " + member.getClass().getName()); //$NON-NLS-1$
+			JavaScriptPlugin.logErrorMessage("Unexpected sub-type of IMember: " + member.getClass().getName()); //$NON-NLS-1$
 			Assert.isTrue(false);
 		}
 		return null;

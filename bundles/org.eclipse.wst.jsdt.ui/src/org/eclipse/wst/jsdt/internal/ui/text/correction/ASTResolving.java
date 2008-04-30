@@ -87,7 +87,7 @@ import org.eclipse.wst.jsdt.internal.corext.dom.ScopeAnalyzer;
 import org.eclipse.wst.jsdt.internal.corext.dom.TypeBindingVisitor;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.ASTProvider;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.BindingLabelProvider;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 public class ASTResolving {
 
@@ -1117,7 +1117,7 @@ public class ASTResolving {
 		buf.append(name).append('(');
 		for (int i= 0; i < params.length; i++) {
 			if (i > 0) {
-				buf.append(JavaElementLabels.COMMA_STRING);
+				buf.append(JavaScriptElementLabels.COMMA_STRING);
 			}
 			if (isVarArgs && i == params.length - 1) {
 				buf.append(getTypeSignature(params[i].getElementType()));

@@ -54,7 +54,7 @@ import org.eclipse.wst.jsdt.internal.corext.template.java.SignatureUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Strings;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.OverrideMethodDialog;
 import org.eclipse.wst.jsdt.internal.ui.preferences.JavaPreferencesSettings;
@@ -150,7 +150,7 @@ public class AnonymousTypeCompletionProposal extends JavaTypeCompletionProposal 
 						CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(fSuperType.getJavaScriptProject());
 						String[] keys= null;
 						if (!fSuperType.isInterface() && !fSuperType.isAnnotation()) {
-							OverrideMethodDialog dialog= new OverrideMethodDialog(JavaPlugin.getActiveWorkbenchShell(), null, type, true);
+							OverrideMethodDialog dialog= new OverrideMethodDialog(JavaScriptPlugin.getActiveWorkbenchShell(), null, type, true);
 							dialog.setGenerateComment(false);
 							dialog.setElementPositionEnabled(false);
 							if (dialog.open() == Window.OK) {
@@ -199,9 +199,9 @@ public class AnonymousTypeCompletionProposal extends JavaTypeCompletionProposal 
 							rewrite.rewriteAST(document, fCompilationUnit.getJavaScriptProject().getOptions(true)).apply(document, TextEdit.UPDATE_REGIONS);
 							buffer.append(document.get(start, document.getLength() - start - end));
 						} catch (MalformedTreeException exception) {
-							JavaPlugin.log(exception);
+							JavaScriptPlugin.log(exception);
 						} catch (BadLocationException exception) {
-							JavaPlugin.log(exception);
+							JavaScriptPlugin.log(exception);
 						}
 					}
 				}
@@ -217,7 +217,7 @@ public class AnonymousTypeCompletionProposal extends JavaTypeCompletionProposal 
 		try {
 			return project.findType(typeName, (IProgressMonitor) null);
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		return null;
 	}
@@ -232,7 +232,7 @@ public class AnonymousTypeCompletionProposal extends JavaTypeCompletionProposal 
 					imageName= JavaPluginImages.IMG_OBJS_INTERFACE;
 				}
 			} catch (JavaScriptModelException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		}
 		return JavaPluginImages.get(imageName);

@@ -101,10 +101,10 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.util.ResourceUtil;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.util.TextChangeManager;
 import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.BindingLabelProvider;
 import org.eclipse.wst.jsdt.ui.CodeGeneration;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 /**
  * Encapsulates a field into getter and setter calls.
@@ -293,7 +293,7 @@ public class SelfEncapsulateFieldRefactoring extends ScriptableRefactoring {
 			String selector= method.getName();
 			if (selector.equals(name)) {
 				if (!reUseExistingField) {
-					status.addFatalError(Messages.format(RefactoringCoreMessages.SelfEncapsulateField_method_exists, new String[] { BindingLabelProvider.getBindingLabel(method, JavaElementLabels.ALL_FULLY_QUALIFIED), type.getElementName() }));
+					status.addFatalError(Messages.format(RefactoringCoreMessages.SelfEncapsulateField_method_exists, new String[] { BindingLabelProvider.getBindingLabel(method, JavaScriptElementLabels.ALL_FULLY_QUALIFIED), type.getElementName() }));
 				} else {
 					boolean methodIsStatic= Modifier.isStatic(method.getModifiers());
 					if (methodIsStatic && !isStatic)
@@ -414,12 +414,12 @@ public class SelfEncapsulateFieldRefactoring extends ScriptableRefactoring {
 			if (declaring.isAnonymous() || declaring.isLocal())
 				flags|= JavaRefactoringDescriptor.JAR_SOURCE_ATTACHMENT;
 		} catch (JavaScriptModelException exception) {
-			JavaPlugin.log(exception);
+			JavaScriptPlugin.log(exception);
 		}
 		final String description= Messages.format(RefactoringCoreMessages.SelfEncapsulateField_descriptor_description_short, fField.getElementName());
-		final String header= Messages.format(RefactoringCoreMessages.SelfEncapsulateFieldRefactoring_descriptor_description, new String[] { JavaElementLabels.getElementLabel(fField, JavaElementLabels.ALL_FULLY_QUALIFIED), JavaElementLabels.getElementLabel(declaring, JavaElementLabels.ALL_FULLY_QUALIFIED)});
+		final String header= Messages.format(RefactoringCoreMessages.SelfEncapsulateFieldRefactoring_descriptor_description, new String[] { JavaScriptElementLabels.getElementLabel(fField, JavaScriptElementLabels.ALL_FULLY_QUALIFIED), JavaScriptElementLabels.getElementLabel(declaring, JavaScriptElementLabels.ALL_FULLY_QUALIFIED)});
 		final JDTRefactoringDescriptorComment comment= new JDTRefactoringDescriptorComment(project, this, header);
-		comment.addSetting(Messages.format(RefactoringCoreMessages.SelfEncapsulateField_original_pattern, JavaElementLabels.getElementLabel(fField, JavaElementLabels.ALL_FULLY_QUALIFIED)));
+		comment.addSetting(Messages.format(RefactoringCoreMessages.SelfEncapsulateField_original_pattern, JavaScriptElementLabels.getElementLabel(fField, JavaScriptElementLabels.ALL_FULLY_QUALIFIED)));
 		comment.addSetting(Messages.format(RefactoringCoreMessages.SelfEncapsulateField_getter_pattern, fGetterName));
 		comment.addSetting(Messages.format(RefactoringCoreMessages.SelfEncapsulateField_setter_pattern, fSetterName));
 		String visibility= JdtFlags.getVisibilityString(fVisibility);

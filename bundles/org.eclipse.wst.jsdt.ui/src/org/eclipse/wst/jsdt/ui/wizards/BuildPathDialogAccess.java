@@ -42,7 +42,7 @@ import org.eclipse.wst.jsdt.core.IIncludePathEntry;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.LibrarySuperType;
 import org.eclipse.wst.jsdt.internal.ui.IUIConstants;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.wst.jsdt.internal.ui.wizards.TypedElementSelectionValidator;
 import org.eclipse.wst.jsdt.internal.ui.wizards.TypedViewerFilter;
@@ -54,7 +54,7 @@ import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.JavadocLocationDialog
 import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.MultipleFolderSelectionDialog;
 import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.NewVariableEntryDialog;
 import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.SourceAttachmentDialog;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 /**
  * Class that gives access to dialogs used by the Java build path page to configure classpath entries
@@ -112,7 +112,7 @@ public final class BuildPathDialogAccess {
 	 * if the user cancels the dialog. If OK is pressed, an array of length 1 containing the configured URL is
 	 * returned. Note that the configured URL can be <code>null</code> when the user
 	 * wishes to have no URL location specified. The dialog does not apply any changes.
-	 * Use {@link org.eclipse.wst.jsdt.ui.JavaUI} to access and configure
+	 * Use {@link org.eclipse.wst.jsdt.ui.JavaScriptUI} to access and configure
 	 * Javadoc locations.
 	 * 
 	 * @param shell The parent shell for the dialog.
@@ -157,7 +157,7 @@ public final class BuildPathDialogAccess {
 			throw new IllegalArgumentException();
 		}
 		
-		URL location= JavaUI.getLibraryJavadocLocation(initialEntry);
+		URL location= JavaScriptUI.getLibraryJSdocLocation(initialEntry);
 		JavadocLocationDialog dialog=  new JavadocLocationDialog(shell, initialEntry.getPath().toString(), location);
 		if (dialog.open() == Window.OK) {
 			CPListElement element= CPListElement.createFromExisting(initialEntry, null);
@@ -457,13 +457,13 @@ public final class BuildPathDialogAccess {
 			
 			public IStatus validate(Object[] selection) {
 				if(selection==null || selection.length!=1) { 
-					return new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.ERROR, null, null);
+					return new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), IStatus.ERROR, null, null);
 				}else if( ! (selection[0]  instanceof LibrarySuperType)     ){
-					return new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.ERROR,null, null);
+					return new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), IStatus.ERROR,null, null);
 				}else if(((LibrarySuperType)selection[0]).isParent()) {
-					return new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.ERROR, null, null);
+					return new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), IStatus.ERROR, null, null);
 				}
-				return new Status(IStatus.OK, JavaPlugin.getPluginId(), IStatus.OK, "", null); //$NON-NLS-1$
+				return new Status(IStatus.OK, JavaScriptPlugin.getPluginId(), IStatus.OK, "", null); //$NON-NLS-1$
 			}
 			
 		}
@@ -527,7 +527,7 @@ public final class BuildPathDialogAccess {
 		if (res == null) {
 			return null;
 		}
-		JavaPlugin.getDefault().getDialogSettings().put(IUIConstants.DIALOGSTORE_LASTEXTJAR, dialog.getFilterPath());
+		JavaScriptPlugin.getDefault().getDialogSettings().put(IUIConstants.DIALOGSTORE_LASTEXTJAR, dialog.getFilterPath());
 
 		return Path.fromOSString(res).makeAbsolute();	
 	}
@@ -542,7 +542,7 @@ public final class BuildPathDialogAccess {
 	 * been canceled by the user.
 	 */
 	public static IPath[] chooseExternalJAREntries(Shell shell) {
-		String lastUsedPath= JavaPlugin.getDefault().getDialogSettings().get(IUIConstants.DIALOGSTORE_LASTEXTJAR);
+		String lastUsedPath= JavaScriptPlugin.getDefault().getDialogSettings().get(IUIConstants.DIALOGSTORE_LASTEXTJAR);
 		if (lastUsedPath == null) {
 			lastUsedPath= ""; //$NON-NLS-1$
 		}
@@ -563,7 +563,7 @@ public final class BuildPathDialogAccess {
 		for (int i= 0; i < nChosen; i++) {
 			elems[i]= filterPath.append(fileNames[i]).makeAbsolute();	
 		}
-		JavaPlugin.getDefault().getDialogSettings().put(IUIConstants.DIALOGSTORE_LASTEXTJAR, dialog.getFilterPath());
+		JavaScriptPlugin.getDefault().getDialogSettings().put(IUIConstants.DIALOGSTORE_LASTEXTJAR, dialog.getFilterPath());
 		
 		return elems;
 	}

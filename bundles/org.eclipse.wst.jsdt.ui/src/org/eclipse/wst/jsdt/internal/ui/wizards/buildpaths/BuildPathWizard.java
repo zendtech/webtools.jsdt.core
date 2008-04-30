@@ -24,7 +24,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.LibrarySuperType;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.wizards.NewElementWizard;
 
 public abstract class BuildPathWizard extends NewElementWizard {
@@ -40,7 +40,7 @@ public abstract class BuildPathWizard extends NewElementWizard {
 		if (image != null)
 			setDefaultPageImageDescriptor(image);
 		
-		setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
+		setDialogSettings(JavaScriptPlugin.getDefault().getDialogSettings());
 		setWindowTitle(titel);
 
 		fEntryToEdit= newEntry;

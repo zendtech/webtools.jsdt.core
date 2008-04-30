@@ -32,7 +32,7 @@ import org.eclipse.wst.jsdt.core.formatter.CodeFormatter;
 import org.eclipse.wst.jsdt.internal.corext.fix.IFix;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.changes.CompilationUnitChange;
 import org.eclipse.wst.jsdt.internal.corext.util.CodeFormatterUtil;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusInfo;
 
 public class CodeFormatFix implements IFix {
@@ -105,7 +105,7 @@ public class CodeFormatFix implements IFix {
 				
 				return new CodeFormatFix(change, cu);
 			} catch (BadLocationException x) {
-				throw new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), 0, "", x)); //$NON-NLS-1$
+				throw new CoreException(new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), 0, "", x)); //$NON-NLS-1$
 			}
 		}
 		

@@ -194,10 +194,10 @@ public void add(IJavaScriptElement element) throws JavaScriptModelException {
 	String containerPathToString = null;
 	int includeMask = SOURCES | APPLICATION_LIBRARIES | SYSTEM_LIBRARIES;
 	switch (element.getElementType()) {
-		case IJavaScriptElement.JAVA_MODEL:
+		case IJavaScriptElement.JAVASCRIPT_MODEL:
 			// a workspace sope should be used
 			break;
-		case IJavaScriptElement.JAVA_PROJECT:
+		case IJavaScriptElement.JAVASCRIPT_PROJECT:
 			add((JavaProject)element, null, includeMask, new HashSet(2), null);
 			break;
 		case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
@@ -487,9 +487,9 @@ public IPath[] enclosingProjectsAndJars() {
 }
 private IPath getPath(IJavaScriptElement element, boolean relativeToRoot) {
 	switch (element.getElementType()) {
-		case IJavaScriptElement.JAVA_MODEL:
+		case IJavaScriptElement.JAVASCRIPT_MODEL:
 			return Path.EMPTY;
-		case IJavaScriptElement.JAVA_PROJECT:
+		case IJavaScriptElement.JAVASCRIPT_PROJECT:
 			return element.getPath();
 		case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
 			if (relativeToRoot)
@@ -498,7 +498,7 @@ private IPath getPath(IJavaScriptElement element, boolean relativeToRoot) {
 		case IJavaScriptElement.PACKAGE_FRAGMENT:
 			String relativePath = Util.concatWith(((PackageFragment) element).names, '/');
 			return getPath(element.getParent(), relativeToRoot).append(new Path(relativePath));
-		case IJavaScriptElement.COMPILATION_UNIT:
+		case IJavaScriptElement.JAVASCRIPT_UNIT:
 		case IJavaScriptElement.CLASS_FILE:
 			return getPath(element.getParent(), relativeToRoot).append(new Path(element.getElementName()));
 		default:
@@ -572,7 +572,7 @@ public void processDelta(IJavaScriptElementDelta delta) {
 				}
 				IPath path = null;
 				switch (element.getElementType()) {
-					case IJavaScriptElement.JAVA_PROJECT:
+					case IJavaScriptElement.JAVASCRIPT_PROJECT:
 						path = ((IJavaScriptProject)element).getProject().getFullPath();
 					case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
 						if (path == null) {

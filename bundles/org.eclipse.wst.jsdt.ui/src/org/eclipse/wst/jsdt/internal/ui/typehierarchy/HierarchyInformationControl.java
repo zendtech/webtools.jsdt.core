@@ -40,12 +40,12 @@ import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.MethodOverrideTester;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.text.AbstractInformationControl;
 import org.eclipse.wst.jsdt.internal.ui.typehierarchy.SuperTypeHierarchyViewer.SuperTypeHierarchyContentProvider;
 import org.eclipse.wst.jsdt.internal.ui.typehierarchy.TraditionalHierarchyViewer.TraditionalHierarchyContentProvider;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.ColoredViewersManager;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 import org.eclipse.wst.jsdt.ui.ProblemsLabelDecorator;
 import org.eclipse.wst.jsdt.ui.actions.IJavaEditorActionDefinitionIds;
 
@@ -142,7 +142,7 @@ public class HierarchyInformationControl extends AbstractInformationControl {
 			}
 		});	
 
-		fLabelProvider.setTextFlags(JavaElementLabels.ALL_DEFAULT | JavaElementLabels.T_POST_QUALIFIED);
+		fLabelProvider.setTextFlags(JavaScriptElementLabels.ALL_DEFAULT | JavaScriptElementLabels.T_POST_QUALIFIED);
 		fLabelProvider.addLabelDecorator(new ProblemsLabelDecorator(null));
 		treeViewer.setLabelProvider(fLabelProvider);
 		
@@ -170,7 +170,7 @@ public class HierarchyInformationControl extends AbstractInformationControl {
 			}
 		} catch (JavaScriptModelException e) {
 			// ignore
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		return false;			
 		
@@ -211,13 +211,13 @@ public class HierarchyInformationControl extends AbstractInformationControl {
 			}
 			
 			switch (elem.getElementType()) {
-				case IJavaScriptElement.JAVA_PROJECT :
+				case IJavaScriptElement.JAVASCRIPT_PROJECT :
 				case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT :
 				case IJavaScriptElement.PACKAGE_FRAGMENT :
 				case IJavaScriptElement.TYPE :
 					input= elem;
 					break;
-				case IJavaScriptElement.COMPILATION_UNIT :
+				case IJavaScriptElement.JAVASCRIPT_UNIT :
 					input= ((IJavaScriptUnit) elem).findPrimaryType();
 					break;
 				case IJavaScriptElement.CLASS_FILE :
@@ -246,16 +246,16 @@ public class HierarchyInformationControl extends AbstractInformationControl {
 					}
 					break;
 				default :
-					JavaPlugin.logErrorMessage("Element unsupported by the hierarchy: " + elem.getClass()); //$NON-NLS-1$
+					JavaScriptPlugin.logErrorMessage("Element unsupported by the hierarchy: " + elem.getClass()); //$NON-NLS-1$
 					input= null;
 			}
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		
 		super.setTitleText(getHeaderLabel(locked == null ? input : locked));
 		try {
-			fLifeCycle.ensureRefreshedTypeHierarchy(input, JavaPlugin.getActiveWorkbenchWindow());
+			fLifeCycle.ensureRefreshedTypeHierarchy(input, JavaScriptPlugin.getActiveWorkbenchWindow());
 		} catch (InvocationTargetException e1) {
 			input= null;
 		} catch (InterruptedException e1) {
@@ -324,10 +324,10 @@ public class HierarchyInformationControl extends AbstractInformationControl {
 	
 	private String getHeaderLabel(IJavaScriptElement input) {
 		if (input instanceof IFunction) {
-			String[] args= { input.getParent().getElementName(), JavaElementLabels.getElementLabel(input, JavaElementLabels.ALL_DEFAULT) };
+			String[] args= { input.getParent().getElementName(), JavaScriptElementLabels.getElementLabel(input, JavaScriptElementLabels.ALL_DEFAULT) };
 			return Messages.format(TypeHierarchyMessages.HierarchyInformationControl_methodhierarchy_label, args); 
 		} else if (input != null) {
-			String arg= JavaElementLabels.getElementLabel(input, JavaElementLabels.DEFAULT_QUALIFIED);
+			String arg= JavaScriptElementLabels.getElementLabel(input, JavaScriptElementLabels.DEFAULT_QUALIFIED);
 			return Messages.format(TypeHierarchyMessages.HierarchyInformationControl_hierarchy_label, arg);	 
 		} else {
 			return ""; //$NON-NLS-1$
@@ -364,7 +364,7 @@ public class HierarchyInformationControl extends AbstractInformationControl {
 			try {
 				return findMethod(fFocus, type);
 			} catch (JavaScriptModelException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		}
 		return selectedElement;

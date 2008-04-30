@@ -29,18 +29,18 @@ import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
  
 /**
  * A tree content provider for Java elements. It extends the 
- * StandardJavaElementContentProvider with support for listening to changes.
+ * StandardJavaScriptElementContentProvider with support for listening to changes.
  * <p>
  * This class may be instantiated; it is not intended to be subclassed.
  * </p>
- * @deprecated use the StandardJavaElementContentProvider instead
- * @see StandardJavaElementContentProvider
+ * @deprecated use the StandardJavaScriptElementContentProvider instead
+ * @see StandardJavaScriptElementContentProvider
  */
-public class JavaElementContentProvider extends StandardJavaElementContentProvider implements ITreeContentProvider, IElementChangedListener {
+public class JavaScriptElementContentProvider extends StandardJavaScriptElementContentProvider implements ITreeContentProvider, IElementChangedListener {
 	
 	/** The tree viewer */
 	protected TreeViewer fViewer;
@@ -71,7 +71,7 @@ public class JavaElementContentProvider extends StandardJavaElementContentProvid
 	/**
 	 * Creates a new content provider for Java elements.
 	 */
-	public JavaElementContentProvider() {
+	public JavaScriptElementContentProvider() {
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class JavaElementContentProvider extends StandardJavaElementContentProvid
 	 * 
 	 * @since 2.0
 	 */
-	public JavaElementContentProvider(boolean provideMembers, boolean provideWorkingCopy) {
+	public JavaScriptElementContentProvider(boolean provideMembers, boolean provideWorkingCopy) {
 		super(provideMembers, provideWorkingCopy);
 	}
 	
@@ -96,7 +96,7 @@ public class JavaElementContentProvider extends StandardJavaElementContentProvid
 		try {
 			processDelta(event.getDelta());
 		} catch(JavaScriptModelException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 	}
 	
@@ -119,7 +119,7 @@ public class JavaElementContentProvider extends StandardJavaElementContentProvid
 				return;
 		
 			IJavaScriptUnit cu= (IJavaScriptUnit) element;
-			if (!JavaModelUtil.isPrimary(cu) || !isOnClassPath((IJavaScriptUnit)element)) {
+			if (!JavaModelUtil.isPrimary(cu) || !isOnIncludePath((IJavaScriptUnit)element)) {
 				return;
 			}
 		}
@@ -219,7 +219,7 @@ public class JavaElementContentProvider extends StandardJavaElementContentProvid
 		}
 	}
 
-	private boolean isOnClassPath(IJavaScriptUnit element) {
+	private boolean isOnIncludePath(IJavaScriptUnit element) {
 		IJavaScriptProject project= element.getJavaScriptProject();
 		if (project == null || !project.exists())
 			return false;

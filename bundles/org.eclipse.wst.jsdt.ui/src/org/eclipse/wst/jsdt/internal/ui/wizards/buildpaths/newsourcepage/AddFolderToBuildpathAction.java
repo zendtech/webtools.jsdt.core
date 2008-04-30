@@ -46,7 +46,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.corext.buildpath.BuildpathDelta;
 import org.eclipse.wst.jsdt.internal.corext.buildpath.ClasspathModifier;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusInfo;
 import org.eclipse.wst.jsdt.internal.ui.wizards.NewWizardMessages;
@@ -176,7 +176,7 @@ public class AddFolderToBuildpathAction extends BuildpathModifierAction {
 				if (e.getCause() instanceof CoreException) {
 					showExceptionDialog((CoreException)e.getCause(), NewWizardMessages.AddSourceFolderToBuildpathAction_ErrorTitle);
 				} else {
-					JavaPlugin.log(e);
+					JavaScriptPlugin.log(e);
 				}
 			} catch (final InterruptedException e) {
 			}
@@ -194,7 +194,7 @@ public class AddFolderToBuildpathAction extends BuildpathModifierAction {
 		
 		try {
 			monitor.beginTask(NewWizardMessages.ClasspathModifier_Monitor_AddToBuildpath, elements.size() + 4); 
-			IWorkspaceRoot workspaceRoot= JavaPlugin.getWorkspace().getRoot();
+			IWorkspaceRoot workspaceRoot= JavaScriptPlugin.getWorkspace().getRoot();
 			
 			if (removeOldClassFiles) {
 				IResource res= workspaceRoot.findMember(project.getOutputLocation());

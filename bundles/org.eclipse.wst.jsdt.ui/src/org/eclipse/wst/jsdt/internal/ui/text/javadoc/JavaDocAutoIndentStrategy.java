@@ -40,7 +40,7 @@ import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.MethodOverrideTester;
 import org.eclipse.wst.jsdt.internal.corext.util.Strings;
 import org.eclipse.wst.jsdt.internal.corext.util.SuperTypeHierarchyCache;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.ui.CodeGeneration;
 import org.eclipse.wst.jsdt.ui.IWorkingCopyManager;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
@@ -150,7 +150,7 @@ public class JavaDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy
 	 * @return the value of the given preference in the Java plug-in's default preference store
 	 */
 	private boolean isPreferenceTrue(String preference) {
-		return JavaPlugin.getDefault().getPreferenceStore().getBoolean(preference);
+		return JavaScriptPlugin.getDefault().getPreferenceStore().getBoolean(preference);
 	}
 
 	/**
@@ -354,7 +354,7 @@ public class JavaDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy
 	}
 
 	private boolean isSmartMode() {
-		IWorkbenchPage page= JavaPlugin.getActivePage();
+		IWorkbenchPage page= JavaScriptPlugin.getActivePage();
 		if (page != null)  {
 			IEditorPart part= page.getActiveEditor();
 			if (part instanceof ITextEditorExtension3) {
@@ -426,7 +426,7 @@ public class JavaDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy
 		if (editor == null)
 			return null;
 
-		IWorkingCopyManager manager= JavaPlugin.getDefault().getWorkingCopyManager();
+		IWorkingCopyManager manager= JavaScriptPlugin.getDefault().getWorkingCopyManager();
 		IJavaScriptUnit unit= manager.getWorkingCopy(editor.getEditorInput());
 		if (unit == null)
 			return null;

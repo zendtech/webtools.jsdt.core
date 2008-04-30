@@ -41,7 +41,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.StubTypeContext;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.structure.ChangeSignatureRefactoring;
 import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.TextFieldNavigationHandler;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaSourceViewer;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.contentassist.ControlContentAssistHelper;
@@ -49,7 +49,7 @@ import org.eclipse.wst.jsdt.internal.ui.refactoring.contentassist.JavaTypeComple
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.wst.jsdt.internal.ui.util.PixelConverter;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
-import org.eclipse.wst.jsdt.ui.text.JavaSourceViewerConfiguration;
+import org.eclipse.wst.jsdt.ui.text.JavaScriptSourceViewerConfiguration;
 
 public class ChangeSignatureWizard extends RefactoringWizard {
 
@@ -326,9 +326,9 @@ public class ChangeSignatureWizard extends RefactoringWizard {
 //			//inside GridLayout. GridData must be constrained to force wrapping. See bug 9866 et al.
 //			ViewForm border= new ViewForm(composite, SWT.BORDER | SWT.FLAT);
 			
-			IPreferenceStore store= JavaPlugin.getDefault().getCombinedPreferenceStore();
+			IPreferenceStore store= JavaScriptPlugin.getDefault().getCombinedPreferenceStore();
 			fSignaturePreview= new JavaSourceViewer(composite, null, null, false, SWT.READ_ONLY | SWT.V_SCROLL | SWT.WRAP /*| SWT.BORDER*/, store);
-			fSignaturePreview.configure(new JavaSourceViewerConfiguration(JavaPlugin.getDefault().getJavaTextTools().getColorManager(), store, null, null));
+			fSignaturePreview.configure(new JavaScriptSourceViewerConfiguration(JavaScriptPlugin.getDefault().getJavaTextTools().getColorManager(), store, null, null));
 			fSignaturePreview.getTextWidget().setFont(JFaceResources.getFont(PreferenceConstants.EDITOR_TEXT_FONT));
 			fSignaturePreview.getTextWidget().setBackground(composite.getBackground());
 			fSignaturePreview.setDocument(fSignaturePreviewDocument);
@@ -379,7 +379,7 @@ public class ChangeSignatureWizard extends RefactoringWizard {
 			} catch (JavaScriptModelException e){
 				setErrorMessage(RefactoringMessages.ChangeSignatureInputPage_Internal_Error); 
 				setPageComplete(false);
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		}
 

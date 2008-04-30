@@ -138,7 +138,7 @@ public void buildDeltas() {
 	this.delta = new JavaElementDelta(this.javaElement);
 	// if building a delta on a compilation unit or below,
 	// it's a fine grained delta
-	if (this.javaElement.getElementType() >= IJavaScriptElement.COMPILATION_UNIT) {
+	if (this.javaElement.getElementType() >= IJavaScriptElement.JAVASCRIPT_UNIT) {
 		this.delta.fineGrained();
 	}
 	this.recordNewPositions(this.javaElement, 0);

@@ -73,7 +73,7 @@ import org.eclipse.wst.jsdt.internal.corext.dom.CodeScopeBuilder;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.code.SourceAnalyzer.NameData;
 import org.eclipse.wst.jsdt.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Strings;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 /**
  * A SourceProvider encapsulates a piece of code (source) and the logic
@@ -362,9 +362,9 @@ public class SourceProvider {
 			processor.performEdits();
 			return result;
 		} catch (MalformedTreeException exception) {
-			JavaPlugin.log(exception);
+			JavaScriptPlugin.log(exception);
 		} catch (BadLocationException exception) {
-			JavaPlugin.log(exception);
+			JavaScriptPlugin.log(exception);
 		}
 		return new String[] {};
 	}

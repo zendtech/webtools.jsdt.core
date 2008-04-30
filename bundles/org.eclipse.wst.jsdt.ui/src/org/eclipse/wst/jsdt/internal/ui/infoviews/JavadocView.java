@@ -76,12 +76,12 @@ import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.javadoc.JavaDocLocations;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaEditor;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
-import org.eclipse.wst.jsdt.ui.JavadocContentAccess;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
+import org.eclipse.wst.jsdt.ui.JSdocContentAccess;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
-import org.eclipse.wst.jsdt.ui.text.IJavaPartitions;
+import org.eclipse.wst.jsdt.ui.text.IJavaScriptPartitions;
 import org.osgi.framework.Bundle;
 
 /**
@@ -105,9 +105,9 @@ public class JavadocView extends AbstractInfoView {
 	private static final boolean WARNING_DIALOG_ENABLED= false;
 
 	/** Flags used to render a label in the text widget. */
-	private static final long LABEL_FLAGS=  JavaElementLabels.ALL_FULLY_QUALIFIED
-		| JavaElementLabels.M_PRE_RETURNTYPE | JavaElementLabels.M_PARAMETER_TYPES | JavaElementLabels.M_PARAMETER_NAMES | JavaElementLabels.M_EXCEPTIONS
-		| JavaElementLabels.F_PRE_TYPE_SIGNATURE | JavaElementLabels.T_TYPE_PARAMETERS;
+	private static final long LABEL_FLAGS=  JavaScriptElementLabels.ALL_FULLY_QUALIFIED
+		| JavaScriptElementLabels.M_PRE_RETURNTYPE | JavaScriptElementLabels.M_PARAMETER_TYPES | JavaScriptElementLabels.M_PARAMETER_NAMES | JavaScriptElementLabels.M_EXCEPTIONS
+		| JavaScriptElementLabels.F_PRE_TYPE_SIGNATURE | JavaScriptElementLabels.T_TYPE_PARAMETERS;
 
 
 	/** The HTML widget. */
@@ -286,7 +286,7 @@ public class JavadocView extends AbstractInfoView {
 			 * from the SWT FAQ web site.
 			 */
 
-			IPreferenceStore store= JavaPlugin.getDefault().getPreferenceStore();
+			IPreferenceStore store= JavaScriptPlugin.getDefault().getPreferenceStore();
 			boolean doNotWarn= store.getBoolean(DO_NOT_WARN_PREFERENCE_KEY);
 			if (WARNING_DIALOG_ENABLED && !doNotWarn) {
 				String title= InfoViewMessages.JavadocView_error_noBrowser_title;
@@ -357,7 +357,7 @@ public class JavadocView extends AbstractInfoView {
 	}
 	
 	private static String loadStyleSheet() {
-		Bundle bundle= Platform.getBundle(JavaPlugin.getPluginId());
+		Bundle bundle= Platform.getBundle(JavaScriptPlugin.getPluginId());
 		URL styleSheetURL= bundle.getEntry("/JavadocViewStyleSheet.css"); //$NON-NLS-1$
 		if (styleSheetURL == null)
 			return null;
@@ -376,7 +376,7 @@ public class JavadocView extends AbstractInfoView {
 			FontData fontData= JFaceResources.getFontRegistry().getFontData(PreferenceConstants.APPEARANCE_JAVADOC_FONT)[0];
 			return HTMLPrinter.convertTopLevelFont(buffer.toString(), fontData);
 		} catch (IOException ex) {
-			JavaPlugin.log(ex);
+			JavaScriptPlugin.log(ex);
 			return null;
 		}
 	}
@@ -484,7 +484,7 @@ public class JavadocView extends AbstractInfoView {
 		String javadocHtml;
 
 		switch (je.getElementType()) {
-			case IJavaScriptElement.COMPILATION_UNIT:
+			case IJavaScriptElement.JAVASCRIPT_UNIT:
 				try {
 					javadocHtml= getJavadocHtml(((IJavaScriptUnit)je).getTypes());
 				} catch (JavaScriptModelException ex) {
@@ -566,7 +566,7 @@ public class JavadocView extends AbstractInfoView {
 //				HTMLPrinter.addSmallHeader(buffer, getInfoText(member));
 				Reader reader;
 				try {
-					reader= JavadocContentAccess.getHTMLContentReader(member, true, true);
+					reader= JSdocContentAccess.getHTMLContentReader(member, true, true);
 					
 					// Provide hint why there's no Javadoc
 					if (reader == null && member.isBinary()) {
@@ -588,7 +588,7 @@ public class JavadocView extends AbstractInfoView {
 					
 				} catch (JavaScriptModelException ex) {
 					reader= new StringReader(InfoViewMessages.JavadocView_error_gettingJavadoc);
-					JavaPlugin.log(ex.getStatus());
+					JavaScriptPlugin.log(ex.getStatus());
 				}
 				if (reader != null) {
 					HTMLPrinter.addParagraph(buffer, reader);
@@ -613,7 +613,7 @@ public class JavadocView extends AbstractInfoView {
 	 * @return a string containing the member's label
 	 */
 	private String getInfoText(IMember member) {
-		return JavaElementLabels.getElementLabel(member, LABEL_FLAGS);
+		return JavaScriptElementLabels.getElementLabel(member, LABEL_FLAGS);
 	}
 
 	/*
@@ -636,8 +636,8 @@ public class JavadocView extends AbstractInfoView {
 			
 			try {
 				int offset= ((ITextSelection)selection).getOffset();
-				String partition= ((IDocumentExtension3)document).getContentType(IJavaPartitions.JAVA_PARTITIONING, offset, false);
-				return  partition != IJavaPartitions.JAVA_DOC;
+				String partition= ((IDocumentExtension3)document).getContentType(IJavaScriptPartitions.JAVA_PARTITIONING, offset, false);
+				return  partition != IJavaScriptPartitions.JAVA_DOC;
 			} catch (BadPartitioningException ex) {
 				return false;
 			} catch (BadLocationException ex) {
@@ -669,8 +669,8 @@ public class JavadocView extends AbstractInfoView {
 				if (document == null)
 					return null;
 
-				ITypedRegion typedRegion= TextUtilities.getPartition(document, IJavaPartitions.JAVA_PARTITIONING, textSelection.getOffset(), false);
-				if (IJavaPartitions.JAVA_DOC.equals(typedRegion.getType()))
+				ITypedRegion typedRegion= TextUtilities.getPartition(document, IJavaScriptPartitions.JAVA_PARTITIONING, textSelection.getOffset(), false);
+				if (IJavaScriptPartitions.JAVA_DOC.equals(typedRegion.getType()))
 					return TextSelectionConverter.getElementAtOffset((JavaEditor)part, textSelection);
 				else
 					return null;

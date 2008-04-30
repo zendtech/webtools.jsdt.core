@@ -22,7 +22,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 
 public class OccurrencesSearchResultPage extends AbstractTextSearchViewPage {
@@ -40,7 +40,7 @@ public class OccurrencesSearchResultPage extends AbstractTextSearchViewPage {
 		JavaElementLine element= (JavaElementLine) match.getElement();
 		IJavaScriptElement javaElement= element.getJavaElement();
 		try {
-			IEditorPart editor= JavaUI.openInEditor(javaElement, activate, false);
+			IEditorPart editor= JavaScriptUI.openInEditor(javaElement, activate, false);
 			if (editor instanceof ITextEditor) {
 				ITextEditor textEditor= (ITextEditor) editor;
 				textEditor.selectAndReveal(currentOffset, currentLength);

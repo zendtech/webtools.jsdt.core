@@ -74,7 +74,7 @@ public class WorkingSetFilter extends JavaViewerFilter {
 		public boolean contains(WorkingSetCompareEntry element) {
 			if (fJavaElement != null && element.fJavaElement != null) {
 				IJavaScriptElement other= element.fJavaElement;
-				if (fJavaElement.getElementType() == IJavaScriptElement.JAVA_PROJECT) {
+				if (fJavaElement.getElementType() == IJavaScriptElement.JAVASCRIPT_PROJECT) {
 					IPackageFragmentRoot pkgRoot= (IPackageFragmentRoot) other.getAncestor(IJavaScriptElement.PACKAGE_FRAGMENT_ROOT);
 					if (pkgRoot != null && pkgRoot.isExternal() && pkgRoot.isArchive()) {
 						if (((IJavaScriptProject) fJavaElement).isOnIncludepath(other)) {

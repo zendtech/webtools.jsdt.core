@@ -48,7 +48,7 @@ import org.eclipse.wst.jsdt.core.IIncludePathEntry;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.WorkbenchRunnableAdapter;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusInfo;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusUtil;
@@ -278,7 +278,7 @@ public class JavadocStandardWizardPage extends JavadocWizardPage {
 			try {
 				collectReferencedElements(project, result);
 			} catch (CoreException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 				// ignore
 			}
 		}

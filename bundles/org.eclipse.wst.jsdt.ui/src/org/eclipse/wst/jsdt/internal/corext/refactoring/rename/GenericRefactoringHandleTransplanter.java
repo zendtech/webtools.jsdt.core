@@ -36,10 +36,10 @@ public class GenericRefactoringHandleTransplanter {
 			parent= transplantHandle(parent); // recursive
 		
 		switch (element.getElementType()) {
-			case IJavaScriptElement.JAVA_MODEL:
+			case IJavaScriptElement.JAVASCRIPT_MODEL:
 				return transplantHandle((IJavaScriptModel) element);
 				
-			case IJavaScriptElement.JAVA_PROJECT:
+			case IJavaScriptElement.JAVASCRIPT_PROJECT:
 				return transplantHandle((IJavaScriptProject) element);
 				
 			case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
@@ -48,7 +48,7 @@ public class GenericRefactoringHandleTransplanter {
 			case IJavaScriptElement.PACKAGE_FRAGMENT:
 				return transplantHandle((IPackageFragmentRoot) parent, (IPackageFragment) element);
 				
-			case IJavaScriptElement.COMPILATION_UNIT:
+			case IJavaScriptElement.JAVASCRIPT_UNIT:
 				return transplantHandle((IPackageFragment) parent, (IJavaScriptUnit) element);
 				
 			case IJavaScriptElement.CLASS_FILE:
@@ -113,7 +113,7 @@ public class GenericRefactoringHandleTransplanter {
 	
 	protected IType transplantHandle(IJavaScriptElement parent, IType element) {
 		switch (parent.getElementType()) {
-			case IJavaScriptElement.COMPILATION_UNIT:
+			case IJavaScriptElement.JAVASCRIPT_UNIT:
 				return ((IJavaScriptUnit) parent).getType(element.getElementName());
 			case IJavaScriptElement.CLASS_FILE:
 				return ((IClassFile) parent).getType();

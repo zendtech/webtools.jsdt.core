@@ -105,10 +105,10 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.util.RefactoringASTParse
 import org.eclipse.wst.jsdt.internal.corext.refactoring.util.ResourceUtil;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.util.SelectionAwareSourceRangeComputer;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.BindingLabelProvider;
 import org.eclipse.wst.jsdt.ui.CodeGeneration;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 /**
  * Extracts a method in a compilation unit based on a text selection range.
@@ -452,11 +452,11 @@ public class ExtractMethodRefactoring extends ScriptableRefactoring {
 		}
 		final int flags= RefactoringDescriptor.STRUCTURAL_CHANGE | JavaRefactoringDescriptor.JAR_REFACTORING | JavaRefactoringDescriptor.JAR_SOURCE_ATTACHMENT;
 		final String description= Messages.format(RefactoringCoreMessages.ExtractMethodRefactoring_descriptor_description_short, fMethodName);
-		final String label= method != null ? BindingLabelProvider.getBindingLabel(method, JavaElementLabels.ALL_FULLY_QUALIFIED) : '{' + JavaElementLabels.ELLIPSIS_STRING + '}';
-		final String header= Messages.format(RefactoringCoreMessages.ExtractMethodRefactoring_descriptor_description, new String[] { getSignature(), label, BindingLabelProvider.getBindingLabel(type, JavaElementLabels.ALL_FULLY_QUALIFIED)});
+		final String label= method != null ? BindingLabelProvider.getBindingLabel(method, JavaScriptElementLabels.ALL_FULLY_QUALIFIED) : '{' + JavaScriptElementLabels.ELLIPSIS_STRING + '}';
+		final String header= Messages.format(RefactoringCoreMessages.ExtractMethodRefactoring_descriptor_description, new String[] { getSignature(), label, BindingLabelProvider.getBindingLabel(type, JavaScriptElementLabels.ALL_FULLY_QUALIFIED)});
 		final JDTRefactoringDescriptorComment comment= new JDTRefactoringDescriptorComment(project, this, header);
 		comment.addSetting(Messages.format(RefactoringCoreMessages.ExtractMethodRefactoring_name_pattern, fMethodName));
-		comment.addSetting(Messages.format(RefactoringCoreMessages.ExtractMethodRefactoring_destination_pattern, BindingLabelProvider.getBindingLabel(type, JavaElementLabels.ALL_FULLY_QUALIFIED)));
+		comment.addSetting(Messages.format(RefactoringCoreMessages.ExtractMethodRefactoring_destination_pattern, BindingLabelProvider.getBindingLabel(type, JavaScriptElementLabels.ALL_FULLY_QUALIFIED)));
 //		String visibility= JdtFlags.getVisibilityString(fVisibility);
 //		if ("".equals(visibility)) //$NON-NLS-1$
 //			visibility= RefactoringCoreMessages.ExtractMethodRefactoring_default_visibility;
@@ -522,7 +522,7 @@ public class ExtractMethodRefactoring extends ScriptableRefactoring {
 			}
 			root.addChild(fRewriter.rewriteAST(fDocument, fCUnit.getJavaScriptProject().getOptions(true)));
 		} catch (BadLocationException e) {
-			throw new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.ERROR,
+			throw new CoreException(new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), IStatus.ERROR,
 				e.getMessage(), e));
 		} finally {
 			bufferManager.disconnect(path, LocationKind.IFILE, new SubProgressMonitor(pm, 1));
@@ -981,14 +981,14 @@ public class ExtractMethodRefactoring extends ScriptableRefactoring {
 			final String handle= extended.getAttribute(JDTRefactoringDescriptor.ATTRIBUTE_INPUT);
 			if (handle != null) {
 				final IJavaScriptElement element= JDTRefactoringDescriptor.handleToElement(extended.getProject(), handle, false);
-				if (element == null || !element.exists() || element.getElementType() != IJavaScriptElement.COMPILATION_UNIT)
+				if (element == null || !element.exists() || element.getElementType() != IJavaScriptElement.JAVASCRIPT_UNIT)
 					return createInputFatalStatus(element, IJavaRefactorings.EXTRACT_METHOD);
 				else {
 					fCUnit= (IJavaScriptUnit) element;
 		        	try {
 						initialize(fCUnit);
 					} catch (CoreException exception) {
-						JavaPlugin.log(exception);
+						JavaScriptPlugin.log(exception);
 					}
 				}
 			} else

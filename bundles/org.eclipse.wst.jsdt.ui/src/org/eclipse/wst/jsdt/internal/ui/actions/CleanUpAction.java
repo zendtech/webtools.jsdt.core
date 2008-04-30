@@ -33,12 +33,12 @@ import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringExecutionStarter;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.browsing.LogicalPackage;
 import org.eclipse.wst.jsdt.internal.ui.fix.ICleanUp;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.wst.jsdt.internal.ui.util.ElementValidator;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.ui.actions.SelectionDispatchAction;
 
 public abstract class CleanUpAction extends SelectionDispatchAction {
@@ -123,8 +123,8 @@ public abstract class CleanUpAction extends SelectionDispatchAction {
 					if (elem.exists()) {
 						switch (elem.getElementType()) {
 							case IJavaScriptElement.TYPE:
-								return elem.getParent().getElementType() == IJavaScriptElement.COMPILATION_UNIT; // for browsing perspective
-							case IJavaScriptElement.COMPILATION_UNIT:
+								return elem.getParent().getElementType() == IJavaScriptElement.JAVASCRIPT_UNIT; // for browsing perspective
+							case IJavaScriptElement.JAVASCRIPT_UNIT:
 								return true;
 							case IJavaScriptElement.IMPORT_CONTAINER:
 								return true;
@@ -132,7 +132,7 @@ public abstract class CleanUpAction extends SelectionDispatchAction {
 							case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
 								IPackageFragmentRoot root= (IPackageFragmentRoot)elem.getAncestor(IJavaScriptElement.PACKAGE_FRAGMENT_ROOT);
 								return (root.getKind() == IPackageFragmentRoot.K_SOURCE);
-							case IJavaScriptElement.JAVA_PROJECT:
+							case IJavaScriptElement.JAVASCRIPT_PROJECT:
 								// https://bugs.eclipse.org/bugs/show_bug.cgi?id=65638
 								return true;
 						}
@@ -142,7 +142,7 @@ public abstract class CleanUpAction extends SelectionDispatchAction {
 				}
 			} catch (JavaScriptModelException e) {
 				if (!e.isDoesNotExist()) {
-					JavaPlugin.log(e);
+					JavaScriptPlugin.log(e);
 				}
 			}
 		}
@@ -167,7 +167,7 @@ public abstract class CleanUpAction extends SelectionDispatchAction {
 				cu
 			}, cleanUps);
 		} catch (InvocationTargetException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 			if (e.getCause() instanceof CoreException)
 				showUnexpectedError((CoreException)e.getCause());
 		} catch (JavaScriptModelException e) {
@@ -180,14 +180,14 @@ public abstract class CleanUpAction extends SelectionDispatchAction {
 		if (cleanUps == null)
 			return;
 
-		MultiStatus status= new MultiStatus(JavaUI.ID_PLUGIN, IStatus.OK, ActionMessages.CleanUpAction_MultiStateErrorTitle, null);
+		MultiStatus status= new MultiStatus(JavaScriptUI.ID_PLUGIN, IStatus.OK, ActionMessages.CleanUpAction_MultiStateErrorTitle, null);
 		for (int i= 0; i < cus.length; i++) {
 			IJavaScriptUnit cu= cus[i];
 
 			if (!ActionUtil.isOnBuildPath(cu)) {
 				String cuLocation= cu.getPath().makeRelative().toString();
 				String message= Messages.format(ActionMessages.CleanUpAction_CUNotOnBuildpathMessage, cuLocation);
-				status.add(new Status(IStatus.INFO, JavaUI.ID_PLUGIN, IStatus.ERROR, message, null));
+				status.add(new Status(IStatus.INFO, JavaScriptUI.ID_PLUGIN, IStatus.ERROR, message, null));
 			}
 		}
 		if (!status.isOK()) {
@@ -198,7 +198,7 @@ public abstract class CleanUpAction extends SelectionDispatchAction {
 		try {
 			performRefactoring(cus, cleanUps);
 		} catch (InvocationTargetException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 			if (e.getCause() instanceof CoreException)
 				showUnexpectedError((CoreException)e.getCause());
 		} catch (JavaScriptModelException e) {
@@ -208,7 +208,7 @@ public abstract class CleanUpAction extends SelectionDispatchAction {
 
 	private void showUnexpectedError(CoreException e) {
 		String message2= Messages.format(ActionMessages.CleanUpAction_UnexpectedErrorMessage, e.getStatus().getMessage());
-		IStatus status= new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IStatus.ERROR, message2, null);
+		IStatus status= new Status(IStatus.ERROR, JavaScriptUI.ID_PLUGIN, IStatus.ERROR, message2, null);
 		ErrorDialog.openError(getShell(), getActionName(), null, status);
 	}
 
@@ -222,11 +222,11 @@ public abstract class CleanUpAction extends SelectionDispatchAction {
 					if (elem.exists()) {
 						switch (elem.getElementType()) {
 							case IJavaScriptElement.TYPE:
-								if (elem.getParent().getElementType() == IJavaScriptElement.COMPILATION_UNIT) {
+								if (elem.getParent().getElementType() == IJavaScriptElement.JAVASCRIPT_UNIT) {
 									result.add(elem.getParent());
 								}
 								break;
-							case IJavaScriptElement.COMPILATION_UNIT:
+							case IJavaScriptElement.JAVASCRIPT_UNIT:
 								result.add(elem);
 								break;
 							case IJavaScriptElement.IMPORT_CONTAINER:
@@ -238,7 +238,7 @@ public abstract class CleanUpAction extends SelectionDispatchAction {
 							case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
 								collectCompilationUnits((IPackageFragmentRoot)elem, result);
 								break;
-							case IJavaScriptElement.JAVA_PROJECT:
+							case IJavaScriptElement.JAVASCRIPT_PROJECT:
 								IPackageFragmentRoot[] roots= ((IJavaScriptProject)elem).getPackageFragmentRoots();
 								for (int k= 0; k < roots.length; k++) {
 									collectCompilationUnits(roots[k], result);
@@ -257,7 +257,7 @@ public abstract class CleanUpAction extends SelectionDispatchAction {
 				}
 			} catch (JavaScriptModelException e) {
 				if (JavaModelUtil.isExceptionToBeLogged(e))
-					JavaPlugin.log(e);
+					JavaScriptPlugin.log(e);
 			}
 		}
 		return (IJavaScriptUnit[])result.toArray(new IJavaScriptUnit[result.size()]);
@@ -277,7 +277,7 @@ public abstract class CleanUpAction extends SelectionDispatchAction {
 	}
 
 	private static IJavaScriptUnit getCompilationUnit(JavaEditor editor) {
-		IJavaScriptElement element= JavaUI.getEditorInputJavaElement(editor.getEditorInput());
+		IJavaScriptElement element= JavaScriptUI.getEditorInputJavaElement(editor.getEditorInput());
 		if (!(element instanceof IJavaScriptUnit))
 			return null;
 

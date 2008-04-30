@@ -42,10 +42,10 @@ import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.IWorkingCopy;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
-import org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
+import org.eclipse.wst.jsdt.ui.StandardJavaScriptElementContentProvider;
 
-class JavaBrowsingContentProvider extends StandardJavaElementContentProvider implements IElementChangedListener {
+class JavaBrowsingContentProvider extends StandardJavaScriptElementContentProvider implements IElementChangedListener {
 
 	private StructuredViewer fViewer;
 	private Object fInput;
@@ -210,7 +210,7 @@ class JavaBrowsingContentProvider extends StandardJavaElementContentProvider imp
 		try {
 			processDelta(event.getDelta());
 		} catch(JavaScriptModelException e) {
-			JavaPlugin.log(e.getStatus());
+			JavaScriptPlugin.log(e.getStatus());
 		}
 	}
 
@@ -229,7 +229,7 @@ class JavaBrowsingContentProvider extends StandardJavaElementContentProvider imp
 		if (!getProvideWorkingCopy() && element instanceof IWorkingCopy && ((IWorkingCopy)element).isWorkingCopy())
 			return;
 
-		if (element != null && element.getElementType() == IJavaScriptElement.COMPILATION_UNIT && !isOnClassPath((IJavaScriptUnit)element))
+		if (element != null && element.getElementType() == IJavaScriptElement.JAVASCRIPT_UNIT && !isOnClassPath((IJavaScriptUnit)element))
 			return;
 
 		// handle open and closing of a solution or project
@@ -300,8 +300,8 @@ class JavaBrowsingContentProvider extends StandardJavaElementContentProvider imp
 				if (newInput != null)
 					postAdjustInputAndSetSelection(element);
 			} else if (element instanceof IType && fBrowsingPart.isValidInput(element)) {
-				IJavaScriptElement cu1= element.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
-				IJavaScriptElement cu2= ((IJavaScriptElement)fInput).getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+				IJavaScriptElement cu1= element.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
+				IJavaScriptElement cu2= ((IJavaScriptElement)fInput).getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 				if  (cu1 != null && cu2 != null && cu1.equals(cu2))
 					postAdjustInputAndSetSelection(element);
 			}

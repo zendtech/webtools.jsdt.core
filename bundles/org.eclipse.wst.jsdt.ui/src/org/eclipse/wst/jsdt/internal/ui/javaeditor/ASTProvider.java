@@ -38,8 +38,8 @@ import org.eclipse.wst.jsdt.core.dom.ASTParser;
 import org.eclipse.wst.jsdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
 import org.eclipse.wst.jsdt.internal.corext.dom.ASTNodes;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 
 /**
@@ -235,7 +235,7 @@ public final class ASTProvider {
 			String id= ref.getId();
 
 			// The instanceof check is not need but helps clients, see https://bugs.eclipse.org/bugs/show_bug.cgi?id=84862
-			return JavaUI.ID_CF_EDITOR.equals(id) || JavaUI.ID_CU_EDITOR.equals(id) || ref.getPart(false) instanceof JavaEditor;
+			return JavaScriptUI.ID_CF_EDITOR.equals(id) || JavaScriptUI.ID_CU_EDITOR.equals(id) || ref.getPart(false) instanceof JavaEditor;
 		}
 	}
 
@@ -263,7 +263,7 @@ public final class ASTProvider {
 	 * @since 3.2
 	 */
 	public static ASTProvider getASTProvider() {
-		return JavaPlugin.getDefault().getASTProvider();
+		return JavaScriptPlugin.getDefault().getASTProvider();
 	}
 	
 	/**
@@ -449,7 +449,7 @@ public final class ASTProvider {
 		if (je == null)
 			return null;
 		
-		Assert.isTrue(je.getElementType() == IJavaScriptElement.CLASS_FILE || je.getElementType() == IJavaScriptElement.COMPILATION_UNIT);
+		Assert.isTrue(je.getElementType() == IJavaScriptElement.CLASS_FILE || je.getElementType() == IJavaScriptElement.JAVASCRIPT_UNIT);
 
 		if (progressMonitor != null && progressMonitor.isCanceled())
 			return null;
@@ -584,7 +584,7 @@ public final class ASTProvider {
 		if (progressMonitor != null && progressMonitor.isCanceled())
 			return null;
 		
-		if (je.getElementType() == IJavaScriptElement.COMPILATION_UNIT)
+		if (je.getElementType() == IJavaScriptElement.JAVASCRIPT_UNIT)
 			parser.setSource((IJavaScriptUnit)je);
 		else if (je.getElementType() == IJavaScriptElement.CLASS_FILE)
 			parser.setSource((IClassFile)je);
@@ -607,8 +607,8 @@ public final class ASTProvider {
 				}
 			}
 			public void handleException(Throwable ex) {
-				IStatus status= new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IStatus.OK, "Error in JDT Core during AST creation", ex);  //$NON-NLS-1$
-				JavaPlugin.getDefault().getLog().log(status);
+				IStatus status= new Status(IStatus.ERROR, JavaScriptUI.ID_PLUGIN, IStatus.OK, "Error in JDT Core during AST creation", ex);  //$NON-NLS-1$
+				JavaScriptPlugin.getDefault().getLog().log(status);
 			}
 		});
 		
@@ -633,8 +633,8 @@ public final class ASTProvider {
 		try {
 			return je instanceof ITypeRoot && ((ITypeRoot)je).getBuffer() != null;
 		} catch (JavaScriptModelException ex) {
-			IStatus status= new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IStatus.OK, "Error in JDT Core during AST creation", ex);  //$NON-NLS-1$
-			JavaPlugin.getDefault().getLog().log(status);
+			IStatus status= new Status(IStatus.ERROR, JavaScriptUI.ID_PLUGIN, IStatus.OK, "Error in JDT Core during AST creation", ex);  //$NON-NLS-1$
+			JavaScriptPlugin.getDefault().getLog().log(status);
 		}
 		return false;
 	}

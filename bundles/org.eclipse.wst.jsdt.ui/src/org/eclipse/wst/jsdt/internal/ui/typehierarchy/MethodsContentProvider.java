@@ -20,7 +20,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.ITypeHierarchy;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.ui.IWorkingCopyProvider;
 
 /**
@@ -105,7 +105,7 @@ public class MethodsContentProvider implements IStructuredContentProvider, IWork
 					addAll(type.getFields(), res);
 				}
 			} catch (JavaScriptModelException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 			return res.toArray();
 		}

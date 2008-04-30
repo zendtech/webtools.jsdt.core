@@ -79,7 +79,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.changes.RenameCompilatio
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.TypeNameMatchCollector;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.actions.WorkbenchRunnableAdapter;
 import org.eclipse.wst.jsdt.internal.ui.fix.UnusedCodeCleanUp;
@@ -91,7 +91,7 @@ import org.eclipse.wst.jsdt.launching.IVMInstall;
 import org.eclipse.wst.jsdt.launching.IVMInstall2;
 import org.eclipse.wst.jsdt.launching.IVMInstallType;
 import org.eclipse.wst.jsdt.launching.JavaRuntime;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 import org.eclipse.wst.jsdt.ui.actions.OrganizeImportsAction;
 import org.eclipse.wst.jsdt.ui.text.java.IInvocationContext;
 import org.eclipse.wst.jsdt.ui.text.java.IProblemLocation;
@@ -199,7 +199,7 @@ public class ReorgCorrectionsSubProcessor {
 		ChangeCorrectionProposal proposal= new ChangeCorrectionProposal(name, null, 5, JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE)) {
 			public void apply(IDocument document) {
 				IEditorInput input= new FileEditorInput((IFile) cu.getResource());
-				IWorkbenchPage p= JavaPlugin.getActivePage();
+				IWorkbenchPage p= JavaScriptPlugin.getActivePage();
 				if (p == null) {
 					return;
 				}
@@ -290,19 +290,19 @@ public class ReorgCorrectionsSubProcessor {
 		switch (entry.getEntryKind()) {
 			case IIncludePathEntry.CPE_LIBRARY:
 				if (root.isArchive()) {
-					String[] args= { JavaElementLabels.getElementLabel(root, JavaElementLabels.REFERENCED_ROOT_POST_QUALIFIED), project.getElementName() };
+					String[] args= { JavaScriptElementLabels.getElementLabel(root, JavaScriptElementLabels.REFERENCED_ROOT_POST_QUALIFIED), project.getElementName() };
 					return Messages.format(CorrectionMessages.ReorgCorrectionsSubProcessor_addcp_archive_description, args);
 				} else {
-					String[] args= { JavaElementLabels.getElementLabel(root, JavaElementLabels.REFERENCED_ROOT_POST_QUALIFIED), project.getElementName() };
+					String[] args= { JavaScriptElementLabels.getElementLabel(root, JavaScriptElementLabels.REFERENCED_ROOT_POST_QUALIFIED), project.getElementName() };
 					return Messages.format(CorrectionMessages.ReorgCorrectionsSubProcessor_addcp_classfolder_description, args);
 				}
 			case IIncludePathEntry.CPE_VARIABLE: {
-					String[] args= { JavaElementLabels.getElementLabel(root, 0), project.getElementName() };
+					String[] args= { JavaScriptElementLabels.getElementLabel(root, 0), project.getElementName() };
 					return Messages.format(CorrectionMessages.ReorgCorrectionsSubProcessor_addcp_variable_description, args);
 				}
 			case IIncludePathEntry.CPE_CONTAINER:
 				try {
-					String[] args= { JavaElementLabels.getContainerEntryLabel(entry.getPath(), root.getJavaScriptProject()), project.getElementName() };
+					String[] args= { JavaScriptElementLabels.getContainerEntryLabel(entry.getPath(), root.getJavaScriptProject()), project.getElementName() };
 					return Messages.format(CorrectionMessages.ReorgCorrectionsSubProcessor_addcp_library_description, args);
 				} catch (JavaScriptModelException e) {
 					// ignore
@@ -343,7 +343,7 @@ public class ReorgCorrectionsSubProcessor {
 					}
 				}
 			}
-			PreferencesUtil.createPropertyDialogOn(JavaPlugin.getActiveWorkbenchShell(), fProject, BuildPathsPropertyPage.PROP_ID, null, data).open();
+			PreferencesUtil.createPropertyDialogOn(JavaScriptPlugin.getActiveWorkbenchShell(), fProject, BuildPathsPropertyPage.PROP_ID, null, data).open();
 		}
 		public String getAdditionalProposalInfo() {
 			return Messages.format(CorrectionMessages.ReorgCorrectionsSubProcessor_configure_buildpath_description, fProject.getName());
@@ -497,7 +497,7 @@ public class ReorgCorrectionsSubProcessor {
 				IProgressService progressService= PlatformUI.getWorkbench().getProgressService();
 				progressService.run(true, true, new WorkbenchRunnableAdapter(this));
 			} catch (InvocationTargetException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			} catch (InterruptedException e) {
 				return;
 			}
@@ -507,7 +507,7 @@ public class ReorgCorrectionsSubProcessor {
 			}
 			
 			if (!f50JREFound) {
-				MessageDialog.openInformation(JavaPlugin.getActiveWorkbenchShell(), CorrectionMessages.ReorgCorrectionsSubProcessor_no_50jre_title, CorrectionMessages.ReorgCorrectionsSubProcessor_no_50jre_message);
+				MessageDialog.openInformation(JavaScriptPlugin.getActiveWorkbenchShell(), CorrectionMessages.ReorgCorrectionsSubProcessor_no_50jre_title, CorrectionMessages.ReorgCorrectionsSubProcessor_no_50jre_message);
 			}
 		}
 	}

@@ -143,7 +143,7 @@ private String getSourceFor(IJavaScriptElement element) throws JavaScriptModelEx
  */
 protected boolean isRenamingMainType(IJavaScriptElement element, IJavaScriptElement dest) throws JavaScriptModelException {
 	if ((isRename() || getNewNameFor(element) != null)
-		&& dest.getElementType() == IJavaScriptElement.COMPILATION_UNIT) {
+		&& dest.getElementType() == IJavaScriptElement.JAVASCRIPT_UNIT) {
 		String typeName = dest.getElementName();
 		typeName = org.eclipse.wst.jsdt.internal.core.util.Util.getNameWithoutJavaLikeExtension(typeName);
 		return element.getElementName().equals(typeName) && element.getParent().equals(dest);

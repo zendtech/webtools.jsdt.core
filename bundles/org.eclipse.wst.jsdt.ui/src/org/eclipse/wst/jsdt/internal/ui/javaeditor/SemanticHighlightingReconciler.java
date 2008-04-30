@@ -36,7 +36,7 @@ import org.eclipse.wst.jsdt.core.dom.NumberLiteral;
 import org.eclipse.wst.jsdt.core.dom.RegularExpressionLiteral;
 import org.eclipse.wst.jsdt.core.dom.SimpleName;
 import org.eclipse.wst.jsdt.internal.corext.dom.GenericVisitor;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.SemanticHighlightingManager.HighlightedPosition;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.SemanticHighlightingManager.Highlighting;
 import org.eclipse.wst.jsdt.internal.ui.text.java.IJavaReconcilingListener;
@@ -415,13 +415,13 @@ public class SemanticHighlightingReconciler implements IJavaReconcilingListener,
 							try {
 								oldJob.join();
 							} catch (InterruptedException e) {
-								JavaPlugin.log(e);
+								JavaScriptPlugin.log(e);
 								return Status.CANCEL_STATUS;
 							}
 						}
 						if (monitor.isCanceled())
 							return Status.CANCEL_STATUS;
-						JavaScriptUnit ast= JavaPlugin.getDefault().getASTProvider().getAST(element, ASTProvider.WAIT_YES, monitor);
+						JavaScriptUnit ast= JavaScriptPlugin.getDefault().getASTProvider().getAST(element, ASTProvider.WAIT_YES, monitor);
 						reconciled(ast, false, monitor);
 						synchronized (fJobLock) {
 							// allow the job to be gc'ed

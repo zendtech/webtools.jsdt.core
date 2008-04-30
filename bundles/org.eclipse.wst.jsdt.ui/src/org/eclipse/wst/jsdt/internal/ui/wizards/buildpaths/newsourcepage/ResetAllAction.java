@@ -31,7 +31,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.buildpath.BuildpathDelta;
 import org.eclipse.wst.jsdt.internal.corext.buildpath.ClasspathModifier;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.CPListElement;
@@ -72,7 +72,7 @@ public class ResetAllAction extends BuildpathModifierAction {
 	            fEntries= ClasspathModifier.getExistingEntries(fJavaProject);
 	            fOutputLocation= fJavaProject.getOutputLocation();
             } catch (JavaScriptModelException e) {
-	            JavaPlugin.log(e);
+	            JavaScriptPlugin.log(e);
 	            return;
             }
 			setEnabled(true);
@@ -85,7 +85,7 @@ public class ResetAllAction extends BuildpathModifierAction {
 	                        fEntries= ClasspathModifier.getExistingEntries(fJavaProject);
 	                        fOutputLocation= fJavaProject.getOutputLocation();
                         } catch (JavaScriptModelException e) {
-                        	JavaPlugin.log(e);
+                        	JavaScriptPlugin.log(e);
                         	return;
                         } finally {
 							JavaScriptCore.removeElementChangedListener(this);
@@ -145,7 +145,7 @@ public class ResetAllAction extends BuildpathModifierAction {
 			if (e.getCause() instanceof CoreException) {
 				showExceptionDialog((CoreException)e.getCause(), NewWizardMessages.NewSourceContainerWorkbookPage_ToolBar_ClearAll_tooltip);
 			} else {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
         } catch (InterruptedException e) {
         }

@@ -81,7 +81,7 @@ private void initEncoding(IJavaScriptElement javaElement) {
 		try {
 			IJavaScriptProject javaProject = javaElement.getJavaScriptProject();
 			switch (javaElement.getElementType()) {
-				case IJavaScriptElement.COMPILATION_UNIT:
+				case IJavaScriptElement.JAVASCRIPT_UNIT:
 					IFile file = (IFile) javaElement.getResource();
 					if (file != null) {
 						this.encoding = file.getCharset();

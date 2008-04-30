@@ -32,7 +32,7 @@ import org.eclipse.wst.jsdt.core.ITypeParameter;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.codemanipulation.StubUtility;
 import org.eclipse.wst.jsdt.internal.corext.util.Strings;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.text.JavaCodeReader;
 
 /**
@@ -98,7 +98,7 @@ public class JavaSourceHover extends AbstractJavaEditorTextHover implements ITex
 				if (reader != null)
 					reader.close();
 			} catch (IOException ex) {
-				JavaPlugin.log(ex);
+				JavaScriptPlugin.log(ex);
 			}
 		}
 

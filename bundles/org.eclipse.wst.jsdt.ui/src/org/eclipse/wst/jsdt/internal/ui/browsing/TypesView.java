@@ -38,8 +38,8 @@ import org.eclipse.wst.jsdt.internal.ui.viewsupport.AppearanceAwareLabelProvider
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.ColoredViewersManager;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.DecoratingJavaLabelProvider;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.JavaUILabelProvider;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 
 public class TypesView extends JavaBrowsingPart {
@@ -54,7 +54,7 @@ public class TypesView extends JavaBrowsingPart {
 	 */
 	protected JavaUILabelProvider createLabelProvider() {
 		return new AppearanceAwareLabelProvider(
-						AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | JavaElementLabels.T_CATEGORY,
+						AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | JavaScriptElementLabels.T_CATEGORY,
 						AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS);
 	}
 
@@ -72,7 +72,7 @@ public class TypesView extends JavaBrowsingPart {
 		if (key == IShowInTargetList.class) {
 			return new IShowInTargetList() {
 				public String[] getShowInTargetIds() {
-					return new String[] { JavaUI.ID_PACKAGES, IPageLayout.ID_RES_NAV  };
+					return new String[] { JavaScriptUI.ID_PACKAGES, IPageLayout.ID_RES_NAV  };
 				}
 
 			};
@@ -132,7 +132,7 @@ public class TypesView extends JavaBrowsingPart {
 				if (type == null)
 					type= (IType)je;
 				return type;
-			case IJavaScriptElement.COMPILATION_UNIT:
+			case IJavaScriptElement.JAVASCRIPT_UNIT:
 				return getTypeForCU((IJavaScriptUnit)je);
 			case IJavaScriptElement.CLASS_FILE:
 				return findElementToSelect(((IClassFile)je).getType());

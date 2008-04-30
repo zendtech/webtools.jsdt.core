@@ -37,7 +37,7 @@ import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.browsing.LogicalPackage;
 import org.eclipse.wst.jsdt.internal.ui.model.JavaModelProvider;
 
@@ -105,7 +105,7 @@ public abstract class JavaElementResourceMapping extends ResourceMapping {
 			try {
 				projects= fJavaModel.getJavaScriptProjects();
 			} catch (JavaScriptModelException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 				return new IProject[0];
 			}
 			IProject[] result= new IProject[projects.length];
@@ -316,7 +316,7 @@ public abstract class JavaElementResourceMapping extends ResourceMapping {
 		switch (element.getElementType()) {
 			case IJavaScriptElement.TYPE:
 				return create((IType)element);
-			case IJavaScriptElement.COMPILATION_UNIT:
+			case IJavaScriptElement.JAVASCRIPT_UNIT:
 				return create((IJavaScriptUnit)element);
 			case IJavaScriptElement.CLASS_FILE:
 				return create((IClassFile)element);
@@ -324,9 +324,9 @@ public abstract class JavaElementResourceMapping extends ResourceMapping {
 				return create((IPackageFragment)element);
 			case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
 				return create((IPackageFragmentRoot)element);
-			case IJavaScriptElement.JAVA_PROJECT:
+			case IJavaScriptElement.JAVASCRIPT_PROJECT:
 				return create((IJavaScriptProject)element);
-			case IJavaScriptElement.JAVA_MODEL:
+			case IJavaScriptElement.JAVASCRIPT_MODEL:
 				return create((IJavaScriptModel)element);
 			default:
 				return null;

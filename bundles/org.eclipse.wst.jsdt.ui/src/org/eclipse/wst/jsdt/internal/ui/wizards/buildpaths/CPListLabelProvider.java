@@ -27,16 +27,16 @@ import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJsGlobalScopeContainerInitializerExtension;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.util.JSDScopeUiUtil;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.ImageDescriptorRegistry;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.JavaElementImageProvider;
 import org.eclipse.wst.jsdt.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.wst.jsdt.ui.ISharedImages;
-import org.eclipse.wst.jsdt.ui.JavaElementImageDescriptor;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementImageDescriptor;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.ui.wizards.ClasspathAttributeConfiguration;
 import org.eclipse.wst.jsdt.ui.wizards.ClasspathAttributeConfiguration.ClasspathAttributeAccess;
 
@@ -56,14 +56,14 @@ public class CPListLabelProvider extends LabelProvider {
 		fNewLabel= NewWizardMessages.CPListLabelProvider_new; 
 		fClassLabel= NewWizardMessages.CPListLabelProvider_classcontainer; 
 		fCreateLabel= NewWizardMessages.CPListLabelProvider_willbecreated; 
-		fRegistry= JavaPlugin.getImageDescriptorRegistry();
+		fRegistry= JavaScriptPlugin.getImageDescriptorRegistry();
 	
-		fSharedImages= JavaUI.getSharedImages();
+		fSharedImages= JavaScriptUI.getSharedImages();
 
-		IWorkbench workbench= JavaPlugin.getDefault().getWorkbench();
+		IWorkbench workbench= JavaScriptPlugin.getDefault().getWorkbench();
 		
 		fProjectImage= workbench.getSharedImages().getImageDescriptor(IDE.SharedImages.IMG_OBJ_PROJECT);
-		fAttributeDescriptors= JavaPlugin.getDefault().getClasspathAttributeConfigurationDescriptors();
+		fAttributeDescriptors= JavaScriptPlugin.getDefault().getClasspathAttributeConfigurationDescriptors();
 	}
 	
 	public String getText(Object element) {
@@ -230,7 +230,7 @@ public class CPListLabelProvider extends LabelProvider {
 					StringBuffer buf= new StringBuffer(path.makeRelative().toString());
 					IPath linkTarget= cpentry.getLinkTarget();
 					if (linkTarget != null) {
-						buf.append(JavaElementLabels.CONCAT_STRING);
+						buf.append(JavaScriptElementLabels.CONCAT_STRING);
 						buf.append(linkTarget.toOSString());
 					}
 					buf.append(' ');
@@ -277,7 +277,7 @@ public class CPListLabelProvider extends LabelProvider {
 				StringBuffer buf= new StringBuffer(path.makeRelative().toString());
 				IPath linkTarget= cpentry.getLinkTarget();
 				if (linkTarget != null) {
-					buf.append(JavaElementLabels.CONCAT_STRING);
+					buf.append(JavaScriptElementLabels.CONCAT_STRING);
 					buf.append(linkTarget.toOSString());
 				}
 				IResource resource= cpentry.getResource();
@@ -362,7 +362,7 @@ public class CPListLabelProvider extends LabelProvider {
 			case IIncludePathEntry.CPE_VARIABLE:
 				ImageDescriptor variableImage= fSharedImages.getImageDescriptor(ISharedImages.IMG_OBJS_CLASSPATH_VAR_ENTRY);
 				if (cpentry.isDeprecated()) {
-					return new JavaElementImageDescriptor(variableImage, JavaElementImageDescriptor.DEPRECATED, JavaElementImageProvider.SMALL_SIZE);
+					return new JavaScriptElementImageDescriptor(variableImage, JavaScriptElementImageDescriptor.DEPRECATED, JavaElementImageProvider.SMALL_SIZE);
 				}
 				return variableImage;
 			case IIncludePathEntry.CPE_CONTAINER:
@@ -378,7 +378,7 @@ public class CPListLabelProvider extends LabelProvider {
 			ImageDescriptor imageDescriptor= getCPListElementBaseImage(cpentry);
 			if (imageDescriptor != null) {
 				if (cpentry.isMissing()) {
-					imageDescriptor= new JavaElementImageDescriptor(imageDescriptor, JavaElementImageDescriptor.WARNING, JavaElementImageProvider.SMALL_SIZE);
+					imageDescriptor= new JavaScriptElementImageDescriptor(imageDescriptor, JavaScriptElementImageDescriptor.WARNING, JavaElementImageProvider.SMALL_SIZE);
 				}
 				return fRegistry.get(imageDescriptor);
 			}

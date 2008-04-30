@@ -31,10 +31,10 @@ import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.JavaWorkbenchAdapter;
-import org.eclipse.wst.jsdt.ui.JavaElementImageDescriptor;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementImageDescriptor;
 
 /**
  * Default strategy of the Java plugin for the construction of Java element icons.
@@ -64,7 +64,7 @@ public class JavaElementImageProvider {
 	private static ImageDescriptor DESC_OBJ_PROJECT_CLOSED;	
 	private static ImageDescriptor DESC_OBJ_PROJECT;	
 	{
-		ISharedImages images= JavaPlugin.getDefault().getWorkbench().getSharedImages(); 
+		ISharedImages images= JavaScriptPlugin.getDefault().getWorkbench().getSharedImages(); 
 		DESC_OBJ_PROJECT_CLOSED= images.getImageDescriptor(IDE.SharedImages.IMG_OBJ_PROJECT_CLOSED);
 		DESC_OBJ_PROJECT= 		 images.getImageDescriptor(IDE.SharedImages.IMG_OBJ_PROJECT);
 	}
@@ -93,7 +93,7 @@ public class JavaElementImageProvider {
 	
 	private ImageDescriptorRegistry getRegistry() {
 		if (fRegistry == null) {
-			fRegistry= JavaPlugin.getImageDescriptorRegistry();
+			fRegistry= JavaScriptPlugin.getImageDescriptorRegistry();
 		}
 		return fRegistry;
 	}
@@ -132,7 +132,7 @@ public class JavaElementImageProvider {
 	 */
 	public ImageDescriptor getCUResourceImageDescriptor(IFile file, int flags) {
 		Point size= useSmallSize(flags) ? SMALL_SIZE : BIG_SIZE;
-		return new JavaElementImageDescriptor(JavaPluginImages.DESC_OBJS_CUNIT_RESOURCE, 0, size);
+		return new JavaScriptElementImageDescriptor(JavaPluginImages.DESC_OBJS_CUNIT_RESOURCE, 0, size);
 	}	
 		
 	/**
@@ -144,9 +144,9 @@ public class JavaElementImageProvider {
 		ImageDescriptor baseDesc= getBaseImageDescriptor(element, flags);
 		if (baseDesc != null) {
 			int adornmentFlags= computeJavaAdornmentFlags(element, flags);
-			return new JavaElementImageDescriptor(baseDesc, adornmentFlags, size);
+			return new JavaScriptElementImageDescriptor(baseDesc, adornmentFlags, size);
 		}
-		return new JavaElementImageDescriptor(JavaPluginImages.DESC_OBJS_GHOST, 0, size);
+		return new JavaScriptElementImageDescriptor(JavaPluginImages.DESC_OBJS_GHOST, 0, size);
 	}
 
 	/**
@@ -164,7 +164,7 @@ public class JavaElementImageProvider {
 		}
 
 		Point size= useSmallSize(flags) ? SMALL_SIZE : BIG_SIZE;
-		return new JavaElementImageDescriptor(descriptor, 0, size);
+		return new JavaScriptElementImageDescriptor(descriptor, 0, size);
 	}
 	
 	// ---- Computation of base image key -------------------------------------------------
@@ -238,7 +238,7 @@ public class JavaElementImageProvider {
 					return getPackageFragmentIcon(element, renderFlags);
 
 					
-				case IJavaScriptElement.COMPILATION_UNIT:
+				case IJavaScriptElement.JAVASCRIPT_UNIT:
 					return JavaPluginImages.DESC_OBJS_CUNIT;
 					
 				case IJavaScriptElement.CLASS_FILE:
@@ -253,7 +253,7 @@ public class JavaElementImageProvider {
 					}*/
 					return JavaPluginImages.DESC_OBJS_CFILE;
 					
-				case IJavaScriptElement.JAVA_PROJECT: 
+				case IJavaScriptElement.JAVASCRIPT_PROJECT: 
 					IJavaScriptProject jp= (IJavaScriptProject)element;
 					if (jp.getProject().isOpen()) {
 						IProject project= jp.getProject();
@@ -267,7 +267,7 @@ public class JavaElementImageProvider {
 					}
 					return DESC_OBJ_PROJECT_CLOSED;
 					
-				case IJavaScriptElement.JAVA_MODEL:
+				case IJavaScriptElement.JAVASCRIPT_MODEL:
 					return JavaPluginImages.DESC_OBJS_JAVA_MODEL;
 
 				case IJavaScriptElement.TYPE_PARAMETER:
@@ -289,7 +289,7 @@ public class JavaElementImageProvider {
 		} catch (JavaScriptModelException e) {
 			if (e.isDoesNotExist())
 				return JavaPluginImages.DESC_OBJS_UNKNOWN;
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 			return JavaPluginImages.DESC_OBJS_GHOST;
 		}
 	}
@@ -325,30 +325,30 @@ public class JavaElementImageProvider {
 				IMember member= (IMember) element;
 				
 				if (element.getElementType() == IJavaScriptElement.METHOD && ((IFunction)element).isConstructor())
-					flags |= JavaElementImageDescriptor.CONSTRUCTOR;
+					flags |= JavaScriptElementImageDescriptor.CONSTRUCTOR;
 					
 				int modifiers= member.getFlags();
 				if (Flags.isAbstract(modifiers) && confirmAbstract(member))
-					flags |= JavaElementImageDescriptor.ABSTRACT;
+					flags |= JavaScriptElementImageDescriptor.ABSTRACT;
 				if (Flags.isFinal(modifiers) || isInterfaceOrAnnotationField(member) || isEnumConstant(member, modifiers))
-					flags |= JavaElementImageDescriptor.FINAL;
+					flags |= JavaScriptElementImageDescriptor.FINAL;
 				if (Flags.isSynchronized(modifiers) && confirmSynchronized(member))
-					flags |= JavaElementImageDescriptor.SYNCHRONIZED;
+					flags |= JavaScriptElementImageDescriptor.SYNCHRONIZED;
 				if (Flags.isStatic(modifiers) || isInterfaceOrAnnotationFieldOrType(member) || isEnumConstant(member, modifiers))
-					flags |= JavaElementImageDescriptor.STATIC;
+					flags |= JavaScriptElementImageDescriptor.STATIC;
 				
 				if (Flags.isDeprecated(modifiers))
-					flags |= JavaElementImageDescriptor.DEPRECATED;
+					flags |= JavaScriptElementImageDescriptor.DEPRECATED;
 				if (member.getElementType() == IJavaScriptElement.TYPE) {
 					if (JavaModelUtil.hasMainMethod((IType) member)) {
-						flags |= JavaElementImageDescriptor.RUNNABLE;
+						flags |= JavaScriptElementImageDescriptor.RUNNABLE;
 					}
 				}
 				if (member.getElementType() == IJavaScriptElement.FIELD) {
 					if (Flags.isVolatile(modifiers))
-						flags |= JavaElementImageDescriptor.VOLATILE;
+						flags |= JavaScriptElementImageDescriptor.VOLATILE;
 					if (Flags.isTransient(modifiers))
-						flags |= JavaElementImageDescriptor.TRANSIENT;
+						flags |= JavaScriptElementImageDescriptor.TRANSIENT;
 				}
 				
 				
@@ -465,7 +465,7 @@ public class JavaElementImageProvider {
 	
 	
 	public static Image getDecoratedImage(ImageDescriptor baseImage, int adornments, Point size) {
-		return JavaPlugin.getImageDescriptorRegistry().get(new JavaElementImageDescriptor(baseImage, adornments, size));
+		return JavaScriptPlugin.getImageDescriptorRegistry().get(new JavaScriptElementImageDescriptor(baseImage, adornments, size));
 	}
 	
 

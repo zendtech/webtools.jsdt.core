@@ -38,7 +38,7 @@ import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.core.search.SearchEngine;
 import org.eclipse.wst.jsdt.internal.corext.javadoc.JavaDocLocations;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.reorg.JavaElementTransfer;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIMessages;
 import org.eclipse.wst.jsdt.internal.ui.SharedImages;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.FilteredTypesSelectionDialog;
@@ -63,12 +63,12 @@ import org.eclipse.wst.jsdt.ui.text.IColorManager;
  * instantiated or subclassed by clients.
  * </p>
  */
-public final class JavaUI {
+public final class JavaScriptUI {
 	
 	private static ISharedImages fgSharedImages= null;
 	
-	private JavaUI() {
-		// prevent instantiation of JavaUI.
+	private JavaScriptUI() {
+		// prevent instantiation of JavaScriptUI.
 	}
 	
 	/**
@@ -253,7 +253,7 @@ public final class JavaUI {
 	/**
 	 * @deprecated Constant introduced to avoid deprecated warning
 	 */
-	private final static int DEPRECATED_CONSIDER_TYPES= IJavaElementSearchConstants.CONSIDER_TYPES;
+	private final static int DEPRECATED_CONSIDER_TYPES= IJavaScriptElementSearchConstants.CONSIDER_TYPES;
 
 	/**
 	 * Returns the shared images for the Java UI.
@@ -276,10 +276,10 @@ public final class JavaUI {
 	 * @param parent the parent shell of the dialog to be created
 	 * @param project the Java project
 	 * @param style flags defining the style of the dialog; the valid flags are:
-	 *   <code>IJavaElementSearchConstants.CONSIDER_BINARIES</code>, indicating that 
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_BINARIES</code>, indicating that 
 	 *   packages from binary package fragment roots should be included in addition
 	 *   to those from source package fragment roots;
-	 *   <code>IJavaElementSearchConstants.CONSIDER_REQUIRED_PROJECTS</code>, indicating that
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_REQUIRED_PROJECTS</code>, indicating that
 	 *   packages from required projects should be included as well.
 	 * @param filter the initial pattern to filter the set of packages. For example "com" shows 
 	 * all packages starting with "com". The meta character '?' representing any character and 
@@ -291,18 +291,18 @@ public final class JavaUI {
 	 * @since 2.0
 	 */
 	public static SelectionDialog createPackageDialog(Shell parent, IJavaScriptProject project, int style, String filter) throws JavaScriptModelException {
-		Assert.isTrue((style | IJavaElementSearchConstants.CONSIDER_BINARIES | IJavaElementSearchConstants.CONSIDER_REQUIRED_PROJECTS) ==
-			(IJavaElementSearchConstants.CONSIDER_BINARIES | IJavaElementSearchConstants.CONSIDER_REQUIRED_PROJECTS));
+		Assert.isTrue((style | IJavaScriptElementSearchConstants.CONSIDER_BINARIES | IJavaScriptElementSearchConstants.CONSIDER_REQUIRED_PROJECTS) ==
+			(IJavaScriptElementSearchConstants.CONSIDER_BINARIES | IJavaScriptElementSearchConstants.CONSIDER_REQUIRED_PROJECTS));
 
 		IPackageFragmentRoot[] roots= null;
-		if ((style & IJavaElementSearchConstants.CONSIDER_REQUIRED_PROJECTS) != 0) {
+		if ((style & IJavaScriptElementSearchConstants.CONSIDER_REQUIRED_PROJECTS) != 0) {
 		    roots= project.getAllPackageFragmentRoots();
 		} else {	
 			roots= project.getPackageFragmentRoots();	
 		}
 		
 		List consideredRoots= null;
-		if ((style & IJavaElementSearchConstants.CONSIDER_BINARIES) != 0) {
+		if ((style & IJavaScriptElementSearchConstants.CONSIDER_BINARIES) != 0) {
 			consideredRoots= Arrays.asList(roots);
 		} else {
 			consideredRoots= new ArrayList(roots.length);
@@ -316,7 +316,7 @@ public final class JavaUI {
 		
 		IJavaScriptSearchScope searchScope= SearchEngine.createJavaSearchScope((IJavaScriptElement[])consideredRoots.toArray(new IJavaScriptElement[consideredRoots.size()]));
 		BusyIndicatorRunnableContext context= new BusyIndicatorRunnableContext();
-		if (style == 0 || style == IJavaElementSearchConstants.CONSIDER_REQUIRED_PROJECTS) {
+		if (style == 0 || style == IJavaScriptElementSearchConstants.CONSIDER_REQUIRED_PROJECTS) {
 			return createPackageDialog(parent, context, searchScope, false, true, filter);
 		} else {
 			return createPackageDialog(parent, context, searchScope, false, false, filter);
@@ -362,10 +362,10 @@ public final class JavaUI {
 	 * @param parent the parent shell of the dialog to be created
 	 * @param project the Java project
 	 * @param style flags defining the style of the dialog; the valid flags are:
-	 *   <code>IJavaElementSearchConstants.CONSIDER_BINARIES</code>, indicating that 
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_BINARIES</code>, indicating that 
 	 *   packages from binary package fragment roots should be included in addition
 	 *   to those from source package fragment roots;
-	 *   <code>IJavaElementSearchConstants.CONSIDER_REQUIRED_PROJECTS</code>, indicating that
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_REQUIRED_PROJECTS</code>, indicating that
 	 *   packages from required projects should be included as well.
 	 * @return a new selection dialog
 	 * @exception JavaScriptModelException if the selection dialog could not be opened
@@ -425,13 +425,13 @@ public final class JavaUI {
 	 *   is being populated
 	 * @param project the Java project
 	 * @param style flags defining the style of the dialog; the only valid values are
-	 *   <code>IJavaElementSearchConstants.CONSIDER_CLASSES</code>,
-	 *   <code>IJavaElementSearchConstants.CONSIDER_INTERFACES</code>, 
-	 *   <code>IJavaElementSearchConstants.CONSIDER_ANNOTATION_TYPES</code>,
-	 *   <code>IJavaElementSearchConstants.CONSIDER_ENUMS</code>,
-	 *   <code>IJavaElementSearchConstants.CONSIDER_ALL_TYPES</code>,
-	 *   <code>IJavaElementSearchConstants.CONSIDER_CLASSES_AND_INTERFACES</code>
-	 *   <code>IJavaElementSearchConstants.CONSIDER_CLASSES_AND_ENUMS</code>. Please note that
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_CLASSES</code>,
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_INTERFACES</code>, 
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_ANNOTATION_TYPES</code>,
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_ENUMS</code>,
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_ALL_TYPES</code>,
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_CLASSES_AND_INTERFACES</code>
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_CLASSES_AND_ENUMS</code>. Please note that
 	 *   the bitwise OR combination of the elementary constants is not supported.
 	 * @param multipleSelection <code>true</code> if multiple selection is allowed
 	 * 
@@ -455,13 +455,13 @@ public final class JavaUI {
 	 *   is being populated
 	 * @param scope the scope that limits which types are included
 	 * @param style flags defining the style of the dialog; the only valid values are
-	 *   <code>IJavaElementSearchConstants.CONSIDER_CLASSES</code>,
-	 *   <code>IJavaElementSearchConstants.CONSIDER_INTERFACES</code>, 
-	 *   <code>IJavaElementSearchConstants.CONSIDER_ANNOTATION_TYPES</code>,
-	 *   <code>IJavaElementSearchConstants.CONSIDER_ENUMS</code>,
-	 *   <code>IJavaElementSearchConstants.CONSIDER_ALL_TYPES</code>,
-	 *   <code>IJavaElementSearchConstants.CONSIDER_CLASSES_AND_INTERFACES</code>
-	 *   <code>IJavaElementSearchConstants.CONSIDER_CLASSES_AND_ENUMS</code>. Please note that
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_CLASSES</code>,
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_INTERFACES</code>, 
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_ANNOTATION_TYPES</code>,
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_ENUMS</code>,
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_ALL_TYPES</code>,
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_CLASSES_AND_INTERFACES</code>
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_CLASSES_AND_ENUMS</code>. Please note that
 	 *   the bitwise OR combination of the elementary constants is not supported.
 	 * @param multipleSelection <code>true</code> if multiple selection is allowed
 	 * 
@@ -484,13 +484,13 @@ public final class JavaUI {
 	 *   is being populated
 	 * @param scope the scope that limits which types are included
 	 * @param style flags defining the style of the dialog; the only valid values are
-	 *   <code>IJavaElementSearchConstants.CONSIDER_CLASSES</code>,
-	 *   <code>IJavaElementSearchConstants.CONSIDER_INTERFACES</code>, 
-	 *   <code>IJavaElementSearchConstants.CONSIDER_ANNOTATION_TYPES</code>,
-	 *   <code>IJavaElementSearchConstants.CONSIDER_ENUMS</code>,
-	 *   <code>IJavaElementSearchConstants.CONSIDER_ALL_TYPES</code>,
-	 *   <code>IJavaElementSearchConstants.CONSIDER_CLASSES_AND_INTERFACES</code>
-	 *   <code>IJavaElementSearchConstants.CONSIDER_CLASSES_AND_ENUMS</code>. Please note that
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_CLASSES</code>,
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_INTERFACES</code>, 
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_ANNOTATION_TYPES</code>,
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_ENUMS</code>,
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_ALL_TYPES</code>,
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_CLASSES_AND_INTERFACES</code>
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_CLASSES_AND_ENUMS</code>. Please note that
 	 *   the bitwise OR combination of the elementary constants is not supported.
 	 * @param multipleSelection <code>true</code> if multiple selection is allowed
 	 * @param filter the initial pattern to filter the set of types. For example "Abstract" shows 
@@ -519,13 +519,13 @@ public final class JavaUI {
 	 *   is being populated
 	 * @param scope the scope that limits which types are included
 	 * @param style flags defining the style of the dialog; the only valid values are
-	 *   <code>IJavaElementSearchConstants.CONSIDER_CLASSES</code>,
-	 *   <code>IJavaElementSearchConstants.CONSIDER_INTERFACES</code>, 
-	 *   <code>IJavaElementSearchConstants.CONSIDER_ANNOTATION_TYPES</code>,
-	 *   <code>IJavaElementSearchConstants.CONSIDER_ENUMS</code>,
-	 *   <code>IJavaElementSearchConstants.CONSIDER_ALL_TYPES</code>,
-	 *   <code>IJavaElementSearchConstants.CONSIDER_CLASSES_AND_INTERFACES</code>
-	 *   <code>IJavaElementSearchConstants.CONSIDER_CLASSES_AND_ENUMS</code>. Please note that
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_CLASSES</code>,
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_INTERFACES</code>, 
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_ANNOTATION_TYPES</code>,
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_ENUMS</code>,
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_ALL_TYPES</code>,
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_CLASSES_AND_INTERFACES</code>
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_CLASSES_AND_ENUMS</code>. Please note that
 	 *   the bitwise OR combination of the elementary constants is not supported.
 	 * @param multipleSelection <code>true</code> if multiple selection is allowed
 	 * @param filter the initial pattern to filter the set of types. For example "Abstract" shows 
@@ -544,19 +544,19 @@ public final class JavaUI {
 	public static SelectionDialog createTypeDialog(Shell parent, IRunnableContext context, IJavaScriptSearchScope scope, int style, 
 			boolean multipleSelection, String filter, TypeSelectionExtension extension) throws JavaScriptModelException {
 		int elementKinds= 0;
-		if (style == IJavaElementSearchConstants.CONSIDER_ALL_TYPES) {
+		if (style == IJavaScriptElementSearchConstants.CONSIDER_ALL_TYPES) {
 			elementKinds= IJavaScriptSearchConstants.TYPE;
-		} else if (style == IJavaElementSearchConstants.CONSIDER_INTERFACES) {
+		} else if (style == IJavaScriptElementSearchConstants.CONSIDER_INTERFACES) {
 			elementKinds= IJavaScriptSearchConstants.INTERFACE;
-		} else if (style == IJavaElementSearchConstants.CONSIDER_CLASSES) {
+		} else if (style == IJavaScriptElementSearchConstants.CONSIDER_CLASSES) {
 			elementKinds= IJavaScriptSearchConstants.CLASS;
-		} else if (style == IJavaElementSearchConstants.CONSIDER_ANNOTATION_TYPES) {
+		} else if (style == IJavaScriptElementSearchConstants.CONSIDER_ANNOTATION_TYPES) {
 			elementKinds= IJavaScriptSearchConstants.ANNOTATION_TYPE;
-		} else if (style == IJavaElementSearchConstants.CONSIDER_ENUMS) {
+		} else if (style == IJavaScriptElementSearchConstants.CONSIDER_ENUMS) {
 			elementKinds= IJavaScriptSearchConstants.ENUM;
-		} else if (style == IJavaElementSearchConstants.CONSIDER_CLASSES_AND_INTERFACES) {
+		} else if (style == IJavaScriptElementSearchConstants.CONSIDER_CLASSES_AND_INTERFACES) {
 			elementKinds= IJavaScriptSearchConstants.CLASS_AND_INTERFACE;
-		} else if (style == IJavaElementSearchConstants.CONSIDER_CLASSES_AND_ENUMS) {
+		} else if (style == IJavaScriptElementSearchConstants.CONSIDER_CLASSES_AND_ENUMS) {
 			elementKinds= IJavaScriptSearchConstants.CLASS_AND_ENUM;
 		} else if (style == DEPRECATED_CONSIDER_TYPES) {
 			elementKinds= IJavaScriptSearchConstants.CLASS_AND_INTERFACE;
@@ -582,7 +582,7 @@ public final class JavaUI {
 	 *   is being populated
 	 * @param scope the scope that limits which types are included
 	 * @param style flags defining the style of the dialog; the only valid values are
-	 *   <code>IJavaElementSearchConstants.CONSIDER_BINARIES</code>,
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_BINARIES</code>,
 	 *   <code>CONSIDER_EXTERNAL_JARS</code>, or their bitwise OR, or <code>0</code>
 	 * @param multipleSelection <code>true</code> if multiple selection is allowed
 	 * @param filter the initial pattern to filter the set of types containing a main method. For 
@@ -617,7 +617,7 @@ public final class JavaUI {
 	 *   is being populated
 	 * @param scope the scope that limits which types are included
 	 * @param style flags defining the style of the dialog; the only valid values are
-	 *   <code>IJavaElementSearchConstants.CONSIDER_BINARIES</code>,
+	 *   <code>IJavaScriptElementSearchConstants.CONSIDER_BINARIES</code>,
 	 *   <code>CONSIDER_EXTERNAL_JARS</code>, or their bitwise OR, or <code>0</code>
 	 * @param multipleSelection <code>true</code> if multiple selection is allowed
 	 * @return a new selection dialog
@@ -706,7 +706,7 @@ public final class JavaUI {
 	 * @return the working copy manager for the Java UI plug-in
 	 */
 	public static IWorkingCopyManager getWorkingCopyManager() {
-		return JavaPlugin.getDefault().getWorkingCopyManager();
+		return JavaScriptPlugin.getDefault().getWorkingCopyManager();
 	}
 
 	/**
@@ -718,7 +718,7 @@ public final class JavaUI {
 	 */
 	public static IJavaScriptElement getEditorInputJavaElement(IEditorInput editorInput) {
 		// Performance: check working copy manager first: this is faster
-		IJavaScriptElement je= JavaPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(editorInput);
+		IJavaScriptElement je= JavaScriptPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(editorInput);
 		if (je != null)
 			return je;
 		
@@ -780,7 +780,7 @@ public final class JavaUI {
 	 * API's that require an owner
 	 */
 	public static org.eclipse.wst.jsdt.core.IBufferFactory getBufferFactory() {
-		return JavaPlugin.getDefault().getBufferFactory();
+		return JavaScriptPlugin.getDefault().getBufferFactory();
 	}
 
 	/**
@@ -792,7 +792,7 @@ public final class JavaUI {
 	 * @since 2.0
 	 */
 	public static IDocumentProvider getDocumentProvider() {
-		return JavaPlugin.getDefault().getCompilationUnitDocumentProvider();
+		return JavaScriptPlugin.getDefault().getCompilationUnitDocumentProvider();
 	}
 		
 	/**
@@ -808,7 +808,7 @@ public final class JavaUI {
 	 * 
 	 * @since 2.0
 	 */
-	public static void setLibraryJavadocLocation(IPath archivePath, URL url) {
+	public static void setLibraryJSdocLocation(IPath archivePath, URL url) {
 		// deprecated
 	}
 	
@@ -838,13 +838,13 @@ public final class JavaUI {
 	 * or an external path in case of an external library.
 	 * @return the Javadoc location for an archive or <code>null</code>.
 	 * 
-	 * @deprecated Javadoc is now attached to the classpath entry. Use {@link #getJavadocBaseLocation(IJavaScriptElement)}
-	 * with the archive's {@link IPackageFragmentRoot} or use {@link #getLibraryJavadocLocation(IIncludePathEntry)}
+	 * @deprecated Javadoc is now attached to the classpath entry. Use {@link #getJSdocBaseLocation(IJavaScriptElement)}
+	 * with the archive's {@link IPackageFragmentRoot} or use {@link #getLibraryJSdocLocation(IIncludePathEntry)}
 	 * with the archive's {@link IIncludePathEntry}.
 	 * 
 	 * @since 2.0
 	 */	
-	public static URL getLibraryJavadocLocation(IPath archivePath) {
+	public static URL getLibraryJSdocLocation(IPath archivePath) {
 		return null;
 	}
 	
@@ -860,7 +860,7 @@ public final class JavaUI {
 	 * 
 	 * @since 3.1
 	 */	
-	public static URL getLibraryJavadocLocation(IIncludePathEntry entry) {
+	public static URL getLibraryJSdocLocation(IIncludePathEntry entry) {
 		return JavaDocLocations.getLibraryJavadocLocation(entry);
 	}
 	
@@ -875,7 +875,7 @@ public final class JavaUI {
 	 * 
 	 * @since 2.1
 	 */
-	public static void setProjectJavadocLocation(IJavaScriptProject project, URL url) {
+	public static void setProjectJSdocLocation(IJavaScriptProject project, URL url) {
 		JavaDocLocations.setProjectJavadocLocation(project, url);
 	}
 
@@ -889,7 +889,7 @@ public final class JavaUI {
 	 * 
 	 * @since 2.1
 	 */	
-	public static URL getProjectJavadocLocation(IJavaScriptProject project) {
+	public static URL getProjectJSdocLocation(IJavaScriptProject project) {
 		return JavaDocLocations.getProjectJavadocLocation(project);
 	}	
 
@@ -905,7 +905,7 @@ public final class JavaUI {
 	 * 
 	 * @since 2.0
 	 */		
-	public static URL getJavadocBaseLocation(IJavaScriptElement element) throws JavaScriptModelException {	
+	public static URL getJSdocBaseLocation(IJavaScriptElement element) throws JavaScriptModelException {	
 		return JavaDocLocations.getJavadocBaseLocation(element);
 	}
 	
@@ -925,7 +925,7 @@ public final class JavaUI {
 	 * 
 	 * @since 2.0
 	 */		
-	public static URL getJavadocLocation(IJavaScriptElement element, boolean includeAnchor) throws JavaScriptModelException {
+	public static URL getJSdocLocation(IJavaScriptElement element, boolean includeAnchor) throws JavaScriptModelException {
 		return JavaDocLocations.getJavadocLocation(element, includeAnchor);
 	}
 	
@@ -936,7 +936,7 @@ public final class JavaUI {
 	 * clipboard clients should use the following code snippet:
 	 * <pre>
 	 *   IJavaScriptElement[] elements=
-	 *     (IJavaScriptElement[])clipboard.getContents(JavaUI.getJavaElementClipboardTransfer());
+	 *     (IJavaScriptElement[])clipboard.getContents(JavaScriptUI.getJavaElementClipboardTransfer());
 	 * </pre>  
 	 * 
 	 * To put elements into the clipboard use the following snippet:
@@ -945,7 +945,7 @@ public final class JavaUI {
 	 *    IJavaScriptElement[] javaElements= ...;
 	 *    clipboard.setContents(
 	 *     new Object[] { javaElements },
-	 *     new Transfer[] { JavaUI.getJavaElementClipboardTransfer() } );
+	 *     new Transfer[] { JavaScriptUI.getJavaElementClipboardTransfer() } );
 	 * </pre>
 	 * 
 	 * @return returns the transfer object used to copy/paste Java elements
@@ -965,6 +965,6 @@ public final class JavaUI {
 	 * @since 3.2
 	 */
 	public static IColorManager getColorManager() {
-		return JavaPlugin.getDefault().getJavaTextTools().getColorManager();
+		return JavaScriptPlugin.getDefault().getJavaTextTools().getColorManager();
 	}
 }

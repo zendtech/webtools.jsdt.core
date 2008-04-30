@@ -111,7 +111,7 @@ import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.Resources;
 import org.eclipse.wst.jsdt.internal.corext.util.Strings;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.FilteredTypesSelectionDialog;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusInfo;
@@ -140,7 +140,7 @@ import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.StringButtonStatusD
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.StringDialogField;
 import org.eclipse.wst.jsdt.ui.CodeGeneration;
 import org.eclipse.wst.jsdt.ui.CodeStyleConfiguration;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
 
 /**
  * The class <code>NewTypeWizardPage</code> contains controls and validation routines 
@@ -520,7 +520,7 @@ public abstract class NewTypeWizardPage extends NewContainerWizardPage {
 					enclosingType= typeInCU;
 				}
 			} else {
-				IJavaScriptUnit cu= (IJavaScriptUnit) elem.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+				IJavaScriptUnit cu= (IJavaScriptUnit) elem.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 				if (cu != null) {
 					enclosingType= cu.findPrimaryType();
 				}
@@ -540,7 +540,7 @@ public abstract class NewTypeWizardPage extends NewContainerWizardPage {
 					}
 				}
 			} catch (JavaScriptModelException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 				// ignore this exception now
 			}			
 		}
@@ -1359,7 +1359,7 @@ public abstract class NewTypeWizardPage extends NewContainerWizardPage {
 		    	    if (findType(root.getJavaScriptProject(), "java.lang.Enum") == null) //$NON-NLS-1$
 		    	        return new StatusInfo(IStatus.WARNING, NewWizardMessages.NewTypeWizardPage_warning_EnumClassNotFound);  
 		    	} catch (JavaScriptModelException e) {
-		    	    JavaPlugin.log(e);
+		    	    JavaScriptPlugin.log(e);
 		    	}
 	    	}
 	    }
@@ -1417,7 +1417,7 @@ public abstract class NewTypeWizardPage extends NewContainerWizardPage {
 						}
 					}
 				} catch (JavaScriptModelException e) {
-					JavaPlugin.log(e);
+					JavaScriptPlugin.log(e);
 					// let pass			
 				}
 			}
@@ -1506,7 +1506,7 @@ public abstract class NewTypeWizardPage extends NewContainerWizardPage {
 			return status;
 		} catch (JavaScriptModelException e) {
 			status.setError(NewWizardMessages.NewTypeWizardPage_error_EnclosingTypeNotExists); 
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 			return status;
 		}
 	}
@@ -1771,13 +1771,13 @@ public abstract class NewTypeWizardPage extends NewContainerWizardPage {
 				packages= froot.getChildren();
 			}
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		if (packages == null) {
 			packages= new IJavaScriptElement[0];
 		}
 		
-		ElementListSelectionDialog dialog= new ElementListSelectionDialog(getShell(), new JavaElementLabelProvider(JavaElementLabelProvider.SHOW_DEFAULT));
+		ElementListSelectionDialog dialog= new ElementListSelectionDialog(getShell(), new JavaScriptElementLabelProvider(JavaScriptElementLabelProvider.SHOW_DEFAULT));
 		dialog.setIgnoreCase(false);
 		dialog.setTitle(NewWizardMessages.NewTypeWizardPage_ChoosePackageDialog_title); 
 		dialog.setMessage(NewWizardMessages.NewTypeWizardPage_ChoosePackageDialog_description); 
@@ -2397,7 +2397,7 @@ public abstract class NewTypeWizardPage extends NewContainerWizardPage {
 					return comment;
 				}
 			} catch (CoreException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		}
 		return null;
@@ -2440,16 +2440,16 @@ public abstract class NewTypeWizardPage extends NewContainerWizardPage {
 	 */
 	protected String getTemplate(String name, IJavaScriptUnit parentCU, int pos) {
 		try {
-			Template template= JavaPlugin.getDefault().getTemplateStore().findTemplate(name);
+			Template template= JavaScriptPlugin.getDefault().getTemplateStore().findTemplate(name);
 			if (template != null) {
 				return JavaContext.evaluateTemplate(template, parentCU, pos);
 			}
 		} catch (CoreException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		} catch (BadLocationException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		} catch (TemplateException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		return null;
 	}	

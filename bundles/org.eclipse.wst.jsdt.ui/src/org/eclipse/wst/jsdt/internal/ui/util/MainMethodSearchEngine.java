@@ -31,8 +31,8 @@ import org.eclipse.wst.jsdt.core.search.SearchPattern;
 import org.eclipse.wst.jsdt.core.search.SearchRequestor;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.SearchUtils;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
-import org.eclipse.wst.jsdt.ui.IJavaElementSearchConstants;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
+import org.eclipse.wst.jsdt.ui.IJavaScriptElementSearchConstants;
 
 public class MainMethodSearchEngine{
 	
@@ -47,11 +47,11 @@ public class MainMethodSearchEngine{
 			}
 
 			private boolean considerExternalJars() {
-				return (fStyle & IJavaElementSearchConstants.CONSIDER_EXTERNAL_JARS) != 0;
+				return (fStyle & IJavaScriptElementSearchConstants.CONSIDER_EXTERNAL_JARS) != 0;
 			}
 					
 			private boolean considerBinaries() {
-				return (fStyle & IJavaElementSearchConstants.CONSIDER_BINARIES) != 0;
+				return (fStyle & IJavaScriptElementSearchConstants.CONSIDER_BINARIES) != 0;
 			}		
 			
 			/* (non-Javadoc)
@@ -75,7 +75,7 @@ public class MainMethodSearchEngine{
 							fResult.add(curr.getDeclaringType());
 						}
 					} catch (JavaScriptModelException e) {
-						JavaPlugin.log(e.getStatus());
+						JavaScriptPlugin.log(e.getStatus());
 					}
 				}
 			}
@@ -83,8 +83,8 @@ public class MainMethodSearchEngine{
 
 	/**
 	 * Searches for all main methods in the given scope.
-	 * Valid styles are IJavaElementSearchConstants.CONSIDER_BINARIES and
-	 * IJavaElementSearchConstants.CONSIDER_EXTERNAL_JARS
+	 * Valid styles are IJavaScriptElementSearchConstants.CONSIDER_BINARIES and
+	 * IJavaScriptElementSearchConstants.CONSIDER_EXTERNAL_JARS
 	 */	
 	public IType[] searchMainMethods(IProgressMonitor pm, IJavaScriptSearchScope scope, int style) throws CoreException {
 		List typesFound= new ArrayList(200);
@@ -101,11 +101,11 @@ public class MainMethodSearchEngine{
 	
 	/**
 	 * Searches for all main methods in the given scope.
-	 * Valid styles are IJavaElementSearchConstants.CONSIDER_BINARIES and
-	 * IJavaElementSearchConstants.CONSIDER_EXTERNAL_JARS
+	 * Valid styles are IJavaScriptElementSearchConstants.CONSIDER_BINARIES and
+	 * IJavaScriptElementSearchConstants.CONSIDER_EXTERNAL_JARS
 	 */
 	public IType[] searchMainMethods(IRunnableContext context, final IJavaScriptSearchScope scope, final int style) throws InvocationTargetException, InterruptedException  {
-		int allFlags=  IJavaElementSearchConstants.CONSIDER_EXTERNAL_JARS | IJavaElementSearchConstants.CONSIDER_BINARIES;
+		int allFlags=  IJavaScriptElementSearchConstants.CONSIDER_EXTERNAL_JARS | IJavaScriptElementSearchConstants.CONSIDER_BINARIES;
 		Assert.isTrue((style | allFlags) == allFlags);
 		
 		final IType[][] res= new IType[1][];

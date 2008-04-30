@@ -27,7 +27,7 @@ import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.util.PixelConverter;
 import org.eclipse.wst.jsdt.internal.ui.wizards.TypedElementSelectionValidator;
 import org.eclipse.wst.jsdt.internal.ui.wizards.TypedViewerFilter;
@@ -35,9 +35,9 @@ import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.DialogField;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.IDialogFieldListener;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.IStringButtonAdapter;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.LayoutUtil;
-import org.eclipse.wst.jsdt.ui.JavaElementComparator;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
-import org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementComparator;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.StandardJavaScriptElementContentProvider;
 
 class SourceFirstPackageSelectionDialogField {
 
@@ -129,7 +129,7 @@ class SourceFirstPackageSelectionDialogField {
 					}
 					return true;
 				} catch (JavaScriptModelException e) {
-					JavaPlugin.log(e.getStatus()); // just log, no ui in validation
+					JavaScriptPlugin.log(e.getStatus()); // just log, no ui in validation
 				}
 				return false;
 			}
@@ -142,7 +142,7 @@ class SourceFirstPackageSelectionDialogField {
 					try {
 						return (((IPackageFragmentRoot)element).getKind() == IPackageFragmentRoot.K_SOURCE);
 					} catch (JavaScriptModelException e) {
-						JavaPlugin.log(e.getStatus()); // just log, no ui in validation
+						JavaScriptPlugin.log(e.getStatus()); // just log, no ui in validation
 						return false;
 					}
 				}
@@ -150,11 +150,11 @@ class SourceFirstPackageSelectionDialogField {
 			}
 		};		
 
-		StandardJavaElementContentProvider provider= new StandardJavaElementContentProvider();
-		ILabelProvider labelProvider= new JavaElementLabelProvider(JavaElementLabelProvider.SHOW_DEFAULT); 
+		StandardJavaScriptElementContentProvider provider= new StandardJavaScriptElementContentProvider();
+		ILabelProvider labelProvider= new JavaScriptElementLabelProvider(JavaScriptElementLabelProvider.SHOW_DEFAULT); 
 		ElementTreeSelectionDialog dialog= new ElementTreeSelectionDialog(fShell, labelProvider, provider);
 		dialog.setValidator(validator);
-		dialog.setComparator(new JavaElementComparator());
+		dialog.setComparator(new JavaScriptElementComparator());
 		dialog.setTitle(NLSUIMessages.SourceFirstPackageSelectionDialogField_ChooseSourceContainerDialog_title); 
 		dialog.setMessage(NLSUIMessages.SourceFirstPackageSelectionDialogField_ChooseSourceContainerDialog_description); 
 		dialog.addFilter(filter);

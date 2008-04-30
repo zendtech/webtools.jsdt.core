@@ -25,7 +25,7 @@ import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIMessages;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.wst.jsdt.internal.ui.util.MainMethodSearchEngine;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
 
 /**
  * A dialog to select a type from a list of types. The dialog allows
@@ -37,9 +37,9 @@ public class MainTypeSelectionDialog extends TwoPaneElementSelector {
 	private IJavaScriptSearchScope fScope;
 	private int fStyle;
 	
-	private static class PackageRenderer extends JavaElementLabelProvider {
+	private static class PackageRenderer extends JavaScriptElementLabelProvider {
 		public PackageRenderer() {
-			super(JavaElementLabelProvider.SHOW_PARAMETERS | JavaElementLabelProvider.SHOW_POST_QUALIFIED | JavaElementLabelProvider.SHOW_ROOT);	
+			super(JavaScriptElementLabelProvider.SHOW_PARAMETERS | JavaScriptElementLabelProvider.SHOW_POST_QUALIFIED | JavaScriptElementLabelProvider.SHOW_ROOT);	
 		}
 
 		public Image getImage(Object element) {
@@ -57,7 +57,7 @@ public class MainTypeSelectionDialog extends TwoPaneElementSelector {
 	public MainTypeSelectionDialog(Shell shell, IRunnableContext context,
 		IJavaScriptSearchScope scope, int style)
 	{
-		super(shell, new JavaElementLabelProvider(JavaElementLabelProvider.SHOW_BASICS | JavaElementLabelProvider.SHOW_OVERLAY_ICONS), 
+		super(shell, new JavaScriptElementLabelProvider(JavaScriptElementLabelProvider.SHOW_BASICS | JavaScriptElementLabelProvider.SHOW_OVERLAY_ICONS), 
 			new PackageRenderer());
 
 		Assert.isNotNull(context);

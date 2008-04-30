@@ -197,7 +197,7 @@ public class InterfaceIndicatorLabelDecorator implements ILabelDecorator, ILight
 		} catch (Result e) {
 			return getOverlayFromFlags(e.modifiers);
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		return null;
 
@@ -234,7 +234,7 @@ public class InterfaceIndicatorLabelDecorator implements ILabelDecorator, ILight
 		int flags= delta.getFlags();
 		
 		switch (elem.getElementType()) {
-			case IJavaScriptElement.JAVA_PROJECT:
+			case IJavaScriptElement.JAVASCRIPT_PROJECT:
 				if (isRemoved || (isChanged && 
 						(flags & IJavaScriptElementDelta.F_CLOSED) != 0)) {
 					return;
@@ -257,10 +257,10 @@ public class InterfaceIndicatorLabelDecorator implements ILabelDecorator, ILight
 			case IJavaScriptElement.TYPE:
 			case IJavaScriptElement.CLASS_FILE:
 				return;
-			case IJavaScriptElement.JAVA_MODEL:
+			case IJavaScriptElement.JAVASCRIPT_MODEL:
 				processChildrenDelta(delta, result);
 				return;
-			case IJavaScriptElement.COMPILATION_UNIT:
+			case IJavaScriptElement.JAVASCRIPT_UNIT:
 				// Not the primary compilation unit. Ignore it 
 				if (!JavaModelUtil.isPrimary((IJavaScriptUnit) elem)) {
 					return;

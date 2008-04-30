@@ -33,10 +33,10 @@ import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.dom.ASTNode;
 import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
 import org.eclipse.wst.jsdt.internal.corext.dom.ASTNodes;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.ASTProvider;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.WorkingCopyManager;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 public class JavaReconcilingStrategy implements IReconcilingStrategy, IReconcilingStrategyExtension {
 
@@ -54,8 +54,8 @@ public class JavaReconcilingStrategy implements IReconcilingStrategy, IReconcili
 
 	public JavaReconcilingStrategy(ITextEditor editor) {
 		fEditor= editor;
-		fManager= JavaPlugin.getDefault().getWorkingCopyManager();
-		fDocumentProvider= JavaPlugin.getDefault().getCompilationUnitDocumentProvider();
+		fManager= JavaScriptPlugin.getDefault().getWorkingCopyManager();
+		fDocumentProvider= JavaScriptPlugin.getDefault().getCompilationUnitDocumentProvider();
 		fIsJavaReconcilingListener= fEditor instanceof IJavaReconcilingListener;
 		if (fIsJavaReconcilingListener)
 			fJavaReconcilingListener= (IJavaReconcilingListener)fEditor;
@@ -85,7 +85,7 @@ public class JavaReconcilingStrategy implements IReconcilingStrategy, IReconcili
 							}
 							
 							try {
-								boolean isASTNeeded= initialReconcile || JavaPlugin.getDefault().getASTProvider().isActive(unit);
+								boolean isASTNeeded= initialReconcile || JavaScriptPlugin.getDefault().getASTProvider().isActive(unit);
 								// reconcile
 								if (fIsJavaReconcilingListener && isASTNeeded) {
 									int reconcileFlags= IJavaScriptUnit.FORCE_PROBLEM_DETECTION 
@@ -115,8 +115,8 @@ public class JavaReconcilingStrategy implements IReconcilingStrategy, IReconcili
 						}
 					}
 					public void handleException(Throwable ex) {
-						IStatus status= new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IStatus.OK, "Error in JDT Core during reconcile", ex);  //$NON-NLS-1$
-						JavaPlugin.getDefault().getLog().log(status);
+						IStatus status= new Status(IStatus.ERROR, JavaScriptUI.ID_PLUGIN, IStatus.OK, "Error in JDT Core during reconcile", ex);  //$NON-NLS-1$
+						JavaScriptPlugin.getDefault().getLog().log(status);
 					}
 				});
 				

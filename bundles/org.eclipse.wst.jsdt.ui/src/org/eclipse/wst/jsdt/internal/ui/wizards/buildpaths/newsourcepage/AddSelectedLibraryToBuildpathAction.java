@@ -35,7 +35,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.buildpath.BuildpathDelta;
 import org.eclipse.wst.jsdt.internal.corext.buildpath.ClasspathModifier;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.CPListElement;
@@ -79,7 +79,7 @@ public class AddSelectedLibraryToBuildpathAction extends BuildpathModifierAction
 	            return Messages.format(NewWizardMessages.PackageExplorerActionGroup_FormText_ArchiveToBuildpath, name);
 	        }
         } catch (JavaScriptModelException e) {
-	        JavaPlugin.log(e);
+	        JavaScriptPlugin.log(e);
         }
         
         return NewWizardMessages.PackageExplorerActionGroup_FormText_Default_toBuildpath;
@@ -108,7 +108,7 @@ public class AddSelectedLibraryToBuildpathAction extends BuildpathModifierAction
 			if (e.getCause() instanceof CoreException) {
 				showExceptionDialog((CoreException)e.getCause(), NewWizardMessages.AddSelectedLibraryToBuildpathAction_ErrorTitle);
 			} else {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		} catch (final InterruptedException e) {
 		}

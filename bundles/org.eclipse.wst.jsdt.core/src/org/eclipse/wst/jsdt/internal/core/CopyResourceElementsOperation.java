@@ -116,7 +116,7 @@ public class CopyResourceElementsOperation extends MultiOperation implements Suf
 	 */
 	private IResource[] collectResourcesOfInterest(IPackageFragment source) throws JavaScriptModelException {
 		IJavaScriptElement[] children = source.getChildren();
-		int childOfInterest = IJavaScriptElement.COMPILATION_UNIT;
+		int childOfInterest = IJavaScriptElement.JAVASCRIPT_UNIT;
 		if (source.getKind() == IPackageFragmentRoot.K_BINARY) {
 			childOfInterest = IJavaScriptElement.CLASS_FILE;
 		}
@@ -346,7 +346,7 @@ public class CopyResourceElementsOperation extends MultiOperation implements Suf
 	protected void processElement(IJavaScriptElement element) throws JavaScriptModelException {
 		IJavaScriptElement dest = getDestinationParent(element);
 		switch (element.getElementType()) {
-			case IJavaScriptElement.COMPILATION_UNIT :
+			case IJavaScriptElement.JAVASCRIPT_UNIT :
 				processCompilationUnitResource((IJavaScriptUnit) element, (PackageFragment) dest);
 				createdElements.add(((IPackageFragment) dest).getJavaScriptUnit(element.getElementName()));
 				break;
@@ -707,7 +707,7 @@ public class CopyResourceElementsOperation extends MultiOperation implements Suf
 
 		int elementType = element.getElementType();
 
-		if (elementType == IJavaScriptElement.COMPILATION_UNIT) {
+		if (elementType == IJavaScriptElement.JAVASCRIPT_UNIT) {
 			org.eclipse.wst.jsdt.internal.core.CompilationUnit compilationUnit = (org.eclipse.wst.jsdt.internal.core.CompilationUnit) element;
 			if (isMove() && compilationUnit.isWorkingCopy() && !compilationUnit.isPrimary())
 				error(IJavaScriptModelStatusConstants.INVALID_ELEMENT_TYPES, element);

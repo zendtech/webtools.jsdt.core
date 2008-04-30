@@ -25,7 +25,7 @@ import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.Signature;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.text.JavaHeuristicScanner;
 import org.eclipse.wst.jsdt.internal.ui.text.Symbols;
 import org.eclipse.wst.jsdt.ui.text.java.CompletionProposalCollector;
@@ -93,7 +93,7 @@ public class JavaTypeCompletionProposalComputer extends JavaCompletionProposalCo
 						}
 
 						// insert history types
-						List history= JavaPlugin.getDefault().getContentAssistHistory().getHistory(expectedType.getFullyQualifiedName()).getTypes();
+						List history= JavaScriptPlugin.getDefault().getContentAssistHistory().getHistory(expectedType.getFullyQualifiedName()).getTypes();
 						relevance-= history.size() + 1;
 						for (Iterator it= history.iterator(); it.hasNext();) {
 							String type= (String) it.next();
@@ -110,10 +110,10 @@ public class JavaTypeCompletionProposalComputer extends JavaCompletionProposalCo
 				}
 			} catch (BadLocationException x) {
 				// log & ignore
-				JavaPlugin.log(x);
+				JavaScriptPlugin.log(x);
 			} catch (JavaScriptModelException x) {
 				// log & ignore
-				JavaPlugin.log(x);
+				JavaScriptPlugin.log(x);
 			}
 		}
 		return types;

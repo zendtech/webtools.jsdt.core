@@ -39,7 +39,7 @@ import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
 import org.eclipse.wst.jsdt.core.dom.ITypeBinding;
 import org.eclipse.wst.jsdt.core.dom.QualifiedName;
 import org.eclipse.wst.jsdt.core.dom.SimpleName;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.ASTProvider;
 
 /**
@@ -153,11 +153,11 @@ public class NLSHint {
 						nlsLine.add(element);
 						String bundleName;
 						try {
-							IJavaScriptUnit bundleCU= (IJavaScriptUnit)type.getJavaElement().getAncestor(IJavaScriptElement.COMPILATION_UNIT); 
+							IJavaScriptUnit bundleCU= (IJavaScriptUnit)type.getJavaElement().getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT); 
 							if (fCache_CU == null || !fCache_CU.equals(bundleCU) || fCache_AST == null) {
 								fCache_CU= bundleCU;
 								if (fCache_CU != null)
-									fCache_AST=	JavaPlugin.getDefault().getASTProvider().getAST(fCache_CU, ASTProvider.WAIT_YES, null);
+									fCache_AST=	JavaScriptPlugin.getDefault().getASTProvider().getAST(fCache_CU, ASTProvider.WAIT_YES, null);
 								else
 									fCache_AST= null;
 							}

@@ -54,7 +54,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.changes.CompilationUnitC
 import org.eclipse.wst.jsdt.internal.corext.refactoring.structure.CompilationUnitRewrite;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.util.RefactoringFileBuffers;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 /**
  * Workspace runnable to add custom constructors initializing fields.
@@ -241,7 +241,7 @@ public final class AddCustomConstructorOperation implements IWorkspaceRunnable {
 										unit.getBuffer().setContents(document.get());
 								}
 							} catch (Exception exception) {
-								throw new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), 0, exception.getLocalizedMessage(), exception));
+								throw new CoreException(new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), 0, exception.getLocalizedMessage(), exception));
 							}
 						}
 					}

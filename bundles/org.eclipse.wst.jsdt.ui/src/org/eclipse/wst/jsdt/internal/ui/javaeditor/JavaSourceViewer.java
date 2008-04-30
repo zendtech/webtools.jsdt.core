@@ -52,8 +52,8 @@ import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.ui.text.SmartBackspaceManager;
 import org.eclipse.wst.jsdt.internal.ui.text.comment.CommentFormattingContext;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
-import org.eclipse.wst.jsdt.ui.text.IJavaPartitions;
-import org.eclipse.wst.jsdt.ui.text.JavaSourceViewerConfiguration;
+import org.eclipse.wst.jsdt.ui.text.IJavaScriptPartitions;
+import org.eclipse.wst.jsdt.ui.text.JavaScriptSourceViewerConfiguration;
 
 
 
@@ -207,8 +207,8 @@ public class JavaSourceViewer extends ProjectionViewer implements IPropertyChang
 		}
 
 		super.configure(configuration);
-		if (configuration instanceof JavaSourceViewerConfiguration) {
-			JavaSourceViewerConfiguration javaSVCconfiguration= (JavaSourceViewerConfiguration)configuration;
+		if (configuration instanceof JavaScriptSourceViewerConfiguration) {
+			JavaScriptSourceViewerConfiguration javaSVCconfiguration= (JavaScriptSourceViewerConfiguration)configuration;
 			fOutlinePresenter= javaSVCconfiguration.getOutlinePresenter(this, false);
 			if (fOutlinePresenter != null)
 				fOutlinePresenter.install(this);
@@ -529,11 +529,11 @@ public class JavaSourceViewer extends ProjectionViewer implements IPropertyChang
 			return null;
 
 		IRegion line= document.getLineInformationOfOffset(lineOffset);
-		ITypedRegion[] linePartitioning= TextUtilities.computePartitioning(document, IJavaPartitions.JAVA_PARTITIONING, lineOffset, line.getLength(), false);
+		ITypedRegion[] linePartitioning= TextUtilities.computePartitioning(document, IJavaScriptPartitions.JAVA_PARTITIONING, lineOffset, line.getLength(), false);
 
 		List segmentation= new ArrayList();
 		for (int i= 0; i < linePartitioning.length; i++) {
-			if (IJavaPartitions.JAVA_STRING.equals(linePartitioning[i].getType()))
+			if (IJavaScriptPartitions.JAVA_STRING.equals(linePartitioning[i].getType()))
 				segmentation.add(linePartitioning[i]);
 		}
 

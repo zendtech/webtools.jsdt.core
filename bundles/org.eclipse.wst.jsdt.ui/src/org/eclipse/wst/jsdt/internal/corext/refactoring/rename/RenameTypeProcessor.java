@@ -112,9 +112,9 @@ import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.SearchUtils;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.RefactoringSaveHelper;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpdating, IReferenceUpdating, IQualifiedNameUpdating, ISimilarDeclarationUpdating, IResourceMapper, IJavaElementMapper {
 
@@ -990,10 +990,10 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 				if (fType.isAnonymous() || fType.isLocal())
 					flags|= JavaRefactoringDescriptor.JAR_SOURCE_ATTACHMENT;
 			} catch (JavaScriptModelException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			}
 			final String description= Messages.format(RefactoringCoreMessages.RenameTypeProcessor_descriptor_description_short, fType.getElementName());
-			final String header= Messages.format(RefactoringCoreMessages.RenameTypeProcessor_descriptor_description, new String[] { JavaElementLabels.getElementLabel(fType, JavaElementLabels.ALL_FULLY_QUALIFIED), getNewElementName()});
+			final String header= Messages.format(RefactoringCoreMessages.RenameTypeProcessor_descriptor_description, new String[] { JavaScriptElementLabels.getElementLabel(fType, JavaScriptElementLabels.ALL_FULLY_QUALIFIED), getNewElementName()});
 			final String comment= new JDTRefactoringDescriptorComment(project, this, header).asString();
 			final RenameJavaElementDescriptor descriptor= new RenameJavaElementDescriptor(IJavaRefactorings.RENAME_TYPE);
 			descriptor.setProject(project);
@@ -1252,7 +1252,7 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 				continue;
 			
 			// JavaScriptUnit changed? (note: fPreloadedElementToName is sorted by JavaScriptUnit)
-			IJavaScriptUnit newCU= (IJavaScriptUnit) element.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+			IJavaScriptUnit newCU= (IJavaScriptUnit) element.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 			
 			if (!newCU.equals(currentCU)) {
 
@@ -1498,15 +1498,15 @@ public class RenameTypeProcessor extends JavaRenameProcessor implements ITextUpd
 			final IFunction[] elements= warning.getRipple();
 			if (warning.isSelectionWarning()) {
 				String message= Messages.format(RefactoringCoreMessages.RenameTypeProcessor_deselected_method_is_overridden,
-						new String[] { JavaElementLabels.getElementLabel(elements[0], JavaElementLabels.ALL_DEFAULT),
-								JavaElementLabels.getElementLabel(elements[0].getDeclaringType(), JavaElementLabels.ALL_DEFAULT) });
+						new String[] { JavaScriptElementLabels.getElementLabel(elements[0], JavaScriptElementLabels.ALL_DEFAULT),
+								JavaScriptElementLabels.getElementLabel(elements[0].getDeclaringType(), JavaScriptElementLabels.ALL_DEFAULT) });
 				status.addWarning(message);
 			}
 			if (warning.isNameWarning()) {
 				String message= Messages.format(
 						RefactoringCoreMessages.RenameTypeProcessor_renamed_method_is_overridden, new String[] {
-								JavaElementLabels.getElementLabel(elements[0], JavaElementLabels.ALL_DEFAULT),
-								JavaElementLabels.getElementLabel(elements[0].getDeclaringType(), JavaElementLabels.ALL_DEFAULT) });
+								JavaScriptElementLabels.getElementLabel(elements[0], JavaScriptElementLabels.ALL_DEFAULT),
+								JavaScriptElementLabels.getElementLabel(elements[0].getDeclaringType(), JavaScriptElementLabels.ALL_DEFAULT) });
 				status.addWarning(message);
 			}
 			for (int i= 0; i < elements.length; i++)

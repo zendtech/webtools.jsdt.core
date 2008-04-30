@@ -61,7 +61,7 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusInfo;
 import org.eclipse.wst.jsdt.internal.ui.text.java.CompletionProposalCategory;
 import org.eclipse.wst.jsdt.internal.ui.text.java.CompletionProposalComputerRegistry;
@@ -729,7 +729,7 @@ final class CodeAssistAdvancedConfigurationBlock extends OptionsConfigurationBlo
 					copy.define(scheme.getName(), scheme.getDescription(), scheme.getParentId());
 				}
 			} catch (final NotDefinedException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		}
 		fgLocalBindingManager.setLocale(bindingService.getLocale());
@@ -744,7 +744,7 @@ final class CodeAssistAdvancedConfigurationBlock extends OptionsConfigurationBlo
 			if (activeScheme != null)
 				fgLocalBindingManager.setActiveScheme(activeScheme);
 		} catch (NotDefinedException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		
 		TriggerSequence[] bindings= fgLocalBindingManager.getActiveBindingsDisregardingContextFor(command);

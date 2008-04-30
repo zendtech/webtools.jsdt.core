@@ -64,14 +64,14 @@ import org.eclipse.wst.jsdt.internal.corext.template.java.CompilationUnitComplet
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Strings;
 import org.eclipse.wst.jsdt.internal.corext.util.TypeNameMatchCollector;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.ASTProvider;
 import org.eclipse.wst.jsdt.internal.ui.text.correction.ASTResolving;
 import org.eclipse.wst.jsdt.internal.ui.text.correction.SimilarElementsRequestor;
 import org.eclipse.wst.jsdt.internal.ui.text.template.contentassist.MultiVariable;
 import org.eclipse.wst.jsdt.internal.ui.text.template.contentassist.MultiVariableGuess;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 
 /**
@@ -155,7 +155,7 @@ public class JavaContext extends CompilationUnitContext {
 
 		getContextType().resolve(buffer, this);
 
-		IPreferenceStore prefs= JavaPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore prefs= JavaScriptPlugin.getDefault().getPreferenceStore();
 		boolean useCodeFormatter= prefs.getBoolean(PreferenceConstants.TEMPLATES_USE_CODEFORMATTER);
 
 		IJavaScriptProject project= getJavaProject();
@@ -296,7 +296,7 @@ public class JavaContext extends CompilationUnitContext {
 		else if (e instanceof InvocationTargetException)
 			ExceptionHandler.handle((InvocationTargetException)e, shell, title, null);
 		else {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 			MessageDialog.openError(shell, title, e.getMessage());
 		}
 	}	
@@ -479,7 +479,7 @@ public class JavaContext extends CompilationUnitContext {
 	}
 	
 	private JavaScriptUnit getASTRoot(IJavaScriptUnit compilationUnit) {
-		return JavaPlugin.getDefault().getASTProvider().getAST(compilationUnit, ASTProvider.WAIT_NO, new NullProgressMonitor());
+		return JavaScriptPlugin.getDefault().getASTProvider().getAST(compilationUnit, ASTProvider.WAIT_NO, new NullProgressMonitor());
 	}
 	
 	/*
@@ -565,9 +565,9 @@ public class JavaContext extends CompilationUnitContext {
 	 */
 	public static String evaluateTemplate(Template template, IJavaScriptUnit compilationUnit, int position) throws CoreException, BadLocationException, TemplateException {
 
-		TemplateContextType contextType= JavaPlugin.getDefault().getTemplateContextRegistry().getContextType(JavaContextType.NAME);
+		TemplateContextType contextType= JavaScriptPlugin.getDefault().getTemplateContextRegistry().getContextType(JavaContextType.NAME);
 		if (contextType == null)
-			throw new CoreException(new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IStatus.ERROR, JavaTemplateMessages.JavaContext_error_message, null)); 
+			throw new CoreException(new Status(IStatus.ERROR, JavaScriptUI.ID_PLUGIN, IStatus.ERROR, JavaTemplateMessages.JavaContext_error_message, null)); 
 
 		IDocument document= new Document();
 		if (compilationUnit != null && compilationUnit.exists())

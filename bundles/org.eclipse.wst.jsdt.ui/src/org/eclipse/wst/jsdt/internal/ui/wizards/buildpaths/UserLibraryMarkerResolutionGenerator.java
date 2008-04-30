@@ -38,7 +38,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.preferences.BuildPathsPropertyPage;
 import org.eclipse.wst.jsdt.internal.ui.preferences.UserLibraryPreferencePage;
@@ -70,7 +70,7 @@ public class UserLibraryMarkerResolutionGenerator implements IMarkerResolutionGe
 	 * @see org.eclipse.ui.IMarkerResolutionGenerator#getResolutions(org.eclipse.core.resources.IMarker)
 	 */
 	public IMarkerResolution[] getResolutions(IMarker marker) {
-		final Shell shell= JavaPlugin.getActiveWorkbenchShell();
+		final Shell shell= JavaScriptPlugin.getActiveWorkbenchShell();
 		if (!hasResolutions(marker) || shell == null) {
 			return NO_RESOLUTION;
 		}
@@ -143,7 +143,7 @@ public class UserLibraryMarkerResolutionGenerator implements IMarkerResolutionGe
 			System.arraycopy(res, 0, newEntries, idx, res.length);
 			System.arraycopy(entries, idx + 1, newEntries, idx + res.length, entries.length - idx - 1);
 			
-			IRunnableContext context= JavaPlugin.getActiveWorkbenchWindow();
+			IRunnableContext context= JavaScriptPlugin.getActiveWorkbenchWindow();
 			if (context == null) {
 				context= PlatformUI.getWorkbench().getProgressService();
 			}
@@ -247,7 +247,7 @@ public class UserLibraryMarkerResolutionGenerator implements IMarkerResolutionGe
 		}
 
 		public void run(IMarker marker) {
-			PreferencesUtil.createPropertyDialogOn(JavaPlugin.getActiveWorkbenchShell(), fProject, BuildPathsPropertyPage.PROP_ID, null, null).open();
+			PreferencesUtil.createPropertyDialogOn(JavaScriptPlugin.getActiveWorkbenchShell(), fProject, BuildPathsPropertyPage.PROP_ID, null, null).open();
 		}
 	}
 

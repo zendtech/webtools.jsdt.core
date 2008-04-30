@@ -84,9 +84,9 @@ import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.SearchUtils;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.RefactoringSaveHelper;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 public class RenameFieldProcessor extends JavaRenameProcessor implements IReferenceUpdating, ITextUpdating, IDelegateUpdating {
 
@@ -580,17 +580,17 @@ public class RenameFieldProcessor extends JavaRenameProcessor implements IRefere
 				if (!Flags.isPrivate(fField.getFlags()))
 					flags|= RefactoringDescriptor.MULTI_CHANGE;
 			} catch (JavaScriptModelException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			}
 			final IType declaring= fField.getDeclaringType();
 			try {
 				if ( declaring!=null && (declaring.isAnonymous() || declaring.isLocal()))
 					flags|= JavaRefactoringDescriptor.JAR_SOURCE_ATTACHMENT;
 			} catch (JavaScriptModelException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			}
 			final String description= Messages.format(RefactoringCoreMessages.RenameFieldRefactoring_descriptor_description_short, fField.getElementName());
-			final String header= Messages.format(RefactoringCoreMessages.RenameFieldProcessor_descriptor_description, new String[] { fField.getElementName(), JavaElementLabels.getElementLabel(fField.getParent(), JavaElementLabels.ALL_FULLY_QUALIFIED), getNewElementName()});
+			final String header= Messages.format(RefactoringCoreMessages.RenameFieldProcessor_descriptor_description, new String[] { fField.getElementName(), JavaScriptElementLabels.getElementLabel(fField.getParent(), JavaScriptElementLabels.ALL_FULLY_QUALIFIED), getNewElementName()});
 			final JDTRefactoringDescriptorComment comment= new JDTRefactoringDescriptorComment(project, this, header);
 			if (fRenameGetter)
 				comment.addSetting(RefactoringCoreMessages.RenameFieldRefactoring_setting_rename_getter);

@@ -44,9 +44,9 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.reorg.ReorgUtils;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.util.JavaElementUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
 import org.eclipse.wst.jsdt.ui.actions.SelectionDispatchAction;
 
 
@@ -75,7 +75,7 @@ public class CopyToClipboardAction extends SelectionDispatchAction{
 	}
 	
 	private static ISharedImages getWorkbenchSharedImages() {
-		return JavaPlugin.getDefault().getWorkbench().getSharedImages();
+		return JavaScriptPlugin.getDefault().getWorkbench().getSharedImages();
 	}
 
 	/* (non-Javadoc)
@@ -94,7 +94,7 @@ public class CopyToClipboardAction extends SelectionDispatchAction{
 			//no ui here - this happens on selection changes
 			// http://bugs.eclipse.org/bugs/show_bug.cgi?id=19253
 			if (JavaModelUtil.isExceptionToBeLogged(e))
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			setEnabled(false);
 		}
 	}
@@ -169,7 +169,7 @@ public class CopyToClipboardAction extends SelectionDispatchAction{
 		}
 
 		private static IJavaScriptElement[] getCompilationUnits(IJavaScriptElement[] javaElements) {
-			List cus= ReorgUtils.getElementsOfType(javaElements, IJavaScriptElement.COMPILATION_UNIT);
+			List cus= ReorgUtils.getElementsOfType(javaElements, IJavaScriptElement.JAVASCRIPT_UNIT);
 			return (IJavaScriptUnit[]) cus.toArray(new IJavaScriptUnit[cus.size()]);
 		}
 
@@ -188,10 +188,10 @@ public class CopyToClipboardAction extends SelectionDispatchAction{
 			for (int i= 0; i < fJavaElements.length; i++) {
 				IJavaScriptElement element= fJavaElements[i];
 				switch (element.getElementType()) {
-					case IJavaScriptElement.JAVA_PROJECT :
+					case IJavaScriptElement.JAVASCRIPT_PROJECT :
 					case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT :
 					case IJavaScriptElement.PACKAGE_FRAGMENT :
-					case IJavaScriptElement.COMPILATION_UNIT :
+					case IJavaScriptElement.JAVASCRIPT_UNIT :
 					case IJavaScriptElement.CLASS_FILE :
 						addFileName(fileNames, ReorgUtils.getResource(element));
 						break;
@@ -271,10 +271,10 @@ public class CopyToClipboardAction extends SelectionDispatchAction{
 		}
 
 		private static ILabelProvider createLabelProvider(){
-			return new JavaElementLabelProvider(
-				JavaElementLabelProvider.SHOW_VARIABLE
-				+ JavaElementLabelProvider.SHOW_PARAMETERS
-				+ JavaElementLabelProvider.SHOW_TYPE
+			return new JavaScriptElementLabelProvider(
+				JavaScriptElementLabelProvider.SHOW_VARIABLE
+				+ JavaScriptElementLabelProvider.SHOW_PARAMETERS
+				+ JavaScriptElementLabelProvider.SHOW_TYPE
 			);		
 		}
 		private String getName(IResource resource){

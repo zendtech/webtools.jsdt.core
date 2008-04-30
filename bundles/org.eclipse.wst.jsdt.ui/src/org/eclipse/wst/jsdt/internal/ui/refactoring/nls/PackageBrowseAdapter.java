@@ -23,10 +23,10 @@ import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.DialogField;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.IStringButtonAdapter;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
 
 
 public class PackageBrowseAdapter implements IStringButtonAdapter {
@@ -44,7 +44,7 @@ public class PackageBrowseAdapter implements IStringButtonAdapter {
     
 	public void changeControlPressed(DialogField field) {
 		ElementListSelectionDialog dialog= new ElementListSelectionDialog(
-			Display.getCurrent().getActiveShell(), new JavaElementLabelProvider());
+			Display.getCurrent().getActiveShell(), new JavaScriptElementLabelProvider());
         dialog.setIgnoreCase(false);
         dialog.setTitle(NLSUIMessages.PackageBrowseAdapter_package_selection); 
         dialog.setMessage(NLSUIMessages.PackageBrowseAdapter_choose_package); 
@@ -69,7 +69,7 @@ public class PackageBrowseAdapter implements IStringButtonAdapter {
 			}
 			return result.toArray();
 		} catch (JavaScriptModelException e){
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 			return new Object[0];
 		}
 	}
@@ -137,7 +137,7 @@ public class PackageBrowseAdapter implements IStringButtonAdapter {
 			}
 			return result;
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 			return new ArrayList(0);
 		}
     }

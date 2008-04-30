@@ -25,7 +25,7 @@ import org.eclipse.wst.jsdt.internal.corext.util.MethodOverrideTester;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.AppearanceAwareLabelProvider;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.ColoredString;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.ColoredViewersManager;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 /**
  * Label provider for the hierarchy method viewers. 
@@ -114,7 +114,7 @@ public class MethodsLabelProvider extends AppearanceAwareLabelProvider {
 			try {
 				IType type= getDefiningType(element);
 				if (type != null) {
-					return super.getText(type) + JavaElementLabels.CONCAT_STRING;
+					return super.getText(type) + JavaScriptElementLabels.CONCAT_STRING;
 				}
 			} catch (JavaScriptModelException e) {
 			}

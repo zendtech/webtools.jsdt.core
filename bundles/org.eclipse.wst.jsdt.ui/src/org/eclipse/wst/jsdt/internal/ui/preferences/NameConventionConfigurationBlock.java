@@ -36,7 +36,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.Strings;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusInfo;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusUtil;
@@ -51,7 +51,7 @@ import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.LayoutUtil;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.ListDialogField;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.SelectionButtonDialogField;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.StringDialogField;
-import org.eclipse.wst.jsdt.ui.JavaElementImageDescriptor;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementImageDescriptor;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 
 /*
@@ -222,12 +222,12 @@ public class NameConventionConfigurationBlock extends OptionsConfigurationBlock 
 			}
 			
 			NameConventionEntry entry= (NameConventionEntry) element;
-			ImageDescriptorRegistry registry= JavaPlugin.getImageDescriptorRegistry();
+			ImageDescriptorRegistry registry= JavaScriptPlugin.getImageDescriptorRegistry();
 			switch (entry.kind) {
 				case FIELD:
 					return registry.get(JavaPluginImages.DESC_FIELD_PUBLIC);
 				case STATIC:
-					return registry.get(new JavaElementImageDescriptor(JavaPluginImages.DESC_FIELD_PUBLIC, JavaElementImageDescriptor.STATIC, JavaElementImageProvider.SMALL_SIZE));
+					return registry.get(new JavaScriptElementImageDescriptor(JavaPluginImages.DESC_FIELD_PUBLIC, JavaScriptElementImageDescriptor.STATIC, JavaElementImageProvider.SMALL_SIZE));
 				case ARGUMENT:
 					return registry.get(JavaPluginImages.DESC_OBJS_LOCAL_VARIABLE);
 				default:
@@ -476,7 +476,7 @@ public class NameConventionConfigurationBlock extends OptionsConfigurationBlock 
 		String value= getValue(key);
 		if (value == null) {
 			value= ""; //$NON-NLS-1$
-			JavaPlugin.logErrorMessage("JavaScriptCore preference is null. Key:" + key); //$NON-NLS-1$
+			JavaScriptPlugin.logErrorMessage("JavaScriptCore preference is null. Key:" + key); //$NON-NLS-1$
 		}
 		return value;
 	}

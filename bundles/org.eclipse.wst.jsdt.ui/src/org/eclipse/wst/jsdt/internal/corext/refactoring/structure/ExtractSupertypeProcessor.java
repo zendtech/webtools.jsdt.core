@@ -92,10 +92,10 @@ import org.eclipse.wst.jsdt.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.preferences.JavaPreferencesSettings;
 import org.eclipse.wst.jsdt.ui.CodeGeneration;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 /**
  * Refactoring processor for the extract supertype refactoring.
@@ -234,7 +234,7 @@ public final class ExtractSupertypeProcessor extends PullUpRefactoringProcessor 
 					return type;
 				}
 			} catch (JavaScriptModelException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			}
 		}
 		return null;
@@ -256,20 +256,20 @@ public final class ExtractSupertypeProcessor extends PullUpRefactoringProcessor 
 				if (declaring.isLocal() || declaring.isAnonymous())
 					flags|= JavaRefactoringDescriptor.JAR_SOURCE_ATTACHMENT;
 			} catch (JavaScriptModelException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			}
 			final String description= Messages.format(RefactoringCoreMessages.ExtractSupertypeProcessor_descriptor_description_short, fTypeName);
-			final String header= Messages.format(RefactoringCoreMessages.ExtractSupertypeProcessor_descriptor_description, new String[] { JavaElementLabels.getElementLabel(fDestinationType, JavaElementLabels.ALL_FULLY_QUALIFIED), JavaElementLabels.getElementLabel(fCachedDeclaringType, JavaElementLabels.ALL_FULLY_QUALIFIED)});
+			final String header= Messages.format(RefactoringCoreMessages.ExtractSupertypeProcessor_descriptor_description, new String[] { JavaScriptElementLabels.getElementLabel(fDestinationType, JavaScriptElementLabels.ALL_FULLY_QUALIFIED), JavaScriptElementLabels.getElementLabel(fCachedDeclaringType, JavaScriptElementLabels.ALL_FULLY_QUALIFIED)});
 			final JDTRefactoringDescriptorComment comment= new JDTRefactoringDescriptorComment(project, this, header);
 			final IType[] types= getTypesToExtract();
 			String[] settings= new String[types.length];
 			for (int index= 0; index < settings.length; index++)
-				settings[index]= JavaElementLabels.getElementLabel(types[index], JavaElementLabels.ALL_FULLY_QUALIFIED);
+				settings[index]= JavaScriptElementLabels.getElementLabel(types[index], JavaScriptElementLabels.ALL_FULLY_QUALIFIED);
 			comment.addSetting(JDTRefactoringDescriptorComment.createCompositeSetting(RefactoringCoreMessages.ExtractSupertypeProcessor_subtypes_pattern, settings));
-			comment.addSetting(Messages.format(RefactoringCoreMessages.ExtractSupertypeProcessor_refactored_element_pattern, JavaElementLabels.getElementLabel(fDestinationType, JavaElementLabels.ALL_FULLY_QUALIFIED)));
+			comment.addSetting(Messages.format(RefactoringCoreMessages.ExtractSupertypeProcessor_refactored_element_pattern, JavaScriptElementLabels.getElementLabel(fDestinationType, JavaScriptElementLabels.ALL_FULLY_QUALIFIED)));
 			settings= new String[fMembersToMove.length];
 			for (int index= 0; index < settings.length; index++)
-				settings[index]= JavaElementLabels.getElementLabel(fMembersToMove[index], JavaElementLabels.ALL_FULLY_QUALIFIED);
+				settings[index]= JavaScriptElementLabels.getElementLabel(fMembersToMove[index], JavaScriptElementLabels.ALL_FULLY_QUALIFIED);
 			comment.addSetting(JDTRefactoringDescriptorComment.createCompositeSetting(RefactoringCoreMessages.ExtractInterfaceProcessor_extracted_members_pattern, settings));
 			addSuperTypeSettings(comment, true);
 			final JDTRefactoringDescriptor descriptor= new JDTRefactoringDescriptor(IJavaRefactorings.EXTRACT_SUPERCLASS, project, description, comment.asString(), arguments, flags);
@@ -376,13 +376,13 @@ public final class ExtractSupertypeProcessor extends PullUpRefactoringProcessor 
 			copy.getBuffer().setContents(document.get());
 			JavaModelUtil.reconcile(copy);
 		} catch (CoreException exception) {
-			JavaPlugin.log(exception);
+			JavaScriptPlugin.log(exception);
 			status.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ExtractSupertypeProcessor_unexpected_exception_on_layer));
 		} catch (MalformedTreeException exception) {
-			JavaPlugin.log(exception);
+			JavaScriptPlugin.log(exception);
 			status.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ExtractSupertypeProcessor_unexpected_exception_on_layer));
 		} catch (BadLocationException exception) {
-			JavaPlugin.log(exception);
+			JavaScriptPlugin.log(exception);
 			status.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ExtractSupertypeProcessor_unexpected_exception_on_layer));
 		}
 	}
@@ -424,7 +424,7 @@ public final class ExtractSupertypeProcessor extends PullUpRefactoringProcessor 
 								if (stub != null)
 									rewrite.insertLast(stub, null);
 							} catch (CoreException exception) {
-								JavaPlugin.log(exception);
+								JavaScriptPlugin.log(exception);
 								status.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ExtractSupertypeProcessor_unexpected_exception_on_layer));
 							}
 						}
@@ -504,10 +504,10 @@ public final class ExtractSupertypeProcessor extends PullUpRefactoringProcessor 
 				try {
 					edit.apply(document, TextEdit.UPDATE_REGIONS);
 				} catch (MalformedTreeException exception) {
-					JavaPlugin.log(exception);
+					JavaScriptPlugin.log(exception);
 					status.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ExtractSupertypeProcessor_unexpected_exception_on_layer));
 				} catch (BadLocationException exception) {
-					JavaPlugin.log(exception);
+					JavaScriptPlugin.log(exception);
 					status.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ExtractSupertypeProcessor_unexpected_exception_on_layer));
 				}
 				source= document.get();
@@ -587,10 +587,10 @@ public final class ExtractSupertypeProcessor extends PullUpRefactoringProcessor 
 			try {
 				edit.apply(document, TextEdit.UPDATE_REGIONS);
 			} catch (MalformedTreeException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 				status.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ExtractSupertypeProcessor_unexpected_exception_on_layer));
 			} catch (BadLocationException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 				status.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ExtractSupertypeProcessor_unexpected_exception_on_layer));
 			}
 			buffer.setLength(0);
@@ -811,7 +811,7 @@ public final class ExtractSupertypeProcessor extends PullUpRefactoringProcessor 
 										}
 									}
 								} catch (CoreException exception) {
-									JavaPlugin.log(exception);
+									JavaScriptPlugin.log(exception);
 									status.merge(RefactoringStatus.createFatalErrorStatus(exception.getLocalizedMessage()));
 								} finally {
 									subsubMonitor.worked(1);
@@ -830,7 +830,7 @@ public final class ExtractSupertypeProcessor extends PullUpRefactoringProcessor 
 				subMonitor.done();
 			}
 		} catch (CoreException exception) {
-			JavaPlugin.log(exception);
+			JavaScriptPlugin.log(exception);
 			status.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ExtractSupertypeProcessor_unexpected_exception_on_layer));
 		} finally {
 			monitor.done();
@@ -863,7 +863,7 @@ public final class ExtractSupertypeProcessor extends PullUpRefactoringProcessor 
 						fPossibleCandidates= (IType[]) list.toArray(new IType[list.size()]);
 					}
 				} catch (JavaScriptModelException exception) {
-					JavaPlugin.log(exception);
+					JavaScriptPlugin.log(exception);
 				} finally {
 					monitor.done();
 				}
@@ -1086,9 +1086,9 @@ public final class ExtractSupertypeProcessor extends PullUpRefactoringProcessor 
 								try {
 									edit.apply(document, TextEdit.UPDATE_REGIONS);
 								} catch (MalformedTreeException exception) {
-									JavaPlugin.log(exception);
+									JavaScriptPlugin.log(exception);
 								} catch (BadLocationException exception) {
-									JavaPlugin.log(exception);
+									JavaScriptPlugin.log(exception);
 								}
 								fSuperSource= document.get();
 								manager.remove(extractedUnit);

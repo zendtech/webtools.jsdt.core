@@ -62,7 +62,7 @@ import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.Resources;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionMessages;
 import org.eclipse.wst.jsdt.internal.ui.actions.WorkbenchRunnableAdapter;
 import org.eclipse.wst.jsdt.internal.ui.browsing.LogicalPackage;
@@ -71,8 +71,8 @@ import org.eclipse.wst.jsdt.internal.ui.text.comment.CommentFormattingContext;
 import org.eclipse.wst.jsdt.internal.ui.text.comment.CommentFormattingStrategy;
 import org.eclipse.wst.jsdt.internal.ui.text.java.JavaFormattingStrategy;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
-import org.eclipse.wst.jsdt.ui.JavaUI;
-import org.eclipse.wst.jsdt.ui.text.IJavaPartitions;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
+import org.eclipse.wst.jsdt.ui.text.IJavaScriptPartitions;
 
 /**
  * Formats the code of the compilation units contained in the selection.
@@ -151,11 +151,11 @@ public class FormatAllAction extends SelectionDispatchAction {
 					
 						switch (elem.getElementType()) {
 							case IJavaScriptElement.TYPE:
-								if (elem.getParent().getElementType() == IJavaScriptElement.COMPILATION_UNIT) {
+								if (elem.getParent().getElementType() == IJavaScriptElement.JAVASCRIPT_UNIT) {
 									result.add(elem.getParent());
 								}
 								break;						
-							case IJavaScriptElement.COMPILATION_UNIT:
+							case IJavaScriptElement.JAVASCRIPT_UNIT:
 								result.add(elem);
 								break;		
 							case IJavaScriptElement.PACKAGE_FRAGMENT:
@@ -164,7 +164,7 @@ public class FormatAllAction extends SelectionDispatchAction {
 							case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
 								collectCompilationUnits((IPackageFragmentRoot) elem, result);
 								break;
-							case IJavaScriptElement.JAVA_PROJECT:
+							case IJavaScriptElement.JAVASCRIPT_PROJECT:
 								IPackageFragmentRoot[] roots= ((IJavaScriptProject) elem).getPackageFragmentRoots();
 								for (int k= 0; k < roots.length; k++) {
 									collectCompilationUnits(roots[k], result);
@@ -182,7 +182,7 @@ public class FormatAllAction extends SelectionDispatchAction {
 					}
 				}
 			} catch (JavaScriptModelException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		}
 		return (IJavaScriptUnit[]) result.toArray(new IJavaScriptUnit[result.size()]);
@@ -210,14 +210,14 @@ public class FormatAllAction extends SelectionDispatchAction {
 					if (elem.exists()) {
 						switch (elem.getElementType()) {
 							case IJavaScriptElement.TYPE:
-								return elem.getParent().getElementType() == IJavaScriptElement.COMPILATION_UNIT; // for browsing perspective
-							case IJavaScriptElement.COMPILATION_UNIT:
+								return elem.getParent().getElementType() == IJavaScriptElement.JAVASCRIPT_UNIT; // for browsing perspective
+							case IJavaScriptElement.JAVASCRIPT_UNIT:
 								return true;
 							case IJavaScriptElement.PACKAGE_FRAGMENT:
 							case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
 								IPackageFragmentRoot root= (IPackageFragmentRoot) elem.getAncestor(IJavaScriptElement.PACKAGE_FRAGMENT_ROOT);
 								return (root.getKind() == IPackageFragmentRoot.K_SOURCE);
-							case IJavaScriptElement.JAVA_PROJECT:
+							case IJavaScriptElement.JAVASCRIPT_PROJECT:
 								// https://bugs.eclipse.org/bugs/show_bug.cgi?id=65638
 								return true;
 						}
@@ -227,7 +227,7 @@ public class FormatAllAction extends SelectionDispatchAction {
 				}
 			} catch (JavaScriptModelException e) {
 				if (JavaModelUtil.isExceptionToBeLogged(e))
-					JavaPlugin.log(e);
+					JavaScriptPlugin.log(e);
 			}
 		}
 		return false;
@@ -250,7 +250,7 @@ public class FormatAllAction extends SelectionDispatchAction {
 		}
 		try {
 			if (cus.length == 1) {
-				JavaUI.openInEditor(cus[0]);
+				JavaScriptUI.openInEditor(cus[0]);
 			} else {
 				int returnCode= OptionalMessageDialog.open("FormatAll",  //$NON-NLS-1$
 						getShell(), 
@@ -283,7 +283,7 @@ public class FormatAllAction extends SelectionDispatchAction {
 	 */
 	public void runOnMultiple(final IJavaScriptUnit[] cus) {
 		try {
-			final MultiStatus status= new MultiStatus(JavaUI.ID_PLUGIN, IStatus.OK, ActionMessages.FormatAllAction_status_description, null);
+			final MultiStatus status= new MultiStatus(JavaScriptUI.ID_PLUGIN, IStatus.OK, ActionMessages.FormatAllAction_status_description, null);
 			
 			IStatus valEditStatus= Resources.makeCommittable(getResources(cus), getShell());
 			if (valEditStatus.matches(IStatus.CANCEL)) {
@@ -318,12 +318,12 @@ public class FormatAllAction extends SelectionDispatchAction {
 			context.setProperty(FormattingContextProperties.CONTEXT_PREFERENCES, options);
 			context.setProperty(FormattingContextProperties.CONTEXT_DOCUMENT, Boolean.valueOf(true));
 			
-			final MultiPassContentFormatter formatter= new MultiPassContentFormatter(IJavaPartitions.JAVA_PARTITIONING, IDocument.DEFAULT_CONTENT_TYPE);
+			final MultiPassContentFormatter formatter= new MultiPassContentFormatter(IJavaScriptPartitions.JAVA_PARTITIONING, IDocument.DEFAULT_CONTENT_TYPE);
 			
 			formatter.setMasterStrategy(new JavaFormattingStrategy());
-			formatter.setSlaveStrategy(new CommentFormattingStrategy(), IJavaPartitions.JAVA_DOC);
-			formatter.setSlaveStrategy(new CommentFormattingStrategy(), IJavaPartitions.JAVA_SINGLE_LINE_COMMENT);
-			formatter.setSlaveStrategy(new CommentFormattingStrategy(), IJavaPartitions.JAVA_MULTI_LINE_COMMENT);		
+			formatter.setSlaveStrategy(new CommentFormattingStrategy(), IJavaScriptPartitions.JAVA_DOC);
+			formatter.setSlaveStrategy(new CommentFormattingStrategy(), IJavaScriptPartitions.JAVA_SINGLE_LINE_COMMENT);
+			formatter.setSlaveStrategy(new CommentFormattingStrategy(), IJavaScriptPartitions.JAVA_MULTI_LINE_COMMENT);		
 
 			try {
 				startSequentialRewriteMode(document);
@@ -379,7 +379,7 @@ public class FormatAllAction extends SelectionDispatchAction {
 				}
 				if (cu.getResource().getResourceAttributes().isReadOnly()) {
 					String message= Messages.format(ActionMessages.FormatAllAction_read_only_skipped, path.toString());
-					status.add(new Status(IStatus.WARNING, JavaUI.ID_PLUGIN, IStatus.WARNING, message, null));
+					status.add(new Status(IStatus.WARNING, JavaScriptUI.ID_PLUGIN, IStatus.WARNING, message, null));
 					continue;
 				}
 				
@@ -403,7 +403,7 @@ public class FormatAllAction extends SelectionDispatchAction {
 					}
 				} catch (CoreException e) {
 					String message= Messages.format(ActionMessages.FormatAllAction_problem_accessing, new String[] { path.toString(), e.getLocalizedMessage() });
-					status.add(new Status(IStatus.WARNING, JavaUI.ID_PLUGIN, IStatus.WARNING, message, e));
+					status.add(new Status(IStatus.WARNING, JavaScriptUI.ID_PLUGIN, IStatus.WARNING, message, e));
 				}
 			}
 		} finally {

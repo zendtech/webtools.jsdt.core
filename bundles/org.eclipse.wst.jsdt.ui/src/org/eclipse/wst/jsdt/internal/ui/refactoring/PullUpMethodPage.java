@@ -68,14 +68,14 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.util.JavaElementUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.Strings;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaSourceViewer;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.wst.jsdt.internal.ui.util.SWTUtil;
-import org.eclipse.wst.jsdt.ui.JavaElementComparator;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementComparator;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
-import org.eclipse.wst.jsdt.ui.text.JavaSourceViewerConfiguration;
+import org.eclipse.wst.jsdt.ui.text.JavaScriptSourceViewerConfiguration;
 
 /**
  * Wizard page for pull up refactoring wizards which allows to specify the
@@ -325,9 +325,9 @@ public class PullUpMethodPage extends UserInputWizardPage {
 	}
 
 	private void createSourceViewer(final Composite c) {
-		final IPreferenceStore store= JavaPlugin.getDefault().getCombinedPreferenceStore();
+		final IPreferenceStore store= JavaScriptPlugin.getDefault().getCombinedPreferenceStore();
 		fSourceViewer= new JavaSourceViewer(c, null, null, false, SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION, store);
-		fSourceViewer.configure(new JavaSourceViewerConfiguration(JavaPlugin.getDefault().getJavaTextTools().getColorManager(), store, null, null));
+		fSourceViewer.configure(new JavaScriptSourceViewerConfiguration(JavaScriptPlugin.getDefault().getJavaTextTools().getColorManager(), store, null, null));
 		fSourceViewer.setEditable(false);
 		fSourceViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 		fSourceViewer.getControl().setFont(JFaceResources.getFont(PreferenceConstants.EDITOR_TEXT_FONT));
@@ -378,9 +378,9 @@ public class PullUpMethodPage extends UserInputWizardPage {
 		final Tree tree= new Tree(composite, SWT.CHECK | SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
 		tree.setLayoutData(new GridData(GridData.FILL_BOTH));
 		fTreeViewer= new ContainerCheckedTreeViewer(tree);
-		fTreeViewer.setLabelProvider(new JavaElementLabelProvider(JavaElementLabelProvider.SHOW_DEFAULT | JavaElementLabelProvider.SHOW_SMALL_ICONS));
+		fTreeViewer.setLabelProvider(new JavaScriptElementLabelProvider(JavaScriptElementLabelProvider.SHOW_DEFAULT | JavaScriptElementLabelProvider.SHOW_SMALL_ICONS));
 		fTreeViewer.setUseHashlookup(true);
-		fTreeViewer.setComparator(new JavaElementComparator());
+		fTreeViewer.setComparator(new JavaScriptElementComparator());
 		fTreeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			public void selectionChanged(final SelectionChangedEvent event) {
@@ -523,7 +523,7 @@ public class PullUpMethodPage extends UserInputWizardPage {
 			}
 		}
 		final IDocument document= (contents == null) ? new Document() : new Document(contents);
-		JavaPlugin.getDefault().getJavaTextTools().setupJavaDocumentPartitioner(document);
+		JavaScriptPlugin.getDefault().getJavaTextTools().setupJavaDocumentPartitioner(document);
 		fSourceViewer.setDocument(document);
 	}
 

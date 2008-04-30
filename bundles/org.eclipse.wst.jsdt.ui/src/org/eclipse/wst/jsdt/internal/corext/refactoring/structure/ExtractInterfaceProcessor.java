@@ -113,10 +113,10 @@ import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.Strings;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.preferences.JavaPreferencesSettings;
 import org.eclipse.wst.jsdt.ui.CodeGeneration;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 /**
  * Refactoring processor to extract interfaces.
@@ -321,18 +321,18 @@ public final class ExtractInterfaceProcessor extends SuperTypeRefactoringProcess
 				if (fSubType.isLocal() || fSubType.isAnonymous())
 					flags|= JavaRefactoringDescriptor.JAR_SOURCE_ATTACHMENT;
 			} catch (JavaScriptModelException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			}
 			final IPackageFragment fragment= fSubType.getPackageFragment();
 			final IJavaScriptUnit cu= fragment.getJavaScriptUnit(JavaModelUtil.getRenamedCUName(fSubType.getJavaScriptUnit(), fSuperName));
 			final IType type= cu.getType(fSuperName);
 			final String description= Messages.format(RefactoringCoreMessages.ExtractInterfaceProcessor_description_descriptor_short, fSuperName);
-			final String header= Messages.format(RefactoringCoreMessages.ExtractInterfaceProcessor_descriptor_description, new String[] { JavaElementLabels.getElementLabel(type, JavaElementLabels.ALL_FULLY_QUALIFIED), JavaElementLabels.getElementLabel(fSubType, JavaElementLabels.ALL_FULLY_QUALIFIED) });
+			final String header= Messages.format(RefactoringCoreMessages.ExtractInterfaceProcessor_descriptor_description, new String[] { JavaScriptElementLabels.getElementLabel(type, JavaScriptElementLabels.ALL_FULLY_QUALIFIED), JavaScriptElementLabels.getElementLabel(fSubType, JavaScriptElementLabels.ALL_FULLY_QUALIFIED) });
 			final JDTRefactoringDescriptorComment comment= new JDTRefactoringDescriptorComment(project, this, header);
-			comment.addSetting(Messages.format(RefactoringCoreMessages.ExtractInterfaceProcessor_refactored_element_pattern, JavaElementLabels.getElementLabel(type, JavaElementLabels.ALL_FULLY_QUALIFIED)));
+			comment.addSetting(Messages.format(RefactoringCoreMessages.ExtractInterfaceProcessor_refactored_element_pattern, JavaScriptElementLabels.getElementLabel(type, JavaScriptElementLabels.ALL_FULLY_QUALIFIED)));
 			final String[] settings= new String[fMembers.length];
 			for (int index= 0; index < settings.length; index++)
-				settings[index]= JavaElementLabels.getElementLabel(fMembers[index], JavaElementLabels.ALL_FULLY_QUALIFIED);
+				settings[index]= JavaScriptElementLabels.getElementLabel(fMembers[index], JavaScriptElementLabels.ALL_FULLY_QUALIFIED);
 			comment.addSetting(JDTRefactoringDescriptorComment.createCompositeSetting(RefactoringCoreMessages.ExtractInterfaceProcessor_extracted_members_pattern, settings));
 			addSuperTypeSettings(comment, true);
 			final JDTRefactoringDescriptor descriptor= new JDTRefactoringDescriptor(IJavaRefactorings.EXTRACT_INTERFACE, project, description, comment.asString(), arguments, flags);
@@ -454,9 +454,9 @@ public final class ExtractInterfaceProcessor extends SuperTypeRefactoringProcess
 				rewrite.rewriteAST(document, unit.getJavaScriptProject().getOptions(true)).apply(document, TextEdit.UPDATE_REGIONS);
 				targetRewrite.getListRewrite(targetDeclaration, targetDeclaration.getBodyDeclarationsProperty()).insertFirst(targetRewrite.createStringPlaceholder(normalizeText(document.get(position.getStartPosition(), position.getLength())), ASTNode.FIELD_DECLARATION), null);
 			} catch (MalformedTreeException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			} catch (BadLocationException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			}
 		} finally {
 			RefactoringFileBuffers.release(unit);
@@ -644,9 +644,9 @@ public final class ExtractInterfaceProcessor extends SuperTypeRefactoringProcess
 				rewrite.rewriteAST(document, unit.getJavaScriptProject().getOptions(true)).apply(document, TextEdit.UPDATE_REGIONS);
 				targetRewrite.getListRewrite(targetDeclaration, targetDeclaration.getBodyDeclarationsProperty()).insertFirst(targetRewrite.createStringPlaceholder(normalizeText(document.get(position.getStartPosition(), position.getLength())), ASTNode.FUNCTION_DECLARATION), null);
 			} catch (MalformedTreeException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			} catch (BadLocationException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			}
 		} finally {
 			RefactoringFileBuffers.release(unit);
@@ -1028,9 +1028,9 @@ public final class ExtractInterfaceProcessor extends SuperTypeRefactoringProcess
 				try {
 					rewrite.rewriteAST(document, fSubType.getJavaScriptProject().getOptions(true)).apply(document, TextEdit.UPDATE_REGIONS);
 				} catch (MalformedTreeException exception) {
-					JavaPlugin.log(exception);
+					JavaScriptPlugin.log(exception);
 				} catch (BadLocationException exception) {
-					JavaPlugin.log(exception);
+					JavaScriptPlugin.log(exception);
 				}
 				subUnit.getBuffer().setContents(document.get());
 			} finally {
@@ -1073,10 +1073,10 @@ public final class ExtractInterfaceProcessor extends SuperTypeRefactoringProcess
 													try {
 														edit.apply(document, TextEdit.UPDATE_REGIONS);
 													} catch (MalformedTreeException exception) {
-														JavaPlugin.log(exception);
+														JavaScriptPlugin.log(exception);
 														status.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ExtractInterfaceProcessor_internal_error));
 													} catch (BadLocationException exception) {
-														JavaPlugin.log(exception);
+														JavaScriptPlugin.log(exception);
 														status.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ExtractInterfaceProcessor_internal_error));
 													}
 													fSuperSource= document.get();
@@ -1089,7 +1089,7 @@ public final class ExtractInterfaceProcessor extends SuperTypeRefactoringProcess
 							}
 						}
 					} catch (JavaScriptModelException exception) {
-						JavaPlugin.log(exception);
+						JavaScriptPlugin.log(exception);
 						status.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ExtractInterfaceProcessor_internal_error));
 					}
 				}

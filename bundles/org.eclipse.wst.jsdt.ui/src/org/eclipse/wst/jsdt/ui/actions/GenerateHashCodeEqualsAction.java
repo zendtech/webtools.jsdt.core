@@ -54,7 +54,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.util.RefactoringASTParse
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionMessages;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionUtil;
 import org.eclipse.wst.jsdt.internal.ui.actions.SelectionConverter;
@@ -65,7 +65,7 @@ import org.eclipse.wst.jsdt.internal.ui.preferences.JavaPreferencesSettings;
 import org.eclipse.wst.jsdt.internal.ui.util.BusyIndicatorRunnableContext;
 import org.eclipse.wst.jsdt.internal.ui.util.ElementValidator;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 /**
  * Adds method implementations for
@@ -335,7 +335,7 @@ public final class GenerateHashCodeEqualsAction extends SelectionDispatchAction 
 
 			final CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(type.getJavaScriptProject());
 			settings.createComments= dialog.getGenerateComment();
-			final IEditorPart editor= JavaUI.openInEditor(type.getJavaScriptUnit());
+			final IEditorPart editor= JavaScriptUI.openInEditor(type.getJavaScriptUnit());
 			final IRewriteTarget target= editor != null ? (IRewriteTarget) editor.getAdapter(IRewriteTarget.class) : null;
 
 			if (target != null)
@@ -343,7 +343,7 @@ public final class GenerateHashCodeEqualsAction extends SelectionDispatchAction 
 			try {
 				final GenerateHashCodeEqualsOperation operation= new GenerateHashCodeEqualsOperation(fTypeBinding, selectedBindings, fUnit, dialog
 						.getElementPosition(), settings, dialog.isUseInstanceOf(), regenerate, true, false);
-				IRunnableContext context= JavaPlugin.getActiveWorkbenchWindow();
+				IRunnableContext context= JavaScriptPlugin.getActiveWorkbenchWindow();
 				if (context == null)
 					context= new BusyIndicatorRunnableContext();
 				PlatformUI.getWorkbench().getProgressService().runInUI(context,
@@ -466,7 +466,7 @@ public final class GenerateHashCodeEqualsAction extends SelectionDispatchAction 
 			setEnabled(canEnable(selection));
 		} catch (JavaScriptModelException exception) {
 			if (JavaModelUtil.isExceptionToBeLogged(exception))
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			setEnabled(false);
 		}
 	}

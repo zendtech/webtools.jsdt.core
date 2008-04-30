@@ -32,9 +32,9 @@ import org.eclipse.wst.jsdt.core.IOpenable;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.javadoc.JavaDocLocations;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
-import org.eclipse.wst.jsdt.ui.JavadocContentAccess;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
+import org.eclipse.wst.jsdt.ui.JSdocContentAccess;
 
 /**
  * Provides Javadoc as hover info for Java elements.
@@ -94,11 +94,11 @@ public class JavadocHover extends AbstractJavaEditorTextHover implements IInform
 		}
 	}
 
-	private final long LABEL_FLAGS=  JavaElementLabels.ALL_FULLY_QUALIFIED
-		| JavaElementLabels.M_PRE_RETURNTYPE | JavaElementLabels.M_PARAMETER_TYPES | JavaElementLabels.M_PARAMETER_NAMES | JavaElementLabels.M_EXCEPTIONS
-		| JavaElementLabels.F_PRE_TYPE_SIGNATURE | JavaElementLabels.M_PRE_TYPE_PARAMETERS | JavaElementLabels.T_TYPE_PARAMETERS
-		| JavaElementLabels.USE_RESOLVED;
-	private final long LOCAL_VARIABLE_FLAGS= LABEL_FLAGS & ~JavaElementLabels.F_FULLY_QUALIFIED | JavaElementLabels.F_POST_QUALIFIED;
+	private final long LABEL_FLAGS=  JavaScriptElementLabels.ALL_FULLY_QUALIFIED
+		| JavaScriptElementLabels.M_PRE_RETURNTYPE | JavaScriptElementLabels.M_PARAMETER_TYPES | JavaScriptElementLabels.M_PARAMETER_NAMES | JavaScriptElementLabels.M_EXCEPTIONS
+		| JavaScriptElementLabels.F_PRE_TYPE_SIGNATURE | JavaScriptElementLabels.M_PRE_TYPE_PARAMETERS | JavaScriptElementLabels.T_TYPE_PARAMETERS
+		| JavaScriptElementLabels.USE_RESOLVED;
+	private final long LOCAL_VARIABLE_FLAGS= LABEL_FLAGS & ~JavaScriptElementLabels.F_FULLY_QUALIFIED | JavaScriptElementLabels.F_POST_QUALIFIED;
 
 	
 	/**
@@ -166,7 +166,7 @@ public class JavadocHover extends AbstractJavaEditorTextHover implements IInform
 				HTMLPrinter.addSmallHeader(buffer, getInfoText(member));
 				Reader reader;
 				try {
-					reader= JavadocContentAccess.getHTMLContentReader(member, true, true);
+					reader= JSdocContentAccess.getHTMLContentReader(member, true, true);
 					
 					// Provide hint why there's no Javadoc
 					if (reader == null && member.isBinary()) {
@@ -188,7 +188,7 @@ public class JavadocHover extends AbstractJavaEditorTextHover implements IInform
 					
 				} catch (JavaScriptModelException ex) {
 					reader= new StringReader(JavaHoverMessages.JavadocHover_error_gettingJavadoc);
-					JavaPlugin.log(ex.getStatus());
+					JavaScriptPlugin.log(ex.getStatus());
 				}
 				
 				if (reader != null) {
@@ -215,7 +215,7 @@ public class JavadocHover extends AbstractJavaEditorTextHover implements IInform
 
 	private String getInfoText(IJavaScriptElement member) {
 		long flags= member.getElementType() == IJavaScriptElement.LOCAL_VARIABLE ? LOCAL_VARIABLE_FLAGS : LABEL_FLAGS;
-		String label= JavaElementLabels.getElementLabel(member, flags);
+		String label= JavaScriptElementLabels.getElementLabel(member, flags);
 		StringBuffer buf= new StringBuffer();
 		for (int i= 0; i < label.length(); i++) {
 			char ch= label.charAt(i);

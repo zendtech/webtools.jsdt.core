@@ -177,7 +177,7 @@ public class ClassPathDetector implements IResourceProxyVisitor {
 //					if (content != null)
 //						content.close();
 //				} catch (IOException e) {
-//					throw new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.ERROR,
+//					throw new CoreException(new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), IStatus.ERROR,
 //						Messages.format(NewWizardMessages.ClassPathDetector_error_closing_file, file.getFullPath().toString()),
 //						e));
 //				}

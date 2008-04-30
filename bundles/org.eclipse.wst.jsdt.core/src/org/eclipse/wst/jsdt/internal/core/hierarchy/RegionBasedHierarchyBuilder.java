@@ -118,7 +118,7 @@ private void createTypeHierarchyBasedOnRegion(HashMap allOpenablesInRegion, IPro
 					allOpenables.put(javaProject, openables);
 				}
 				switch (root.getElementType()) {
-					case IJavaScriptElement.JAVA_PROJECT :
+					case IJavaScriptElement.JAVASCRIPT_PROJECT :
 						injectAllOpenablesForJavaProject((IJavaScriptProject) root, openables);
 						break;
 					case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT :
@@ -128,7 +128,7 @@ private void createTypeHierarchyBasedOnRegion(HashMap allOpenablesInRegion, IPro
 						injectAllOpenablesForPackageFragment((IPackageFragment) root, openables);
 						break;
 					case IJavaScriptElement.CLASS_FILE :
-					case IJavaScriptElement.COMPILATION_UNIT :
+					case IJavaScriptElement.JAVASCRIPT_UNIT :
 						openables.add(root);
 						break;
 					case IJavaScriptElement.TYPE :

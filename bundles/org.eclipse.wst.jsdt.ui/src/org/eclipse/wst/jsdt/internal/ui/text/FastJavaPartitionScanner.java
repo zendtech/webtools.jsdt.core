@@ -16,14 +16,14 @@ import org.eclipse.jface.text.rules.ICharacterScanner;
 import org.eclipse.jface.text.rules.IPartitionTokenScanner;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.Token;
-import org.eclipse.wst.jsdt.ui.text.IJavaPartitions;
+import org.eclipse.wst.jsdt.ui.text.IJavaScriptPartitions;
 
 
 /**
  * This scanner recognizes the JavaDoc comments, Java multi line comments, Java single line comments,
  * Java strings and Java characters.
  */
-public class FastJavaPartitionScanner implements IPartitionTokenScanner, IJavaPartitions {
+public class FastJavaPartitionScanner implements IPartitionTokenScanner, IJavaScriptPartitions {
 
 	// states
 	private static final int JAVA= 0;

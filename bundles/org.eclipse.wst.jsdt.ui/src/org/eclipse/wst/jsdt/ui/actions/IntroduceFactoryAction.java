@@ -23,7 +23,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringAvailabilityT
 import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringExecutionStarter;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionUtil;
 import org.eclipse.wst.jsdt.internal.ui.actions.SelectionConverter;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaEditor;
@@ -79,7 +79,7 @@ public class IntroduceFactoryAction extends SelectionDispatchAction {
 			setEnabled(RefactoringAvailabilityTester.isIntroduceFactoryAvailable(selection));
 		} catch (JavaScriptModelException e) {
 			if (JavaModelUtil.isExceptionToBeLogged(e))
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			setEnabled(false);//no UI here - happens on selection changes
 		}
 	}

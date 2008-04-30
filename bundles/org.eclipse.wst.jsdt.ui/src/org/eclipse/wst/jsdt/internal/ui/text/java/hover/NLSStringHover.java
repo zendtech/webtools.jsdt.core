@@ -28,7 +28,7 @@ import org.eclipse.wst.jsdt.core.dom.StringLiteral;
 import org.eclipse.wst.jsdt.internal.corext.dom.NodeFinder;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.nls.AccessorClassReference;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.nls.NLSHintHelper;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.ASTProvider;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.ClassFileEditor;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.CompilationUnitEditor;
@@ -55,7 +55,7 @@ public class NLSStringHover extends AbstractJavaEditorTextHover {
 			return null;
 
 		// Never wait for an AST in UI thread.
-		JavaScriptUnit ast= JavaPlugin.getDefault().getASTProvider().getAST(je, ASTProvider.WAIT_NO, null);
+		JavaScriptUnit ast= JavaScriptPlugin.getDefault().getASTProvider().getAST(je, ASTProvider.WAIT_NO, null);
 		if (ast == null)
 			return null;
 
@@ -82,7 +82,7 @@ public class NLSStringHover extends AbstractJavaEditorTextHover {
 		if (je == null)
 			return null;
 
-		JavaScriptUnit ast= JavaPlugin.getDefault().getASTProvider().getAST(je, ASTProvider.WAIT_ACTIVE_ONLY, null);
+		JavaScriptUnit ast= JavaScriptPlugin.getDefault().getASTProvider().getAST(je, ASTProvider.WAIT_ACTIVE_ONLY, null);
 		if (ast == null)
 			return null;
 
@@ -144,7 +144,7 @@ public class NLSStringHover extends AbstractJavaEditorTextHover {
 
 	private IJavaScriptElement getEditorInputJavaElement() {
 		if (getEditor() instanceof CompilationUnitEditor)
-			return JavaPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(getEditor().getEditorInput());
+			return JavaScriptPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(getEditor().getEditorInput());
 		else if (getEditor() instanceof ClassFileEditor) {
 			IEditorInput editorInput= getEditor().getEditorInput();
 			if (editorInput instanceof IClassFileEditorInput)

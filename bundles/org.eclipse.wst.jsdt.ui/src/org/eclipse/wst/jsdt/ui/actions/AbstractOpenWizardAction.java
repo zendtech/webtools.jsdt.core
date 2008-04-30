@@ -28,7 +28,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.NewProjectAction;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.wst.jsdt.internal.ui.util.PixelConverter;
 import org.eclipse.wst.jsdt.internal.ui.wizards.NewElementWizard;
@@ -106,7 +106,7 @@ public abstract class AbstractOpenWizardAction extends Action {
 	}
 			
 	private IStructuredSelection evaluateCurrentSelection() {
-		IWorkbenchWindow window= JavaPlugin.getActiveWorkbenchWindow();
+		IWorkbenchWindow window= JavaScriptPlugin.getActiveWorkbenchWindow();
 		if (window != null) {
 			ISelection selection= window.getSelectionService().getSelection();
 			if (selection instanceof IStructuredSelection) {
@@ -131,7 +131,7 @@ public abstract class AbstractOpenWizardAction extends Action {
 	 */
 	protected Shell getShell() {
 		if (fShell == null) {
-			return JavaPlugin.getActiveWorkbenchShell();
+			return JavaScriptPlugin.getActiveWorkbenchShell();
 		}
 		return fShell;
 	}

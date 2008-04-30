@@ -163,7 +163,7 @@ public class ResourceToItemsMapper {
 			IJavaScriptElement elem= (IJavaScriptElement) element;
 			IResource res= elem.getResource();
 			if (res == null) {
-				IJavaScriptUnit cu= (IJavaScriptUnit) elem.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+				IJavaScriptUnit cu= (IJavaScriptUnit) elem.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 				if (cu != null) {
 					// elements in compilation units are mapped to the underlying resource of the original cu
 					res= cu.getResource();

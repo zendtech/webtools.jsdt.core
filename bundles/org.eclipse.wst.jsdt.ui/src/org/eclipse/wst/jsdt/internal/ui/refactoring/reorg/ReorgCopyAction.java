@@ -24,7 +24,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringExecutionStar
 import org.eclipse.wst.jsdt.internal.corext.refactoring.reorg.ReorgUtils;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.RefactoringMessages;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.wst.jsdt.ui.actions.SelectionDispatchAction;
@@ -58,7 +58,7 @@ public class ReorgCopyAction extends SelectionDispatchAction {
 				// no ui here - this happens on selection changes
 				// http://bugs.eclipse.org/bugs/show_bug.cgi?id=19253
 				if (JavaModelUtil.isExceptionToBeLogged(e))
-					JavaPlugin.log(e);
+					JavaScriptPlugin.log(e);
 				setEnabled(false);
 			}
 		} else

@@ -27,7 +27,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.text.java.JavaCompletionProposal;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.ui.text.java.ContentAssistInvocationContext;
 import org.eclipse.wst.jsdt.ui.text.java.IJavaCompletionProposalComputer;
 import org.eclipse.wst.jsdt.ui.text.java.IJavadocCompletionProcessor;
@@ -129,7 +129,7 @@ public class HTMLTagCompletionProposalComputer implements IJavaCompletionProposa
 		if (cu == null)
 			return Collections.EMPTY_LIST;
 		IEditorInput editorInput= new FileEditorInput((IFile) cu.getResource());
-		fDocument= JavaUI.getDocumentProvider().getDocument(editorInput);
+		fDocument= JavaScriptUI.getDocumentProvider().getDocument(editorInput);
 		if (fDocument == null) {
 			return null;
 		}

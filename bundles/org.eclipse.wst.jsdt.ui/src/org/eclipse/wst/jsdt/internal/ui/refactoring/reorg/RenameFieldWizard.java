@@ -28,7 +28,7 @@ import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.rename.RenameFieldProcessor;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.RefactoringMessages;
 
@@ -147,7 +147,7 @@ public class RenameFieldWizard extends RenameRefactoringWizard {
 				String newGetterName= createNewGetterName();
 				return Messages.format(RefactoringMessages.RenameFieldInputWizardPage_rename_getter_to, new String[]{oldGetterName, newGetterName}); 
 			} catch(CoreException e) {
-				JavaPlugin.log(e)	;
+				JavaScriptPlugin.log(e)	;
 				return defaultLabel;			
 			}
 		}
@@ -164,7 +164,7 @@ public class RenameFieldWizard extends RenameRefactoringWizard {
 				String newSetterName= createNewSetterName();
 				return Messages.format(RefactoringMessages.RenameFieldInputWizardPage_rename_setter_to, new String[]{oldSetterName, newSetterName});
 			} catch(CoreException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 				return defaultLabel;			
 			}
 		}
@@ -197,7 +197,7 @@ public class RenameFieldWizard extends RenameRefactoringWizard {
 				fGetterRenamingErrorMessage= getRenameFieldProcessor().canEnableGetterRenaming();
 				return fGetterRenamingErrorMessage;
 			} catch (CoreException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 				return ""; //$NON-NLS-1$
 			} 
 		}
@@ -209,7 +209,7 @@ public class RenameFieldWizard extends RenameRefactoringWizard {
 				fSetterRenamingErrorMessage= getRenameFieldProcessor().canEnableSetterRenaming();
 				return fSetterRenamingErrorMessage;
 			} catch (CoreException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 				return ""; //$NON-NLS-1$
 			} 
 		}

@@ -53,7 +53,7 @@ protected ASTNode generateElementAST(ASTRewrite rewriter, IDocument document, IJ
 protected IJavaScriptElement generateResultHandle() {
 	IJavaScriptElement parent= getParentElement();
 	switch (parent.getElementType()) {
-		case IJavaScriptElement.COMPILATION_UNIT:
+		case IJavaScriptElement.JAVASCRIPT_UNIT:
 			return ((IJavaScriptUnit)parent).getType(getASTNodeName());
 		case IJavaScriptElement.TYPE:
 			return ((IType)parent).getType(getASTNodeName());
@@ -83,7 +83,7 @@ protected IType getType() {
 protected IJavaScriptModelStatus verifyNameCollision() {
 	IJavaScriptElement parent = getParentElement();
 	switch (parent.getElementType()) {
-		case IJavaScriptElement.COMPILATION_UNIT:
+		case IJavaScriptElement.JAVASCRIPT_UNIT:
 			String typeName = getASTNodeName();
 			if (((IJavaScriptUnit) parent).getType(typeName).exists()) {
 				return new JavaModelStatus(

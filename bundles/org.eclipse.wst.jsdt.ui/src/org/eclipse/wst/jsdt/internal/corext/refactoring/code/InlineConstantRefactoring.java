@@ -110,8 +110,8 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.util.TightSourceRangeCom
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.Strings;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 public class InlineConstantRefactoring extends ScriptableRefactoring {
 
@@ -514,9 +514,9 @@ public class InlineConstantRefactoring extends ScriptableRefactoring {
 				int oldIndent= Strings.computeIndentUnits(document.get(region.getOffset(), region.getLength()), project);
 				return Strings.changeIndent(rewrittenInitializer, oldIndent, project, "", TextUtilities.getDefaultLineDelimiter(document)); //$NON-NLS-1$
 			} catch (MalformedTreeException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			} catch (BadLocationException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 			return fInitializerUnit.getBuffer().getText(fInitializer.getStartPosition(), fInitializer.getLength());
 		}
@@ -856,12 +856,12 @@ public class InlineConstantRefactoring extends ScriptableRefactoring {
 				if (!Flags.isPrivate(fField.getFlags()))
 					flags|= RefactoringDescriptor.MULTI_CHANGE;
 			} catch (JavaScriptModelException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			}
 			final String description= Messages.format(RefactoringCoreMessages.InlineConstantRefactoring_descriptor_description_short, fField.getElementName());
-			final String header= Messages.format(RefactoringCoreMessages.InlineConstantRefactoring_descriptor_description, new String[] { JavaElementLabels.getElementLabel(fField, JavaElementLabels.ALL_FULLY_QUALIFIED), JavaElementLabels.getElementLabel(fField.getParent(), JavaElementLabels.ALL_FULLY_QUALIFIED)});
+			final String header= Messages.format(RefactoringCoreMessages.InlineConstantRefactoring_descriptor_description, new String[] { JavaScriptElementLabels.getElementLabel(fField, JavaScriptElementLabels.ALL_FULLY_QUALIFIED), JavaScriptElementLabels.getElementLabel(fField.getParent(), JavaScriptElementLabels.ALL_FULLY_QUALIFIED)});
 			final JDTRefactoringDescriptorComment comment= new JDTRefactoringDescriptorComment(project, this, header);
-			comment.addSetting(Messages.format(RefactoringCoreMessages.InlineConstantRefactoring_original_pattern, JavaElementLabels.getElementLabel(fField, JavaElementLabels.ALL_FULLY_QUALIFIED)));
+			comment.addSetting(Messages.format(RefactoringCoreMessages.InlineConstantRefactoring_original_pattern, JavaScriptElementLabels.getElementLabel(fField, JavaScriptElementLabels.ALL_FULLY_QUALIFIED)));
 			if (fRemoveDeclaration)
 				comment.addSetting(RefactoringCoreMessages.InlineConstantRefactoring_remove_declaration);
 			if (fReplaceAllReferences)

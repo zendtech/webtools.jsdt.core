@@ -27,7 +27,7 @@ import org.eclipse.wst.jsdt.core.dom.rewrite.ImportRewrite;
 import org.eclipse.wst.jsdt.internal.corext.codemanipulation.ContextSensitiveImportRewriteContext;
 import org.eclipse.wst.jsdt.internal.corext.codemanipulation.StubUtility;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.ASTProvider;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 import org.eclipse.wst.jsdt.ui.text.java.JavaContentAssistInvocationContext;
@@ -125,9 +125,9 @@ public class ImportCompletionProposal extends AbstractJavaCompletionProposal {
 				setReplacementOffset(getReplacementOffset() + document.getLength() - oldLen);
 			}
 		} catch (CoreException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		} catch (BadLocationException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 	}
 	
@@ -151,14 +151,14 @@ public class ImportCompletionProposal extends AbstractJavaCompletionProposal {
 					return rewrite;
 				}
 			} catch (CoreException x) {
-				JavaPlugin.log(x);
+				JavaScriptPlugin.log(x);
 			}
 		}
 		return null;
 	}
 
 	private JavaScriptUnit getASTRoot(IJavaScriptUnit compilationUnit) {
-		return JavaPlugin.getDefault().getASTProvider().getAST(compilationUnit, ASTProvider.WAIT_NO, new NullProgressMonitor());
+		return JavaScriptPlugin.getDefault().getASTProvider().getAST(compilationUnit, ASTProvider.WAIT_NO, new NullProgressMonitor());
 	}
 
 	/**
@@ -185,7 +185,7 @@ public class ImportCompletionProposal extends AbstractJavaCompletionProposal {
 		if (isInJavadoc() && !isJavadocProcessingEnabled())
 			return false;
 		
-		IPreferenceStore preferenceStore= JavaPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore preferenceStore= JavaScriptPlugin.getDefault().getPreferenceStore();
 		return preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_ADDIMPORT);
 	}
 

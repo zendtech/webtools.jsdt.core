@@ -36,7 +36,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.buildpath.BuildpathDelta;
 import org.eclipse.wst.jsdt.internal.corext.buildpath.ClasspathModifier;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.actions.WorkbenchRunnableAdapter;
 import org.eclipse.wst.jsdt.internal.ui.packageview.JsGlobalScopeContainer;
@@ -79,7 +79,7 @@ public class AddLibraryToBuildpathAction extends BuildpathModifierAction {
 
 		Shell shell= getShell();
 		if (shell == null) {
-			shell= JavaPlugin.getActiveWorkbenchShell();
+			shell= JavaScriptPlugin.getActiveWorkbenchShell();
 		}
 
 		IIncludePathEntry[] classpath;
@@ -118,7 +118,7 @@ public class AddLibraryToBuildpathAction extends BuildpathModifierAction {
 							runnable= new WorkbenchRunnableAdapter(op, ResourcesPlugin.getWorkspace().getRoot());
 						getContainer().run(false, true, runnable);
 					} catch (InvocationTargetException e) {
-						JavaPlugin.log(e);
+						JavaScriptPlugin.log(e);
 						return false;
 					} catch  (InterruptedException e) {
 						return false;

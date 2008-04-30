@@ -61,13 +61,13 @@ import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.internal.corext.CorextMessages;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIException;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIStatus;
 import org.eclipse.wst.jsdt.internal.ui.actions.WorkbenchRunnableAdapter;
 import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.BuildPathSupport;
 import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.CPListElement;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -87,7 +87,7 @@ public class JavaDocLocations {
 	private static final String NODE_PATH= "path"; //$NON-NLS-1$
 	private static final String NODE_URL= "url"; //$NON-NLS-1$
 	
-	private static final QualifiedName PROJECT_JAVADOC= new QualifiedName(JavaUI.ID_PLUGIN, "project_javadoc_location"); //$NON-NLS-1$
+	private static final QualifiedName PROJECT_JAVADOC= new QualifiedName(JavaScriptUI.ID_PLUGIN, "project_javadoc_location"); //$NON-NLS-1$
 	
 	public static void migrateToClasspathAttributes() {
 		final Map oldLocations= loadOldForCompatibility();
@@ -111,7 +111,7 @@ public class JavaDocLocations {
 					};
 					new WorkbenchRunnableAdapter(runnable).run(monitor);
 				} catch (InvocationTargetException e) {
-					JavaPlugin.log(e);
+					JavaScriptPlugin.log(e);
 				} catch (InterruptedException e) {
 					// should not happen, cannot cancel
 				}
@@ -226,7 +226,7 @@ public class JavaDocLocations {
 			String location= url != null ? url.toExternalForm() : null;
 			setProjectJavadocLocation(project, location);
 		} catch (CoreException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 	}
 	
@@ -242,9 +242,9 @@ public class JavaDocLocations {
 			}
 			return new URL(prop);
 		} catch (CoreException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		} catch (MalformedURLException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		return null;
 	}
@@ -275,7 +275,7 @@ public class JavaDocLocations {
 	}
 
 	public static URL getJavadocBaseLocation(IJavaScriptElement element) throws JavaScriptModelException {	
-		if (element.getElementType() == IJavaScriptElement.JAVA_PROJECT) {
+		if (element.getElementType() == IJavaScriptElement.JAVASCRIPT_PROJECT) {
 			return getProjectJavadocLocation((IJavaScriptProject) element);
 		}
 		
@@ -341,7 +341,7 @@ public class JavaDocLocations {
 				PreferenceConstants.getPreferenceStore().setValue(PREF_JAVADOCLOCATIONS, ""); //$NON-NLS-1$
 				return resultingOldLocations;
 			} catch (CoreException e) {
-				JavaPlugin.log(e); // log but ignore
+				JavaScriptPlugin.log(e); // log but ignore
 			} finally {
 				try {
 					is.close();
@@ -355,7 +355,7 @@ public class JavaDocLocations {
 		// note that it is wrong to use a stream reader with XML declaring to be UTF-8
 		try {
 			final String STORE_FILE= "javadoclocations.xml"; //$NON-NLS-1$
-			File file= JavaPlugin.getDefault().getStateLocation().append(STORE_FILE).toFile();
+			File file= JavaScriptPlugin.getDefault().getStateLocation().append(STORE_FILE).toFile();
 			if (file.exists()) {
 				Reader reader= null;
 				try {
@@ -364,7 +364,7 @@ public class JavaDocLocations {
 					file.delete(); // remove file after successful store
 					return resultingOldLocations;
 				} catch (IOException e) {
-					JavaPlugin.log(e); // log but ignore
+					JavaScriptPlugin.log(e); // log but ignore
 				} finally {
 					try {
 						if (reader != null) {
@@ -374,13 +374,13 @@ public class JavaDocLocations {
 				}
 			}
 		} catch (CoreException e) {
-			JavaPlugin.log(e); // log but ignore
+			JavaScriptPlugin.log(e); // log but ignore
 		}	
 		
 		// in 2.0, the Javadoc locations were stored as one big string in the persistent properties
 		// note that it is wrong to use a stream reader with XML declaring to be UTF-8
 		try {
-			final QualifiedName QUALIFIED_NAME= new QualifiedName(JavaUI.ID_PLUGIN, "jdoclocation"); //$NON-NLS-1$
+			final QualifiedName QUALIFIED_NAME= new QualifiedName(JavaScriptUI.ID_PLUGIN, "jdoclocation"); //$NON-NLS-1$
 			
 			IWorkspaceRoot root= ResourcesPlugin.getWorkspace().getRoot();
 			String xmlString= root.getPersistentProperty(QUALIFIED_NAME); 
@@ -400,7 +400,7 @@ public class JavaDocLocations {
 				}
 			}
 		} catch (CoreException e) {
-			JavaPlugin.log(e); // log but ignore
+			JavaScriptPlugin.log(e); // log but ignore
 		}
 		return resultingOldLocations;
 	}
@@ -456,14 +456,14 @@ public class JavaDocLocations {
 			case IJavaScriptElement.PACKAGE_FRAGMENT:
 				appendPackageSummaryPath((IPackageFragment) element, pathBuffer);
 				break;
-			case IJavaScriptElement.JAVA_PROJECT:
+			case IJavaScriptElement.JAVASCRIPT_PROJECT:
 			case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT :
 				appendIndexPath(pathBuffer);
 				break;
 			case IJavaScriptElement.IMPORT_CONTAINER :
 				element= element.getParent();
 				// fall through
-			case IJavaScriptElement.COMPILATION_UNIT :
+			case IJavaScriptElement.JAVASCRIPT_UNIT :
 				IType mainType= ((IJavaScriptUnit) element).findPrimaryType();
 				if (mainType == null) {
 					return null;
@@ -523,7 +523,7 @@ public class JavaDocLocations {
 		try {
 			return new URL(pathBuffer.toString());
 		} catch (MalformedURLException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		return null;
 	}	

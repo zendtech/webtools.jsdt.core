@@ -98,7 +98,7 @@ import org.eclipse.wst.jsdt.internal.corext.template.java.CodeTemplateContext;
 import org.eclipse.wst.jsdt.internal.corext.template.java.CodeTemplateContextType;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Strings;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIStatus;
 import org.eclipse.wst.jsdt.internal.ui.text.correction.ASTResolving;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.ProjectTemplateStore;
@@ -810,7 +810,7 @@ public class StubUtility {
 	 */	
 	public static int getIndentUsed(IJavaScriptElement elem) throws JavaScriptModelException {
 		if (elem instanceof ISourceReference) {
-			IJavaScriptUnit cu= (IJavaScriptUnit) elem.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+			IJavaScriptUnit cu= (IJavaScriptUnit) elem.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 			if (cu != null) {
 				IBuffer buf= cu.getBuffer();
 				int offset= ((ISourceReference)elem).getSourceRange().getOffset();
@@ -1477,7 +1477,7 @@ public class StubUtility {
 	}
 	
 	public static void setCodeTemplate(String templateId, String pattern, IJavaScriptProject project) {
-		TemplateStore codeTemplateStore= JavaPlugin.getDefault().getCodeTemplateStore();
+		TemplateStore codeTemplateStore= JavaScriptPlugin.getDefault().getCodeTemplateStore();
 		TemplatePersistenceData data= codeTemplateStore.getTemplateData(templateId);
 		Template orig= data.getTemplate();
 		Template copy= new Template(orig.getName(), orig.getDescription(), orig.getContextTypeId(), pattern, true);
@@ -1486,12 +1486,12 @@ public class StubUtility {
 	
 	private static Template getCodeTemplate(String id, IJavaScriptProject project) {
 		if (project == null)
-			return JavaPlugin.getDefault().getCodeTemplateStore().findTemplateById(id);
+			return JavaScriptPlugin.getDefault().getCodeTemplateStore().findTemplateById(id);
 		ProjectTemplateStore projectStore= new ProjectTemplateStore(project.getProject());
 		try {
 			projectStore.load();
 		} catch (IOException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		return projectStore.findTemplateById(id);
 	}

@@ -61,8 +61,8 @@ import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.wst.jsdt.internal.ui.util.SWTUtil;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.AppearanceAwareLabelProvider;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.JavaElementImageProvider;
-import org.eclipse.wst.jsdt.ui.JavaElementComparator;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementComparator;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 /**
  * Wizard page for the extract supertype refactoring, which, apart from pull up
@@ -190,7 +190,7 @@ public final class ExtractSupertypeMemberPage extends PullUpMemberPage {
 	 * @return a label provider
 	 */
 	private static ILabelProvider createLabelProvider() {
-		return new SupertypeSelectionLabelProvider(JavaElementLabels.T_TYPE_PARAMETERS | JavaElementLabels.T_POST_QUALIFIED, JavaElementImageProvider.OVERLAY_ICONS);
+		return new SupertypeSelectionLabelProvider(JavaScriptElementLabels.T_TYPE_PARAMETERS | JavaScriptElementLabels.T_POST_QUALIFIED, JavaElementImageProvider.OVERLAY_ICONS);
 	}
 
 	/** The supertype name field */
@@ -443,7 +443,7 @@ public final class ExtractSupertypeMemberPage extends PullUpMemberPage {
 		fTableViewer.getTable().setLayoutData(data);
 		fTableViewer.setLabelProvider(createLabelProvider());
 		fTableViewer.setContentProvider(new ArrayContentProvider());
-		fTableViewer.setComparator(new JavaElementComparator());
+		fTableViewer.setComparator(new JavaScriptElementComparator());
 		fTypesToExtract.add(getDeclaringType());
 		fTableViewer.setInput(fTypesToExtract.toArray());
 

@@ -18,7 +18,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.IClassFileEditorInput;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.wst.jsdt.ui.IWorkingCopyManager;
@@ -70,7 +70,7 @@ class TextSelectionConverter {
 		IEditorInput input= editor.getEditorInput();
 		if (input instanceof IClassFileEditorInput)
 			return ((IClassFileEditorInput)input).getClassFile();
-		IWorkingCopyManager manager= JavaPlugin.getDefault().getWorkingCopyManager();
+		IWorkingCopyManager manager= JavaScriptPlugin.getDefault().getWorkingCopyManager();
 		return manager.getWorkingCopy(input);
 	}
 

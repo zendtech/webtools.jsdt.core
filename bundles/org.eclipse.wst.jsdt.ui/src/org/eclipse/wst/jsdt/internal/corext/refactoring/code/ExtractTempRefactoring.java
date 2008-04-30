@@ -109,9 +109,9 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.util.NoCommentSourceRang
 import org.eclipse.wst.jsdt.internal.corext.refactoring.util.RefactoringASTParser;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.util.ResourceUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.BindingLabelProvider;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 /**
  * Extract Local Variable (from selected expression inside method or initializer).
@@ -490,7 +490,7 @@ public class ExtractTempRefactoring extends ScriptableRefactoring {
 		final BodyDeclaration decl= (BodyDeclaration) ASTNodes.getParent(fSelectedExpression.getAssociatedExpression(), BodyDeclaration.class);
 		if (decl instanceof FunctionDeclaration) {
 			final IFunctionBinding method= ((FunctionDeclaration) decl).resolveBinding();
-			final String label= method != null ? BindingLabelProvider.getBindingLabel(method, JavaElementLabels.ALL_FULLY_QUALIFIED) : '{' + JavaElementLabels.ELLIPSIS_STRING + '}';
+			final String label= method != null ? BindingLabelProvider.getBindingLabel(method, JavaScriptElementLabels.ALL_FULLY_QUALIFIED) : '{' + JavaScriptElementLabels.ELLIPSIS_STRING + '}';
 			comment.addSetting(Messages.format(RefactoringCoreMessages.ExtractTempRefactoring_destination_pattern, label));
 		}
 		comment.addSetting(Messages.format(RefactoringCoreMessages.ExtractTempRefactoring_expression_pattern, expression));
@@ -513,7 +513,7 @@ public class ExtractTempRefactoring extends ScriptableRefactoring {
 			try {
 				createTempDeclaration();
 			} catch (CoreException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			}
 			addReplaceExpressionWithTemp();
 		} finally {
@@ -983,7 +983,7 @@ public class ExtractTempRefactoring extends ScriptableRefactoring {
 			final String handle= extended.getAttribute(JDTRefactoringDescriptor.ATTRIBUTE_INPUT);
 			if (handle != null) {
 				final IJavaScriptElement element= JDTRefactoringDescriptor.handleToElement(extended.getProject(), handle, false);
-				if (element == null || !element.exists() || element.getElementType() != IJavaScriptElement.COMPILATION_UNIT)
+				if (element == null || !element.exists() || element.getElementType() != IJavaScriptElement.JAVASCRIPT_UNIT)
 					return createInputFatalStatus(element, IJavaRefactorings.EXTRACT_LOCAL_VARIABLE);
 				else
 					fCu= (IJavaScriptUnit) element;

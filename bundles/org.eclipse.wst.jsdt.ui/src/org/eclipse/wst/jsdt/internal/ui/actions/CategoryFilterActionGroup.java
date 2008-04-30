@@ -52,7 +52,7 @@ import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.CheckedListDialogField;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.DialogField;
@@ -83,7 +83,7 @@ public class CategoryFilterActionGroup extends ActionGroup {
 					}
 					return false;
 				} catch (JavaScriptModelException e) {
-					JavaPlugin.log(e);
+					JavaScriptPlugin.log(e);
 				}
 			}
 			return true;
@@ -298,7 +298,7 @@ public class CategoryFilterActionGroup extends ActionGroup {
 	
 	private void loadSettings() {
 		fFilteredCategories.clear();
-		IPreferenceStore store= JavaPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore store= JavaScriptPlugin.getDefault().getPreferenceStore();
 		String string= store.getString(getPreferenceKey());
 		if (string != null && string.length() > 0) {
 			String[] categories= string.split(";"); //$NON-NLS-1$
@@ -317,7 +317,7 @@ public class CategoryFilterActionGroup extends ActionGroup {
 	}
 
 	private void storeSettings() {
-		IPreferenceStore store= JavaPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore store= JavaScriptPlugin.getDefault().getPreferenceStore();
 		if (fFilteredCategories.size() == 0) {
 			store.setValue(getPreferenceKey(), ""); //$NON-NLS-1$
 		} else {
@@ -462,7 +462,7 @@ public class CategoryFilterActionGroup extends ActionGroup {
 			}
 			return false;
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 			return true;
 		}
 	}

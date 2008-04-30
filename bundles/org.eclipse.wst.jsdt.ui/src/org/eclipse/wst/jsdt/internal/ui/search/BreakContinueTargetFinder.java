@@ -40,7 +40,7 @@ import org.eclipse.wst.jsdt.core.dom.SwitchStatement;
 import org.eclipse.wst.jsdt.core.dom.WhileStatement;
 import org.eclipse.wst.jsdt.internal.corext.dom.ASTNodes;
 import org.eclipse.wst.jsdt.internal.corext.dom.NodeFinder;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 /**
  * Class used to find the target for a break or continue statement according 
@@ -100,7 +100,7 @@ public class BreakContinueTargetFinder extends ASTVisitor {
 			
 			/* showing a dialog here would be too heavy but we cannot just 
              * swallow the exception */
-			JavaPlugin.log(e); 
+			JavaScriptPlugin.log(e); 
 			return null;
 		}
 	}

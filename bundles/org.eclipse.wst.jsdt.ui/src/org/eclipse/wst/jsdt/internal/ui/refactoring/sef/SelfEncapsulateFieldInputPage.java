@@ -44,7 +44,7 @@ import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.TextFieldNavigationHandler;
 import org.eclipse.wst.jsdt.internal.ui.preferences.JavaPreferencesSettings;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.RefactoringMessages;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 public class SelfEncapsulateFieldInputPage extends UserInputWizardPage {
 
@@ -296,7 +296,7 @@ public class SelfEncapsulateFieldInputPage extends UserInputWizardPage {
 		try {
 			IFunction[] methods= field.getDeclaringType().getFunctions();
 			for (int i= 0; i < methods.length; i++) {
-				combo.add(JavaElementLabels.getElementLabel(methods[i], JavaElementLabels.M_PARAMETER_TYPES));
+				combo.add(JavaScriptElementLabels.getElementLabel(methods[i], JavaScriptElementLabels.M_PARAMETER_TYPES));
 			}
 			if (methods.length > 0)
 				select= methods.length;

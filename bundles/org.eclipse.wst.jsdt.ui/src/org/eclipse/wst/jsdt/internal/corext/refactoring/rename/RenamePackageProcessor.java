@@ -94,7 +94,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.util.TextChangeManager;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.Resources;
 import org.eclipse.wst.jsdt.internal.corext.util.SearchUtils;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.RefactoringSaveHelper;
 
 public class RenamePackageProcessor extends JavaRenameProcessor implements
@@ -1016,7 +1016,7 @@ public class RenamePackageProcessor extends JavaRenameProcessor implements
 					try {
 						TextChangeCompatibility.addTextEdit(changeManager.get(cu), name, importEdit);
 					} catch (MalformedTreeException e) {
-						JavaPlugin.logErrorMessage("MalformedTreeException while processing cu " + cu); //$NON-NLS-1$
+						JavaScriptPlugin.logErrorMessage("MalformedTreeException while processing cu " + cu); //$NON-NLS-1$
 						throw e;
 					}
 				}

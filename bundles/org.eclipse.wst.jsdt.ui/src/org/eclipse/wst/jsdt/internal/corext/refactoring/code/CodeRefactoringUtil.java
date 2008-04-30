@@ -30,7 +30,7 @@ import org.eclipse.wst.jsdt.internal.corext.dom.SelectionAnalyzer;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.Strings;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 public class CodeRefactoringUtil {
 
@@ -58,7 +58,7 @@ public class CodeRefactoringUtil {
 				IRegion region= buffer.getDocument().getLineInformationOfOffset(node.getStartPosition());
 				return Strings.computeIndentUnits(buffer.getDocument().get(region.getOffset(), region.getLength()), unit.getJavaScriptProject());
 			} catch (BadLocationException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			}
 			return 0;
 		} finally {

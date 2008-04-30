@@ -35,7 +35,7 @@ import org.eclipse.wst.jsdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.wst.jsdt.core.util.JavaScriptUnitSorter;
 import org.eclipse.wst.jsdt.internal.corext.dom.ASTNodes;
 import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.preferences.MembersOrderPreferenceCache;
 
 import com.ibm.icu.text.Collator;
@@ -58,7 +58,7 @@ public class SortMembersOperation implements IWorkspaceRunnable {
 		public DefaultJavaElementComparator(boolean doNotSortFields) {
 			fDoNotSortFields= doNotSortFields;
 			fCollator= Collator.getInstance();
-			fMemberOrderCache= JavaPlugin.getDefault().getMemberOrderPreferenceCache();
+			fMemberOrderCache= JavaScriptPlugin.getDefault().getMemberOrderPreferenceCache();
 		}
 
 		private int category(BodyDeclaration bodyDeclaration) {

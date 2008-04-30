@@ -76,7 +76,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.util.RefactoringASTParse
 import org.eclipse.wst.jsdt.internal.corext.refactoring.util.TextChangeManager;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.BindingLabelProvider;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 /*
  * Open items:
@@ -353,9 +353,9 @@ public class InlineMethodRefactoring extends ScriptableRefactoring {
 		if (!Modifier.isPrivate(binding.getModifiers()))
 			flags|= RefactoringDescriptor.MULTI_CHANGE;
 		final String description= Messages.format(RefactoringCoreMessages.InlineMethodRefactoring_descriptor_description_short, binding.getName());
-		final String header= Messages.format(RefactoringCoreMessages.InlineMethodRefactoring_descriptor_description, new String[] { BindingLabelProvider.getBindingLabel(binding, JavaElementLabels.ALL_FULLY_QUALIFIED), BindingLabelProvider.getBindingLabel(declaring, JavaElementLabels.ALL_FULLY_QUALIFIED)});
+		final String header= Messages.format(RefactoringCoreMessages.InlineMethodRefactoring_descriptor_description, new String[] { BindingLabelProvider.getBindingLabel(binding, JavaScriptElementLabels.ALL_FULLY_QUALIFIED), BindingLabelProvider.getBindingLabel(declaring, JavaScriptElementLabels.ALL_FULLY_QUALIFIED)});
 		final JDTRefactoringDescriptorComment comment= new JDTRefactoringDescriptorComment(project, this, header);
-		comment.addSetting(Messages.format(RefactoringCoreMessages.InlineMethodRefactoring_original_pattern, BindingLabelProvider.getBindingLabel(binding, JavaElementLabels.ALL_FULLY_QUALIFIED)));
+		comment.addSetting(Messages.format(RefactoringCoreMessages.InlineMethodRefactoring_original_pattern, BindingLabelProvider.getBindingLabel(binding, JavaScriptElementLabels.ALL_FULLY_QUALIFIED)));
 		if (fDeleteSource)
 			comment.addSetting(RefactoringCoreMessages.InlineMethodRefactoring_remove_method);
 		if (fCurrentMode == Mode.INLINE_ALL)
@@ -388,7 +388,7 @@ public class InlineMethodRefactoring extends ScriptableRefactoring {
 			} else {
 				IClassFile classFile= method.getClassFile();
 				if (! JavaElementUtil.isSourceAvailable(classFile)) {
-					String methodLabel= JavaElementLabels.getTextLabel(method, JavaElementLabels.M_FULLY_QUALIFIED | JavaElementLabels.M_PARAMETER_TYPES);
+					String methodLabel= JavaScriptElementLabels.getTextLabel(method, JavaScriptElementLabels.M_FULLY_QUALIFIED | JavaScriptElementLabels.M_PARAMETER_TYPES);
 					status.addFatalError(Messages.format(RefactoringCoreMessages.InlineMethodRefactoring_error_classFile, methodLabel)); 
 					return null;
 				}				

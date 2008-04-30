@@ -39,7 +39,7 @@ import org.eclipse.wst.jsdt.internal.corext.codemanipulation.StubUtility;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.nls.changes.CreateTextFileChange;
 import org.eclipse.wst.jsdt.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusInfo;
 import org.eclipse.wst.jsdt.internal.ui.preferences.MembersOrderPreferenceCache;
 import org.eclipse.wst.jsdt.ui.CodeGeneration;
@@ -140,7 +140,7 @@ public class AccessorClassCreator {
 
 	private String createClass(String lineDelim) throws CoreException {
 		if (fIsEclipseNLS) {
-			MembersOrderPreferenceCache sortOrder= JavaPlugin.getDefault().getMemberOrderPreferenceCache();
+			MembersOrderPreferenceCache sortOrder= JavaScriptPlugin.getDefault().getMemberOrderPreferenceCache();
 			int constructorIdx= sortOrder.getCategoryIndex(MembersOrderPreferenceCache.CONSTRUCTORS_INDEX);
 			int fieldIdx= sortOrder.getCategoryIndex(MembersOrderPreferenceCache.STATIC_FIELDS_INDEX);
 			int initIdx= sortOrder.getCategoryIndex(MembersOrderPreferenceCache.STATIC_INIT_INDEX);
@@ -180,7 +180,7 @@ public class AccessorClassCreator {
 			
 			return result.toString();
 		} else {
-			MembersOrderPreferenceCache sortOrder= JavaPlugin.getDefault().getMemberOrderPreferenceCache();
+			MembersOrderPreferenceCache sortOrder= JavaScriptPlugin.getDefault().getMemberOrderPreferenceCache();
 			int constructorIdx= sortOrder.getCategoryIndex(MembersOrderPreferenceCache.CONSTRUCTORS_INDEX);
 			int methodIdx= sortOrder.getCategoryIndex(MembersOrderPreferenceCache.METHOD_INDEX);
 			

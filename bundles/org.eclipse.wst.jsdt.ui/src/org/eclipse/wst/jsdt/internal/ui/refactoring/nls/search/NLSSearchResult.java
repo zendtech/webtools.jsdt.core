@@ -34,7 +34,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IParent;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.IClassFileEditorInput;
 
@@ -104,7 +104,7 @@ public class NLSSearchResult extends AbstractTextSearchResult implements IEditor
 				}
 			}
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 			return NO_MATCHES;
 		}
 		
@@ -180,7 +180,7 @@ public class NLSSearchResult extends AbstractTextSearchResult implements IEditor
 			}
 			if (editorInput instanceof IFileEditorInput) {
 				try {
-					IJavaScriptUnit cu= (IJavaScriptUnit) je.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+					IJavaScriptUnit cu= (IJavaScriptUnit) je.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 					if (cu == null)
 						return false;
 					else

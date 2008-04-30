@@ -44,7 +44,7 @@ public class SourceReferenceUtil {
 		if (o instanceof IJavaScriptUnit)
 			return (IJavaScriptUnit)o;
 		if (o instanceof IJavaScriptElement)
-			return (IJavaScriptUnit) ((IJavaScriptElement)o).getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+			return (IJavaScriptUnit) ((IJavaScriptElement)o).getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 		return null;
 	}	
 	

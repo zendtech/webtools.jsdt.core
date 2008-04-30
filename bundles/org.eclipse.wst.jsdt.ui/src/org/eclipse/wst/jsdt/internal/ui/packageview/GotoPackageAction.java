@@ -24,7 +24,7 @@ import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.core.search.SearchEngine;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.PackageSelectionDialog;
 
 class GotoPackageAction extends Action {
@@ -40,7 +40,7 @@ class GotoPackageAction extends Action {
  
 	public void run() { 
 		try {
-			Shell shell= JavaPlugin.getActiveWorkbenchShell();
+			Shell shell= JavaScriptPlugin.getActiveWorkbenchShell();
 			SelectionDialog dialog= createAllPackagesDialog(shell);
 			dialog.setTitle(getDialogTitle());
 			dialog.setMessage(PackagesMessages.GotoPackage_dialog_message); 

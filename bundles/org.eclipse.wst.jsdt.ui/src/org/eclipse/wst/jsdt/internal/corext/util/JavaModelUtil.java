@@ -612,9 +612,9 @@ public final class JavaModelUtil {
 			// does not exist exceptions. See bug 
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=75894
 			// for more details
-			if (element.getElementType() == IJavaScriptElement.COMPILATION_UNIT)
+			if (element.getElementType() == IJavaScriptElement.JAVASCRIPT_UNIT)
 				continue;
-			IJavaScriptUnit unit= (IJavaScriptUnit)element.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+			IJavaScriptUnit unit= (IJavaScriptUnit)element.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 			if (unit == null)
 				return true;
 			if (!unit.isWorkingCopy())
@@ -752,7 +752,7 @@ public final class JavaModelUtil {
 
 	private static void addAllCus(HashSet/*<IJavaScriptUnit>*/ collector, IJavaScriptElement javaElement) throws JavaScriptModelException {
 		switch (javaElement.getElementType()) {
-			case IJavaScriptElement.JAVA_PROJECT:
+			case IJavaScriptElement.JAVASCRIPT_PROJECT:
 				IJavaScriptProject javaProject= (IJavaScriptProject) javaElement;
 				IPackageFragmentRoot[] packageFragmentRoots= javaProject.getPackageFragmentRoots();
 				for (int i= 0; i < packageFragmentRoots.length; i++)
@@ -773,12 +773,12 @@ public final class JavaModelUtil {
 				collector.addAll(Arrays.asList(packageFragment.getJavaScriptUnits()));
 				return;
 			
-			case IJavaScriptElement.COMPILATION_UNIT:
+			case IJavaScriptElement.JAVASCRIPT_UNIT:
 				collector.add(javaElement);
 				return;
 				
 			default:
-				IJavaScriptElement cu= javaElement.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+				IJavaScriptElement cu= javaElement.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 				if (cu != null)
 					collector.add(cu);
 		}
@@ -1035,7 +1035,7 @@ public final class JavaModelUtil {
 	
 	public static String getFilePackage(IJavaScriptElement javaElement)
 	{
-		IJavaScriptElement fileAncestor = javaElement.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+		IJavaScriptElement fileAncestor = javaElement.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 		if (fileAncestor==null)
 			fileAncestor=javaElement.getAncestor(IJavaScriptElement.CLASS_FILE);
 		IPath filePath= fileAncestor.getResource().getFullPath();

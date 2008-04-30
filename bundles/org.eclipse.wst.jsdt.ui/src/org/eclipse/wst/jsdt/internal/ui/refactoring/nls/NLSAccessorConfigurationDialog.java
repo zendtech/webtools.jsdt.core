@@ -57,7 +57,7 @@ import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.LayoutUtil;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.Separator;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.StringButtonDialogField;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.StringDialogField;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
 
 public class NLSAccessorConfigurationDialog extends StatusDialog {
 
@@ -213,7 +213,7 @@ public class NLSAccessorConfigurationDialog extends StatusDialog {
 	}
 
 	private void browseForPropertyFile() {
-		ElementListSelectionDialog dialog= new ElementListSelectionDialog(getShell(), new JavaElementLabelProvider());
+		ElementListSelectionDialog dialog= new ElementListSelectionDialog(getShell(), new JavaScriptElementLabelProvider());
 		dialog.setIgnoreCase(false);
 		dialog.setTitle(NLSUIMessages.NLSAccessorConfigurationDialog_Property_File_Selection); 
 		dialog.setMessage(NLSUIMessages.NLSAccessorConfigurationDialog_Choose_the_property_file); 

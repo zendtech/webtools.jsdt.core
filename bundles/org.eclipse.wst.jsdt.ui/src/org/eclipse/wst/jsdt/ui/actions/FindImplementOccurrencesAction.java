@@ -21,7 +21,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionMessages;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionUtil;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.IClassFileEditorInput;
@@ -96,7 +96,7 @@ public class FindImplementOccurrencesAction extends SelectionDispatchAction {
 			if (result != null)
 				showMessage(getShell(), fEditor, result);
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 	}
 
@@ -104,7 +104,7 @@ public class FindImplementOccurrencesAction extends SelectionDispatchAction {
 		IEditorInput input= editor.getEditorInput();
 		if (input instanceof IClassFileEditorInput)
 			return ((IClassFileEditorInput)input).getClassFile();
-		return  JavaPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(input);
+		return  JavaScriptPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(input);
 	} 
 		
 	private static void showMessage(Shell shell, JavaEditor editor, String msg) {

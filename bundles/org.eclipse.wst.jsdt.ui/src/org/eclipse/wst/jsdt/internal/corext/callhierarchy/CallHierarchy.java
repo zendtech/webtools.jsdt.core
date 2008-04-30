@@ -29,7 +29,7 @@ import org.eclipse.wst.jsdt.core.dom.ASTParser;
 import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
 import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.core.search.SearchEngine;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.util.StringMatcher;
 
 public class CallHierarchy {
@@ -51,13 +51,13 @@ public class CallHierarchy {
     }
 
     public boolean isSearchUsingImplementorsEnabled() {
-        IPreferenceStore settings = JavaPlugin.getDefault().getPreferenceStore();
+        IPreferenceStore settings = JavaScriptPlugin.getDefault().getPreferenceStore();
 
         return settings.getBoolean(PREF_USE_IMPLEMENTORS);
     }
 
     public void setSearchUsingImplementorsEnabled(boolean enabled) {
-        IPreferenceStore settings = JavaPlugin.getDefault().getPreferenceStore();
+        IPreferenceStore settings = JavaScriptPlugin.getDefault().getPreferenceStore();
 
         settings.setValue(PREF_USE_IMPLEMENTORS, enabled);
     }
@@ -149,12 +149,12 @@ public class CallHierarchy {
     }
 
     public boolean isFilterEnabled() {
-        IPreferenceStore settings = JavaPlugin.getDefault().getPreferenceStore();
+        IPreferenceStore settings = JavaScriptPlugin.getDefault().getPreferenceStore();
         return settings.getBoolean(PREF_USE_FILTERS);
     }
 
     public void setFilterEnabled(boolean filterEnabled) {
-        IPreferenceStore settings = JavaPlugin.getDefault().getPreferenceStore();
+        IPreferenceStore settings = JavaScriptPlugin.getDefault().getPreferenceStore();
         settings.setValue(PREF_USE_FILTERS, filterEnabled);
     }
     
@@ -163,7 +163,7 @@ public class CallHierarchy {
      * @return returns the filters
      */
     public String getFilters() {
-        IPreferenceStore settings = JavaPlugin.getDefault().getPreferenceStore();
+        IPreferenceStore settings = JavaScriptPlugin.getDefault().getPreferenceStore();
 
         return settings.getString(PREF_FILTERS_LIST);
     }
@@ -171,7 +171,7 @@ public class CallHierarchy {
     public void setFilters(String filters) {
         fFilters = null;
 
-        IPreferenceStore settings = JavaPlugin.getDefault().getPreferenceStore();
+        IPreferenceStore settings = JavaScriptPlugin.getDefault().getPreferenceStore();
         settings.setValue(PREF_FILTERS_LIST, filters);
     }
 
@@ -230,7 +230,7 @@ public class CallHierarchy {
 				return (JavaScriptUnit) parser.createAST(null);
 	    	}
         } catch (JavaScriptModelException e) {
-            JavaPlugin.log(e);
+            JavaScriptPlugin.log(e);
         }
         return null;
     }

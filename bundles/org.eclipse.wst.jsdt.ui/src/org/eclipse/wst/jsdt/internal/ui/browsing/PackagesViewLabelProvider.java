@@ -17,14 +17,14 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.AppearanceAwareLabelProvider;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.ColoredString;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.ImageDescriptorRegistry;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.JavaElementImageProvider;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.TreeHierarchyLayoutProblemsDecorator;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 /**
  * Label provider for the Packages view.
@@ -40,7 +40,7 @@ class PackagesViewLabelProvider extends AppearanceAwareLabelProvider {
 	private TreeHierarchyLayoutProblemsDecorator fDecorator;
 
 	PackagesViewLabelProvider(int state) {
-		this(state, AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | JavaElementLabels.P_COMPRESSED, AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS | JavaElementImageProvider.SMALL_ICONS);
+		this(state, AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | JavaScriptElementLabels.P_COMPRESSED, AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS | JavaElementImageProvider.SMALL_ICONS);
 	}
 
 	PackagesViewLabelProvider(int state, long textFlags, int imageFlags) {
@@ -48,7 +48,7 @@ class PackagesViewLabelProvider extends AppearanceAwareLabelProvider {
 
 		Assert.isTrue(isValidState(state));
 		fViewState= state;
-		fRegistry= JavaPlugin.getImageDescriptorRegistry();
+		fRegistry= JavaScriptPlugin.getImageDescriptorRegistry();
 
 		fDecorator= new TreeHierarchyLayoutProblemsDecorator(isFlatView());
 		addLabelDecorator(fDecorator);

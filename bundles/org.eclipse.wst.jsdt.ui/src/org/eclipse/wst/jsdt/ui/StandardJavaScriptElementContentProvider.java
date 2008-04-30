@@ -63,7 +63,7 @@ Java model (<code>IJavaScriptModel</code>)
  * 
  * @since 2.0
  */
-public class StandardJavaElementContentProvider implements ITreeContentProvider, IWorkingCopyProvider {
+public class StandardJavaScriptElementContentProvider implements ITreeContentProvider, IWorkingCopyProvider {
 
 	protected static final Object[] NO_CHILDREN= new Object[0];
 	protected boolean fProvideMembers;
@@ -73,27 +73,27 @@ public class StandardJavaElementContentProvider implements ITreeContentProvider,
 	 * Creates a new content provider. The content provider does not
 	 * provide members of compilation units or class files.
 	 */	
-	public StandardJavaElementContentProvider() {
+	public StandardJavaScriptElementContentProvider() {
 		this(false);
 	}
 	
 	/**
-	 *@deprecated Use {@link #StandardJavaElementContentProvider(boolean)} instead.
+	 *@deprecated Use {@link #StandardJavaScriptElementContentProvider(boolean)} instead.
 	 * Since 3.0 compilation unit children are always provided as working copies. The Java Model
 	 * does not support the 'original' mode anymore.
 	 */
-	public StandardJavaElementContentProvider(boolean provideMembers, boolean provideWorkingCopy) {
+	public StandardJavaScriptElementContentProvider(boolean provideMembers, boolean provideWorkingCopy) {
 		this(provideMembers);
 	}
 	
 	
 	/**
-	 * Creates a new <code>StandardJavaElementContentProvider</code>.
+	 * Creates a new <code>StandardJavaScriptElementContentProvider</code>.
 	 *
 	 * @param provideMembers if <code>true</code> members below compilation units 
 	 * and class files are provided. 
 	 */
-	public StandardJavaElementContentProvider(boolean provideMembers) {
+	public StandardJavaScriptElementContentProvider(boolean provideMembers) {
 		fProvideMembers= provideMembers;
 		fProvideWorkingCopy= provideMembers;
 	}
@@ -211,7 +211,7 @@ public class StandardJavaElementContentProvider implements ITreeContentProvider,
 	 */
 	protected boolean matches(IJavaScriptElement element) {
 			
-		if (element.getElementType() == IJavaScriptElement.TYPE && (element.getParent().getElementType() == IJavaScriptElement.COMPILATION_UNIT || element.getParent().getElementType() == IJavaScriptElement.CLASS_FILE) ) {
+		if (element.getElementType() == IJavaScriptElement.TYPE && (element.getParent().getElementType() == IJavaScriptElement.JAVASCRIPT_UNIT || element.getParent().getElementType() == IJavaScriptElement.CLASS_FILE) ) {
 			
 			IType type = (IType)element;
 			try {

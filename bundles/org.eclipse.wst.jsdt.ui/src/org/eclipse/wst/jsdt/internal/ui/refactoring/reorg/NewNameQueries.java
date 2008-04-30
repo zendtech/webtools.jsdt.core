@@ -35,7 +35,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.reorg.INewNameQueries;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.reorg.INewNameQuery;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.TextFieldNavigationHandler;
 
 public class NewNameQueries implements INewNameQueries {
@@ -66,7 +66,7 @@ public class NewNameQueries implements INewNameQueries {
 			
 		if (fShell != null)
 			return fShell;
-		return JavaPlugin.getActiveWorkbenchShell();
+		return JavaScriptPlugin.getActiveWorkbenchShell();
 	}
 
 	public INewNameQuery createNewCompilationUnitNameQuery(IJavaScriptUnit cu, String initialSuggestedName) {

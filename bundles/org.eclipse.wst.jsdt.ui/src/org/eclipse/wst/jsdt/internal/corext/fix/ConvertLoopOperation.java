@@ -31,13 +31,13 @@ import org.eclipse.wst.jsdt.internal.corext.dom.GenericVisitor;
 import org.eclipse.wst.jsdt.internal.corext.dom.ScopeAnalyzer;
 import org.eclipse.wst.jsdt.internal.corext.fix.LinkedFix.AbstractLinkedFixRewriteOperation;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.structure.CompilationUnitRewrite;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 public abstract class ConvertLoopOperation extends AbstractLinkedFixRewriteOperation {
 	
 	protected static final String FOR_LOOP_ELEMENT_IDENTIFIER= "element"; //$NON-NLS-1$
 	
-	protected static final IStatus ERROR_STATUS= new Status(IStatus.ERROR, JavaPlugin.getPluginId(), ""); //$NON-NLS-1$
+	protected static final IStatus ERROR_STATUS= new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), ""); //$NON-NLS-1$
 	
 	private final ForStatement fStatement;
 	private ConvertLoopOperation fOperation;

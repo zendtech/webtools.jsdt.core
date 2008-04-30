@@ -112,7 +112,7 @@ public class JavaElementAdapterFactory implements IAdapterFactory, IContributorR
 					return ((IJavaScriptUnit) parent).getPrimary().getResource();
 				}
 				return null;
-			case IJavaScriptElement.COMPILATION_UNIT:
+			case IJavaScriptElement.JAVASCRIPT_UNIT:
 				return ((IJavaScriptUnit) element).getPrimary().getResource();
 			case IJavaScriptElement.CLASS_FILE:
 			case IJavaScriptElement.PACKAGE_FRAGMENT:
@@ -123,8 +123,8 @@ public class JavaElementAdapterFactory implements IAdapterFactory, IContributorR
 				}
 				return null;
 			case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
-			case IJavaScriptElement.JAVA_PROJECT:
-			case IJavaScriptElement.JAVA_MODEL:
+			case IJavaScriptElement.JAVASCRIPT_PROJECT:
+			case IJavaScriptElement.JAVASCRIPT_MODEL:
 				return element.getResource();
 			default:
 				return null;

@@ -42,11 +42,11 @@ import org.eclipse.wst.jsdt.internal.corext.callhierarchy.CallLocation;
 import org.eclipse.wst.jsdt.internal.corext.callhierarchy.MethodWrapper;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaStatusConstants;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.SelectionConverter;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.EditorUtility;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 public class CallHierarchyUI {
     private static final int DEFAULT_MAX_CALL_DEPTH= 10;    
@@ -73,7 +73,7 @@ public class CallHierarchyUI {
     public int getMaxCallDepth() {
         int maxCallDepth;
         
-        IPreferenceStore settings = JavaPlugin.getDefault().getPreferenceStore();
+        IPreferenceStore settings = JavaScriptPlugin.getDefault().getPreferenceStore();
         maxCallDepth = settings.getInt(PREF_MAX_CALL_DEPTH);
         if (maxCallDepth < 1 || maxCallDepth > 99) {
             maxCallDepth= DEFAULT_MAX_CALL_DEPTH;
@@ -83,34 +83,34 @@ public class CallHierarchyUI {
     }
 
     public void setMaxCallDepth(int maxCallDepth) {
-        IPreferenceStore settings = JavaPlugin.getDefault().getPreferenceStore();
+        IPreferenceStore settings = JavaScriptPlugin.getDefault().getPreferenceStore();
         settings.setValue(PREF_MAX_CALL_DEPTH, maxCallDepth);
     }
     
     public static void jumpToMember(IJavaScriptElement element) {
         if (element != null) {
             try {
-                JavaUI.openInEditor(element, true, true);
+                JavaScriptUI.openInEditor(element, true, true);
             } catch (JavaScriptModelException e) {
-                JavaPlugin.log(e);
+                JavaScriptPlugin.log(e);
             } catch (PartInitException e) {
-                JavaPlugin.log(e);
+                JavaScriptPlugin.log(e);
             }
         }
     }
 
     public static void jumpToLocation(CallLocation callLocation) {
         try {
-            IEditorPart methodEditor = JavaUI.openInEditor(callLocation.getMember(), false, false);
+            IEditorPart methodEditor = JavaScriptUI.openInEditor(callLocation.getMember(), false, false);
             if (methodEditor instanceof ITextEditor) {
                 ITextEditor editor = (ITextEditor) methodEditor;
                 editor.selectAndReveal(callLocation.getStart(),
                     (callLocation.getEnd() - callLocation.getStart()));
             }
         } catch (JavaScriptModelException e) {
-            JavaPlugin.log(e);
+            JavaScriptPlugin.log(e);
         } catch (PartInitException e) {
-            JavaPlugin.log(e);
+            JavaScriptPlugin.log(e);
         }
     }
 
@@ -151,14 +151,14 @@ public class CallHierarchyUI {
 	
             boolean activateOnOpen = OpenStrategy.activateOnOpen();
 
-			IEditorPart methodEditor = JavaUI.openInEditor(enclosingMember, activateOnOpen, false);
+			IEditorPart methodEditor = JavaScriptUI.openInEditor(enclosingMember, activateOnOpen, false);
             if (methodEditor instanceof ITextEditor) {
                 ITextEditor editor = (ITextEditor) methodEditor;
 				editor.selectAndReveal(selectionStart, selectionLength);
             }
             return true;
         } catch (JavaScriptModelException e) {
-            JavaPlugin.log(new Status(IStatus.ERROR, JavaPlugin.getPluginId(),
+            JavaScriptPlugin.log(new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(),
                     IJavaStatusConstants.INTERNAL_ERROR,
                     CallHierarchyMessages.CallHierarchyUI_open_in_editor_error_message, e)); 
 

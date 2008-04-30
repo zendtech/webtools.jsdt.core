@@ -62,7 +62,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.base.JavaStatusContext;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.SearchUtils;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 /**
  * Helper class to adjust the visibilities of members with respect to a reference element.
@@ -291,7 +291,7 @@ public final class MemberVisibilityAdjustor {
 	 */
 	public static String getLabel(final IJavaScriptElement element) {
 		Assert.isNotNull(element);
-		return JavaElementLabels.getElementLabel(element, JavaElementLabels.ALL_FULLY_QUALIFIED | JavaElementLabels.ALL_DEFAULT);
+		return JavaScriptElementLabels.getElementLabel(element, JavaScriptElementLabels.ALL_FULLY_QUALIFIED | JavaScriptElementLabels.ALL_DEFAULT);
 	}
 
 	/**
@@ -651,7 +651,7 @@ public final class MemberVisibilityAdjustor {
 		if (declaring != null && (JavaModelUtil.isInterfaceOrAnnotation(declaring) || declaring.equals(fReferenced)))
 			adjust= false;
 		if (adjust && hasLowerVisibility(member.getFlags(), keywordToVisibility(threshold)) && needsVisibilityAdjustment(member, threshold))
-			fAdjustments.put(member, new OutgoingMemberVisibilityAdjustment(member, threshold, RefactoringStatus.createStatus(fVisibilitySeverity, Messages.format(template, new String[] { JavaElementLabels.getTextLabel(member, JavaElementLabels.M_PARAMETER_TYPES | JavaElementLabels.ALL_FULLY_QUALIFIED), getLabel(threshold)}), JavaStatusContext.create(member), null, RefactoringStatusEntry.NO_CODE, null)));
+			fAdjustments.put(member, new OutgoingMemberVisibilityAdjustment(member, threshold, RefactoringStatus.createStatus(fVisibilitySeverity, Messages.format(template, new String[] { JavaScriptElementLabels.getTextLabel(member, JavaScriptElementLabels.M_PARAMETER_TYPES | JavaScriptElementLabels.ALL_FULLY_QUALIFIED), getLabel(threshold)}), JavaStatusContext.create(member), null, RefactoringStatusEntry.NO_CODE, null)));
 	}
 
 	/**
@@ -908,7 +908,7 @@ public final class MemberVisibilityAdjustor {
 				case IJavaScriptElement.TYPE: {
 					final IType typeReferenced= (IType) referenced;
 					switch (referencingType) {
-						case IJavaScriptElement.COMPILATION_UNIT: {
+						case IJavaScriptElement.JAVASCRIPT_UNIT: {
 							final IJavaScriptUnit unit= (IJavaScriptUnit) referencing;
 							final IJavaScriptUnit referencedUnit= typeReferenced.getJavaScriptUnit();
 							if (referencedUnit != null && referencedUnit.equals(unit))
@@ -936,7 +936,7 @@ public final class MemberVisibilityAdjustor {
 					final IField fieldReferenced= (IField) referenced;
 					final IJavaScriptUnit referencedUnit= fieldReferenced.getJavaScriptUnit();
 					switch (referencingType) {
-						case IJavaScriptElement.COMPILATION_UNIT: {
+						case IJavaScriptElement.JAVASCRIPT_UNIT: {
 							final IJavaScriptUnit unit= (IJavaScriptUnit) referencing;
 							if (referencedUnit != null && referencedUnit.equals(unit))
 								keyword= ModifierKeyword.PRIVATE_KEYWORD;
@@ -963,7 +963,7 @@ public final class MemberVisibilityAdjustor {
 					final IFunction methodReferenced= (IFunction) referenced;
 					final IJavaScriptUnit referencedUnit= methodReferenced.getJavaScriptUnit();
 					switch (referencingType) {
-						case IJavaScriptElement.COMPILATION_UNIT: {
+						case IJavaScriptElement.JAVASCRIPT_UNIT: {
 							final IJavaScriptUnit unit= (IJavaScriptUnit) referencing;
 							if (referencedUnit != null && referencedUnit.equals(unit))
 								keyword= ModifierKeyword.PRIVATE_KEYWORD;

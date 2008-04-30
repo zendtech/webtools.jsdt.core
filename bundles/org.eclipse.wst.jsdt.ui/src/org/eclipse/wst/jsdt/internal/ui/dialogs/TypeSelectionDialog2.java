@@ -50,11 +50,11 @@ import org.eclipse.wst.jsdt.core.search.TypeNameRequestor;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.OpenTypeHistory;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIMessages;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.ui.dialogs.TypeSelectionExtension;
 
 /**
@@ -170,7 +170,7 @@ public class TypeSelectionDialog2 extends SelectionStatusDialog {
 	protected void handleWidgetSelected(TypeNameMatch[] selection) {
 		IStatus status= null;
 		if (selection.length == 0) {
-	    	status= new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.ERROR, "",null); //$NON-NLS-1$
+	    	status= new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), IStatus.ERROR, "",null); //$NON-NLS-1$
 	    } else {
 		    if (fValidator != null) {
 				List jElements= new ArrayList();
@@ -179,7 +179,7 @@ public class TypeSelectionDialog2 extends SelectionStatusDialog {
 					if (type != null) {
 						jElements.add(type);
 					} else {
-			    		status= new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.ERROR,
+			    		status= new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), IStatus.ERROR,
 			    			Messages.format(JavaUIMessages.TypeSelectionDialog_error_type_doesnot_exist, selection[i].getFullyQualifiedName()),
 			    			null);
 			    		break;
@@ -189,7 +189,7 @@ public class TypeSelectionDialog2 extends SelectionStatusDialog {
 					status= fValidator.validate(jElements.toArray());
 				}
 			} else {
-				status= new Status(IStatus.OK, JavaPlugin.getPluginId(), IStatus.OK, "",null); //$NON-NLS-1$
+				status= new Status(IStatus.OK, JavaScriptPlugin.getPluginId(), IStatus.OK, "",null); //$NON-NLS-1$
 			}
 	    }
     	updateStatus(status);
@@ -206,7 +206,7 @@ public class TypeSelectionDialog2 extends SelectionStatusDialog {
 			return CANCEL;
 		}
 		if (fInitialFilter == null) {
-			IWorkbenchWindow window= JavaPlugin.getActiveWorkbenchWindow();
+			IWorkbenchWindow window= JavaScriptPlugin.getActiveWorkbenchWindow();
 			if (window != null) {
 				ISelection selection= window.getSelectionService().getSelection();
 				if (selection instanceof ITextSelection) {
@@ -261,7 +261,7 @@ public class TypeSelectionDialog2 extends SelectionStatusDialog {
 			if (!type.exists()) {
 				String title= JavaUIMessages.TypeSelectionDialog_errorTitle; 
 				IPackageFragmentRoot root= typeInfo.getPackageFragmentRoot();
-				String containerName= JavaElementLabels.getElementLabel(root, JavaElementLabels.ROOT_QUALIFIED);
+				String containerName= JavaScriptElementLabels.getElementLabel(root, JavaScriptElementLabels.ROOT_QUALIFIED);
 				String message= Messages.format(JavaUIMessages.TypeSelectionDialog_dialogMessage, new String[] { typeInfo.getFullyQualifiedName(), containerName }); 
 				MessageDialog.openError(getShell(), title, message);
 				history.remove(typeInfo);
@@ -282,7 +282,7 @@ public class TypeSelectionDialog2 extends SelectionStatusDialog {
 				if (fgFirstTime) {
 					// Join the initialize after load job.
 					IJobManager manager= Job.getJobManager();
-					manager.join(JavaUI.ID_PLUGIN, monitor);
+					manager.join(JavaScriptUI.ID_PLUGIN, monitor);
 				}
 				OpenTypeHistory history= OpenTypeHistory.getInstance();
 				if (fgFirstTime || history.isEmpty()) {

@@ -54,10 +54,10 @@ protected void verify(IJavaScriptElement element) throws JavaScriptModelExceptio
 
 	int elementType = element.getElementType();
 
-	if (!(elementType == IJavaScriptElement.COMPILATION_UNIT || elementType == IJavaScriptElement.PACKAGE_FRAGMENT)) {
+	if (!(elementType == IJavaScriptElement.JAVASCRIPT_UNIT || elementType == IJavaScriptElement.PACKAGE_FRAGMENT)) {
 		error(IJavaScriptModelStatusConstants.INVALID_ELEMENT_TYPES, element);
 	}
-	if (elementType == IJavaScriptElement.COMPILATION_UNIT) {
+	if (elementType == IJavaScriptElement.JAVASCRIPT_UNIT) {
 		CompilationUnit cu = (CompilationUnit)element;
 		if (cu.isWorkingCopy() && !cu.isPrimary()) {
 			error(IJavaScriptModelStatusConstants.INVALID_ELEMENT_TYPES, element);

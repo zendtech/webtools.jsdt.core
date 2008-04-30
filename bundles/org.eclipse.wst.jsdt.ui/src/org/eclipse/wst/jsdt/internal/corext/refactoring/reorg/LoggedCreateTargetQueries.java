@@ -24,7 +24,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.util.CoreUtility;
 import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.BuildPathsBlock;
 
@@ -73,7 +73,7 @@ public final class LoggedCreateTargetQueries implements ICreateTargetQueries {
 						if (!fragment.exists())
 							root.createPackageFragment(fragment.getElementName(), true, new NullProgressMonitor());
 					} catch (CoreException exception) {
-						JavaPlugin.log(exception);
+						JavaScriptPlugin.log(exception);
 						return null;
 					}
 				}
@@ -86,7 +86,7 @@ public final class LoggedCreateTargetQueries implements ICreateTargetQueries {
 					if (!folder.exists())
 						CoreUtility.createFolder(folder, true, true, new NullProgressMonitor());
 				} catch (CoreException exception) {
-					JavaPlugin.log(exception);
+					JavaScriptPlugin.log(exception);
 					return null;
 				}
 			}

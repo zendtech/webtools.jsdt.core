@@ -35,7 +35,7 @@ import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.wst.jsdt.core.ICodeAssist;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.IClassFileEditorInput;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.WorkingCopyManager;
 import org.eclipse.wst.jsdt.internal.ui.text.JavaWordFinder;
@@ -75,7 +75,7 @@ public abstract class AbstractJavaEditorTextHover implements IJavaEditorTextHove
 				return cfeInput.getClassFile();
 			}
 
-			WorkingCopyManager manager= JavaPlugin.getDefault().getWorkingCopyManager();
+			WorkingCopyManager manager= JavaScriptPlugin.getDefault().getWorkingCopyManager();
 			return manager.getWorkingCopy(input, false);
 		}
 
@@ -158,7 +158,7 @@ public abstract class AbstractJavaEditorTextHover implements IJavaEditorTextHove
 	}
 	
 	private static String loadStyleSheet() {
-		Bundle bundle= Platform.getBundle(JavaPlugin.getPluginId());
+		Bundle bundle= Platform.getBundle(JavaScriptPlugin.getPluginId());
 		URL styleSheetURL= bundle.getEntry("/JavadocHoverStyleSheet.css"); //$NON-NLS-1$
 		if (styleSheetURL != null) {
 			try {
@@ -173,7 +173,7 @@ public abstract class AbstractJavaEditorTextHover implements IJavaEditorTextHove
 				}
 				return buffer.toString();
 			} catch (IOException ex) {
-				JavaPlugin.log(ex);
+				JavaScriptPlugin.log(ex);
 				return ""; //$NON-NLS-1$
 			}
 		}

@@ -52,10 +52,10 @@ import org.eclipse.wst.jsdt.core.JavaScriptConventions;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusInfo;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusUtil;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 	
 /*
@@ -77,7 +77,7 @@ public class NewJavaProjectPreferencePage extends PreferencePage implements IWor
 	private static String fgDefaultEncoding= System.getProperty("file.encoding"); //$NON-NLS-1$
 
 	public static IIncludePathEntry[] getDefaultJRELibrary() {
-		IPreferenceStore store= JavaPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore store= JavaScriptPlugin.getDefault().getPreferenceStore();
 		
 		String str= store.getString(CLASSPATH_JRELIBRARY_LIST);
 		int index= store.getInt(CLASSPATH_JRELIBRARY_INDEX);
@@ -111,7 +111,7 @@ public class NewJavaProjectPreferencePage extends PreferencePage implements IWor
 		try {
 			return URLDecoder.decode(str, fgDefaultEncoding);
 		} catch (UnsupportedEncodingException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		return ""; //$NON-NLS-1$
 	}
@@ -120,7 +120,7 @@ public class NewJavaProjectPreferencePage extends PreferencePage implements IWor
 		try {
 			return URLEncoder.encode(str, fgDefaultEncoding);
 		} catch (UnsupportedEncodingException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		return ""; //$NON-NLS-1$
 	}	
@@ -155,10 +155,10 @@ public class NewJavaProjectPreferencePage extends PreferencePage implements IWor
 				}								
 			} catch (NumberFormatException e) {
 				String message= PreferencesMessages.NewJavaProjectPreferencePage_error_decode; 
-				JavaPlugin.log(new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IStatus.ERROR, message, e));
+				JavaScriptPlugin.log(new Status(IStatus.ERROR, JavaScriptUI.ID_PLUGIN, IStatus.ERROR, message, e));
 			} catch (NoSuchElementException e) {
 				String message= PreferencesMessages.NewJavaProjectPreferencePage_error_decode; 
-				JavaPlugin.log(new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IStatus.ERROR, message, e));
+				JavaScriptPlugin.log(new Status(IStatus.ERROR, JavaScriptUI.ID_PLUGIN, IStatus.ERROR, message, e));
 			}
 		}
 		return (IIncludePathEntry[]) res.toArray(new IIncludePathEntry[res.size()]);	
@@ -226,7 +226,7 @@ public class NewJavaProjectPreferencePage extends PreferencePage implements IWor
 
 	public NewJavaProjectPreferencePage() {
 		super();
-		setPreferenceStore(JavaPlugin.getDefault().getPreferenceStore());
+		setPreferenceStore(JavaScriptPlugin.getDefault().getPreferenceStore());
 		setDescription(PreferencesMessages.NewJavaProjectPreferencePage_description); 
 	
 		// title used when opened programatically
@@ -405,7 +405,7 @@ public class NewJavaProjectPreferencePage extends PreferencePage implements IWor
 				updateStatus(new StatusInfo(IStatus.ERROR,  PreferencesMessages.NewJavaProjectPreferencePage_folders_error_namesempty)); 
 				return;
 			}
-			IWorkspace workspace= JavaPlugin.getWorkspace();
+			IWorkspace workspace= JavaScriptPlugin.getWorkspace();
 			IProject dmy= workspace.getRoot().getProject("project"); //$NON-NLS-1$
 			
 			IStatus status;
@@ -510,7 +510,7 @@ public class NewJavaProjectPreferencePage extends PreferencePage implements IWor
 			store.setValue(CLASSPATH_JRELIBRARY_INDEX, fJRECombo.getSelectionIndex());
 		}
 		
-		JavaPlugin.getDefault().savePluginPreferences();
+		JavaScriptPlugin.getDefault().savePluginPreferences();
 		return super.performOk();
 	}
 	

@@ -29,9 +29,9 @@ import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.wizards.NewWizardMessages;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 /**
  *
@@ -93,7 +93,7 @@ public class BuildPathSupport {
 				}
 			}
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e.getStatus());
+			JavaScriptPlugin.log(e.getStatus());
 		}
 		return null;
 	}
@@ -131,7 +131,7 @@ public class BuildPathSupport {
 				}
 			}
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e.getStatus());
+			JavaScriptPlugin.log(e.getStatus());
 		}
 		return null;
 	}
@@ -212,7 +212,7 @@ public class BuildPathSupport {
 	private static void updateContainerClasspath(IJavaScriptProject jproject, IPath containerPath, IIncludePathEntry newEntry, String[] changedAttributes, IProgressMonitor monitor) throws CoreException {
 		IJsGlobalScopeContainer container= JavaScriptCore.getJsGlobalScopeContainer(containerPath, jproject);
 		if (container == null) {
-			throw new CoreException(new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IStatus.ERROR, "Container " + containerPath + " cannot be resolved", null));  //$NON-NLS-1$//$NON-NLS-2$
+			throw new CoreException(new Status(IStatus.ERROR, JavaScriptUI.ID_PLUGIN, IStatus.ERROR, "Container " + containerPath + " cannot be resolved", null));  //$NON-NLS-1$//$NON-NLS-2$
 		}
 		IIncludePathEntry[] entries= container.getIncludepathEntries();
 		IIncludePathEntry[] newEntries= new IIncludePathEntry[entries.length];

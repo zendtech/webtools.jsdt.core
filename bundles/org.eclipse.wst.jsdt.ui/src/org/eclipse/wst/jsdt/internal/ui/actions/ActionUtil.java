@@ -81,7 +81,7 @@ public class ActionUtil {
 
 	public static boolean isOnBuildPath(IJavaScriptElement element) {	
         //fix for bug http://dev.eclipse.org/bugs/show_bug.cgi?id=20051
-        if (element.getElementType() == IJavaScriptElement.JAVA_PROJECT)
+        if (element.getElementType() == IJavaScriptElement.JAVASCRIPT_PROJECT)
             return true;
 		IJavaScriptProject project= element.getJavaScriptProject();
 		try {
@@ -127,7 +127,7 @@ public class ActionUtil {
 	public static boolean isEditable(JavaEditor editor, Shell shell, IJavaScriptElement element) {
 		if (editor != null) {
 			IJavaScriptElement input= SelectionConverter.getInput(editor);
-			if (input != null && input.equals(element.getAncestor(IJavaScriptElement.COMPILATION_UNIT)))
+			if (input != null && input.equals(element.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT)))
 				return isEditable(editor);
 			else
 				return isEditable(editor) && isEditable(shell, element);
@@ -146,7 +146,7 @@ public class ActionUtil {
 		if (! isProcessable(shell, element))
 			return false;
 		
-		IJavaScriptElement cu= element.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+		IJavaScriptElement cu= element.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 		if (cu != null) {
 			IResource resource= cu.getResource();
 			if (resource != null && resource.isDerived()) {

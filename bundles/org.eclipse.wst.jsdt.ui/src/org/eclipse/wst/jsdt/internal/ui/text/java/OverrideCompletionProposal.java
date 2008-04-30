@@ -48,7 +48,7 @@ import org.eclipse.wst.jsdt.internal.corext.codemanipulation.StubUtility2;
 import org.eclipse.wst.jsdt.internal.corext.dom.Bindings;
 import org.eclipse.wst.jsdt.internal.corext.dom.NodeFinder;
 import org.eclipse.wst.jsdt.internal.corext.util.Strings;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.preferences.JavaPreferencesSettings;
 
 public class OverrideCompletionProposal extends JavaTypeCompletionProposal implements ICompletionProposalExtension4 {
@@ -159,9 +159,9 @@ public class OverrideCompletionProposal extends JavaTypeCompletionProposal imple
 						try {
 							rewrite.rewriteAST(contents, fJavaProject.getOptions(true)).apply(contents, TextEdit.UPDATE_REGIONS);
 						} catch (MalformedTreeException exception) {
-							JavaPlugin.log(exception);
+							JavaScriptPlugin.log(exception);
 						} catch (BadLocationException exception) {
-							JavaPlugin.log(exception);
+							JavaScriptPlugin.log(exception);
 						}
 						setReplacementString(IndentManipulation.changeIndent(Strings.trimIndentation(contents.get(position.getStartPosition(), position.getLength()), settings.tabWidth, settings.indentWidth, false), 0, settings.tabWidth, settings.indentWidth, indent, TextUtilities.getDefaultLineDelimiter(contents)));
 					}

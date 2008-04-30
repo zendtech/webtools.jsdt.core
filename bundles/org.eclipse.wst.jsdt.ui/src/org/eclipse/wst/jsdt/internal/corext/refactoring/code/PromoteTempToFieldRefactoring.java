@@ -86,7 +86,7 @@ import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.BindingLabelProvider;
 import org.eclipse.wst.jsdt.ui.CodeGeneration;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 public class PromoteTempToFieldRefactoring extends ScriptableRefactoring {
 
@@ -455,7 +455,7 @@ public class PromoteTempToFieldRefactoring extends ScriptableRefactoring {
 				method.accept(nameCollector);
 				List names= nameCollector.getNames();
 				if (names.contains(fFieldName)) {
-					String[] keys= { fFieldName, BindingLabelProvider.getBindingLabel(method.resolveBinding(), JavaElementLabels.ALL_FULLY_QUALIFIED)};
+					String[] keys= { fFieldName, BindingLabelProvider.getBindingLabel(method.resolveBinding(), JavaScriptElementLabels.ALL_FULLY_QUALIFIED)};
 					String msg= Messages.format(RefactoringCoreMessages.PromoteTempToFieldRefactoring_Name_conflict, keys); 
 					return RefactoringStatus.createFatalErrorStatus(msg);
 				}
@@ -652,9 +652,9 @@ public class PromoteTempToFieldRefactoring extends ScriptableRefactoring {
 			project= javaProject.getElementName();
 		final IVariableBinding binding= fTempDeclarationNode.resolveBinding();
 		final String description= Messages.format(RefactoringCoreMessages.PromoteTempToFieldRefactoring_descriptor_description_short, binding.getName());
-		final String header= Messages.format(RefactoringCoreMessages.PromoteTempToFieldRefactoring_descriptor_description, new String[] { BindingLabelProvider.getBindingLabel(binding, JavaElementLabels.ALL_FULLY_QUALIFIED), BindingLabelProvider.getBindingLabel(binding.getDeclaringMethod(), JavaElementLabels.ALL_FULLY_QUALIFIED)});
+		final String header= Messages.format(RefactoringCoreMessages.PromoteTempToFieldRefactoring_descriptor_description, new String[] { BindingLabelProvider.getBindingLabel(binding, JavaScriptElementLabels.ALL_FULLY_QUALIFIED), BindingLabelProvider.getBindingLabel(binding.getDeclaringMethod(), JavaScriptElementLabels.ALL_FULLY_QUALIFIED)});
 		final JDTRefactoringDescriptorComment comment= new JDTRefactoringDescriptorComment(project, this, header);
-		comment.addSetting(Messages.format(RefactoringCoreMessages.PromoteTempToFieldRefactoring_original_pattern, BindingLabelProvider.getBindingLabel(binding, JavaElementLabels.ALL_FULLY_QUALIFIED)));
+		comment.addSetting(Messages.format(RefactoringCoreMessages.PromoteTempToFieldRefactoring_original_pattern, BindingLabelProvider.getBindingLabel(binding, JavaScriptElementLabels.ALL_FULLY_QUALIFIED)));
 		comment.addSetting(Messages.format(RefactoringCoreMessages.PromoteTempToFieldRefactoring_field_pattern, fFieldName));
 		switch (fInitializeIn) {
 			case INITIALIZE_IN_CONSTRUCTOR:
@@ -889,7 +889,7 @@ public class PromoteTempToFieldRefactoring extends ScriptableRefactoring {
 			final String handle= extended.getAttribute(JDTRefactoringDescriptor.ATTRIBUTE_INPUT);
 			if (handle != null) {
 				final IJavaScriptElement element= JDTRefactoringDescriptor.handleToElement(extended.getProject(), handle, false);
-				if (element == null || !element.exists() || element.getElementType() != IJavaScriptElement.COMPILATION_UNIT)
+				if (element == null || !element.exists() || element.getElementType() != IJavaScriptElement.JAVASCRIPT_UNIT)
 					return createInputFatalStatus(element, IJavaRefactorings.CONVERT_LOCAL_VARIABLE);
 				else
 					fCu= (IJavaScriptUnit) element;

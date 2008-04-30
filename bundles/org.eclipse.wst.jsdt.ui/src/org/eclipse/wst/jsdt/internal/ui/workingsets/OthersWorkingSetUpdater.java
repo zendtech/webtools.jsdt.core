@@ -37,7 +37,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptModel;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 public class OthersWorkingSetUpdater implements IWorkingSetUpdater {
 	
@@ -91,7 +91,7 @@ public class OthersWorkingSetUpdater implements IWorkingSetUpdater {
 		private void processJavaDelta(List elements, IJavaScriptElementDelta delta) {
 			IJavaScriptElement jElement= delta.getElement();
 			int type= jElement.getElementType();
-			if (type == IJavaScriptElement.JAVA_PROJECT) {
+			if (type == IJavaScriptElement.JAVASCRIPT_PROJECT) {
 				int index= elements.indexOf(jElement);
 				int kind= delta.getKind();
 				int flags= delta.getFlags();
@@ -197,7 +197,7 @@ public class OthersWorkingSetUpdater implements IWorkingSetUpdater {
 					result.add(rProjects[i]);
 			}
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		fWorkingSet.setElements((IAdaptable[])result.toArray(new IAdaptable[result.size()]));
 	}

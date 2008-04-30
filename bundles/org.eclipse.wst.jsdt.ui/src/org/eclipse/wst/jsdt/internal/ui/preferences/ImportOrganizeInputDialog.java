@@ -45,8 +45,8 @@ import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.IStringButtonAdapte
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.LayoutUtil;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.SelectionButtonDialogField;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.StringButtonDialogField;
-import org.eclipse.wst.jsdt.ui.IJavaElementSearchConstants;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.IJavaScriptElementSearchConstants;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 /**
  * Dialog to enter a new package entry in the organize import preference page.
@@ -167,9 +167,9 @@ public class ImportOrganizeInputDialog extends StatusDialog {
 	private void doBrowseTypes() {		
 		IRunnableContext context= new BusyIndicatorRunnableContext();
 		IJavaScriptSearchScope scope= SearchEngine.createWorkspaceScope();
-		int style= IJavaElementSearchConstants.CONSIDER_ALL_TYPES;
+		int style= IJavaScriptElementSearchConstants.CONSIDER_ALL_TYPES;
 		try {
-			SelectionDialog dialog= JavaUI.createTypeDialog(getShell(), context, scope, style, false, fNameDialogField.getText());
+			SelectionDialog dialog= JavaScriptUI.createTypeDialog(getShell(), context, scope, style, false, fNameDialogField.getText());
 			dialog.setTitle(PreferencesMessages.ImportOrganizeInputDialog_ChooseTypeDialog_title); 
 			dialog.setMessage(PreferencesMessages.ImportOrganizeInputDialog_ChooseTypeDialog_description); 
 			if (dialog.open() == Window.OK) {

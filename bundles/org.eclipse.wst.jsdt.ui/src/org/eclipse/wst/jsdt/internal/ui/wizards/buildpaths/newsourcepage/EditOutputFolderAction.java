@@ -40,7 +40,7 @@ import org.eclipse.wst.jsdt.internal.corext.buildpath.BuildpathDelta;
 import org.eclipse.wst.jsdt.internal.corext.buildpath.CPJavaProject;
 import org.eclipse.wst.jsdt.internal.corext.buildpath.ClasspathModifier;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.CPListElement;
@@ -163,7 +163,7 @@ public class EditOutputFolderAction extends BuildpathModifierAction {
 				};
 				fContext.run(false, false, runnable);
 			} catch (final InvocationTargetException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			} catch (final InterruptedException e) {
 			}
 			

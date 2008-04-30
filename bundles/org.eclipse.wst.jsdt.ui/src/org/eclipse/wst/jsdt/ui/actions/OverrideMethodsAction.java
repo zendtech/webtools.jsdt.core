@@ -35,7 +35,7 @@ import org.eclipse.wst.jsdt.internal.corext.codemanipulation.AddUnimplementedMet
 import org.eclipse.wst.jsdt.internal.corext.dom.ASTNodes;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionMessages;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionUtil;
 import org.eclipse.wst.jsdt.internal.ui.actions.SelectionConverter;
@@ -45,7 +45,7 @@ import org.eclipse.wst.jsdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.wst.jsdt.internal.ui.util.BusyIndicatorRunnableContext;
 import org.eclipse.wst.jsdt.internal.ui.util.ElementValidator;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 /**
  * Adds unimplemented methods of a type. The action opens a dialog from which the user can
@@ -212,7 +212,7 @@ public class OverrideMethodsAction extends SelectionDispatchAction {
 		IFunctionBinding[] methodToOverride= (IFunctionBinding[]) methods.toArray(new IFunctionBinding[methods.size()]);
 
 		
-		final IEditorPart editor= JavaUI.openInEditor(type.getJavaScriptUnit());
+		final IEditorPart editor= JavaScriptUI.openInEditor(type.getJavaScriptUnit());
 		final IRewriteTarget target= editor != null ? (IRewriteTarget) editor.getAdapter(IRewriteTarget.class) : null;
 		if (target != null)
 			target.beginCompoundChange();
@@ -222,7 +222,7 @@ public class OverrideMethodsAction extends SelectionDispatchAction {
 			int insertPos= dialog.getInsertOffset();
 			
 			AddUnimplementedMethodsOperation operation= (AddUnimplementedMethodsOperation) createRunnable(astRoot, typeBinding, methodToOverride, insertPos, dialog.getGenerateComment());
-			IRunnableContext context= JavaPlugin.getActiveWorkbenchWindow();
+			IRunnableContext context= JavaScriptPlugin.getActiveWorkbenchWindow();
 			if (context == null)
 				context= new BusyIndicatorRunnableContext();
 			PlatformUI.getWorkbench().getProgressService().runInUI(context, new WorkbenchRunnableAdapter(operation, operation.getSchedulingRule()), operation.getSchedulingRule());
@@ -268,7 +268,7 @@ public class OverrideMethodsAction extends SelectionDispatchAction {
 			setEnabled(canEnable(selection));
 		} catch (JavaScriptModelException exception) {
 			if (JavaModelUtil.isExceptionToBeLogged(exception))
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			setEnabled(false);
 		}
 	}

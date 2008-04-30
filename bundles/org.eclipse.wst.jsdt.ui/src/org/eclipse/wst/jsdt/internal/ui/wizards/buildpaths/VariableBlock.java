@@ -46,7 +46,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptModel;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.util.CoreUtility;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.wst.jsdt.internal.ui.wizards.NewWizardMessages;
@@ -140,7 +140,7 @@ public class VariableBlock {
 		if (fControl != null) {
 			return fControl.getShell();
 		}
-		return JavaPlugin.getActiveWorkbenchShell();
+		return JavaScriptPlugin.getActiveWorkbenchShell();
 	}
 	
 	private class VariablesAdapter implements IDialogFieldListener, IListAdapter {
@@ -403,7 +403,7 @@ public class VariableBlock {
 					initSelectedElement= elem;
 				}
 			} else {				
-				JavaPlugin.logErrorMessage("VariableBlock: Classpath variable with null value: " + name); //$NON-NLS-1$
+				JavaScriptPlugin.logErrorMessage("VariableBlock: Classpath variable with null value: " + name); //$NON-NLS-1$
 			}
 		}
 		

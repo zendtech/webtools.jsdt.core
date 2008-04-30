@@ -144,7 +144,7 @@ public class ASTNodeFinder {
 			}
 		}
 		switch (parent.getElementType()) {
-			case IJavaScriptElement.COMPILATION_UNIT:
+			case IJavaScriptElement.JAVASCRIPT_UNIT:
 				TypeDeclaration[] types = this.unit.types;
 				if (types != null) {
 					for (int i = 0, length = types.length; i < length; i++) {

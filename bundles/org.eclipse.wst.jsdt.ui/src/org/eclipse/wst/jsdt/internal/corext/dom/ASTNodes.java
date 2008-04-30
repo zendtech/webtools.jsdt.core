@@ -74,7 +74,7 @@ import org.eclipse.wst.jsdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.wst.jsdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.wst.jsdt.core.dom.WhileStatement;
 import org.eclipse.wst.jsdt.internal.corext.util.CodeFormatterUtil;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.preferences.MembersOrderPreferenceCache;
 
 public class ASTNodes {
@@ -667,7 +667,7 @@ public class ASTNodes {
 	public static int getInsertionIndex(BodyDeclaration member, List container) {
 		int containerSize= container.size();
 		
-		MembersOrderPreferenceCache orderStore= JavaPlugin.getDefault().getMemberOrderPreferenceCache();
+		MembersOrderPreferenceCache orderStore= JavaScriptPlugin.getDefault().getMemberOrderPreferenceCache();
 		
 		int orderIndex= getOrderPreference(member, orderStore);
 		

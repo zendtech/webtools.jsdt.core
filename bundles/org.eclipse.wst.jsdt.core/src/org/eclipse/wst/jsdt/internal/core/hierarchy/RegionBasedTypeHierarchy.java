@@ -51,7 +51,7 @@ public RegionBasedTypeHierarchy(IRegion region, IJavaScriptUnit[] workingCopies,
 				//"new" element added to region
 				removeAllChildren(element);
 				fRootElements.add(element);
-				if (element.getElementType() == IJavaScriptElement.JAVA_PROJECT) {
+				if (element.getElementType() == IJavaScriptElement.JAVASCRIPT_PROJECT) {
 					// add jar roots as well so that jars don't rely on their parent to know
 					// if they are contained in the region
 					// (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=146615)

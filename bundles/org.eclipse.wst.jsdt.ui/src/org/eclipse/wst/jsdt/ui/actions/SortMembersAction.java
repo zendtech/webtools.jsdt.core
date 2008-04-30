@@ -42,7 +42,7 @@ import org.eclipse.wst.jsdt.internal.ui.javaeditor.IJavaAnnotation;
 import org.eclipse.wst.jsdt.internal.ui.util.BusyIndicatorRunnableContext;
 import org.eclipse.wst.jsdt.internal.ui.util.ElementValidator;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 /**
  * Sorts the members of a compilation unit with the sort order as specified in
@@ -135,7 +135,7 @@ public class SortMembersAction extends SelectionDispatchAction {
 			}
 			
 			// open an editor and work on a working copy
-			IEditorPart editor= JavaUI.openInEditor(cu);
+			IEditorPart editor= JavaScriptUI.openInEditor(cu);
 			if (editor != null) {
 				run(shell, cu, editor, dialog.isNotSortingFieldsEnabled());
 			}
@@ -191,7 +191,7 @@ public class SortMembersAction extends SelectionDispatchAction {
 	//---- Helpers -------------------------------------------------------------------
 	
 	private boolean containsRelevantMarkers(IEditorPart editor) {
-		IAnnotationModel model= JavaUI.getDocumentProvider().getAnnotationModel(editor.getEditorInput());
+		IAnnotationModel model= JavaScriptUI.getDocumentProvider().getAnnotationModel(editor.getEditorInput());
 		Iterator iterator= model.getAnnotationIterator();
 		while (iterator.hasNext()) {
 			Object element= iterator.next();

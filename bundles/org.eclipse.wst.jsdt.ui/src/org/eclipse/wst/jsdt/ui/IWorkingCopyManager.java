@@ -39,7 +39,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
  * This interface is not intended to be implemented by clients.
  * </p>
  *
- * @see JavaUI#getWorkingCopyManager()
+ * @see JavaScriptUI#getWorkingCopyManager()
  * @see org.eclipse.wst.jsdt.ui.IWorkingCopyManagerExtension
  */
 public interface IWorkingCopyManager {

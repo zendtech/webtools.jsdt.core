@@ -34,7 +34,7 @@ import org.eclipse.wst.jsdt.internal.corext.codemanipulation.StubUtility;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.changes.CompilationUnitChange;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.util.RefactoringASTParser;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 /**
  * A {@link CompilationUnitRewrite} holds all data structures that are typically
@@ -306,7 +306,7 @@ public class CompilationUnitRewrite {
 					fImportRewrite= StubUtility.createImportRewrite(getRoot(), true);
 				}
 			} catch (CoreException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 				throw new IllegalStateException(e.getMessage()); // like ASTParser#createAST(..) does
 			}
 		}

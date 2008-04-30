@@ -36,10 +36,10 @@ import org.eclipse.wst.jsdt.core.dom.SimpleName;
 import org.eclipse.wst.jsdt.internal.corext.dom.Bindings;
 import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.text.java.IJavaReconcilingListener;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 /**
  * Manages the override and overwrite indicators for
@@ -97,7 +97,7 @@ class OverrideIndicatorManager implements IJavaReconcilingListener {
 						if (definingMethodBinding != null) {
 							IJavaScriptElement definingMethod= definingMethodBinding.getJavaElement();
 							if (definingMethod != null) {
-								JavaUI.openInEditor(definingMethod, true, true);
+								JavaScriptUI.openInEditor(definingMethod, true, true);
 								return;
 							}
 						}
@@ -109,7 +109,7 @@ class OverrideIndicatorManager implements IJavaReconcilingListener {
 			}
 			String title= JavaEditorMessages.OverrideIndicatorManager_open_error_title;
 			String message= JavaEditorMessages.OverrideIndicatorManager_open_error_message;
-			MessageDialog.openError(JavaPlugin.getActiveWorkbenchShell(), title, message);
+			MessageDialog.openError(JavaScriptPlugin.getActiveWorkbenchShell(), title, message);
 		}
 	}
 

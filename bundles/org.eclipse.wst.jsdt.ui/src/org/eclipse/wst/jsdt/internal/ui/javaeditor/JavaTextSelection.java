@@ -24,7 +24,7 @@ import org.eclipse.wst.jsdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.wst.jsdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.wst.jsdt.internal.corext.dom.Selection;
 import org.eclipse.wst.jsdt.internal.corext.dom.SelectionAnalyzer;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.SelectionConverter;
 
 /**
@@ -95,7 +95,7 @@ public class JavaTextSelection extends TextSelection {
 		if (! (fElement instanceof IJavaScriptUnit))
 			return null;
 		// long start= System.currentTimeMillis();
-		fPartialAST= JavaPlugin.getDefault().getASTProvider().getAST(fElement, ASTProvider.WAIT_YES, null);
+		fPartialAST= JavaScriptPlugin.getDefault().getASTProvider().getAST(fElement, ASTProvider.WAIT_YES, null);
 		// System.out.println("Time requesting partial AST: " + (System.currentTimeMillis() - start));
 		return fPartialAST;
 	}

@@ -33,7 +33,7 @@ import org.eclipse.wst.jsdt.core.compiler.ITerminalSymbols;
 import org.eclipse.wst.jsdt.core.compiler.InvalidInputException;
 import org.eclipse.wst.jsdt.internal.corext.SourceRange;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.IClassFileEditorInput;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaEditor;
 
@@ -106,7 +106,7 @@ public class GoToNextPreviousMemberAction extends Action implements IUpdate {
 		if (input instanceof IClassFileEditorInput) {
 			return new IType[] { ((IClassFileEditorInput)input).getClassFile().getType() };
 		} else {
-			return JavaPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(input).getAllTypes();
+			return JavaScriptPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(input).getAllTypes();
 		}
 	}
 
@@ -115,7 +115,7 @@ public class GoToNextPreviousMemberAction extends Action implements IUpdate {
 		if (input instanceof IClassFileEditorInput) {
 			return ((IClassFileEditorInput)input).getClassFile();
 		} else {
-			return JavaPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(input);
+			return JavaScriptPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(input);
 		}
 	}
 
@@ -140,7 +140,7 @@ public class GoToNextPreviousMemberAction extends Action implements IUpdate {
 				return createNewSourceRange(getPreviousOffset(index, offsetArray, oldOffset));
 
 	 	}	catch (JavaScriptModelException e){
-	 		JavaPlugin.log(e); //dialog would be too heavy here
+	 		JavaScriptPlugin.log(e); //dialog would be too heavy here
 	 		return oldSourceRange;
 	 	}
 	}

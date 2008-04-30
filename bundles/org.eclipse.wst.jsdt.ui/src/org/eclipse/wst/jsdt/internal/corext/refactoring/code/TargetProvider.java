@@ -398,7 +398,7 @@ abstract class TargetProvider {
 						Object element= match.getElement();
 						if (element instanceof IJavaScriptElement) {
 							IJavaScriptElement jElement= (IJavaScriptElement)element;
-							IJavaScriptUnit unit= (IJavaScriptUnit)jElement.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+							IJavaScriptUnit unit= (IJavaScriptUnit)jElement.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 							if (unit != null) {
 								status.addError(RefactoringCoreMessages.TargetProvider_inaccurate_match,
 									JavaStatusContext.create(unit, new SourceRange(match.getOffset(), match.getLength())));

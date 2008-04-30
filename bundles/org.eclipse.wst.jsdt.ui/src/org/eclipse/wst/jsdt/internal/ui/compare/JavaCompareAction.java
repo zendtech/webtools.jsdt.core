@@ -31,8 +31,8 @@ import org.eclipse.wst.jsdt.core.ISourceRange;
 import org.eclipse.wst.jsdt.core.ISourceReference;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
 
 public class JavaCompareAction implements IActionDelegate {
 	
@@ -78,7 +78,7 @@ public class JavaCompareAction implements IActionDelegate {
 	private ISourceReference fLeft;
 	private ISourceReference fRight;
 	
-	private JavaElementLabelProvider fJavaElementLabelProvider;
+	private JavaScriptElementLabelProvider fJavaElementLabelProvider;
 	
 
 	public void selectionChanged(IAction action, ISelection selection) {
@@ -86,7 +86,7 @@ public class JavaCompareAction implements IActionDelegate {
 	}
 	
 	public void run(IAction action) {
-		Shell shell= JavaPlugin.getActiveWorkbenchShell();
+		Shell shell= JavaScriptPlugin.getActiveWorkbenchShell();
 		ResourceBundle bundle= ResourceBundle.getBundle(BUNDLE_NAME);
 		CompareDialog d= new CompareDialog(shell, bundle);
 					
@@ -97,19 +97,19 @@ public class JavaCompareAction implements IActionDelegate {
 		try {
 			left= getExtendedSource(fLeft);
 		} catch (JavaScriptModelException ex) {
-			JavaPlugin.log(ex);
+			JavaScriptPlugin.log(ex);
 		}
 		
 		try {
 			right= getExtendedSource(fRight);
 		} catch (JavaScriptModelException ex) {
-			JavaPlugin.log(ex);
+			JavaScriptPlugin.log(ex);
 		}
 		
-		fJavaElementLabelProvider= new JavaElementLabelProvider(
-					JavaElementLabelProvider.SHOW_PARAMETERS |
-					JavaElementLabelProvider.SHOW_OVERLAY_ICONS |
-					JavaElementLabelProvider.SHOW_ROOT);
+		fJavaElementLabelProvider= new JavaScriptElementLabelProvider(
+					JavaScriptElementLabelProvider.SHOW_PARAMETERS |
+					JavaScriptElementLabelProvider.SHOW_OVERLAY_ICONS |
+					JavaScriptElementLabelProvider.SHOW_ROOT);
 		
 		if (left == null || right == null) {
 			String errorTitle= JavaCompareUtilities.getString(bundle, "errorTitle"); //$NON-NLS-1$

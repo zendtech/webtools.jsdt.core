@@ -58,14 +58,14 @@ import org.eclipse.wst.jsdt.internal.corext.fix.LinkedProposalPositionGroup;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.changes.CompilationUnitChange;
 import org.eclipse.wst.jsdt.internal.corext.util.Resources;
 import org.eclipse.wst.jsdt.internal.corext.util.Strings;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIStatus;
 import org.eclipse.wst.jsdt.internal.ui.compare.JavaTokenComparator;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.EditorHighlightingSynchronizer;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.EditorUtility;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.ui.text.java.IJavaCompletionProposal;
 
 /**
@@ -182,9 +182,9 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal  {
 				}
 			}
 		} catch (CoreException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		} catch (BadLocationException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		return buf.toString();
 	}
@@ -255,12 +255,12 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal  {
 				}
 				part= EditorUtility.isOpenInEditor(unit);
 				if (part == null) {
-					part= JavaUI.openInEditor(unit);
+					part= JavaScriptUI.openInEditor(unit);
 					if (part != null) {
-						document= JavaUI.getDocumentProvider().getDocument(part.getEditorInput());
+						document= JavaScriptUI.getDocumentProvider().getDocument(part.getEditorInput());
 					}
 				}
-				IWorkbenchPage page= JavaPlugin.getActivePage();
+				IWorkbenchPage page= JavaScriptPlugin.getActivePage();
 				if (page != null && part != null) {
 					page.bringToTop(part);
 				}
@@ -275,11 +275,11 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal  {
 	}
 
 	private boolean performValidateEdit(IJavaScriptUnit unit) {
-		IStatus status= Resources.makeCommittable(unit.getResource(), JavaPlugin.getActiveWorkbenchShell());
+		IStatus status= Resources.makeCommittable(unit.getResource(), JavaScriptPlugin.getActiveWorkbenchShell());
 		if (!status.isOK()) {
 			String label= CorrectionMessages.CUCorrectionProposal_error_title;
 			String message= CorrectionMessages.CUCorrectionProposal_error_message;
-			ErrorDialog.openError(JavaPlugin.getActiveWorkbenchShell(), label, message, status);
+			ErrorDialog.openError(JavaScriptPlugin.getActiveWorkbenchShell(), label, message, status);
 			return false;
 		}
 		return true;
@@ -399,7 +399,7 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal  {
 			try {
 				source= cu.getSource();
 			} catch (JavaScriptModelException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 				source= new String(); // empty
 			}
 			Document document= new Document(source);
@@ -502,12 +502,12 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal  {
 							edit.apply(position.getDocument(), 0);
 						}
 					} catch (MalformedTreeException e) {
-						throw new CoreException(new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IStatus.ERROR, "Unexpected exception applying edit", e)); //$NON-NLS-1$
+						throw new CoreException(new Status(IStatus.ERROR, JavaScriptUI.ID_PLUGIN, IStatus.ERROR, "Unexpected exception applying edit", e)); //$NON-NLS-1$
 					} catch (BadLocationException e) {
-						throw new CoreException(new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IStatus.ERROR, "Unexpected exception applying edit", e)); //$NON-NLS-1$
+						throw new CoreException(new Status(IStatus.ERROR, JavaScriptUI.ID_PLUGIN, IStatus.ERROR, "Unexpected exception applying edit", e)); //$NON-NLS-1$
 					}
 				} catch (CoreException e) {
-					JavaPlugin.log(e);
+					JavaScriptPlugin.log(e);
 				}
 			}
 		}
@@ -574,7 +574,7 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal  {
 					if (insert.startsWith(content))
 						return true;
 				} catch (BadLocationException e) {
-					JavaPlugin.log(e);
+					JavaScriptPlugin.log(e);
 					// and ignore and return false
 				}
 			}

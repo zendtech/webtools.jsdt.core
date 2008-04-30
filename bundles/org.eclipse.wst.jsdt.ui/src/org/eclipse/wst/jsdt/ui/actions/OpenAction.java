@@ -34,7 +34,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionMessages;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionUtil;
 import org.eclipse.wst.jsdt.internal.ui.actions.SelectionConverter;
@@ -42,7 +42,7 @@ import org.eclipse.wst.jsdt.internal.ui.javaeditor.EditorUtility;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.JavaUILabelProvider;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 /**
  * This action opens a Java editor on a Java element or file.
@@ -141,7 +141,7 @@ public class OpenAction extends SelectionDispatchAction {
 			if (element!=null)
 			{
 				int type= element.getElementType();
-				if (type == IJavaScriptElement.JAVA_PROJECT || type == IJavaScriptElement.PACKAGE_FRAGMENT_ROOT || type == IJavaScriptElement.PACKAGE_FRAGMENT)
+				if (type == IJavaScriptElement.JAVASCRIPT_PROJECT || type == IJavaScriptElement.PACKAGE_FRAGMENT_ROOT || type == IJavaScriptElement.PACKAGE_FRAGMENT)
 					element= EditorUtility.getEditorInputJavaElement(fEditor, false);
 				run(new Object[] {element} );
 			}
@@ -179,7 +179,7 @@ public class OpenAction extends SelectionDispatchAction {
 		if (elements == null)
 			return;
 		
-		MultiStatus status= new MultiStatus(JavaUI.ID_PLUGIN, IStatus.OK, ActionMessages.OpenAction_multistatus_message, null);
+		MultiStatus status= new MultiStatus(JavaScriptUI.ID_PLUGIN, IStatus.OK, ActionMessages.OpenAction_multistatus_message, null);
 		
 		for (int i= 0; i < elements.length; i++) {
 			Object element= elements[i];
@@ -188,14 +188,14 @@ public class OpenAction extends SelectionDispatchAction {
 				boolean activateOnOpen= fEditor != null ? true : OpenStrategy.activateOnOpen();
 				IEditorPart part= EditorUtility.openInEditor(element, activateOnOpen);
 				if (part != null && element instanceof IJavaScriptElement)
-					JavaUI.revealInEditor(part, (IJavaScriptElement)element);
+					JavaScriptUI.revealInEditor(part, (IJavaScriptElement)element);
 			} catch (PartInitException e) {
 				String message= Messages.format(ActionMessages.OpenAction_error_problem_opening_editor, new String[] { new JavaUILabelProvider().getText(element), e.getStatus().getMessage() });
-				status.add(new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IStatus.ERROR, message, null));
+				status.add(new Status(IStatus.ERROR, JavaScriptUI.ID_PLUGIN, IStatus.ERROR, message, null));
 			} catch (CoreException e) {
 				String message= Messages.format(ActionMessages.OpenAction_error_problem_opening_editor, new String[] { new JavaUILabelProvider().getText(element), e.getStatus().getMessage() });
-				status.add(new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IStatus.ERROR, message, null));
-				JavaPlugin.log(e);
+				status.add(new Status(IStatus.ERROR, JavaScriptUI.ID_PLUGIN, IStatus.ERROR, message, null));
+				JavaScriptPlugin.log(e);
 			}
 		}
 		if (!status.isOK()) {

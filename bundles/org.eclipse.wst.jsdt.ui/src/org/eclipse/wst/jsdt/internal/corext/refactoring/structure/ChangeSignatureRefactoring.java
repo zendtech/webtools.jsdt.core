@@ -131,8 +131,8 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.util.TightSourceRangeCom
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 public class ChangeSignatureRefactoring extends ScriptableRefactoring implements IDelegateUpdating {
 	
@@ -215,7 +215,7 @@ public class ChangeSignatureRefactoring extends ScriptableRefactoring implements
 			}
 			return result;
 		} catch(JavaScriptModelException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 			return new ArrayList(0);
 		}		
 	}
@@ -253,7 +253,7 @@ public class ChangeSignatureRefactoring extends ScriptableRefactoring implements
 		try {
 			return ! fMethod.isConstructor();
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 			return false;
 		}
 	}
@@ -769,7 +769,7 @@ public class ChangeSignatureRefactoring extends ScriptableRefactoring implements
 				}
 				fExceptionInfos= result;
 			} catch (JavaScriptModelException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		}
 		return null;
@@ -880,7 +880,7 @@ public class ChangeSignatureRefactoring extends ScriptableRefactoring implements
 			buff.append(fReturnTypeInfo.getOldTypeName())
 				.append(' ');
 
-		buff.append(JavaElementLabels.getElementLabel(fMethod.getParent(), JavaElementLabels.ALL_FULLY_QUALIFIED));
+		buff.append(JavaScriptElementLabels.getElementLabel(fMethod.getParent(), JavaScriptElementLabels.ALL_FULLY_QUALIFIED));
 		buff.append('.');
 		buff.append(fMethod.getElementName())
 			.append(Signature.C_PARAM_START)
@@ -1189,7 +1189,7 @@ public class ChangeSignatureRefactoring extends ScriptableRefactoring implements
 				if (declaring!=null && (declaring.isAnonymous() || declaring.isLocal()))
 					flags|= JavaRefactoringDescriptor.JAR_SOURCE_ATTACHMENT;
 			} catch (JavaScriptModelException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			}
 			JDTRefactoringDescriptor descriptor= null;
 			try {
@@ -1249,7 +1249,7 @@ public class ChangeSignatureRefactoring extends ScriptableRefactoring implements
 					if (!isVisibilitySameAsInitial())
 						arguments.put(ATTRIBUTE_VISIBILITY, new Integer(fVisibility).toString());
 				} catch (JavaScriptModelException exception) {
-					JavaPlugin.log(exception);
+					JavaScriptPlugin.log(exception);
 				}
 				int count= 1;
 				for (final Iterator iterator= fParameterInfos.iterator(); iterator.hasNext();) {
@@ -1280,7 +1280,7 @@ public class ChangeSignatureRefactoring extends ScriptableRefactoring implements
 					count++;
 				}
 			} catch (JavaScriptModelException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 				return null;
 			}
 			return new DynamicValidationRefactoringChange(descriptor, doGetRefactoringChangeName(), (Change[]) list.toArray(new Change[list.size()]));
@@ -2509,7 +2509,7 @@ public class ChangeSignatureRefactoring extends ScriptableRefactoring implements
 			int length= fNode.getLength();
 			String msg= "Cannot update found node: nodeType=" + fNode.getNodeType() + "; "  //$NON-NLS-1$//$NON-NLS-2$
 					+ fNode.toString() + "[" + start + ", " + length + "]";  //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-			JavaPlugin.log(new Exception(msg + ":\n" + fCuRewrite.getCu().getSource().substring(start, start + length))); //$NON-NLS-1$
+			JavaScriptPlugin.log(new Exception(msg + ":\n" + fCuRewrite.getCu().getSource().substring(start, start + length))); //$NON-NLS-1$
 			fResult.addError(msg, JavaStatusContext.create(fCuRewrite.getCu(), fNode));
 		}
 		protected ListRewrite getParamgumentsRewrite() {

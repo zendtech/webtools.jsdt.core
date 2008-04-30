@@ -293,9 +293,9 @@ public final class RefactoringAvailabilityTester {
 						IPackageFragmentRoot root= (IPackageFragmentRoot)javaElement;
 						if (!root.isExternal() && !ReorgUtils.isClassFolder(root))
 							return true;
-					} else if (elementType == IJavaScriptElement.JAVA_PROJECT) {
+					} else if (elementType == IJavaScriptElement.JAVASCRIPT_PROJECT) {
 						return true;
-					} else if (elementType == IJavaScriptElement.COMPILATION_UNIT) {
+					} else if (elementType == IJavaScriptElement.JAVASCRIPT_UNIT) {
 						IJavaScriptUnit cu= (IJavaScriptUnit)javaElement;
 						if (cu.exists()) 
 							return true;
@@ -501,7 +501,7 @@ public final class RefactoringAvailabilityTester {
 			return ((IPackageFragment) element).getKind() == IPackageFragmentRoot.K_SOURCE;
 		} else if (element instanceof IJavaScriptUnit) {
 			return true;
-		} else if (element.getAncestor(IJavaScriptElement.COMPILATION_UNIT) != null) {
+		} else if (element.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT) != null) {
 			return true;
 		} else {
 			return false;

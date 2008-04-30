@@ -24,11 +24,11 @@ import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.reorg.IReorgDestinationValidator;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
-import org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
+import org.eclipse.wst.jsdt.ui.StandardJavaScriptElementContentProvider;
 
 
-public final class DestinationContentProvider extends StandardJavaElementContentProvider {
+public final class DestinationContentProvider extends StandardJavaScriptElementContentProvider {
 	
 	private IReorgDestinationValidator fValidator;
 	
@@ -75,7 +75,7 @@ public final class DestinationContentProvider extends StandardJavaElementContent
 				return result.toArray();
 			}
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 			return new Object[0];
 		}
 	}

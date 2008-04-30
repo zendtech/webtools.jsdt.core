@@ -83,7 +83,7 @@ public ISourceRange getNameRange() {
  */
 public IJavaScriptElement getPrimaryElement(boolean checkOwner) {
 	if (checkOwner) {
-		CompilationUnit cu = (CompilationUnit)getAncestor(COMPILATION_UNIT);
+		CompilationUnit cu = (CompilationUnit)getAncestor(JAVASCRIPT_UNIT);
 		if (cu == null || cu.isPrimary()) return this;
 	}
 	IJavaScriptElement primaryParent = this.parent.getPrimaryElement(false);

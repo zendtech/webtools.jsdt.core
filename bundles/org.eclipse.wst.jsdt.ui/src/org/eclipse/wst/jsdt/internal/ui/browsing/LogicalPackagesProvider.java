@@ -29,7 +29,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 abstract class LogicalPackagesProvider implements IPropertyChangeListener, IElementChangedListener {
 
@@ -47,7 +47,7 @@ abstract class LogicalPackagesProvider implements IPropertyChangeListener, IElem
 		fInputIsProject= true;
 		fMapToLogicalPackage= new HashMap();
 		fMapToPackageFragments= new HashMap();
-		JavaPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
+		JavaScriptPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
 	}
 
 	/**
@@ -162,7 +162,7 @@ abstract class LogicalPackagesProvider implements IPropertyChangeListener, IElem
 	}
 
 	public void dispose(){
-		JavaPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(this);
+		JavaScriptPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(this);
 		fMapToLogicalPackage= null;
 		fMapToPackageFragments= null;
 	}
@@ -207,7 +207,7 @@ abstract class LogicalPackagesProvider implements IPropertyChangeListener, IElem
 		try {
 			processDelta(event.getDelta());
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 	}
 

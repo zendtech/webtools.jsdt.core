@@ -37,7 +37,7 @@ import org.eclipse.wst.jsdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.EditorUtility;
 import org.eclipse.wst.jsdt.internal.ui.util.ElementValidator;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 /**
  * Create Javadoc comment stubs for the selected members.
@@ -109,7 +109,7 @@ public class AddJavaDocStubAction extends SelectionDispatchAction {
 			}
 			
 			// open the editor, forces the creation of a working copy
-			IEditorPart editor= JavaUI.openInEditor(cu);
+			IEditorPart editor= JavaScriptUI.openInEditor(cu);
 			
 			if (ElementValidator.check(members, getShell(), getDialogTitle(), false))
 				run(cu, members);

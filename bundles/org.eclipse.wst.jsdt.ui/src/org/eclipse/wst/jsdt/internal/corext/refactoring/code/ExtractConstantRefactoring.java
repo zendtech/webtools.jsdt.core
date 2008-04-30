@@ -85,13 +85,13 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.structure.CompilationUni
 import org.eclipse.wst.jsdt.internal.corext.refactoring.util.RefactoringASTParser;
 import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.preferences.JavaPreferencesSettings;
 import org.eclipse.wst.jsdt.internal.ui.text.correction.ASTResolving;
 import org.eclipse.wst.jsdt.internal.ui.text.correction.ModifierCorrectionSubProcessor;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.BindingLabelProvider;
 import org.eclipse.wst.jsdt.ui.CodeGeneration;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 public class ExtractConstantRefactoring extends ScriptableRefactoring {
 
@@ -532,9 +532,9 @@ public class ExtractConstantRefactoring extends ScriptableRefactoring {
 			flags|= RefactoringDescriptor.STRUCTURAL_CHANGE;
 		String pattern= ""; //$NON-NLS-1$
 		try {
-			pattern= BindingLabelProvider.getBindingLabel(getContainingTypeBinding(), JavaElementLabels.ALL_FULLY_QUALIFIED) + "."; //$NON-NLS-1$
+			pattern= BindingLabelProvider.getBindingLabel(getContainingTypeBinding(), JavaScriptElementLabels.ALL_FULLY_QUALIFIED) + "."; //$NON-NLS-1$
 		} catch (JavaScriptModelException exception) {
-			JavaPlugin.log(exception);
+			JavaScriptPlugin.log(exception);
 		}
 		final String expression= ASTNodes.asString(fSelectedExpression.getAssociatedExpression());
 		final String description= Messages.format(RefactoringCoreMessages.ExtractConstantRefactoring_descriptor_description_short, fConstantName);
@@ -804,7 +804,7 @@ public class ExtractConstantRefactoring extends ScriptableRefactoring {
 			final String handle= extended.getAttribute(JDTRefactoringDescriptor.ATTRIBUTE_INPUT);
 			if (handle != null) {
 				final IJavaScriptElement element= JDTRefactoringDescriptor.handleToElement(extended.getProject(), handle, false);
-				if (element == null || !element.exists() || element.getElementType() != IJavaScriptElement.COMPILATION_UNIT)
+				if (element == null || !element.exists() || element.getElementType() != IJavaScriptElement.JAVASCRIPT_UNIT)
 					return createInputFatalStatus(element, IJavaRefactorings.EXTRACT_CONSTANT);
 				else
 					fCu= (IJavaScriptUnit) element;

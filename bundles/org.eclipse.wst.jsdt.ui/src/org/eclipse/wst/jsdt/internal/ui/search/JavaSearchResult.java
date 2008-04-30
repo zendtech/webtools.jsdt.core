@@ -32,7 +32,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IParent;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.ui.search.IMatchPresentation;
 
 public class JavaSearchResult extends AbstractTextSearchResult implements IEditorMatchAdapter, IFileMatchAdapter {
@@ -134,7 +134,7 @@ public class JavaSearchResult extends AbstractTextSearchResult implements IEdito
 	public IFile getFile(Object element) {
 		if (element instanceof IJavaScriptElement) {
 			IJavaScriptElement javaElement= (IJavaScriptElement) element;
-			IJavaScriptUnit cu= (IJavaScriptUnit) javaElement.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+			IJavaScriptUnit cu= (IJavaScriptUnit) javaElement.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 			if (cu != null) {
 				return (IFile) cu.getResource();
 			} else {
@@ -181,7 +181,7 @@ public class JavaSearchResult extends AbstractTextSearchResult implements IEdito
 		Object element= match.getElement();
 		if (fElementsToParticipants.get(element) != null) {
 			// TODO must access the participant id / label to properly report the error.
-			JavaPlugin.log(new Status(IStatus.WARNING, JavaPlugin.getPluginId(), 0, "A second search participant was found for an element", null)); //$NON-NLS-1$
+			JavaScriptPlugin.log(new Status(IStatus.WARNING, JavaScriptPlugin.getPluginId(), 0, "A second search participant was found for an element", null)); //$NON-NLS-1$
 			return false;
 		}
 		fElementsToParticipants.put(element, participant);

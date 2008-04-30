@@ -26,11 +26,11 @@ import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIMessages;
 import org.eclipse.wst.jsdt.internal.ui.actions.SelectionConverter;
 import org.eclipse.wst.jsdt.internal.ui.typehierarchy.TypeHierarchyViewPart;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 
 public class OpenTypeHierarchyUtil {
@@ -82,11 +82,11 @@ public class OpenTypeHierarchyUtil {
 	private static TypeHierarchyViewPart openInViewPart(IWorkbenchWindow window, IJavaScriptElement input) {
 		IWorkbenchPage page= window.getActivePage();
 		try {
-			TypeHierarchyViewPart result= (TypeHierarchyViewPart) page.findView(JavaUI.ID_TYPE_HIERARCHY);
+			TypeHierarchyViewPart result= (TypeHierarchyViewPart) page.findView(JavaScriptUI.ID_TYPE_HIERARCHY);
 			if (result != null) {
 				result.clearNeededRefresh(); // avoid refresh of old hierarchy on 'becomes visible'
 			}
-			result= (TypeHierarchyViewPart) page.showView(JavaUI.ID_TYPE_HIERARCHY);
+			result= (TypeHierarchyViewPart) page.showView(JavaScriptUI.ID_TYPE_HIERARCHY);
 			result.setInputElement(input);
 			return result;
 		} catch (CoreException e) {
@@ -97,7 +97,7 @@ public class OpenTypeHierarchyUtil {
 	}
 	
 	private static TypeHierarchyViewPart openInPerspective(IWorkbenchWindow window, IJavaScriptElement input) throws WorkbenchException, JavaScriptModelException {
-		IWorkbench workbench= JavaPlugin.getDefault().getWorkbench();
+		IWorkbench workbench= JavaScriptPlugin.getDefault().getWorkbench();
 		// The problem is that the input element can be a working copy. So we first convert it to the original element if
 		// it exists.
 		IJavaScriptElement perspectiveInput= input;
@@ -110,17 +110,17 @@ public class OpenTypeHierarchyUtil {
 				perspectiveInput= input;
 			}
 		}
-		IWorkbenchPage page= workbench.showPerspective(JavaUI.ID_HIERARCHYPERSPECTIVE, window, perspectiveInput);
+		IWorkbenchPage page= workbench.showPerspective(JavaScriptUI.ID_HIERARCHYPERSPECTIVE, window, perspectiveInput);
 		
-		TypeHierarchyViewPart part= (TypeHierarchyViewPart) page.findView(JavaUI.ID_TYPE_HIERARCHY);
+		TypeHierarchyViewPart part= (TypeHierarchyViewPart) page.findView(JavaScriptUI.ID_TYPE_HIERARCHY);
 		if (part != null) {
 			part.clearNeededRefresh(); // avoid refresh of old hierarchy on 'becomes visible'
 		}		
-		part= (TypeHierarchyViewPart) page.showView(JavaUI.ID_TYPE_HIERARCHY);
+		part= (TypeHierarchyViewPart) page.showView(JavaScriptUI.ID_TYPE_HIERARCHY);
 		part.setInputElement(input);
 		if (input instanceof IMember) {
 			if (page.getEditorReferences().length == 0) {
-				JavaUI.openInEditor(input, false, false); // only open when the perspecive has been created
+				JavaScriptUI.openInEditor(input, false, false); // only open when the perspecive has been created
 			}
 		}
 		return part;
@@ -142,7 +142,7 @@ public class OpenTypeHierarchyUtil {
 				case IJavaScriptElement.FIELD:
 				case IJavaScriptElement.TYPE:
 				case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
-				case IJavaScriptElement.JAVA_PROJECT:
+				case IJavaScriptElement.JAVASCRIPT_PROJECT:
 					return new IJavaScriptElement[] { elem };
 				case IJavaScriptElement.PACKAGE_FRAGMENT:
 					if (((IPackageFragment)elem).containsJavaResources())
@@ -163,8 +163,8 @@ public class OpenTypeHierarchyUtil {
 					
 				case IJavaScriptElement.CLASS_FILE:
 					return new IJavaScriptElement[] { ((IClassFile)input).getType() };				
-				case IJavaScriptElement.COMPILATION_UNIT: {
-					IJavaScriptUnit cu= (IJavaScriptUnit) elem.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+				case IJavaScriptElement.JAVASCRIPT_UNIT: {
+					IJavaScriptUnit cu= (IJavaScriptUnit) elem.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 					if (cu != null) {
 						IType[] types= cu.getTypes();
 						if (types.length > 0) {
@@ -176,7 +176,7 @@ public class OpenTypeHierarchyUtil {
 				default:
 			}
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		return null;	
 	}

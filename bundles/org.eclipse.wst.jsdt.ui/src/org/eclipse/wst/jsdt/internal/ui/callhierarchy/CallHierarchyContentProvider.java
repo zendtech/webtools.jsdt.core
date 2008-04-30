@@ -22,7 +22,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.progress.DeferredTreeContentManager;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.internal.corext.callhierarchy.MethodWrapper;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
 
 public class CallHierarchyContentProvider implements ITreeContentProvider {
@@ -83,7 +83,7 @@ public class CallHierarchyContentProvider implements ITreeContentProvider {
     }
 
     protected Object[] fetchChildren(MethodWrapper methodWrapper) {
-        IRunnableContext context= JavaPlugin.getActiveWorkbenchWindow();
+        IRunnableContext context= JavaScriptPlugin.getActiveWorkbenchWindow();
         MethodWrapperRunnable runnable= new MethodWrapperRunnable(methodWrapper);
         try {
             context.run(true, true, runnable);

@@ -57,7 +57,7 @@ import org.eclipse.wst.jsdt.internal.corext.fix.CleanUpConstants;
 import org.eclipse.wst.jsdt.internal.corext.fix.CleanUpPreferenceUtil;
 import org.eclipse.wst.jsdt.internal.corext.fix.CleanUpRefactoring;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.preferences.BulletListBlock;
 import org.eclipse.wst.jsdt.internal.ui.preferences.CleanUpPreferencePage;
@@ -77,7 +77,7 @@ import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.IDialogFieldListene
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.IListAdapter;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.ListDialogField;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.SelectionButtonDialogField;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.xml.sax.InputSource;
 
 public class CleanUpRefactoringWizard extends RefactoringWizard {
@@ -108,7 +108,7 @@ public class CleanUpRefactoringWizard extends RefactoringWizard {
 		    		fProfileIdsTable= loadProfiles();
 				
 				InstanceScope instanceScope= new InstanceScope();
-	    		IEclipsePreferences instancePreferences= instanceScope.getNode(JavaUI.ID_PLUGIN);
+	    		IEclipsePreferences instancePreferences= instanceScope.getNode(JavaScriptUI.ID_PLUGIN);
 	
 	    		final String workbenchProfileId;
 	    		if (instancePreferences.get(CleanUpConstants.CLEANUP_PROFILE, null) != null) {
@@ -136,7 +136,7 @@ public class CleanUpRefactoringWizard extends RefactoringWizard {
 
 		private String getProjectProfileName(final IJavaScriptProject project, Hashtable profileIdsTable, String workbenchProfileId) {
 			ProjectScope projectScope= new ProjectScope(project.getProject());
-	        IEclipsePreferences node= projectScope.getNode(JavaUI.ID_PLUGIN);
+	        IEclipsePreferences node= projectScope.getNode(JavaScriptUI.ID_PLUGIN);
 	        String id= node.get(CleanUpConstants.CLEANUP_PROFILE, null);
 			if (id == null) {
 	        	Profile profile= (Profile)profileIdsTable.get(workbenchProfileId);
@@ -285,7 +285,7 @@ public class CleanUpRefactoringWizard extends RefactoringWizard {
 				try {
 	                fCustomSettings= decodeSettings(settings);
                 } catch (CoreException e) {
-	                JavaPlugin.log(e);
+	                JavaScriptPlugin.log(e);
 	                fCustomSettings= CleanUpConstants.getEclipseDefaultSettings();
                 }
 			}
@@ -408,7 +408,7 @@ public class CleanUpRefactoringWizard extends RefactoringWizard {
 			try {
 	            getDialogSettings().put(CUSTOM_PROFILE_KEY, encodeSettings(fCustomSettings));
             } catch (CoreException e) {
-	            JavaPlugin.log(e);
+	            JavaScriptPlugin.log(e);
             }
         }
 

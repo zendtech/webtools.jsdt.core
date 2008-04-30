@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.ui.dialogs.TypeSelectionExtension;
 
 /**
@@ -44,7 +44,7 @@ public class OpenTypeSelectionDialog2 extends TypeSelectionDialog2 {
 	public OpenTypeSelectionDialog2(Shell parent, boolean multi, IRunnableContext context, 
 			IJavaScriptSearchScope scope, int elementKinds, TypeSelectionExtension extension) {
 		super(parent, multi, context, scope, elementKinds, extension);
-		IDialogSettings settings= JavaPlugin.getDefault().getDialogSettings();
+		IDialogSettings settings= JavaScriptPlugin.getDefault().getDialogSettings();
 		fSettings= settings.getSection(DIALOG_SETTINGS);
 		if (fSettings == null) {
 			fSettings= new DialogSettings(DIALOG_SETTINGS);

@@ -106,7 +106,7 @@ protected String getMainTaskName() {
 protected void processElement(IJavaScriptElement element) throws JavaScriptModelException {
 	switch (element.getElementType()) {
 		case IJavaScriptElement.CLASS_FILE :
-		case IJavaScriptElement.COMPILATION_UNIT :
+		case IJavaScriptElement.JAVASCRIPT_UNIT :
 			deleteResource(element.getResource(), force ? IResource.FORCE | IResource.KEEP_HISTORY : IResource.KEEP_HISTORY);
 			break;
 		case IJavaScriptElement.PACKAGE_FRAGMENT :
@@ -128,7 +128,7 @@ protected void verify(IJavaScriptElement element) throws JavaScriptModelExceptio
 		error(IJavaScriptModelStatusConstants.ELEMENT_DOES_NOT_EXIST, element);
 
 	int type = element.getElementType();
-	if (type <= IJavaScriptElement.PACKAGE_FRAGMENT_ROOT || type > IJavaScriptElement.COMPILATION_UNIT)
+	if (type <= IJavaScriptElement.PACKAGE_FRAGMENT_ROOT || type > IJavaScriptElement.JAVASCRIPT_UNIT)
 		error(IJavaScriptModelStatusConstants.INVALID_ELEMENT_TYPES, element);
 	else if (type == IJavaScriptElement.PACKAGE_FRAGMENT && element instanceof JarPackageFragment)
 		error(IJavaScriptModelStatusConstants.INVALID_ELEMENT_TYPES, element);

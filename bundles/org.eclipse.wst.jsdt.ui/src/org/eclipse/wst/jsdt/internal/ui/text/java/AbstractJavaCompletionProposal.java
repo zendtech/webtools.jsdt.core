@@ -70,10 +70,10 @@ import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.compiler.CharOperation;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
-import org.eclipse.wst.jsdt.ui.text.IJavaPartitions;
-import org.eclipse.wst.jsdt.ui.text.JavaTextTools;
+import org.eclipse.wst.jsdt.ui.text.IJavaScriptPartitions;
+import org.eclipse.wst.jsdt.ui.text.JavaScriptTextTools;
 import org.eclipse.wst.jsdt.ui.text.java.IJavaCompletionProposal;
 import org.eclipse.wst.jsdt.ui.text.java.JavaContentAssistInvocationContext;
 import org.osgi.framework.Bundle;
@@ -129,7 +129,7 @@ public abstract class AbstractJavaCompletionProposal implements IJavaCompletionP
 	
 			} catch (BadPositionCategoryException e) {
 				// should not happen
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		}
 	
@@ -147,7 +147,7 @@ public abstract class AbstractJavaCompletionProposal implements IJavaCompletionP
 	
 			} catch (BadPositionCategoryException e) {
 				// should not happen
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 			return fPosition.getOffset();
 		}
@@ -382,8 +382,8 @@ public abstract class AbstractJavaCompletionProposal implements IJavaCompletionP
 	
 
 	private boolean isSmartTrigger(char trigger) {
-		return trigger == ';' && JavaPlugin.getDefault().getCombinedPreferenceStore().getBoolean(PreferenceConstants.EDITOR_SMART_SEMICOLON)
-				|| trigger == '{' && JavaPlugin.getDefault().getCombinedPreferenceStore().getBoolean(PreferenceConstants.EDITOR_SMART_OPENING_BRACE);
+		return trigger == ';' && JavaScriptPlugin.getDefault().getCombinedPreferenceStore().getBoolean(PreferenceConstants.EDITOR_SMART_SEMICOLON)
+				|| trigger == '{' && JavaScriptPlugin.getDefault().getCombinedPreferenceStore().getBoolean(PreferenceConstants.EDITOR_SMART_OPENING_BRACE);
 	}
 
 	private void handleSmartTrigger(IDocument document, char trigger, int referenceOffset) throws BadLocationException {
@@ -397,7 +397,7 @@ public abstract class AbstractJavaCompletionProposal implements IJavaCompletionP
 		cmd.shiftsCaret= true;
 		cmd.caretOffset= getReplacementOffset() + getCursorPosition();
 		
-		SmartSemicolonAutoEditStrategy strategy= new SmartSemicolonAutoEditStrategy(IJavaPartitions.JAVA_PARTITIONING);
+		SmartSemicolonAutoEditStrategy strategy= new SmartSemicolonAutoEditStrategy(IJavaScriptPartitions.JAVA_PARTITIONING);
 		strategy.customizeDocumentCommand(document, cmd);
 		
 		replace(document, cmd.offset, cmd.length, cmd.text);
@@ -531,7 +531,7 @@ public abstract class AbstractJavaCompletionProposal implements IJavaCompletionP
 	 */
 	protected String getCSSStyles() {
 		if (fgCSSStyles == null) {
-			Bundle bundle= Platform.getBundle(JavaPlugin.getPluginId());
+			Bundle bundle= Platform.getBundle(JavaScriptPlugin.getPluginId());
 			URL url= bundle.getEntry("/JavadocHoverStyleSheet.css"); //$NON-NLS-1$
 			if (url != null) {
 				try {
@@ -546,7 +546,7 @@ public abstract class AbstractJavaCompletionProposal implements IJavaCompletionP
 					}
 					fgCSSStyles= buffer.toString();
 				} catch (IOException ex) {
-					JavaPlugin.log(ex);
+					JavaScriptPlugin.log(ex);
 				}
 			}
 		}
@@ -815,23 +815,23 @@ public abstract class AbstractJavaCompletionProposal implements IJavaCompletionP
 
 
 	private static boolean insertCompletion() {
-		IPreferenceStore preference= JavaPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore preference= JavaScriptPlugin.getDefault().getPreferenceStore();
 		return preference.getBoolean(PreferenceConstants.CODEASSIST_INSERT_COMPLETION);
 	}
 
 	private static Color getForegroundColor(StyledText text) {
 
-		IPreferenceStore preference= JavaPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore preference= JavaScriptPlugin.getDefault().getPreferenceStore();
 		RGB rgb= PreferenceConverter.getColor(preference, PreferenceConstants.CODEASSIST_REPLACEMENT_FOREGROUND);
-		JavaTextTools textTools= JavaPlugin.getDefault().getJavaTextTools();
+		JavaScriptTextTools textTools= JavaScriptPlugin.getDefault().getJavaTextTools();
 		return textTools.getColorManager().getColor(rgb);
 	}
 
 	private static Color getBackgroundColor(StyledText text) {
 
-		IPreferenceStore preference= JavaPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore preference= JavaScriptPlugin.getDefault().getPreferenceStore();
 		RGB rgb= PreferenceConverter.getColor(preference, PreferenceConstants.CODEASSIST_REPLACEMENT_BACKGROUND);
-		JavaTextTools textTools= JavaPlugin.getDefault().getJavaTextTools();
+		JavaScriptTextTools textTools= JavaScriptPlugin.getDefault().getJavaTextTools();
 		return textTools.getColorManager().getColor(rgb);
 	}
 
@@ -928,7 +928,7 @@ public abstract class AbstractJavaCompletionProposal implements IJavaCompletionP
 	 * @see org.eclipse.jface.text.contentassist.ICompletionProposalExtension3#getInformationControlCreator()
 	 */
 	public IInformationControlCreator getInformationControlCreator() {
-		Shell shell= JavaPlugin.getActiveWorkbenchShell();
+		Shell shell= JavaScriptPlugin.getActiveWorkbenchShell();
 		if (shell == null || !BrowserInformationControl.isAvailable(shell))
 			return null;
 		
@@ -981,13 +981,13 @@ public abstract class AbstractJavaCompletionProposal implements IJavaCompletionP
 				ui.setCyclingMode(LinkedModeUI.CYCLE_NEVER);
 				ui.enter();
 			} catch (BadLocationException x) {
-				JavaPlugin.log(x);
+				JavaScriptPlugin.log(x);
 			}
 		}
 	}
 	
 	protected boolean autocloseBrackets() {
-		IPreferenceStore preferenceStore= JavaPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore preferenceStore= JavaScriptPlugin.getDefault().getPreferenceStore();
 		return preferenceStore.getBoolean(PreferenceConstants.EDITOR_CLOSE_BRACKETS);
 	}
 
@@ -1012,7 +1012,7 @@ public abstract class AbstractJavaCompletionProposal implements IJavaCompletionP
 			try {
 				return getProposalInfo().getJavaElement();
 			} catch (JavaScriptModelException x) {
-				JavaPlugin.log(x);
+				JavaScriptPlugin.log(x);
 			}
 		return null;
 	}

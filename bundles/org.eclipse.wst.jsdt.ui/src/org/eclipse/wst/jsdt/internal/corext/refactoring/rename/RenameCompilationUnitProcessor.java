@@ -52,7 +52,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.tagging.ISimilarDeclarat
 import org.eclipse.wst.jsdt.internal.corext.refactoring.tagging.ITextUpdating;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.util.ResourceUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.RefactoringSaveHelper;
 
 public final class RenameCompilationUnitProcessor extends JavaRenameProcessor implements IReferenceUpdating, ITextUpdating, IQualifiedNameUpdating, ISimilarDeclarationUpdating, IResourceMapper, IJavaElementMapper {
@@ -433,7 +433,7 @@ public final class RenameCompilationUnitProcessor extends JavaRenameProcessor im
 		}
 			
 		final IJavaScriptElement element= JDTRefactoringDescriptor.handleToElement(extended.getProject(), handle, false);
-		if (element == null || !element.exists() || element.getElementType() != IJavaScriptElement.COMPILATION_UNIT)
+		if (element == null || !element.exists() || element.getElementType() != IJavaScriptElement.JAVASCRIPT_UNIT)
 			return ScriptableRefactoring.createInputFatalStatus(element, getRefactoring().getName(), IJavaRefactorings.RENAME_COMPILATION_UNIT);
 		
 		final String name= extended.getAttribute(JDTRefactoringDescriptor.ATTRIBUTE_NAME);
@@ -445,7 +445,7 @@ public final class RenameCompilationUnitProcessor extends JavaRenameProcessor im
 			computeRenameTypeRefactoring();
 			setNewElementName(name);
 		} catch (CoreException exception) {
-			JavaPlugin.log(exception);
+			JavaScriptPlugin.log(exception);
 			return ScriptableRefactoring.createInputFatalStatus(element, getRefactoring().getName(), IJavaRefactorings.RENAME_COMPILATION_UNIT);
 		}
 		return new RefactoringStatus();

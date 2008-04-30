@@ -77,7 +77,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIStatus;
 import org.eclipse.wst.jsdt.internal.ui.actions.CompositeActionGroup;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
@@ -392,9 +392,9 @@ public class ClassFileEditor extends JavaEditor implements ClassFileDocumentProv
 //			try {
 //				content= disassembler.disassemble(classFile.getBytes(), "\n", ClassFileBytesDisassembler.DETAILED); //$NON-NLS-1$
 //			} catch (JavaScriptModelException ex) {
-//				JavaPlugin.log(ex.getStatus());
+//				JavaScriptPlugin.log(ex.getStatus());
 //			} catch (ClassFormatException ex) {
-//				JavaPlugin.log(ex);
+//				JavaScriptPlugin.log(ex);
 //			}
 //			styledText.setText(content == null ? "" : content); //$NON-NLS-1$
 //		}
@@ -503,7 +503,7 @@ public class ClassFileEditor extends JavaEditor implements ClassFileDocumentProv
 	 */
 	public ClassFileEditor() {
 		super();
-		setDocumentProvider(JavaPlugin.getDefault().getClassFileDocumentProvider());
+		setDocumentProvider(JavaScriptPlugin.getDefault().getClassFileDocumentProvider());
 		setEditorContextMenuId("#ClassFileEditorContext"); //$NON-NLS-1$
 		setRulerContextMenuId("#ReadOnlyJavaScriptRulerContext"); //$NON-NLS-1$
 		setOutlinerContextMenuId("#ClassFileOutlinerContext"); //$NON-NLS-1$
@@ -664,7 +664,7 @@ public class ClassFileEditor extends JavaEditor implements ClassFileDocumentProv
 			 * @since 3.0
 			 */
 			protected IStatus run(IProgressMonitor monitor) {
-				JavaScriptUnit ast= JavaPlugin.getDefault().getASTProvider().getAST(inputElement, ASTProvider.WAIT_YES, null);
+				JavaScriptUnit ast= JavaScriptPlugin.getDefault().getASTProvider().getAST(inputElement, ASTProvider.WAIT_YES, null);
 				if (fOverrideIndicatorManager != null)
 					fOverrideIndicatorManager.reconciled(ast, true, monitor);
 				if (fSemanticManager != null) {

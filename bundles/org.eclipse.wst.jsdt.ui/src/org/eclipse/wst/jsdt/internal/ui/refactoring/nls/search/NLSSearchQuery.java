@@ -36,10 +36,10 @@ import org.eclipse.wst.jsdt.core.search.SearchPattern;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.nls.NLSRefactoring;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.SearchUtils;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIStatus;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.AppearanceAwareLabelProvider;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 
 public class NLSSearchQuery implements ISearchQuery {
@@ -66,7 +66,7 @@ public class NLSSearchQuery implements ISearchQuery {
 		try {
 			final AbstractTextSearchResult textResult= (AbstractTextSearchResult) getSearchResult();
 			textResult.removeAll();
-			AppearanceAwareLabelProvider labelProvider= new AppearanceAwareLabelProvider(JavaElementLabels.ALL_POST_QUALIFIED, 0);
+			AppearanceAwareLabelProvider labelProvider= new AppearanceAwareLabelProvider(JavaScriptElementLabels.ALL_POST_QUALIFIED, 0);
 			
 			for (int i= 0; i < fWrapperClass.length; i++) {
 				IJavaScriptElement wrapperClass= fWrapperClass[i];
@@ -110,7 +110,7 @@ public class NLSSearchQuery implements ISearchQuery {
 						fResult.addCompilationUnitGroup(groupElement);
 					
 				} catch (CoreException e) {
-					JavaPlugin.log(e);
+					JavaScriptPlugin.log(e);
 				}
 			}
 		} finally {

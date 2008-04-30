@@ -33,9 +33,9 @@ import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIMessages;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionUtil;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
-import org.eclipse.wst.jsdt.ui.JavaUI;
-import org.eclipse.wst.jsdt.ui.JavadocContentAccess;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
+import org.eclipse.wst.jsdt.ui.JSdocContentAccess;
 
 import com.ibm.icu.text.BreakIterator;
 
@@ -68,7 +68,7 @@ public class JavadocHelpContext implements IContext2 {
 		}
 
 		public String getLabel() {
-			String label= JavaElementLabels.getTextLabel(fElement, JavaElementLabels.ALL_DEFAULT | JavaElementLabels.ALL_FULLY_QUALIFIED);
+			String label= JavaScriptElementLabels.getTextLabel(fElement, JavaScriptElementLabels.ALL_DEFAULT | JavaScriptElementLabels.ALL_FULLY_QUALIFIED);
 			return Messages.format(JavaUIMessages.JavaUIHelp_link_label, label); 
 		}
 	}	
@@ -102,7 +102,7 @@ public class JavadocHelpContext implements IContext2 {
 					if (javadocSummary == null) {
 						javadocSummary= retrieveText(element);
 						if (javadocSummary != null) {
-							String elementLabel= JavaElementLabels.getTextLabel(element, JavaElementLabels.ALL_DEFAULT);
+							String elementLabel= JavaScriptElementLabels.getTextLabel(element, JavaScriptElementLabels.ALL_DEFAULT);
 							
 							// FIXME: needs to be NLSed once the code becomes active
 							javadocSummary= "<b>Javadoc for " + elementLabel + ":</b><br>" + javadocSummary;   //$NON-NLS-1$//$NON-NLS-2$
@@ -112,17 +112,17 @@ public class JavadocHelpContext implements IContext2 {
 					}	
 				}
 				
-				URL url= JavaUI.getJavadocLocation(element, true);
+				URL url= JavaScriptUI.getJSdocLocation(element, true);
 				if (url == null || doesNotExist(url)) {
 					IPackageFragmentRoot root= JavaModelUtil.getPackageFragmentRoot(element);
 					if (root != null) {
-						url= JavaUI.getJavadocBaseLocation(element);
+						url= JavaScriptUI.getJSdocBaseLocation(element);
 						if (root.getKind() == IPackageFragmentRoot.K_SOURCE) {
 							element= element.getJavaScriptProject();
 						} else {
 							element= root;
 						}
-						url= JavaUI.getJavadocLocation(element, false);
+						url= JavaScriptUI.getJSdocLocation(element, false);
 					}
 				}
 				if (url != null) {
@@ -182,7 +182,7 @@ public class JavadocHelpContext implements IContext2 {
 
 	private String retrieveText(IJavaScriptElement elem) throws JavaScriptModelException {
 		if (elem instanceof IMember) {
-			Reader reader= JavadocContentAccess.getHTMLContentReader((IMember)elem, true, true);
+			Reader reader= JSdocContentAccess.getHTMLContentReader((IMember)elem, true, true);
 			if (reader != null)
 				reader= new HTML2TextReader(reader, null);
 			if (reader != null) {

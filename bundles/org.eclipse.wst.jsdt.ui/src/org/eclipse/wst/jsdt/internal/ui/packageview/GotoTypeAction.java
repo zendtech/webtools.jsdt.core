@@ -26,10 +26,10 @@ import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.search.SearchEngine;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
-import org.eclipse.wst.jsdt.ui.IJavaElementSearchConstants;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.IJavaScriptElementSearchConstants;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 class GotoTypeAction extends Action {
 	
@@ -44,11 +44,11 @@ class GotoTypeAction extends Action {
 	}
 
 	public void run() {
-		Shell shell= JavaPlugin.getActiveWorkbenchShell();
+		Shell shell= JavaScriptPlugin.getActiveWorkbenchShell();
 		SelectionDialog dialog= null;
 		try {
-			dialog= JavaUI.createTypeDialog(shell, new ProgressMonitorDialog(shell),
-				SearchEngine.createWorkspaceScope(), IJavaElementSearchConstants.CONSIDER_ALL_TYPES, false);
+			dialog= JavaScriptUI.createTypeDialog(shell, new ProgressMonitorDialog(shell),
+				SearchEngine.createWorkspaceScope(), IJavaScriptElementSearchConstants.CONSIDER_ALL_TYPES, false);
 		} catch (JavaScriptModelException e) {
 			String title= getDialogTitle();
 			String message= PackagesMessages.GotoType_error_message; 
@@ -69,7 +69,7 @@ class GotoTypeAction extends Action {
 	}
 	
 	private void gotoType(IType type) {
-		IJavaScriptUnit cu= (IJavaScriptUnit) type.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+		IJavaScriptUnit cu= (IJavaScriptUnit) type.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 		IJavaScriptElement element= null;
 		if (cu != null) {
 			element= cu.getPrimary();

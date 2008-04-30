@@ -22,7 +22,7 @@ import org.eclipse.wst.jsdt.core.IParent;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.fix.CleanUpConstants;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.SortMembersMessageDialog;
 import org.eclipse.wst.jsdt.internal.ui.fix.ICleanUp;
 import org.eclipse.wst.jsdt.internal.ui.fix.SortMembersCleanUp;
@@ -58,7 +58,7 @@ public class MultiSortMembersAction extends CleanUpAction {
 	        if (!hasMembersToSort(units))
 	        	return null;
         } catch (JavaScriptModelException e) {
-        	JavaPlugin.log(e);
+        	JavaScriptPlugin.log(e);
 	        return null;
         }
 

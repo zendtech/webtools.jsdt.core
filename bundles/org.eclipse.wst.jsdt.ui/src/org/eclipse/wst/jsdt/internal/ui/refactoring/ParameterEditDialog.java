@@ -32,7 +32,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.StubTypeContext;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.TypeContextChecker;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.structure.ChangeSignatureRefactoring;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.TextFieldNavigationHandler;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.contentassist.ControlContentAssistHelper;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.contentassist.JavaTypeCompletionProcessor;
@@ -213,14 +213,14 @@ public class ParameterEditDialog extends StatusDialog {
 	}
 	
 	private Status createOkStatus() {
-		return new Status(IStatus.OK, JavaPlugin.getPluginId(), IStatus.OK, "", null); //$NON-NLS-1$
+		return new Status(IStatus.OK, JavaScriptPlugin.getPluginId(), IStatus.OK, "", null); //$NON-NLS-1$
 	}
 	
 	private Status createWarningStatus(String message) {
-		return new Status(IStatus.WARNING, JavaPlugin.getPluginId(), IStatus.WARNING, message, null);
+		return new Status(IStatus.WARNING, JavaScriptPlugin.getPluginId(), IStatus.WARNING, message, null);
 	}
 	
 	private Status createErrorStatus(String message) {
-		return new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.ERROR, message, null);
+		return new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), IStatus.ERROR, message, null);
 	}
 }

@@ -43,10 +43,10 @@ import org.eclipse.wst.jsdt.core.search.SearchPattern;
 import org.eclipse.wst.jsdt.core.search.SearchRequestor;
 import org.eclipse.wst.jsdt.internal.corext.util.SearchUtils;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIMessages;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
 
 /**
  * Dialog to browse for package fragments.
@@ -84,11 +84,11 @@ public class PackageSelectionDialog extends ElementListSelectionDialog {
 	}
 	
 	private static ILabelProvider createLabelProvider(int dialogFlags) {
-		int flags= JavaElementLabelProvider.SHOW_DEFAULT;
+		int flags= JavaScriptElementLabelProvider.SHOW_DEFAULT;
 		if ((dialogFlags & F_REMOVE_DUPLICATES) == 0) {
-			flags= flags | JavaElementLabelProvider.SHOW_ROOT;
+			flags= flags | JavaScriptElementLabelProvider.SHOW_ROOT;
 		}
-		return new JavaElementLabelProvider(flags);
+		return new JavaScriptElementLabelProvider(flags);
 	}
 	
 	
@@ -308,7 +308,7 @@ public class PackageSelectionDialog extends ElementListSelectionDialog {
 	 * @return the dialog settings to be used
 	 */
 	private IDialogSettings getDialogSettings() {
-		IDialogSettings settings= JavaPlugin.getDefault().getDialogSettings();
+		IDialogSettings settings= JavaScriptPlugin.getDefault().getDialogSettings();
 		String sectionName= getClass().getName();
 		IDialogSettings subSettings= settings.getSection(sectionName);
 		if (subSettings == null)

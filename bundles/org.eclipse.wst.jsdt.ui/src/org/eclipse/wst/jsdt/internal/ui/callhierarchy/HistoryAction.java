@@ -20,15 +20,15 @@ import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.JavaElementImageProvider;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
 
 /**
  * Action used for the type hierarchy forward / backward buttons
  */
 class HistoryAction extends Action {
-    private static JavaElementLabelProvider fLabelProvider = new JavaElementLabelProvider(JavaElementLabelProvider.SHOW_POST_QUALIFIED |
-            JavaElementLabelProvider.SHOW_PARAMETERS |
-            JavaElementLabelProvider.SHOW_RETURN_TYPE);
+    private static JavaScriptElementLabelProvider fLabelProvider = new JavaScriptElementLabelProvider(JavaScriptElementLabelProvider.SHOW_POST_QUALIFIED |
+            JavaScriptElementLabelProvider.SHOW_PARAMETERS |
+            JavaScriptElementLabelProvider.SHOW_RETURN_TYPE);
     private CallHierarchyViewPart fView;
     private IFunction fMethod;
 

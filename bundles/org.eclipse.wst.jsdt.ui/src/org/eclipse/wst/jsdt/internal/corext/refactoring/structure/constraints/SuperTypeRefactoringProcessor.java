@@ -102,7 +102,7 @@ import org.eclipse.wst.jsdt.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
 import org.eclipse.wst.jsdt.internal.corext.util.SearchUtils;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.ui.CodeGeneration;
 
 /**
@@ -295,9 +295,9 @@ public abstract class SuperTypeRefactoringProcessor extends RefactoringProcessor
 			try {
 				edit.apply(document, TextEdit.UPDATE_REGIONS);
 			} catch (MalformedTreeException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			} catch (BadLocationException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			}
 			buffer.setLength(0);
 			buffer.append(document.get());
@@ -343,11 +343,11 @@ public abstract class SuperTypeRefactoringProcessor extends RefactoringProcessor
 			try {
 				rewrite.rewriteImports(new SubProgressMonitor(monitor, 100)).apply(document);
 			} catch (MalformedTreeException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			} catch (BadLocationException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			} catch (CoreException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			}
 			fTypeBindings.clear();
 			fStaticBindings.clear();
@@ -446,10 +446,10 @@ public abstract class SuperTypeRefactoringProcessor extends RefactoringProcessor
 				try {
 					edit.apply(document, TextEdit.UPDATE_REGIONS);
 				} catch (MalformedTreeException exception) {
-					JavaPlugin.log(exception);
+					JavaScriptPlugin.log(exception);
 					status.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ExtractInterfaceProcessor_internal_error));
 				} catch (BadLocationException exception) {
-					JavaPlugin.log(exception);
+					JavaScriptPlugin.log(exception);
 					status.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.ExtractInterfaceProcessor_internal_error));
 				}
 				source= document.get();
@@ -754,7 +754,7 @@ public abstract class SuperTypeRefactoringProcessor extends RefactoringProcessor
 					getFieldReferencingCompilationUnits(units, nodes);
 					monitor.worked(40);
 				} catch (JavaScriptModelException exception) {
-					JavaPlugin.log(exception);
+					JavaScriptPlugin.log(exception);
 				}
 			}
 		} finally {
@@ -820,7 +820,7 @@ public abstract class SuperTypeRefactoringProcessor extends RefactoringProcessor
 					units[index].getBuffer().setContents(unit.getPrimary().getBuffer().getContents());
 					JavaModelUtil.reconcile(units[index]);
 				} catch (JavaScriptModelException exception) {
-					JavaPlugin.log(exception);
+					JavaScriptPlugin.log(exception);
 				}
 			}
 		}

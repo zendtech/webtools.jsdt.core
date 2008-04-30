@@ -2956,7 +2956,7 @@ public final class JavaScriptCore extends Plugin {
 				}
 			}
 			if (state == null) continue;
-			if (element.getElementType() == IJavaScriptElement.JAVA_PROJECT) {
+			if (element.getElementType() == IJavaScriptElement.JAVASCRIPT_PROJECT) {
 				IPackageFragmentRoot[] roots = null;
 				try {
 					roots = javaProject.getPackageFragmentRoots();
@@ -2999,7 +2999,7 @@ public final class JavaScriptCore extends Plugin {
 			if (outputLocation == null) continue;
 			IContainer container = (IContainer) project.getWorkspace().getRoot().findMember(outputLocation);
 			switch(element.getElementType()) {
-				case IJavaScriptElement.COMPILATION_UNIT :
+				case IJavaScriptElement.JAVASCRIPT_UNIT :
 					// get the .class files generated when this element was built
 					IJavaScriptUnit unit = (IJavaScriptUnit) element;
 					getGeneratedResource(unit, container, state, rootPathSegmentCounts, collector);

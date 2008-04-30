@@ -45,7 +45,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.buildpath.ClasspathModifier;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.WorkbenchRunnableAdapter;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.wst.jsdt.internal.ui.util.PixelConverter;
@@ -258,7 +258,7 @@ public class SourceContainerWorkbookPage extends BuildPathBasePage {
 		if (fSWTControl != null) {
 			return fSWTControl.getShell();
 		}
-		return JavaPlugin.getActiveWorkbenchShell();
+		return JavaScriptPlugin.getActiveWorkbenchShell();
 	}
 	
 	
@@ -619,7 +619,7 @@ public class SourceContainerWorkbookPage extends BuildPathBasePage {
 				}
 			} catch (JavaScriptModelException e) {
 				// ignore it here, just log
-				JavaPlugin.log(e.getStatus());
+				JavaScriptPlugin.log(e.getStatus());
 			}
 		}	
 			

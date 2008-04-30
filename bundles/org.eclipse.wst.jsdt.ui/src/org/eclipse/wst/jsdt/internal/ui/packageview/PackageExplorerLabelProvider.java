@@ -27,7 +27,7 @@ import org.eclipse.wst.jsdt.internal.ui.navigator.ContainerFolder;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.AppearanceAwareLabelProvider;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.ColoredString;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.JavaElementImageProvider;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 /**
  * Provides the labels for the Package Explorer.
@@ -46,7 +46,7 @@ public class PackageExplorerLabelProvider extends AppearanceAwareLabelProvider {
 	private PackageExplorerProblemsDecorator fProblemDecorator;
 
 	public PackageExplorerLabelProvider(PackageExplorerContentProvider cp) {
-		super(DEFAULT_TEXTFLAGS | JavaElementLabels.P_COMPRESSED | JavaElementLabels.ALL_CATEGORY, DEFAULT_IMAGEFLAGS | JavaElementImageProvider.SMALL_ICONS);
+		super(DEFAULT_TEXTFLAGS | JavaScriptElementLabels.P_COMPRESSED | JavaScriptElementLabels.ALL_CATEGORY, DEFAULT_IMAGEFLAGS | JavaElementImageProvider.SMALL_ICONS);
 		
 		fProblemDecorator= new PackageExplorerProblemsDecorator();
 		addLabelDecorator(fProblemDecorator);

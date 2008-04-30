@@ -35,12 +35,12 @@ import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.base.JavaStatusContext;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.base.JavaStringStatusContext;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.InternalClassFileEditorInput;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaSourceViewer;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
-import org.eclipse.wst.jsdt.ui.text.JavaSourceViewerConfiguration;
-import org.eclipse.wst.jsdt.ui.text.JavaTextTools;
+import org.eclipse.wst.jsdt.ui.text.JavaScriptSourceViewerConfiguration;
+import org.eclipse.wst.jsdt.ui.text.JavaScriptTextTools;
 
 
 public class JavaStatusContextViewer extends TextStatusContextViewer {
@@ -52,13 +52,13 @@ public class JavaStatusContextViewer extends TextStatusContextViewer {
 		super.createControl(parent);
 		final SourceViewer viewer= getSourceViewer();
 		viewer.unconfigure();
-		IPreferenceStore store= JavaPlugin.getDefault().getCombinedPreferenceStore();
-		viewer.configure(new JavaSourceViewerConfiguration(JavaPlugin.getDefault().getJavaTextTools().getColorManager(), store, null, null));
+		IPreferenceStore store= JavaScriptPlugin.getDefault().getCombinedPreferenceStore();
+		viewer.configure(new JavaScriptSourceViewerConfiguration(JavaScriptPlugin.getDefault().getJavaTextTools().getColorManager(), store, null, null));
 		viewer.getControl().setFont(JFaceResources.getFont(PreferenceConstants.EDITOR_TEXT_FONT));
 	}
 	
 	protected SourceViewer createSourceViewer(Composite parent) {
-		IPreferenceStore store= JavaPlugin.getDefault().getCombinedPreferenceStore();
+		IPreferenceStore store= JavaScriptPlugin.getDefault().getCombinedPreferenceStore();
 		return new JavaSourceViewer(parent, null, null, false, SWT.LEFT_TO_RIGHT | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI | SWT.FULL_SELECTION, store);
 	}
 
@@ -78,7 +78,7 @@ public class JavaStatusContextViewer extends TextStatusContextViewer {
 			if (jsc.isBinary()) {
 				IClassFile file= jsc.getClassFile();
 				IEditorInput editorInput= new InternalClassFileEditorInput(file);
-				document= getDocument(JavaPlugin.getDefault().getClassFileDocumentProvider(), editorInput);
+				document= getDocument(JavaScriptPlugin.getDefault().getClassFileDocumentProvider(), editorInput);
 				if (document.getLength() == 0)
 					document= new Document(Messages.format(RefactoringMessages.JavaStatusContextViewer_no_source_found0, getPackageFragmentRoot(file).getElementName()));
 				updateTitle(file);
@@ -92,7 +92,7 @@ public class JavaStatusContextViewer extends TextStatusContextViewer {
 					}
 				} else {
 					IEditorInput editorInput= new FileEditorInput((IFile)cunit.getResource());
-					document= getDocument(JavaPlugin.getDefault().getCompilationUnitDocumentProvider(), editorInput);
+					document= getDocument(JavaScriptPlugin.getDefault().getCompilationUnitDocumentProvider(), editorInput);
 				}
 				if (document == null)
 					document= new Document(RefactoringMessages.JavaStatusContextViewer_no_source_available);
@@ -108,7 +108,7 @@ public class JavaStatusContextViewer extends TextStatusContextViewer {
 	
 	private IDocument newJavaDocument(String source) {
 		IDocument result= new Document(source);
-		JavaTextTools textTools= JavaPlugin.getDefault().getJavaTextTools();
+		JavaScriptTextTools textTools= JavaScriptPlugin.getDefault().getJavaTextTools();
 		textTools.setupJavaDocumentPartitioner(result);
 		return result;
 	}

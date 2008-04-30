@@ -268,7 +268,7 @@ public IJavaScriptUnit[] getJavaScriptUnits() throws JavaScriptModelException {
 		return NO_COMPILATION_UNITS;
 	}
 
-	ArrayList list = getChildrenOfType(COMPILATION_UNIT);
+	ArrayList list = getChildrenOfType(JAVASCRIPT_UNIT);
 	IJavaScriptUnit[] array= new IJavaScriptUnit[list.size()];
 	list.toArray(array);
 	return array;

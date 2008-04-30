@@ -91,9 +91,9 @@ import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.SearchUtils;
 import org.eclipse.wst.jsdt.internal.corext.util.Strings;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.preferences.JavaPreferencesSettings;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 /**
  * Refactoring processor for the push down refactoring.
@@ -311,7 +311,7 @@ public final class PushDownRefactoringProcessor extends HierarchyProcessor {
 					fCachedDeclaringType= type;
 				}
 			} catch (JavaScriptModelException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			}
 		}
 	}
@@ -359,7 +359,7 @@ public final class PushDownRefactoringProcessor extends HierarchyProcessor {
 				IField field= accessedFields[j];
 				boolean isAccessible= pushedDownList.contains(field) || canBeAccessedFrom(field, targetClass, targetSupertypes) || Flags.isEnum(field.getFlags());
 				if (!isAccessible) {
-					String message= Messages.format(RefactoringCoreMessages.PushDownRefactoring_field_not_accessible, new String[] { JavaElementLabels.getTextLabel(field, JavaElementLabels.ALL_FULLY_QUALIFIED), JavaElementLabels.getTextLabel(targetClass, JavaElementLabels.ALL_FULLY_QUALIFIED) });
+					String message= Messages.format(RefactoringCoreMessages.PushDownRefactoring_field_not_accessible, new String[] { JavaScriptElementLabels.getTextLabel(field, JavaScriptElementLabels.ALL_FULLY_QUALIFIED), JavaScriptElementLabels.getTextLabel(targetClass, JavaScriptElementLabels.ALL_FULLY_QUALIFIED) });
 					result.addError(message, JavaStatusContext.create(field));
 				}
 			}
@@ -380,7 +380,7 @@ public final class PushDownRefactoringProcessor extends HierarchyProcessor {
 				IFunction method= accessedMethods[offset];
 				boolean isAccessible= pushedDownList.contains(method) || canBeAccessedFrom(method, targetClass, targetSupertypes);
 				if (!isAccessible) {
-					String message= Messages.format(RefactoringCoreMessages.PushDownRefactoring_method_not_accessible, new String[] { JavaElementLabels.getTextLabel(method, JavaElementLabels.ALL_FULLY_QUALIFIED), JavaElementLabels.getTextLabel(targetClass, JavaElementLabels.ALL_FULLY_QUALIFIED) });
+					String message= Messages.format(RefactoringCoreMessages.PushDownRefactoring_method_not_accessible, new String[] { JavaScriptElementLabels.getTextLabel(method, JavaScriptElementLabels.ALL_FULLY_QUALIFIED), JavaScriptElementLabels.getTextLabel(targetClass, JavaScriptElementLabels.ALL_FULLY_QUALIFIED) });
 					result.addError(message, JavaStatusContext.create(method));
 				}
 			}
@@ -398,7 +398,7 @@ public final class PushDownRefactoringProcessor extends HierarchyProcessor {
 			for (int offset= 0; offset < accessedTypes.length; offset++) {
 				IType type= accessedTypes[offset];
 				if (!canBeAccessedFrom(type, targetClass, targetSupertypes)) {
-					String message= Messages.format(RefactoringCoreMessages.PushDownRefactoring_type_not_accessible, new String[] { JavaElementLabels.getTextLabel(type, JavaElementLabels.ALL_FULLY_QUALIFIED), JavaElementLabels.getTextLabel(targetClass, JavaElementLabels.ALL_FULLY_QUALIFIED) });
+					String message= Messages.format(RefactoringCoreMessages.PushDownRefactoring_type_not_accessible, new String[] { JavaScriptElementLabels.getTextLabel(type, JavaScriptElementLabels.ALL_FULLY_QUALIFIED), JavaScriptElementLabels.getTextLabel(targetClass, JavaScriptElementLabels.ALL_FULLY_QUALIFIED) });
 					result.addError(message, JavaStatusContext.create(type));
 				}
 			}
@@ -514,7 +514,7 @@ public final class PushDownRefactoringProcessor extends HierarchyProcessor {
 	private RefactoringStatus checkPossibleSubclasses(IProgressMonitor pm) throws JavaScriptModelException {
 		IType[] modifiableSubclasses= getAbstractDestinations(pm);
 		if (modifiableSubclasses.length == 0) {
-			String msg= Messages.format(RefactoringCoreMessages.PushDownRefactoring_no_subclasses, new String[] { JavaElementLabels.getTextLabel(getDeclaringType(), JavaElementLabels.ALL_FULLY_QUALIFIED) });
+			String msg= Messages.format(RefactoringCoreMessages.PushDownRefactoring_no_subclasses, new String[] { JavaScriptElementLabels.getTextLabel(getDeclaringType(), JavaScriptElementLabels.ALL_FULLY_QUALIFIED) });
 			return RefactoringStatus.createFatalErrorStatus(msg);
 		}
 		return new RefactoringStatus();
@@ -578,9 +578,9 @@ public final class PushDownRefactoringProcessor extends HierarchyProcessor {
 			content= Strings.concatenate(lines, StubUtility.getLineDelimiterUsed(method));
 			newMethod.setBody((Block) targetRewrite.createStringPlaceholder(content, ASTNode.BLOCK));
 		} catch (MalformedTreeException exception) {
-			JavaPlugin.log(exception);
+			JavaScriptPlugin.log(exception);
 		} catch (BadLocationException exception) {
-			JavaPlugin.log(exception);
+			JavaScriptPlugin.log(exception);
 		}
 	}
 
@@ -652,14 +652,14 @@ public final class PushDownRefactoringProcessor extends HierarchyProcessor {
 				if (declaring.isLocal() || declaring.isAnonymous())
 					flags|= JavaRefactoringDescriptor.JAR_SOURCE_ATTACHMENT;
 			} catch (JavaScriptModelException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			}
 			final String description= fMembersToMove.length == 1 ? Messages.format(RefactoringCoreMessages.PushDownRefactoring_descriptor_description_short_multi, fMembersToMove[0].getElementName()) : RefactoringCoreMessages.PushDownRefactoring_descriptor_description_short;
-			final String header= fMembersToMove.length == 1 ? Messages.format(RefactoringCoreMessages.PushDownRefactoring_descriptor_description_full, new String[] { JavaElementLabels.getElementLabel(fMembersToMove[0], JavaElementLabels.ALL_FULLY_QUALIFIED), JavaElementLabels.getElementLabel(declaring, JavaElementLabels.ALL_FULLY_QUALIFIED) }) : Messages.format(RefactoringCoreMessages.PushDownRefactoring_descriptor_description, new String[] { JavaElementLabels.getElementLabel(declaring, JavaElementLabels.ALL_FULLY_QUALIFIED) });
+			final String header= fMembersToMove.length == 1 ? Messages.format(RefactoringCoreMessages.PushDownRefactoring_descriptor_description_full, new String[] { JavaScriptElementLabels.getElementLabel(fMembersToMove[0], JavaScriptElementLabels.ALL_FULLY_QUALIFIED), JavaScriptElementLabels.getElementLabel(declaring, JavaScriptElementLabels.ALL_FULLY_QUALIFIED) }) : Messages.format(RefactoringCoreMessages.PushDownRefactoring_descriptor_description, new String[] { JavaScriptElementLabels.getElementLabel(declaring, JavaScriptElementLabels.ALL_FULLY_QUALIFIED) });
 			final JDTRefactoringDescriptorComment comment= new JDTRefactoringDescriptorComment(project, this, header);
 			final String[] settings= new String[fMembersToMove.length];
 			for (int index= 0; index < settings.length; index++)
-				settings[index]= JavaElementLabels.getElementLabel(fMembersToMove[index], JavaElementLabels.ALL_FULLY_QUALIFIED);
+				settings[index]= JavaScriptElementLabels.getElementLabel(fMembersToMove[index], JavaScriptElementLabels.ALL_FULLY_QUALIFIED);
 			comment.addSetting(JDTRefactoringDescriptorComment.createCompositeSetting(RefactoringCoreMessages.PushDownRefactoring_pushed_members_pattern, settings));
 			addSuperTypeSettings(comment, true);
 			final JDTRefactoringDescriptor descriptor= new JDTRefactoringDescriptor(IJavaRefactorings.PUSH_DOWN, project, description, comment.asString(), arguments, flags);

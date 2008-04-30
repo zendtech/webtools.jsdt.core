@@ -58,7 +58,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.LibrarySuperType;
 import org.eclipse.wst.jsdt.internal.core.JavaProject;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusInfo;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusUtil;
@@ -137,7 +137,7 @@ public class BuildPathsBlock {
 	
 	public BuildPathsBlock(IRunnableContext runnableContext, IStatusChangeListener context, int pageToShow, boolean useNewPage, IWorkbenchPreferenceContainer pageContainer) {
 		fPageContainer= pageContainer;
-//		fWorkspaceRoot= JavaPlugin.getWorkspace().getRoot();
+//		fWorkspaceRoot= JavaScriptPlugin.getWorkspace().getRoot();
 		fContext= context;
 		fUseNewPage= useNewPage;
 		
@@ -244,7 +244,7 @@ public class BuildPathsBlock {
         item.setData(fSourceContainerPage);     
         item.setControl(fSourceContainerPage.getControl(folder));
 		
-		IWorkbench workbench= JavaPlugin.getDefault().getWorkbench();	
+		IWorkbench workbench= JavaScriptPlugin.getDefault().getWorkbench();	
 		Image projectImage= workbench.getSharedImages().getImage(IDE.SharedImages.IMG_OBJ_PROJECT);
 		
 		fProjectsPage= new ProjectsWorkbookPage(fClassPathList, fPageContainer);		
@@ -284,7 +284,7 @@ public class BuildPathsBlock {
 //		if (fSWTWidget != null) {
 //			return fSWTWidget.getShell();
 //		}
-//		return JavaPlugin.getActiveWorkbenchShell();
+//		return JavaScriptPlugin.getActiveWorkbenchShell();
 //	}
 	
 	/**
@@ -892,7 +892,7 @@ public class BuildPathsBlock {
 			
 //			if (oldOutputLocation.equals(projPath) && !outputLocation.equals(projPath)) {
 //				if (BuildPathsBlock.hasClassfiles(project)) {
-//					if (BuildPathsBlock.getRemoveOldBinariesQuery(JavaPlugin.getActiveWorkbenchShell()).doQuery(projPath)) {
+//					if (BuildPathsBlock.getRemoveOldBinariesQuery(JavaScriptPlugin.getActiveWorkbenchShell()).doQuery(projPath)) {
 //						BuildPathsBlock.removeOldClassfiles(project);
 //					}
 //				}
@@ -900,7 +900,7 @@ public class BuildPathsBlock {
 			
 			monitor.worked(1);
 			
-			IWorkspaceRoot fWorkspaceRoot= JavaPlugin.getWorkspace().getRoot();
+			IWorkspaceRoot fWorkspaceRoot= JavaScriptPlugin.getWorkspace().getRoot();
 			
 			//create and set the output path first
 //			if (!fWorkspaceRoot.exists(outputLocation)) {
@@ -1056,7 +1056,7 @@ public class BuildPathsBlock {
 				final int[] res= new int[] { 1 };
 				Display.getDefault().syncExec(new Runnable() {
 					public void run() {
-						Shell sh= shell != null ? shell : JavaPlugin.getActiveWorkbenchShell();
+						Shell sh= shell != null ? shell : JavaScriptPlugin.getActiveWorkbenchShell();
 						String title= NewWizardMessages.BuildPathsBlock_RemoveBinariesDialog_title; 
 						String message;
 						if (removeFolder) {

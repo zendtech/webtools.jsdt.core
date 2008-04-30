@@ -57,7 +57,7 @@ import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.MethodOverrideTester;
 import org.eclipse.wst.jsdt.internal.corext.util.SuperTypeHierarchyCache;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIMessages;
 import org.eclipse.wst.jsdt.internal.ui.actions.CategoryFilterActionGroup;
@@ -66,10 +66,10 @@ import org.eclipse.wst.jsdt.internal.ui.util.StringMatcher;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.AppearanceAwareLabelProvider;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.ColoredViewersManager;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.MemberFilter;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 import org.eclipse.wst.jsdt.ui.OverrideIndicatorLabelDecorator;
 import org.eclipse.wst.jsdt.ui.ProblemsLabelDecorator;
-import org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider;
+import org.eclipse.wst.jsdt.ui.StandardJavaScriptElementContentProvider;
 
 /**
  * Show outline in light-weight control.
@@ -104,7 +104,7 @@ public class JavaOutlineInformationControl extends AbstractInformationControl {
 		private boolean fShowDefiningType;
 
 		private OutlineLabelProvider() {
-			super(AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS |  JavaElementLabels.F_APP_TYPE_SIGNATURE | JavaElementLabels.ALL_CATEGORY, AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS);
+			super(AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS |  JavaScriptElementLabels.F_APP_TYPE_SIGNATURE | JavaScriptElementLabels.ALL_CATEGORY, AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS);
 		}
 
 		/*
@@ -117,7 +117,7 @@ public class JavaOutlineInformationControl extends AbstractInformationControl {
 					IType type= getDefiningType(element);
 					if (type != null) {
 						StringBuffer buf= new StringBuffer(super.getText(type));
-						buf.append(JavaElementLabels.CONCAT_STRING);
+						buf.append(JavaScriptElementLabels.CONCAT_STRING);
 						buf.append(text);
 						return buf.toString();
 					}
@@ -137,7 +137,7 @@ public class JavaOutlineInformationControl extends AbstractInformationControl {
 					if (fInput.getElementType() == IJavaScriptElement.CLASS_FILE)
 						je= je.getAncestor(IJavaScriptElement.CLASS_FILE);
 					else
-						je= je.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+						je= je.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 					if (fInput.equals(je)) {
 						return null;
 					}
@@ -230,7 +230,7 @@ public class JavaOutlineInformationControl extends AbstractInformationControl {
 					IJavaScriptElement parent= type.getParent();
 					if (parent != null) {
 						int parentElementType= parent.getElementType();
-						return (parentElementType != IJavaScriptElement.COMPILATION_UNIT && parentElementType != IJavaScriptElement.CLASS_FILE);
+						return (parentElementType != IJavaScriptElement.JAVASCRIPT_UNIT && parentElementType != IJavaScriptElement.CLASS_FILE);
 					}
 				}
 			}
@@ -239,7 +239,7 @@ public class JavaOutlineInformationControl extends AbstractInformationControl {
 	}
 
 
-	private class OutlineContentProvider extends StandardJavaElementContentProvider {
+	private class OutlineContentProvider extends StandardJavaScriptElementContentProvider {
 
 		private boolean fShowInheritedMembers;
 
@@ -608,7 +608,7 @@ public class JavaOutlineInformationControl extends AbstractInformationControl {
 			return;
 		}
 		IJavaScriptElement je= (IJavaScriptElement)information;
-		IJavaScriptUnit cu= (IJavaScriptUnit)je.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+		IJavaScriptUnit cu= (IJavaScriptUnit)je.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 		if (cu != null)
 			fInput= cu;
 		else
@@ -650,7 +650,7 @@ public class JavaOutlineInformationControl extends AbstractInformationControl {
 
 	protected void toggleShowInheritedMembers() {
 		long flags= fInnerLabelProvider.getTextFlags();
-		flags ^= JavaElementLabels.ALL_POST_QUALIFIED;
+		flags ^= JavaScriptElementLabels.ALL_POST_QUALIFIED;
 		fInnerLabelProvider.setTextFlags(flags);
 		fOutlineContentProvider.toggleShowInheritedMembers();
 		updateStatusFieldText();
@@ -685,7 +685,7 @@ public class JavaOutlineInformationControl extends AbstractInformationControl {
 		}
 		
 		boolean ignoreCase= pattern.toLowerCase().equals(pattern);
-		String pattern2= "*" + JavaElementLabels.CONCAT_STRING + pattern; //$NON-NLS-1$
+		String pattern2= "*" + JavaScriptElementLabels.CONCAT_STRING + pattern; //$NON-NLS-1$
 		fStringMatcher= new OrStringMatcher(pattern, pattern2, ignoreCase, false);
 
 		if (update)
@@ -738,7 +738,7 @@ public class JavaOutlineInformationControl extends AbstractInformationControl {
 	}
 
 	private IProgressMonitor getProgressMonitor() {
-		IWorkbenchPage wbPage= JavaPlugin.getActivePage();
+		IWorkbenchPage wbPage= JavaScriptPlugin.getActivePage();
 		if (wbPage == null)
 			return null;
 

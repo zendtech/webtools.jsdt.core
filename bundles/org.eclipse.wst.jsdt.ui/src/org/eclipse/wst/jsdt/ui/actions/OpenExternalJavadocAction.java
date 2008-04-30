@@ -27,15 +27,15 @@ import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionMessages;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionUtil;
 import org.eclipse.wst.jsdt.internal.ui.actions.OpenBrowserUtil;
 import org.eclipse.wst.jsdt.internal.ui.actions.SelectionConverter;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 /**
  * This action opens the selected element's Javadoc in an external 
@@ -165,9 +165,9 @@ public class OpenExternalJavadocAction extends SelectionDispatchAction {
 			return;
 		Shell shell= getShell();
 		try {
-			String labelName= JavaElementLabels.getElementLabel(element, JavaElementLabels.ALL_DEFAULT);
+			String labelName= JavaScriptElementLabels.getElementLabel(element, JavaScriptElementLabels.ALL_DEFAULT);
 			
-			URL baseURL= JavaUI.getJavadocBaseLocation(element);
+			URL baseURL= JavaScriptUI.getJSdocBaseLocation(element);
 			if (baseURL == null) {
 				IPackageFragmentRoot root= JavaModelUtil.getPackageFragmentRoot(element);
 				if (root != null && root.getKind() == IPackageFragmentRoot.K_BINARY) {
@@ -180,12 +180,12 @@ public class OpenExternalJavadocAction extends SelectionDispatchAction {
 				}
 				return;
 			}		
-			URL url= JavaUI.getJavadocLocation(element, true);
+			URL url= JavaScriptUI.getJSdocLocation(element, true);
 			if (url != null) {
 				OpenBrowserUtil.open(url, shell.getDisplay(), getTitle());
 			} 		
 		} catch (CoreException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 			showMessage(shell, ActionMessages.OpenExternalJavadocAction_opening_failed, true); 
 		}
 	}

@@ -31,7 +31,7 @@ import org.eclipse.wst.jsdt.core.ITypeParameter;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.core.compiler.IProblem;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 /**
  * A completion requester to collect informations on local variables.
@@ -392,7 +392,7 @@ final class CompilationUnitCompletion extends CompletionRequestor {
 			IJavaScriptProject project= fUnit.getJavaScriptProject();
 			IType type= project.findType(superType);
 			if (type == null)
-				throw new JavaScriptModelException(new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.OK, "No such type", null))); //$NON-NLS-1$
+				throw new JavaScriptModelException(new CoreException(new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), IStatus.OK, "No such type", null))); //$NON-NLS-1$
 			return computeBinding(type, index);
 		}
 
@@ -560,7 +560,7 @@ final class CompilationUnitCompletion extends CompletionRequestor {
 				}
 			}
 			
-			throw new JavaScriptModelException(new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.OK, "Illegal hierarchy", null))); //$NON-NLS-1$
+			throw new JavaScriptModelException(new CoreException(new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), IStatus.OK, "Illegal hierarchy", null))); //$NON-NLS-1$
 		}
 		
 		/**

@@ -24,9 +24,9 @@ import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.wst.jsdt.internal.ui.wizards.TypedElementSelectionValidator;
 import org.eclipse.wst.jsdt.internal.ui.wizards.TypedViewerFilter;
-import org.eclipse.wst.jsdt.ui.JavaElementComparator;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
-import org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementComparator;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.StandardJavaScriptElementContentProvider;
 
 public class SourceContainerDialog extends ElementTreeSelectionDialog {
 
@@ -78,9 +78,9 @@ public class SourceContainerDialog extends ElementTreeSelectionDialog {
 	}
 
 	private SourceContainerDialog(Shell shell) {
-		super(shell,new JavaElementLabelProvider(JavaElementLabelProvider.SHOW_DEFAULT),new StandardJavaElementContentProvider());
+		super(shell,new JavaScriptElementLabelProvider(JavaScriptElementLabelProvider.SHOW_DEFAULT),new StandardJavaScriptElementContentProvider());
 		setValidator(new PackageAndProjectSelectionValidator());
-		setComparator(new JavaElementComparator());
+		setComparator(new JavaScriptElementComparator());
 		setTitle(NewWizardMessages.NewContainerWizardPage_ChooseSourceContainerDialog_title); 
 		setMessage(NewWizardMessages.NewContainerWizardPage_ChooseSourceContainerDialog_description); 
 		addFilter(new JavaTypedViewerFilter());

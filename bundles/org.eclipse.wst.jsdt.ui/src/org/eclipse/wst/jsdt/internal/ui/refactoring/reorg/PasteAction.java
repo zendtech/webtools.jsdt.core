@@ -103,7 +103,7 @@ import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.RefactoringExecutionHelper;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.RefactoringMessages;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.RefactoringSaveHelper;
@@ -112,7 +112,7 @@ import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.wst.jsdt.internal.ui.util.SelectionUtil;
 import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.BuildPathsBlock;
 import org.eclipse.wst.jsdt.internal.ui.workingsets.OthersWorkingSetUpdater;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 import org.eclipse.wst.jsdt.ui.actions.SelectionDispatchAction;
 
@@ -129,7 +129,7 @@ public class PasteAction extends SelectionDispatchAction{
 		setText(ReorgMessages.PasteAction_4); 
 		setDescription(ReorgMessages.PasteAction_5); 
 
-		ISharedImages workbenchImages= JavaPlugin.getDefault().getWorkbench().getSharedImages();
+		ISharedImages workbenchImages= JavaScriptPlugin.getDefault().getWorkbench().getSharedImages();
 		setDisabledImageDescriptor(workbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE_DISABLED));
 		setImageDescriptor(workbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
 		setHoverImageDescriptor(workbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
@@ -209,7 +209,7 @@ public class PasteAction extends SelectionDispatchAction{
 			String msg= resources.length + javaElements.length + workingSets.length == 0
 					? ReorgMessages.PasteAction_cannot_no_selection
 					: ReorgMessages.PasteAction_cannot_selection;
-			MessageDialog.openError(JavaPlugin.getActiveWorkbenchShell(), ReorgMessages.PasteAction_name, msg); 
+			MessageDialog.openError(JavaScriptPlugin.getActiveWorkbenchShell(), ReorgMessages.PasteAction_name, msg); 
 		} catch (JavaScriptModelException e) {
 			ExceptionHandler.handle(e, RefactoringMessages.OpenRefactoringWizardAction_refactoring, RefactoringMessages.OpenRefactoringWizardAction_exception); 
 		} catch (InvocationTargetException e) {
@@ -443,7 +443,7 @@ public class PasteAction extends SelectionDispatchAction{
 			IPackageFragmentRoot packageFragmentRoot;
 			IPackageFragment destinationPack;
 			switch (destination.getElementType()) {
-				case IJavaScriptElement.JAVA_PROJECT :
+				case IJavaScriptElement.JAVASCRIPT_PROJECT :
 					IPackageFragmentRoot[] packageFragmentRoots= ((IJavaScriptProject) destination).getPackageFragmentRoots();
 					for (int i= 0; i < packageFragmentRoots.length; i++) {
 						packageFragmentRoot= packageFragmentRoots[i];
@@ -474,7 +474,7 @@ public class PasteAction extends SelectionDispatchAction{
 					}
 					return false;
 					
-				case IJavaScriptElement.COMPILATION_UNIT :
+				case IJavaScriptElement.JAVASCRIPT_UNIT :
 					destinationPack= (IPackageFragment) destination.getParent();
 					packageFragmentRoot= (IPackageFragmentRoot) destinationPack.getParent();
 					if (isWritable(packageFragmentRoot)) {
@@ -600,7 +600,7 @@ public class PasteAction extends SelectionDispatchAction{
 					int i= 1;
 					do {
 						String name= Messages.format(ReorgMessages.PasteAction_projectName, i == 1 ? (Object) "" : new Integer(i)); //$NON-NLS-1$
-						project= JavaPlugin.getWorkspace().getRoot().getProject(name);
+						project= JavaScriptPlugin.getWorkspace().getRoot().getProject(name);
 						i++;
 					} while (project.exists());
 					
@@ -697,7 +697,7 @@ public class PasteAction extends SelectionDispatchAction{
 							ISourceRange sourceRange= packageDeclarations[0].getSourceRange();
 							buffer.getDocument().replace(sourceRange.getOffset(), sourceRange.getLength(), ""); //$NON-NLS-1$
 						} catch (BadLocationException e) {
-							JavaPlugin.log(e);
+							JavaScriptPlugin.log(e);
 						} finally {
 							if (buffer != null)
 								RefactoringFileBuffers.release(cu);
@@ -706,11 +706,11 @@ public class PasteAction extends SelectionDispatchAction{
 				}
 			};
 			
-			IRunnableContext context= JavaPlugin.getActiveWorkbenchWindow();
+			IRunnableContext context= JavaScriptPlugin.getActiveWorkbenchWindow();
 			if (context == null) {
 				context= new BusyIndicatorRunnableContext();
 			}
-			PlatformUI.getWorkbench().getProgressService().runInUI(context, op, JavaPlugin.getWorkspace().getRoot());
+			PlatformUI.getWorkbench().getProgressService().runInUI(context, op, JavaScriptPlugin.getWorkspace().getRoot());
 			
 			if (editorPart[0] != null)
 				editorPart[0].getEditorSite().getPage().activate(editorPart[0]); //activate editor again, since runInUI restores previous active part
@@ -718,12 +718,12 @@ public class PasteAction extends SelectionDispatchAction{
 
 		private IEditorPart openCu(IJavaScriptUnit cu) {
 			try {
-				return JavaUI.openInEditor(cu, true, true);
+				return JavaScriptUI.openInEditor(cu, true, true);
 			} catch (PartInitException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 				return null;
 			} catch (JavaScriptModelException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 				return null;
 			}
 		}
@@ -823,7 +823,7 @@ public class PasteAction extends SelectionDispatchAction{
 			IJavaScriptElement[] javaElements= getClipboardJavaElements(availableDataTypes);
 			return 	javaElements != null && 
 					javaElements.length != 0 && 
-					! ReorgUtils.hasElementsNotOfType(javaElements, IJavaScriptElement.JAVA_PROJECT);
+					! ReorgUtils.hasElementsNotOfType(javaElements, IJavaScriptElement.JAVASCRIPT_PROJECT);
 		}
 
 		private boolean canPasteSimpleProjects(TransferData[] availableDataTypes) {
@@ -1010,7 +1010,7 @@ public class PasteAction extends SelectionDispatchAction{
 		}
 		private static IJavaScriptElement getAsTypeOrCu(IJavaScriptElement element) {
 			//try to get type first
-			if (element.getElementType() == IJavaScriptElement.COMPILATION_UNIT || element.getElementType() == IJavaScriptElement.TYPE)
+			if (element.getElementType() == IJavaScriptElement.JAVASCRIPT_UNIT || element.getElementType() == IJavaScriptElement.TYPE)
 				return element;
 			IJavaScriptElement ancestorType= element.getAncestor(IJavaScriptElement.TYPE);
 			if (ancestorType != null)

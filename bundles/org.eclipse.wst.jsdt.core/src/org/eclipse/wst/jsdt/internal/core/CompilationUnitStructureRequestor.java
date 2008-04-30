@@ -114,7 +114,7 @@ protected CompilationUnitStructureRequestor(IJavaScriptElement unit, Compilation
  */
 public void acceptImport(int declarationStart, int declarationEnd, char[][] tokens, boolean onDemand, int modifiers) {
 	JavaElement parentHandle= (JavaElement) this.handleStack.peek();
-	if (!(parentHandle.getElementType() == IJavaScriptElement.COMPILATION_UNIT)) {
+	if (!(parentHandle.getElementType() == IJavaScriptElement.JAVASCRIPT_UNIT)) {
 		Assert.isTrue(false); // Should not happen
 	}
 
@@ -159,7 +159,7 @@ public void acceptPackage(int declarationStart, int declarationEnd, char[] name)
 		JavaElement parentHandle= (JavaElement) this.handleStack.peek();
 		PackageDeclaration handle = null;
 
-		if (parentHandle.getElementType() == IJavaScriptElement.COMPILATION_UNIT) {
+		if (parentHandle.getElementType() == IJavaScriptElement.JAVASCRIPT_UNIT) {
 			handle = new PackageDeclaration((CompilationUnit) parentHandle, new String(name));
 		}
 		else if (parentHandle.getElementType() == IJavaScriptElement.CLASS_FILE) {
@@ -231,7 +231,7 @@ public void enterField(FieldInfo fieldInfo) {
 	JavaElement parentHandle= (JavaElement) this.handleStack.peek();
 	SourceField handle = null;
 	if (parentHandle.getElementType() == IJavaScriptElement.TYPE
-			|| parentHandle.getElementType() == IJavaScriptElement.COMPILATION_UNIT
+			|| parentHandle.getElementType() == IJavaScriptElement.JAVASCRIPT_UNIT
 			|| parentHandle.getElementType() == IJavaScriptElement.CLASS_FILE
 			|| parentHandle.getElementType() == IJavaScriptElement.METHOD
 			) {
@@ -316,7 +316,7 @@ public void enterMethod(MethodInfo methodInfo) {
 
 	String[] parameterTypeSigs = convertTypeNamesToSigs(methodInfo.parameterTypes);
 	if (parentHandle.getElementType() == IJavaScriptElement.TYPE
-			|| parentHandle.getElementType() == IJavaScriptElement.COMPILATION_UNIT
+			|| parentHandle.getElementType() == IJavaScriptElement.JAVASCRIPT_UNIT
 			|| parentHandle.getElementType() == IJavaScriptElement.CLASS_FILE
 			|| parentHandle.getElementType() == IJavaScriptElement.METHOD
 			) {

@@ -89,7 +89,7 @@ import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.CompositeActionGroup;
 import org.eclipse.wst.jsdt.internal.ui.actions.NewWizardsActionGroup;
 import org.eclipse.wst.jsdt.internal.ui.dnd.DelegatingDropAdapter;
@@ -112,10 +112,10 @@ import org.eclipse.wst.jsdt.internal.ui.viewsupport.StatusBarUpdater;
 import org.eclipse.wst.jsdt.internal.ui.workingsets.WorkingSetFilterActionGroup;
 import org.eclipse.wst.jsdt.ui.IContextMenuConstants;
 import org.eclipse.wst.jsdt.ui.IWorkingCopyManager;
-import org.eclipse.wst.jsdt.ui.JavaElementComparator;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementComparator;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 import org.eclipse.wst.jsdt.ui.actions.BuildActionGroup;
 import org.eclipse.wst.jsdt.ui.actions.CCPActionGroup;
@@ -403,8 +403,8 @@ abstract class JavaBrowsingPart extends ViewPart implements IMenuListener, ISele
 		return new DecoratingJavaLabelProvider(provider);
 	}
 
-	protected JavaElementComparator createJavaElementComparator() {
-		return new JavaElementComparator();
+	protected JavaScriptElementComparator createJavaElementComparator() {
+		return new JavaScriptElementComparator();
 	}
 
 	protected StatusBarUpdater createStatusBarUpdater(IStatusLineManager slManager) {
@@ -516,7 +516,7 @@ abstract class JavaBrowsingPart extends ViewPart implements IMenuListener, ISele
 	 * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
 	 */
 	public void menuAboutToShow(IMenuManager menu) {
-		JavaPlugin.createStandardGroups(menu);
+		JavaScriptPlugin.createStandardGroups(menu);
 
 		IStructuredSelection selection= (IStructuredSelection) fViewer.getSelection();
 		int size= selection.size();
@@ -792,7 +792,7 @@ abstract class JavaBrowsingPart extends ViewPart implements IMenuListener, ISele
 	String getToolTipText(Object element) {
 		String result;
 		if (!(element instanceof IResource)) {
-			result= JavaElementLabels.getTextLabel(element, AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS);
+			result= JavaScriptElementLabels.getTextLabel(element, AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS);
 		} else {
 			IPath path= ((IResource) element).getFullPath();
 			if (path.isRoot()) {
@@ -837,7 +837,7 @@ abstract class JavaBrowsingPart extends ViewPart implements IMenuListener, ISele
 	}
 
 	protected ILabelProvider createTitleProvider() {
-		return new JavaElementLabelProvider(JavaElementLabelProvider.SHOW_BASICS | JavaElementLabelProvider.SHOW_SMALL_ICONS);
+		return new JavaScriptElementLabelProvider(JavaScriptElementLabelProvider.SHOW_BASICS | JavaScriptElementLabelProvider.SHOW_SMALL_ICONS);
 	}
 
 	protected final ILabelProvider getLabelProvider() {
@@ -859,8 +859,8 @@ abstract class JavaBrowsingPart extends ViewPart implements IMenuListener, ISele
 	}
 
 	protected int getLabelProviderFlags() {
-		return JavaElementLabelProvider.SHOW_BASICS | JavaElementLabelProvider.SHOW_OVERLAY_ICONS |
-				JavaElementLabelProvider.SHOW_SMALL_ICONS | JavaElementLabelProvider.SHOW_VARIABLE | JavaElementLabelProvider.SHOW_PARAMETERS;
+		return JavaScriptElementLabelProvider.SHOW_BASICS | JavaScriptElementLabelProvider.SHOW_OVERLAY_ICONS |
+				JavaScriptElementLabelProvider.SHOW_SMALL_ICONS | JavaScriptElementLabelProvider.SHOW_VARIABLE | JavaScriptElementLabelProvider.SHOW_PARAMETERS;
 	}
 
 	/**
@@ -960,7 +960,7 @@ abstract class JavaBrowsingPart extends ViewPart implements IMenuListener, ISele
 				if (page == null)
 					return;
 
-				if (page.equals(JavaPlugin.getActivePage()) && JavaBrowsingPart.this.equals(page.getActivePart())) {
+				if (page.equals(JavaScriptPlugin.getActivePage()) && JavaBrowsingPart.this.equals(page.getActivePart())) {
 					linkToEditor((IStructuredSelection)event.getSelection());
 				}
 			}
@@ -1184,7 +1184,7 @@ abstract class JavaBrowsingPart extends ViewPart implements IMenuListener, ISele
 		if (input instanceof IFileEditorInput)
 			return ((IFileEditorInput)input).getFile();
 		if (input != null)
-			return JavaUI.getEditorInputJavaElement(input);
+			return JavaScriptUI.getEditorInputJavaElement(input);
 		return null;
 	}
 
@@ -1210,7 +1210,7 @@ abstract class JavaBrowsingPart extends ViewPart implements IMenuListener, ISele
 			}
 		}
 
-		IWorkingCopyManager manager= JavaPlugin.getDefault().getWorkingCopyManager();
+		IWorkingCopyManager manager= JavaScriptPlugin.getDefault().getWorkingCopyManager();
 		IJavaScriptUnit unit= manager.getWorkingCopy(input);
 		if (unit != null)
 			try {

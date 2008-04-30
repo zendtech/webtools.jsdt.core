@@ -54,7 +54,7 @@ public class ResourceUtil {
 	}
 
 	private static IResource getResource(IJavaScriptElement element){
-		if (element.getElementType() == IJavaScriptElement.COMPILATION_UNIT)
+		if (element.getElementType() == IJavaScriptElement.JAVASCRIPT_UNIT)
 			return ((IJavaScriptUnit) element).getResource();
 		else if (element instanceof IOpenable) 
 			return element.getResource();

@@ -66,11 +66,11 @@ import org.eclipse.wst.jsdt.core.search.SearchRequestor;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.SearchUtils;
 import org.eclipse.wst.jsdt.internal.ui.IJavaStatusConstants;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.EditorUtility;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.wst.jsdt.internal.ui.util.PatternConstructor;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 import com.ibm.icu.text.Collator;
 
@@ -148,9 +148,9 @@ public class PropertyKeyHyperlink implements IHyperlink {
 					manager.disconnect(storage.getFullPath(), LocationKind.NORMALIZE, null);
 				}
 			} catch (CoreException e) {
-				JavaPlugin.log(e.getStatus());
+				JavaScriptPlugin.log(e.getStatus());
 			} catch (BadLocationException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 
 			return storage.getFullPath().toString();
@@ -335,7 +335,7 @@ public class PropertyKeyHyperlink implements IHyperlink {
 			IEditorPart part= EditorUtility.openInEditor(keyReference.storage, true);
 			EditorUtility.revealInEditor(part, keyReference.offset, keyReference.length);
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(new Status(IStatus.ERROR, JavaPlugin.getPluginId(),
+			JavaScriptPlugin.log(new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(),
 				IJavaStatusConstants.INTERNAL_ERROR, PropertiesFileEditorMessages.OpenAction_error_message, e));
 
 			ErrorDialog.openError(fShell,
@@ -469,7 +469,7 @@ public class PropertyKeyHyperlink implements IHyperlink {
 			);
 		} catch (InvocationTargetException ex) {
 			String message= PropertiesFileEditorMessages.OpenAction_error_messageErrorSearchingKey;
-			showError(new CoreException(new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IStatus.OK, message, ex.getTargetException())));
+			showError(new CoreException(new Status(IStatus.ERROR, JavaScriptUI.ID_PLUGIN, IStatus.OK, message, ex.getTargetException())));
 		} catch (InterruptedException ex) {
 			return null; // canceled
 		}

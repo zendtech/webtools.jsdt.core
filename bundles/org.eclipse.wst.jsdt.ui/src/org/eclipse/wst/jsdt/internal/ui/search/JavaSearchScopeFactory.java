@@ -44,9 +44,9 @@ import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.core.search.SearchEngine;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.browsing.LogicalPackage;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 public class JavaSearchScopeFactory {
 	
@@ -73,7 +73,7 @@ public class JavaSearchScopeFactory {
 	}
 
 	public IWorkingSet[] queryWorkingSets() throws JavaScriptModelException, InterruptedException {
-		Shell shell= JavaPlugin.getActiveWorkbenchShell();
+		Shell shell= JavaScriptPlugin.getActiveWorkbenchShell();
 		if (shell == null)
 			return null;
 		IWorkingSetSelectionDialog dialog= PlatformUI.getWorkbench().getWorkingSetManager().createWorkingSetSelectionDialog(shell, true);
@@ -168,7 +168,7 @@ public class JavaSearchScopeFactory {
 	}
 	
 	public IJavaScriptSearchScope createJavaProjectSearchScope(IEditorInput editorInput, int includeMask) {
-		IJavaScriptElement elem= JavaUI.getEditorInputJavaElement(editorInput);
+		IJavaScriptElement elem= JavaScriptUI.getEditorInputJavaElement(editorInput);
 		if (elem != null) {
 			IJavaScriptProject project= elem.getJavaScriptProject();
 			if (project != null) {
@@ -214,7 +214,7 @@ public class JavaSearchScopeFactory {
 	}
 	
 	public String getProjectScopeDescription(IEditorInput editorInput, boolean includeJRE) {
-		IJavaScriptElement elem= JavaUI.getEditorInputJavaElement(editorInput);
+		IJavaScriptElement elem= JavaScriptUI.getEditorInputJavaElement(editorInput);
 		if (elem != null) {
 			IJavaScriptProject project= elem.getJavaScriptProject();
 			if (project != null) {
@@ -374,7 +374,7 @@ public class JavaSearchScopeFactory {
 				IJavaScriptProject[] projects= JavaScriptCore.create(ResourcesPlugin.getWorkspace().getRoot()).getJavaScriptProjects();
 				javaElements.addAll(Arrays.asList(projects));
 			} catch (JavaScriptModelException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 			return;
 		}
@@ -428,7 +428,7 @@ public class JavaSearchScopeFactory {
 				}
 				return false;
 			} catch (JavaScriptModelException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		}
 		return true; // include JRE in doubt

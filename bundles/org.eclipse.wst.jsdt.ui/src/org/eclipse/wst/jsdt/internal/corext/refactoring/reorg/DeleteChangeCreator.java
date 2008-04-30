@@ -163,7 +163,7 @@ class DeleteChangeCreator {
 			case IJavaScriptElement.PACKAGE_FRAGMENT:
 				return createSourceManipulationDeleteChange((IPackageFragment)javaElement);
 
-			case IJavaScriptElement.COMPILATION_UNIT:
+			case IJavaScriptElement.JAVASCRIPT_UNIT:
 				return createSourceManipulationDeleteChange((IJavaScriptUnit)javaElement);
 
 			case IJavaScriptElement.CLASS_FILE:
@@ -171,11 +171,11 @@ class DeleteChangeCreator {
 				Assert.isTrue(((IClassFile)javaElement).getResource() instanceof IFile);
 				return createDeleteChange(((IClassFile)javaElement).getResource());
 
-			case IJavaScriptElement.JAVA_MODEL: //cannot be done
+			case IJavaScriptElement.JAVASCRIPT_MODEL: //cannot be done
 				Assert.isTrue(false);
 				return null;
 
-			case IJavaScriptElement.JAVA_PROJECT: //handled differently
+			case IJavaScriptElement.JAVASCRIPT_PROJECT: //handled differently
 				Assert.isTrue(false);
 				return null;
 

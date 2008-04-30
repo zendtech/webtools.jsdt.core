@@ -41,7 +41,7 @@ import org.eclipse.wst.jsdt.core.formatter.CodeFormatter;
 import org.eclipse.wst.jsdt.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.IndentUtil;
 import org.eclipse.wst.jsdt.internal.ui.text.FastJavaPartitionScanner;
-import org.eclipse.wst.jsdt.ui.text.IJavaPartitions;
+import org.eclipse.wst.jsdt.ui.text.IJavaScriptPartitions;
 
 /**
  * A template editor using the Java formatter to format a template buffer.
@@ -94,16 +94,16 @@ public class JavaFormatter {
 		 */
 		private static void installJavaStuff(Document document) {
 			String[] types= new String[] {
-										  IJavaPartitions.JAVA_DOC,
-										  IJavaPartitions.JAVA_MULTI_LINE_COMMENT,
-										  IJavaPartitions.JAVA_SINGLE_LINE_COMMENT,
-										  IJavaPartitions.JAVA_STRING,
-										  IJavaPartitions.JAVA_CHARACTER,
+										  IJavaScriptPartitions.JAVA_DOC,
+										  IJavaScriptPartitions.JAVA_MULTI_LINE_COMMENT,
+										  IJavaScriptPartitions.JAVA_SINGLE_LINE_COMMENT,
+										  IJavaScriptPartitions.JAVA_STRING,
+										  IJavaScriptPartitions.JAVA_CHARACTER,
 										  IDocument.DEFAULT_CONTENT_TYPE
 			};
 			FastPartitioner partitioner= new FastPartitioner(new FastJavaPartitionScanner(), types);
 			partitioner.connect(document);
-			document.setDocumentPartitioner(IJavaPartitions.JAVA_PARTITIONING, partitioner);
+			document.setDocumentPartitioner(IJavaScriptPartitions.JAVA_PARTITIONING, partitioner);
 		}
 		
 		/**

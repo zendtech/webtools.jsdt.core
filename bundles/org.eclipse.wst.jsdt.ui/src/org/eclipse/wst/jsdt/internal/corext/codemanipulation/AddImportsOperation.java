@@ -59,7 +59,7 @@ import org.eclipse.wst.jsdt.internal.corext.dom.NodeFinder;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.TypeNameMatchCollector;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIStatus;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.ASTProvider;
 import org.eclipse.wst.jsdt.internal.ui.text.correction.ASTResolving;
@@ -135,7 +135,7 @@ public class AddImportsOperation implements IWorkspaceRunnable {
 		try {
 			monitor.beginTask(CodeGenerationMessages.AddImportsOperation_description, 4); 
 			
-			JavaScriptUnit astRoot= JavaPlugin.getDefault().getASTProvider().getAST(fCompilationUnit, ASTProvider.WAIT_YES, new SubProgressMonitor(monitor, 1));
+			JavaScriptUnit astRoot= JavaScriptPlugin.getDefault().getASTProvider().getAST(fCompilationUnit, ASTProvider.WAIT_YES, new SubProgressMonitor(monitor, 1));
 
 			ImportRewrite importRewrite= StubUtility.createImportRewrite(astRoot, true);
 			

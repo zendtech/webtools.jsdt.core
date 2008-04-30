@@ -236,20 +236,20 @@ public abstract class MultiOperation extends JavaModelOperation {
 		switch (element.getElementType()) {
 			case IJavaScriptElement.PACKAGE_DECLARATION :
 			case IJavaScriptElement.IMPORT_DECLARATION :
-				if (destType != IJavaScriptElement.COMPILATION_UNIT)
+				if (destType != IJavaScriptElement.JAVASCRIPT_UNIT)
 					error(IJavaScriptModelStatusConstants.INVALID_DESTINATION, element);
 				break;
 			case IJavaScriptElement.TYPE :
-				if (destType != IJavaScriptElement.COMPILATION_UNIT && destType != IJavaScriptElement.TYPE)
+				if (destType != IJavaScriptElement.JAVASCRIPT_UNIT && destType != IJavaScriptElement.TYPE)
 					error(IJavaScriptModelStatusConstants.INVALID_DESTINATION, element);
 				break;
 			case IJavaScriptElement.METHOD :
 			case IJavaScriptElement.FIELD :
 			case IJavaScriptElement.INITIALIZER :
-				if (!(destType == IJavaScriptElement.TYPE ||destType == IJavaScriptElement.COMPILATION_UNIT) || destination instanceof BinaryType)
+				if (!(destType == IJavaScriptElement.TYPE ||destType == IJavaScriptElement.JAVASCRIPT_UNIT) || destination instanceof BinaryType)
 					error(IJavaScriptModelStatusConstants.INVALID_DESTINATION, element);
 				break;
-			case IJavaScriptElement.COMPILATION_UNIT :
+			case IJavaScriptElement.JAVASCRIPT_UNIT :
 				if (destType != IJavaScriptElement.PACKAGE_FRAGMENT)
 					error(IJavaScriptModelStatusConstants.INVALID_DESTINATION, element);
 				else {
@@ -288,7 +288,7 @@ public abstract class MultiOperation extends JavaModelOperation {
 				}
 				isValid = JavaScriptConventions.validatePackageName(newName, sourceLevel, complianceLevel).getSeverity() != IStatus.ERROR;
 				break;
-			case IJavaScriptElement.COMPILATION_UNIT :
+			case IJavaScriptElement.JAVASCRIPT_UNIT :
 				isValid = JavaScriptConventions.validateCompilationUnitName(newName,sourceLevel, complianceLevel).getSeverity() != IStatus.ERROR;
 				break;
 			case IJavaScriptElement.INITIALIZER :

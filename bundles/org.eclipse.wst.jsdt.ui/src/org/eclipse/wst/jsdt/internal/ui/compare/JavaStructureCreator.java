@@ -50,8 +50,8 @@ import org.eclipse.wst.jsdt.core.compiler.InvalidInputException;
 import org.eclipse.wst.jsdt.core.dom.AST;
 import org.eclipse.wst.jsdt.core.dom.ASTParser;
 import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
-import org.eclipse.wst.jsdt.ui.text.IJavaPartitions;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
+import org.eclipse.wst.jsdt.ui.text.IJavaScriptPartitions;
 
 
 public class JavaStructureCreator extends StructureCreator {
@@ -308,7 +308,7 @@ public class JavaStructureCreator extends StructureCreator {
 		try {
 			content= JavaCompareUtilities.readString(sca);
 		} catch (CoreException ex) {
-			JavaPlugin.log(ex);
+			JavaScriptPlugin.log(ex);
 			return null;
 		}
 				
@@ -464,7 +464,7 @@ public class JavaStructureCreator extends StructureCreator {
 	 * @see org.eclipse.compare.structuremergeviewer.StructureCreator#getDocumentPartitioning()
 	 */
 	protected String getDocumentPartitioning() {
-		return IJavaPartitions.JAVA_PARTITIONING;
+		return IJavaScriptPartitions.JAVA_PARTITIONING;
 	}
 	
 	/* (non-Javadoc)

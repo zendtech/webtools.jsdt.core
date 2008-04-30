@@ -17,7 +17,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.IProblemChangedListener;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.JavaElementImageProvider;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.JavaUILabelProvider;
@@ -38,7 +38,7 @@ public class JavaEditorErrorTickUpdater implements IProblemChangedListener {
 		fJavaEditor= editor;
 		fLabelProvider=  new JavaUILabelProvider(0, JavaElementImageProvider.SMALL_ICONS);
 		fLabelProvider.addLabelDecorator(new ProblemsLabelDecorator(null));
-		JavaPlugin.getDefault().getProblemMarkerManager().addListener(this);
+		JavaScriptPlugin.getDefault().getProblemMarkerManager().addListener(this);
 	}
 
 	/* (non-Javadoc)
@@ -90,7 +90,7 @@ public class JavaEditorErrorTickUpdater implements IProblemChangedListener {
 
 	public void dispose() {
 		fLabelProvider.dispose();
-		JavaPlugin.getDefault().getProblemMarkerManager().removeListener(this);
+		JavaScriptPlugin.getDefault().getProblemMarkerManager().removeListener(this);
 	}
 
 

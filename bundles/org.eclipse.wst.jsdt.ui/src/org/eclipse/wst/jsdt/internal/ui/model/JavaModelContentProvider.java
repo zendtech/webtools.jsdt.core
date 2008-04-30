@@ -19,14 +19,14 @@ import org.eclipse.ltk.core.refactoring.RefactoringDescriptorProxy;
 import org.eclipse.ltk.core.refactoring.history.RefactoringHistory;
 import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
-import org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider;
+import org.eclipse.wst.jsdt.ui.StandardJavaScriptElementContentProvider;
 
 /**
  * Content provider for Java models.
  * 
  * @since 3.2
  */
-public final class JavaModelContentProvider extends StandardJavaElementContentProvider {
+public final class JavaModelContentProvider extends StandardJavaScriptElementContentProvider {
 
 	/** The name of the settings folder */
 	private static final String NAME_SETTINGS_FOLDER= ".settings"; //$NON-NLS-1$

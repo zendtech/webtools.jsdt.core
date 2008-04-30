@@ -329,7 +329,7 @@ protected void compute() throws JavaScriptModelException, CoreException {
 //private String typehash(IJavaScriptElement type)
 //{
 //	StringBuffer sb=new StringBuffer();
-//	while (type !=null && type.getElementType()!=IJavaScriptElement.JAVA_MODEL)
+//	while (type !=null && type.getElementType()!=IJavaScriptElement.JAVASCRIPT_MODEL)
 //	{
 //		sb.append(type.getElementName());
 //		sb.append(" - ");
@@ -835,16 +835,16 @@ protected void initialize(int size) {
 public synchronized boolean isAffected(IJavaScriptElementDelta delta) {
 	IJavaScriptElement element= delta.getElement();
 	switch (element.getElementType()) {
-		case IJavaScriptElement.JAVA_MODEL:
+		case IJavaScriptElement.JAVASCRIPT_MODEL:
 			return isAffectedByJavaModel(delta, element);
-		case IJavaScriptElement.JAVA_PROJECT:
+		case IJavaScriptElement.JAVASCRIPT_PROJECT:
 			return isAffectedByJavaProject(delta, element);
 		case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
 			return isAffectedByPackageFragmentRoot(delta, element);
 		case IJavaScriptElement.PACKAGE_FRAGMENT:
 			return isAffectedByPackageFragment(delta, (PackageFragment) element);
 		case IJavaScriptElement.CLASS_FILE:
-		case IJavaScriptElement.COMPILATION_UNIT:
+		case IJavaScriptElement.JAVASCRIPT_UNIT:
 			return isAffectedByOpenable(delta, element);
 	}
 	return false;

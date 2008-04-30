@@ -65,7 +65,7 @@ import org.eclipse.wst.jsdt.internal.ui.actions.ActionUtil;
 import org.eclipse.wst.jsdt.internal.ui.fix.ICleanUp;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.ASTProvider;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.saveparticipant.IPostSaveListener;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 public class CleanUpPostSaveListener implements IPostSaveListener {
 	
@@ -134,7 +134,7 @@ public class CleanUpPostSaveListener implements IPostSaveListener {
 						String message= e.getMessage();
                         if (message == null)
                         	message= "BadLocationException"; //$NON-NLS-1$
-						throw new CoreException(new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IRefactoringCoreStatusCodes.BAD_LOCATION, message, e));
+						throw new CoreException(new Status(IStatus.ERROR, JavaScriptUI.ID_PLUGIN, IRefactoringCoreStatusCodes.BAD_LOCATION, message, e));
 					}
 				}
 				
@@ -148,7 +148,7 @@ public class CleanUpPostSaveListener implements IPostSaveListener {
 				String message= e.getMessage();
                 if (message == null)
                 	message= "BadLocationException"; //$NON-NLS-1$
-				throw new CoreException(new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IRefactoringCoreStatusCodes.BAD_LOCATION, message, e));
+				throw new CoreException(new Status(IStatus.ERROR, JavaScriptUI.ID_PLUGIN, IRefactoringCoreStatusCodes.BAD_LOCATION, message, e));
 			} finally {
 				if (buffer != null)
 					manager.disconnect(fFile.getFullPath(), LocationKind.IFILE, new SubProgressMonitor(pm, 1));
@@ -176,12 +176,12 @@ public class CleanUpPostSaveListener implements IPostSaveListener {
 			IProject project= unit.getJavaScriptProject().getProject();
 			Map settings= CleanUpPreferenceUtil.loadSaveParticipantOptions(new ProjectScope(project));
 			if (settings == null) {
-				IEclipsePreferences contextNode= new InstanceScope().getNode(JavaUI.ID_PLUGIN);
+				IEclipsePreferences contextNode= new InstanceScope().getNode(JavaScriptUI.ID_PLUGIN);
 				String id= contextNode.get(CleanUpConstants.CLEANUP_ON_SAVE_PROFILE, null);
 				if (id == null) {
-					id= new DefaultScope().getNode(JavaUI.ID_PLUGIN).get(CleanUpConstants.CLEANUP_ON_SAVE_PROFILE, CleanUpConstants.DEFAULT_SAVE_PARTICIPANT_PROFILE);
+					id= new DefaultScope().getNode(JavaScriptUI.ID_PLUGIN).get(CleanUpConstants.CLEANUP_ON_SAVE_PROFILE, CleanUpConstants.DEFAULT_SAVE_PARTICIPANT_PROFILE);
 				}
-				throw new CoreException(new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, Messages.format(FixMessages.CleanUpPostSaveListener_unknown_profile_error_message, id)));
+				throw new CoreException(new Status(IStatus.ERROR, JavaScriptUI.ID_PLUGIN, Messages.format(FixMessages.CleanUpPostSaveListener_unknown_profile_error_message, id)));
 			}
 			
 			ICleanUp[] cleanUps;

@@ -27,7 +27,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusInfo;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusUtil;
 import org.eclipse.wst.jsdt.internal.ui.util.PixelConverter;
@@ -210,7 +210,7 @@ public class JavaBuildConfigurationBlock extends OptionsConfigurationBlock {
 		gd.widthHint= fPixelConverter.convertWidthInCharsToPixels(60);
 		description.setLayoutData(gd);
 
-		IDialogSettings section= JavaPlugin.getDefault().getDialogSettings().getSection(SETTINGS_SECTION_NAME);
+		IDialogSettings section= JavaScriptPlugin.getDefault().getDialogSettings().getSection(SETTINGS_SECTION_NAME);
 		restoreSectionExpansionStates(section);
 		
 		return pageContent;
@@ -301,7 +301,7 @@ public class JavaBuildConfigurationBlock extends OptionsConfigurationBlock {
 	 * @see org.eclipse.wst.jsdt.internal.ui.preferences.OptionsConfigurationBlock#dispose()
 	 */
 	public void dispose() {
-		IDialogSettings settings= JavaPlugin.getDefault().getDialogSettings().addNewSection(SETTINGS_SECTION_NAME);
+		IDialogSettings settings= JavaScriptPlugin.getDefault().getDialogSettings().addNewSection(SETTINGS_SECTION_NAME);
 		storeSectionExpansionStates(settings);
 		super.dispose();
 	}

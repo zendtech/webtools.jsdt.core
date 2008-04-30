@@ -59,7 +59,7 @@ import org.eclipse.wst.jsdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.wst.jsdt.internal.corext.dom.Bindings;
 import org.eclipse.wst.jsdt.internal.corext.dom.NodeFinder;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.ASTProvider;
 
 public class NLSHintHelper {
@@ -178,17 +178,17 @@ public class NLSHintHelper {
 			container= (IClassFile)openable;
 		else
 			Assert.isLegal(false);
-		JavaScriptUnit astRoot= JavaPlugin.getDefault().getASTProvider().getAST(container, ASTProvider.WAIT_YES, null);
+		JavaScriptUnit astRoot= JavaScriptPlugin.getDefault().getASTProvider().getAST(container, ASTProvider.WAIT_YES, null);
 	
 		return getResourceBundleName(astRoot);
 	}
 	
 	public static String getResourceBundleName(IJavaScriptUnit unit) throws JavaScriptModelException {
-		return getResourceBundleName(JavaPlugin.getDefault().getASTProvider().getAST(unit, ASTProvider.WAIT_YES, null));
+		return getResourceBundleName(JavaScriptPlugin.getDefault().getASTProvider().getAST(unit, ASTProvider.WAIT_YES, null));
 	}
 	
 	public static String getResourceBundleName(IClassFile classFile) throws JavaScriptModelException {
-		return getResourceBundleName(JavaPlugin.getDefault().getASTProvider().getAST(classFile, ASTProvider.WAIT_YES, null));
+		return getResourceBundleName(JavaScriptPlugin.getDefault().getASTProvider().getAST(classFile, ASTProvider.WAIT_YES, null));
 	}
 	
 	public static String getResourceBundleName(JavaScriptUnit astRoot) throws JavaScriptModelException {
@@ -445,7 +445,7 @@ public class NLSHintHelper {
 				is.close();
 			} catch (IOException e) {
 				// return properties anyway but log
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		}
 		return props;

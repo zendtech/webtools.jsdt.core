@@ -54,7 +54,7 @@ import org.eclipse.wst.jsdt.core.dom.rewrite.ListRewrite;
 import org.eclipse.wst.jsdt.internal.corext.dom.ASTNodes;
 import org.eclipse.wst.jsdt.internal.corext.util.Resources;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.wst.jsdt.ui.IWorkingCopyManager;
@@ -84,7 +84,7 @@ class JavaAddElementFromHistoryImpl extends JavaHistoryActionImpl {
 			JavaEditor editor= getEditor();
 			if (editor != null) {
 				IEditorInput editorInput= editor.getEditorInput();
-				IWorkingCopyManager manager= JavaPlugin.getDefault().getWorkingCopyManager();
+				IWorkingCopyManager manager= JavaScriptPlugin.getDefault().getWorkingCopyManager();
 				if (manager != null) {
 					cu= manager.getWorkingCopy(editorInput);
 					parent= cu;
@@ -194,7 +194,7 @@ class JavaAddElementFromHistoryImpl extends JavaHistoryActionImpl {
 							lw.insertAt(newNode, index, null);
 						}
 					} else {
-						JavaPlugin.logErrorMessage("JavaAddElementFromHistoryImpl: unknown container " + parent); //$NON-NLS-1$
+						JavaScriptPlugin.logErrorMessage("JavaAddElementFromHistoryImpl: unknown container " + parent); //$NON-NLS-1$
 					}
 					
 				}
@@ -221,7 +221,7 @@ class JavaAddElementFromHistoryImpl extends JavaHistoryActionImpl {
 				if (textFileBuffer != null)
 					bufferManager.disconnect(path, LocationKind.IFILE, null);
 			} catch (CoreException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		}
 	}
@@ -301,7 +301,7 @@ class JavaAddElementFromHistoryImpl extends JavaHistoryActionImpl {
 			if (editor != null) {
 				// we check whether editor shows JavaScriptUnit
 				IEditorInput editorInput= editor.getEditorInput();
-				IWorkingCopyManager manager= JavaPlugin.getDefault().getWorkingCopyManager();
+				IWorkingCopyManager manager= JavaScriptPlugin.getDefault().getWorkingCopyManager();
 				return manager.getWorkingCopy(editorInput) != null;
 			}
 			return false;

@@ -23,7 +23,7 @@ import org.eclipse.text.edits.UndoEdit;
 import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 /* package */ class UndoCompilationUnitChange extends UndoTextFileChange {
 	
@@ -39,7 +39,7 @@ import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
 		if (file == null)
 			throw new CoreException(new Status(
 				IStatus.ERROR, 
-				JavaPlugin.getPluginId(), 
+				JavaScriptPlugin.getPluginId(), 
 				IStatus.ERROR, 
 				Messages.format(
 					RefactoringCoreMessages.UndoCompilationUnitChange_no_resource, 

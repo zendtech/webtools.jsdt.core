@@ -34,7 +34,7 @@ import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
 import org.eclipse.wst.jsdt.internal.ui.IJavaStatusConstants;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionMessages;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionUtil;
 import org.eclipse.wst.jsdt.internal.ui.actions.SelectionConverter;
@@ -135,12 +135,12 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction {
 			case IJavaScriptElement.TYPE:
 				return true;
 			case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
-			case IJavaScriptElement.JAVA_PROJECT:
+			case IJavaScriptElement.JAVASCRIPT_PROJECT:
 			case IJavaScriptElement.PACKAGE_FRAGMENT:
 			case IJavaScriptElement.PACKAGE_DECLARATION:
 			case IJavaScriptElement.IMPORT_DECLARATION:	
 			case IJavaScriptElement.CLASS_FILE:
-			case IJavaScriptElement.COMPILATION_UNIT:
+			case IJavaScriptElement.JAVASCRIPT_UNIT:
 				return true;
 			case IJavaScriptElement.LOCAL_VARIABLE:
 			default:
@@ -224,7 +224,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction {
 	}
 	
 	private static IStatus compileCandidates(List result, IJavaScriptElement elem) {
-		IStatus ok= new Status(IStatus.OK, JavaPlugin.getPluginId(), 0, "", null); //$NON-NLS-1$		
+		IStatus ok= new Status(IStatus.OK, JavaScriptPlugin.getPluginId(), 0, "", null); //$NON-NLS-1$		
 		try {
 			switch (elem.getElementType()) {
 				case IJavaScriptElement.INITIALIZER:
@@ -232,7 +232,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction {
 				case IJavaScriptElement.FIELD:
 				case IJavaScriptElement.TYPE:
 				case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
-				case IJavaScriptElement.JAVA_PROJECT:
+				case IJavaScriptElement.JAVASCRIPT_PROJECT:
 					result.add(elem);
 					return ok;
 				case IJavaScriptElement.PACKAGE_FRAGMENT:
@@ -259,7 +259,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction {
 				case IJavaScriptElement.CLASS_FILE:
 					result.add(((IClassFile)elem).getType());
 					return ok;				
-				case IJavaScriptElement.COMPILATION_UNIT:
+				case IJavaScriptElement.JAVASCRIPT_UNIT:
 					IJavaScriptUnit cu= (IJavaScriptUnit)elem;
 					IType[] types= cu.getTypes();
 					if (types.length > 0) {
@@ -275,6 +275,6 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction {
 	}
 	
 	private static IStatus createStatus(String message) {
-		return new Status(IStatus.INFO, JavaPlugin.getPluginId(), IJavaStatusConstants.INTERNAL_ERROR, message, null);
+		return new Status(IStatus.INFO, JavaScriptPlugin.getPluginId(), IJavaStatusConstants.INTERNAL_ERROR, message, null);
 	}			
 }

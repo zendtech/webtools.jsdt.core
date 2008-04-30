@@ -46,7 +46,7 @@ import org.eclipse.wst.jsdt.internal.corext.dom.TokenScanner;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionMessages;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionUtil;
 import org.eclipse.wst.jsdt.internal.ui.actions.GenerateConstructorUsingFieldsContentProvider;
@@ -60,7 +60,7 @@ import org.eclipse.wst.jsdt.internal.ui.util.BusyIndicatorRunnableContext;
 import org.eclipse.wst.jsdt.internal.ui.util.ElementValidator;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.BindingLabelProvider;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 /**
  * Creates constructors for a type based on existing fields.
@@ -170,7 +170,7 @@ public class GenerateNewConstructorUsingFieldsAction extends SelectionDispatchAc
 						if (declaringType==null || declaringType.isInterface() || declaringType.isAnnotation())
 							return null;
 					} catch (JavaScriptModelException exception) {
-						JavaPlugin.log(exception);
+						JavaScriptPlugin.log(exception);
 						return null;
 					}
 					fields[index]= field;
@@ -365,7 +365,7 @@ public class GenerateNewConstructorUsingFieldsAction extends SelectionDispatchAc
 			}
 			IVariableBinding[] variables= new IVariableBinding[result.size()];
 			result.toArray(variables);
-			IEditorPart editor= JavaUI.openInEditor(type.getJavaScriptUnit());
+			IEditorPart editor= JavaScriptUI.openInEditor(type.getJavaScriptUnit());
 			CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(type.getJavaScriptProject());
 			settings.createComments= dialog.getGenerateComment();
 			IFunctionBinding constructor= dialog.getSuperConstructorChoice();
@@ -377,7 +377,7 @@ public class GenerateNewConstructorUsingFieldsAction extends SelectionDispatchAc
 				operation.setVisibility(dialog.getVisibilityModifier());
 				if (constructor.getParameterTypes().length == 0)
 					operation.setOmitSuper(dialog.isOmitSuper());
-				IRunnableContext context= JavaPlugin.getActiveWorkbenchWindow();
+				IRunnableContext context= JavaScriptPlugin.getActiveWorkbenchWindow();
 				if (context == null)
 					context= new BusyIndicatorRunnableContext();
 				PlatformUI.getWorkbench().getProgressService().runInUI(context, new WorkbenchRunnableAdapter(operation, operation.getSchedulingRule()), operation.getSchedulingRule());
@@ -408,7 +408,7 @@ public class GenerateNewConstructorUsingFieldsAction extends SelectionDispatchAc
 		} catch (JavaScriptModelException e) {
 			// http://bugs.eclipse.org/bugs/show_bug.cgi?id=19253
 			if (JavaModelUtil.isExceptionToBeLogged(e))
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			setEnabled(false);
 		}
 	}

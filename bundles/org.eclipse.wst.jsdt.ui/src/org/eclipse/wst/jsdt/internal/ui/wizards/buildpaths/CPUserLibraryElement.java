@@ -92,7 +92,7 @@ public class CPUserLibraryElement {
 				IIncludePathEntry curr= entries[i];
 				CPListElement elem= CPListElement.createFromExisting(this, curr, project);
 				//elem.setAttribute(CPListElement.SOURCEATTACHMENT, curr.getSourceAttachmentPath());
-				//elem.setAttribute(CPListElement.JAVADOC, JavaUI.getLibraryJavadocLocation(curr.getPath()));
+				//elem.setAttribute(CPListElement.JAVADOC, JavaScriptUI.getLibraryJavadocLocation(curr.getPath()));
 				fChildren.add(elem);
 			}
 			fIsSystemLibrary= container.getKind() == IJsGlobalScopeContainer.K_SYSTEM;

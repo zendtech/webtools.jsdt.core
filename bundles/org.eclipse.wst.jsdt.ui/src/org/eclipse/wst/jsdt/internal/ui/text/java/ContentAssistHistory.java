@@ -45,7 +45,7 @@ import org.eclipse.wst.jsdt.core.Flags;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.ITypeHierarchy;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIException;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIStatus;
 import org.w3c.dom.Document;
@@ -375,7 +375,7 @@ public final class ContentAssistHistory {
 				rememberInternal(lhs, rhs);
 			}
 		} catch (JavaScriptModelException x) {
-			JavaPlugin.log(x);
+			JavaScriptPlugin.log(x);
 		}
 	}
 	

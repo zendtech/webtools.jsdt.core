@@ -33,7 +33,7 @@ import org.eclipse.wst.jsdt.internal.ui.fix.CleanUpSaveParticipantPreferenceConf
  * whenever the {@link org.eclipse.wst.jsdt.internal.ui.javaeditor.CompilationUnitDocumentProvider} saves a compilation unit
  * that is in the workspace.</p>
  * <p>
- * An instance of this registry can be received through a call to {@link org.eclipse.wst.jsdt.internal.ui.JavaPlugin#getSaveParticipantRegistry()}.</p>
+ * An instance of this registry can be received through a call to {@link org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin#getSaveParticipantRegistry()}.</p>
  * 
  * @since 3.3
  */

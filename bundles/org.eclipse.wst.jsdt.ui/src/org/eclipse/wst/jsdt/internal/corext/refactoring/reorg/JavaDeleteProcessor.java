@@ -73,7 +73,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.util.ResourceUtil;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.util.TextChangeManager;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.Resources;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 public final class JavaDeleteProcessor extends DeleteProcessor implements IScriptableRefactoring, ICommentProvider {
 
@@ -191,7 +191,7 @@ public final class JavaDeleteProcessor extends DeleteProcessor implements IScrip
 				}
 			}
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		return false;
 	}

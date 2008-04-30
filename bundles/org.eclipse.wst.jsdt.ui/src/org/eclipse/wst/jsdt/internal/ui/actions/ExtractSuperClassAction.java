@@ -29,7 +29,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringAvailabilityT
 import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringExecutionStarter;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaTextSelection;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.RefactoringMessages;
@@ -76,7 +76,7 @@ public class ExtractSuperClassAction extends SelectionDispatchAction {
 				if (type != null)
 					return new IType[] {type};
 			} catch (JavaScriptModelException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			}
 		}
 		for (final Iterator iterator= selection.iterator(); iterator.hasNext();) {
@@ -166,7 +166,7 @@ public class ExtractSuperClassAction extends SelectionDispatchAction {
 		} catch (JavaScriptModelException exception) {
 			// http://bugs.eclipse.org/bugs/show_bug.cgi?id=19253
 			if (!(exception.getException() instanceof CharConversionException) && JavaModelUtil.isExceptionToBeLogged(exception))
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			setEnabled(false);//no UI - happens on selection changes
 		}
 	}

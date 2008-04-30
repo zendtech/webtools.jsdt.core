@@ -23,7 +23,7 @@ import org.eclipse.ltk.core.refactoring.TextFileChange;
 import org.eclipse.text.edits.UndoEdit;
 import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 public class CompilationUnitChange extends TextFileChange {
 
@@ -99,7 +99,7 @@ public class CompilationUnitChange extends TextFileChange {
 		try {
 			return new UndoCompilationUnitChange(getName(), fCUnit, edit, stampToRestore, getSaveMode());
 		} catch (CoreException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 			return null;
 		}
 	}

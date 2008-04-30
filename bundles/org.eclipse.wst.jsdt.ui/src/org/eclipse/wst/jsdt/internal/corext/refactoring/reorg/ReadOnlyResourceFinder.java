@@ -67,7 +67,7 @@ class ReadOnlyResourceFinder{
 				//if this assert fails, it means that a precondition is missing
 				Assert.isTrue(((IClassFile)javaElement).getResource() instanceof IFile);
 				//fall thru
-			case IJavaScriptElement.COMPILATION_UNIT:
+			case IJavaScriptElement.JAVASCRIPT_UNIT:
 				IResource resource= ReorgUtils.getResource(javaElement);
 				return (resource != null && Resources.isReadOnly(resource));
 			case IJavaScriptElement.PACKAGE_FRAGMENT:

@@ -35,7 +35,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.buildpath.BuildpathDelta;
 import org.eclipse.wst.jsdt.internal.corext.buildpath.ClasspathModifier;
 import org.eclipse.wst.jsdt.internal.corext.buildpath.IBuildpathModifierListener;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.preferences.ScrolledPageContent;
 import org.eclipse.wst.jsdt.internal.ui.util.PixelConverter;
 import org.eclipse.wst.jsdt.internal.ui.util.ViewerPane;
@@ -156,7 +156,7 @@ public class NewSourceContainerWorkbookPage extends BuildPathBasePage implements
      */
     public Control getControl(Composite parent) {
         final int[] sashWeight= {60};
-        final IPreferenceStore preferenceStore= JavaPlugin.getDefault().getPreferenceStore();
+        final IPreferenceStore preferenceStore= JavaScriptPlugin.getDefault().getPreferenceStore();
         preferenceStore.setDefault(OPEN_SETTING, true);
         
         // ScrolledPageContent is needed for resizing on expand the expandable composite
@@ -353,7 +353,7 @@ public class NewSourceContainerWorkbookPage extends BuildPathBasePage implements
         try {
 			fJavaProject.setRawIncludepath(entries, null);
         } catch (JavaScriptModelException e) {
-            JavaPlugin.log(e);
+            JavaScriptPlugin.log(e);
         }
         
         fPackageExplorer.setSelection(cpEntries);
@@ -375,7 +375,7 @@ public class NewSourceContainerWorkbookPage extends BuildPathBasePage implements
 //        try {
 //	        fOutputLocationField.setText(fJavaProject.getOutputLocation().makeRelative().toString());
 //        } catch (JavaScriptModelException e) {
-//	        JavaPlugin.log(e);
+//	        JavaScriptPlugin.log(e);
 //        }
     }
 
@@ -396,9 +396,9 @@ public class NewSourceContainerWorkbookPage extends BuildPathBasePage implements
 //			}
 //	        fJavaProject.setOutputLocation(path, null);
 //        } catch (JavaScriptModelException e) {
-//	     	JavaPlugin.log(e);
+//	     	JavaScriptPlugin.log(e);
 //        } catch (CoreException e) {
-//	        JavaPlugin.log(e);
+//	        JavaScriptPlugin.log(e);
 //        }
     }
 

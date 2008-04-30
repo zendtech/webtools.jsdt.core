@@ -19,7 +19,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.core.IOpenable;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 public class CallLocation implements IAdaptable {
     public static final int UNKNOWN_LINE_NUMBER= -1;
@@ -92,7 +92,7 @@ public class CallLocation implements IAdaptable {
             try {
                 fLineNumber= document.getLineOfOffset(fStart) + 1;
             } catch (BadLocationException e) {
-                JavaPlugin.log(e);
+                JavaScriptPlugin.log(e);
             }
         }
     }
@@ -111,7 +111,7 @@ public class CallLocation implements IAdaptable {
                 buffer = openable.getBuffer();
             }
         } catch (JavaScriptModelException e) {
-            JavaPlugin.log(e);
+            JavaScriptPlugin.log(e);
         }
         return buffer;
     }

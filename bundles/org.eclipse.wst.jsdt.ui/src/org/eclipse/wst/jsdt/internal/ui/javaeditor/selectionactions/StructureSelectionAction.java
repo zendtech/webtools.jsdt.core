@@ -26,7 +26,7 @@ import org.eclipse.wst.jsdt.core.dom.StructuralPropertyDescriptor;
 import org.eclipse.wst.jsdt.internal.corext.SourceRange;
 import org.eclipse.wst.jsdt.internal.corext.dom.Selection;
 import org.eclipse.wst.jsdt.internal.corext.dom.SelectionAnalyzer;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.ASTProvider;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.EditorUtility;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaEditor;
@@ -100,7 +100,7 @@ public abstract class StructureSelectionAction extends Action {
 			root.accept(selAnalyzer);
 			return internalGetNewSelectionRange(oldSourceRange, sr, selAnalyzer);
 	 	}	catch (JavaScriptModelException e){
-	 		JavaPlugin.log(e); //dialog would be too heavy here
+	 		JavaScriptPlugin.log(e); //dialog would be too heavy here
 	 		return new SourceRange(oldSourceRange.getOffset(), oldSourceRange.getLength());
 	 	}
 	}

@@ -24,7 +24,7 @@ import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIMessages;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.wst.jsdt.internal.ui.util.MainMethodSearchEngine;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
 
 /**
  * A dialog to select a type from a list of types. The dialog allows
@@ -42,8 +42,8 @@ public class MultiMainTypeSelectionDialog extends ElementListSelectionDialog {
 	public MultiMainTypeSelectionDialog(Shell shell, IRunnableContext context,
 		IJavaScriptSearchScope scope, int style)
 	{
-		super(shell, new JavaElementLabelProvider(
-			JavaElementLabelProvider.SHOW_PARAMETERS | JavaElementLabelProvider.SHOW_POST_QUALIFIED | JavaElementLabelProvider.SHOW_ROOT));
+		super(shell, new JavaScriptElementLabelProvider(
+			JavaScriptElementLabelProvider.SHOW_PARAMETERS | JavaScriptElementLabelProvider.SHOW_POST_QUALIFIED | JavaScriptElementLabelProvider.SHOW_ROOT));
 
 		setMultipleSelection(true);
 

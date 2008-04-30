@@ -31,7 +31,7 @@ import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 /**
  * Tree content provider for the hierarchical layout in the packages view.
@@ -57,7 +57,7 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider im
 				int type= iJavaElement.getElementType();
 
 				switch (type) {
-					case IJavaScriptElement.JAVA_PROJECT :
+					case IJavaScriptElement.JAVASCRIPT_PROJECT :
 						{
 
 							//create new element mapping
@@ -250,7 +250,7 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider im
 			}
 
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		return (IPackageFragment[]) list.toArray(new IPackageFragment[list.size()]);
 	}
@@ -323,7 +323,7 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider im
 			}
 
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		return null;
 	}
@@ -362,7 +362,7 @@ class PackagesViewHierarchicalContentProvider extends LogicalPackagesProvider im
 			}
 
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 
 		return null;

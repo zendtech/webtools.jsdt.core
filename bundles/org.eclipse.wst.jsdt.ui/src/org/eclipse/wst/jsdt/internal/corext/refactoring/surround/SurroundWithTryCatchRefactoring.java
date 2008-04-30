@@ -70,7 +70,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.util.RefactoringASTParse
 import org.eclipse.wst.jsdt.internal.corext.refactoring.util.ResourceUtil;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.util.SelectionAwareSourceRangeComputer;
 import org.eclipse.wst.jsdt.internal.corext.util.Strings;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 /**
  * Surround a set of statements with a try/catch block.
@@ -200,7 +200,7 @@ public class SurroundWithTryCatchRefactoring extends Refactoring {
 			result.addTextEditGroup(new TextEditGroup(NN, new TextEdit[] {change} ));
 			return result;
 		} catch (BadLocationException e) {
-			throw new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.ERROR,
+			throw new CoreException(new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), IStatus.ERROR,
 				e.getMessage(), e));
 		} finally {
 			bufferManager.disconnect(path, LocationKind.IFILE, new SubProgressMonitor(pm, 1));

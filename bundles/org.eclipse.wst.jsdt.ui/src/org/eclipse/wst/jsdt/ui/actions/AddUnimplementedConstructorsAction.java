@@ -62,7 +62,7 @@ import org.eclipse.wst.jsdt.internal.corext.template.java.CodeTemplateContextTyp
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionMessages;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionUtil;
 import org.eclipse.wst.jsdt.internal.ui.actions.SelectionConverter;
@@ -76,8 +76,8 @@ import org.eclipse.wst.jsdt.internal.ui.util.BusyIndicatorRunnableContext;
 import org.eclipse.wst.jsdt.internal.ui.util.ElementValidator;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.BindingLabelProvider;
-import org.eclipse.wst.jsdt.ui.JavaElementComparator;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementComparator;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 /**
  * Creates unimplemented constructors for a type.
@@ -180,7 +180,7 @@ public class AddUnimplementedConstructorsAction extends SelectionDispatchAction 
 		public AddUnimplementedConstructorsDialog(Shell parent, ILabelProvider labelProvider, ITreeContentProvider contentProvider, CompilationUnitEditor editor, IType type) throws JavaScriptModelException {
 			super(parent, labelProvider, contentProvider, editor, type, true);
 
-			IDialogSettings dialogSettings= JavaPlugin.getDefault().getDialogSettings();
+			IDialogSettings dialogSettings= JavaScriptPlugin.getDefault().getDialogSettings();
 			fAddConstructorsSettings= dialogSettings.getSection(SETTINGS_SECTION);
 			if (fAddConstructorsSettings == null) {
 				fAddConstructorsSettings= dialogSettings.addNewSection(SETTINGS_SECTION);
@@ -499,7 +499,7 @@ public class AddUnimplementedConstructorsAction extends SelectionDispatchAction 
 		dialog.setTitle(ActionMessages.AddUnimplementedConstructorsAction_dialog_title); 
 		dialog.setInitialSelections(constructors);
 		dialog.setContainerMode(true);
-		dialog.setComparator(new JavaElementComparator());
+		dialog.setComparator(new JavaScriptElementComparator());
 		dialog.setSize(60, 18);
 		dialog.setInput(new Object());
 		dialog.setMessage(ActionMessages.AddUnimplementedConstructorsAction_dialog_label); 
@@ -524,7 +524,7 @@ public class AddUnimplementedConstructorsAction extends SelectionDispatchAction 
 
 			CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(type.getJavaScriptProject());
 			settings.createComments= dialog.getGenerateComment();
-			IEditorPart editor= JavaUI.openInEditor(type, true, false);
+			IEditorPart editor= JavaScriptUI.openInEditor(type, true, false);
 			IRewriteTarget target= editor != null ? (IRewriteTarget) editor.getAdapter(IRewriteTarget.class) : null;
 			if (target != null)
 				target.beginCompoundChange();
@@ -534,7 +534,7 @@ public class AddUnimplementedConstructorsAction extends SelectionDispatchAction 
 				int insertPos= dialog.getInsertOffset();
 				
 				AddUnimplementedConstructorsOperation operation= (AddUnimplementedConstructorsOperation) createRunnable(astRoot, typeBinding, selected, insertPos, dialog.getGenerateComment(), dialog.getVisibilityModifier(), dialog.isOmitSuper());
-				IRunnableContext context= JavaPlugin.getActiveWorkbenchWindow();
+				IRunnableContext context= JavaScriptPlugin.getActiveWorkbenchWindow();
 				if (context == null)
 					context= new BusyIndicatorRunnableContext();
 				PlatformUI.getWorkbench().getProgressService().runInUI(context, new WorkbenchRunnableAdapter(operation, operation.getSchedulingRule()), operation.getSchedulingRule());
@@ -589,7 +589,7 @@ public class AddUnimplementedConstructorsAction extends SelectionDispatchAction 
 		} catch (JavaScriptModelException e) {
 			// http://bugs.eclipse.org/bugs/show_bug.cgi?id=19253
 			if (JavaModelUtil.isExceptionToBeLogged(e))
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			setEnabled(false);
 		}
 	}

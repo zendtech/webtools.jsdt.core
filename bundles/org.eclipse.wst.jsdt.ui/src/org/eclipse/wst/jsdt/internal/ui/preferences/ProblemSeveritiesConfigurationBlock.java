@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusInfo;
 import org.eclipse.wst.jsdt.internal.ui.util.PixelConverter;
 import org.eclipse.wst.jsdt.internal.ui.wizards.IStatusChangeListener;
@@ -473,7 +473,7 @@ public class ProblemSeveritiesConfigurationBlock extends OptionsConfigurationBlo
 		//addCheckBox(composite, label, PREF_PB_FATAL_OPTIONAL_ERROR, enableDisableValues, 0);
 
 		
-		IDialogSettings section= JavaPlugin.getDefault().getDialogSettings().getSection(SETTINGS_SECTION_NAME);
+		IDialogSettings section= JavaScriptPlugin.getDefault().getDialogSettings().getSection(SETTINGS_SECTION_NAME);
 		restoreSectionExpansionStates(section);
 		
 		return sc1;
@@ -538,7 +538,7 @@ public class ProblemSeveritiesConfigurationBlock extends OptionsConfigurationBlo
 	 * @see org.eclipse.wst.jsdt.internal.ui.preferences.OptionsConfigurationBlock#dispose()
 	 */
 	public void dispose() {
-		IDialogSettings section= JavaPlugin.getDefault().getDialogSettings().addNewSection(SETTINGS_SECTION_NAME);
+		IDialogSettings section= JavaScriptPlugin.getDefault().getDialogSettings().addNewSection(SETTINGS_SECTION_NAME);
 		storeSectionExpansionStates(section);
 		super.dispose();
 	}

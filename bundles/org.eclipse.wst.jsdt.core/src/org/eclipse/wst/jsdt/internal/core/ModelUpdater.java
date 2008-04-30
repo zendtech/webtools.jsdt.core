@@ -68,7 +68,7 @@ public class ModelUpdater {
 	protected void elementAdded(Openable element) {
 
 		int elementType = element.getElementType();
-		if (elementType == IJavaScriptElement.JAVA_PROJECT) {
+		if (elementType == IJavaScriptElement.JAVASCRIPT_PROJECT) {
 			// project add is handled by JavaProject.configure() because
 			// when a project is created, it does not yet have a java nature
 			addToParentInfo(element);
@@ -128,10 +128,10 @@ public class ModelUpdater {
 		int elementType = element.getElementType();
 
 		switch (elementType) {
-			case IJavaScriptElement.JAVA_MODEL :
+			case IJavaScriptElement.JAVASCRIPT_MODEL :
 				JavaModelManager.getJavaModelManager().getIndexManager().reset();
 				break;
-			case IJavaScriptElement.JAVA_PROJECT :
+			case IJavaScriptElement.JAVASCRIPT_PROJECT :
 				JavaModelManager manager = JavaModelManager.getJavaModelManager();
 				JavaProject javaProject = (JavaProject) element;
 				manager.removePerProjectInfo(javaProject);
@@ -207,13 +207,13 @@ public class ModelUpdater {
 
 		Openable element = (Openable) delta.getElement();
 		switch (element.getElementType()) {
-			case IJavaScriptElement.JAVA_PROJECT :
+			case IJavaScriptElement.JAVASCRIPT_PROJECT :
 				project = (IJavaScriptProject) element;
 				break;
 			case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT :
 				root = (IPackageFragmentRoot) element;
 				break;
-			case IJavaScriptElement.COMPILATION_UNIT :
+			case IJavaScriptElement.JAVASCRIPT_UNIT :
 				// filter out working copies that are not primary (we don't want to add/remove them to/from the package fragment
 				CompilationUnit cu = (CompilationUnit)element;
 				if (cu.isWorkingCopy() && !cu.isPrimary()) {

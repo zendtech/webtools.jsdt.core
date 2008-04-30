@@ -25,7 +25,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 public class RecentSettingsStore {
 	
@@ -212,7 +212,7 @@ public class RecentSettingsStore {
 
 	private String getDefaultDestination(IJavaScriptProject project) {
 		if (project != null) {
-			URL url= JavaUI.getProjectJavadocLocation(project);
+			URL url= JavaScriptUI.getProjectJSdocLocation(project);
 			//uses default if source is has http protocol
 			if (url == null || !url.getProtocol().equals("file")) { //$NON-NLS-1$
 				// Since Javadoc.exe is a local tool its output is local.

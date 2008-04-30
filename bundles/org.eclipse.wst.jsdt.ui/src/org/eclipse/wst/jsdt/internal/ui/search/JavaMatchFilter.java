@@ -30,7 +30,7 @@ import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchConstants;
 import org.eclipse.wst.jsdt.core.search.SearchMatch;
 import org.eclipse.wst.jsdt.core.search.SearchPattern;
 import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.ui.search.ElementQuerySpecification;
 import org.eclipse.wst.jsdt.ui.search.PatternQuerySpecification;
 import org.eclipse.wst.jsdt.ui.search.QuerySpecification;
@@ -59,7 +59,7 @@ abstract class JavaMatchFilter extends MatchFilter {
 	private static final String SETTINGS_LAST_USED_FILTERS= "filters_last_used";  //$NON-NLS-1$
 	
 	public static MatchFilter[] getLastUsedFilters() {
-		String string= JavaPlugin.getDefault().getDialogSettings().get(SETTINGS_LAST_USED_FILTERS);
+		String string= JavaScriptPlugin.getDefault().getDialogSettings().get(SETTINGS_LAST_USED_FILTERS);
 		if (string != null && string.length() > 0) {
 			return decodeFiltersString(string);
 		}
@@ -68,7 +68,7 @@ abstract class JavaMatchFilter extends MatchFilter {
 	
 	public static void setLastUsedFilters(MatchFilter[] filters) {
 		String encoded= encodeFilters(filters);
-		JavaPlugin.getDefault().getDialogSettings().put(SETTINGS_LAST_USED_FILTERS, encoded);
+		JavaScriptPlugin.getDefault().getDialogSettings().put(SETTINGS_LAST_USED_FILTERS, encoded);
 	}
 	
 	public static MatchFilter[] getDefaultFilters() {
@@ -400,7 +400,7 @@ class NonPublicFilter extends ModifierFilter {
 			try {
 				return ! JdtFlags.isPublic((IMember) element);
 			} catch (JavaScriptModelException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		}
 		return false;
@@ -426,7 +426,7 @@ class StaticFilter extends ModifierFilter {
 			try {
 				return JdtFlags.isStatic((IMember) element);
 			} catch (JavaScriptModelException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		}
 		return false;
@@ -452,7 +452,7 @@ class NonStaticFilter extends ModifierFilter {
 			try {
 				return ! JdtFlags.isStatic((IMember) element);
 			} catch (JavaScriptModelException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		}
 		return false;
@@ -478,7 +478,7 @@ class DeprecatedFilter extends ModifierFilter {
 			try {
 				return JdtFlags.isDeprecated((IMember) element);
 			} catch (JavaScriptModelException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		}
 		return false;
@@ -504,7 +504,7 @@ class NonDeprecatedFilter extends ModifierFilter {
 			try {
 				return !JdtFlags.isDeprecated((IMember) element);
 			} catch (JavaScriptModelException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		}
 		return false;

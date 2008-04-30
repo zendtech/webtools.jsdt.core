@@ -42,7 +42,7 @@ import org.eclipse.wst.jsdt.internal.corext.codemanipulation.AddImportsOperation
 import org.eclipse.wst.jsdt.internal.corext.util.History;
 import org.eclipse.wst.jsdt.internal.corext.util.QualifiedTypeNameHistory;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionUtil;
 import org.eclipse.wst.jsdt.internal.ui.actions.WorkbenchRunnableAdapter;
 import org.eclipse.wst.jsdt.internal.ui.util.ElementValidator;
@@ -99,7 +99,7 @@ public class AddImportOnSelectionAction extends Action implements IUpdate {
 		if (fEditor == null) {
 			return null;
 		}
-		IWorkingCopyManager manager= JavaPlugin.getDefault().getWorkingCopyManager();
+		IWorkingCopyManager manager= JavaScriptPlugin.getDefault().getWorkingCopyManager();
 		return manager.getWorkingCopy(fEditor.getEditorInput());
 	}
 

@@ -40,7 +40,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusUtil;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.wst.jsdt.internal.ui.wizards.IStatusChangeListener;
@@ -120,7 +120,7 @@ public class SourceAttachmentPropertyPage extends PropertyPage implements IStatu
 			fSourceAttachmentBlock= new SourceAttachmentBlock(this, entry);
 			return fSourceAttachmentBlock.createControl(composite);				
 		} catch (CoreException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 			return createMessageContent(composite, PreferencesMessages.SourceAttachmentPropertyPage_noarchive_message);  
 		}
 	}

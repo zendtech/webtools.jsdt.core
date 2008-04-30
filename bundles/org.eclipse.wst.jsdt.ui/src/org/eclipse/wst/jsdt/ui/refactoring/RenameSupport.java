@@ -50,7 +50,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.tagging.INameUpdating;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.tagging.IReferenceUpdating;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.tagging.ITextUpdating;
 import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIMessages;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.RefactoringExecutionHelper;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.UserInterfaceStarter;
@@ -93,7 +93,7 @@ public class RenameSupport {
 		if (fPreCheckStatus.hasFatalError())
 			return fPreCheckStatus.getEntryMatchingSeverity(RefactoringStatus.FATAL).toStatus();
 		else
-			return new Status(IStatus.OK, JavaPlugin.getPluginId(), 0, "", null); //$NON-NLS-1$
+			return new Status(IStatus.OK, JavaScriptPlugin.getPluginId(), 0, "", null); //$NON-NLS-1$
 	}
 
 	/**

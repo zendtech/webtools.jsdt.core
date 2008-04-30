@@ -187,7 +187,7 @@ public class ElementValidator {
 			IResource resource= null;
 			if (element instanceof IJavaScriptElement) {
 				IJavaScriptElement je= (IJavaScriptElement)element;
-				IJavaScriptUnit cu= (IJavaScriptUnit)je.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+				IJavaScriptUnit cu= (IJavaScriptUnit)je.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 				if (cu != null) {
 					je= cu.getPrimary();
 				}

@@ -61,9 +61,9 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.util.RefactoringASTParse
 import org.eclipse.wst.jsdt.internal.corext.refactoring.util.ResourceUtil;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.util.TextChangeManager;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.RefactoringSaveHelper;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 public class RenameLocalVariableProcessor extends JavaRenameProcessor implements IReferenceUpdating {
 
@@ -93,7 +93,7 @@ public class RenameLocalVariableProcessor extends JavaRenameProcessor implements
 		fLocalVariable= localVariable;
 		fUpdateReferences= true;
 		if (localVariable != null)
-			fCu= (IJavaScriptUnit) localVariable.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+			fCu= (IJavaScriptUnit) localVariable.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 		fNewName= ""; //$NON-NLS-1$
 		fIsComposite= false;
 	}
@@ -347,7 +347,7 @@ public class RenameLocalVariableProcessor extends JavaRenameProcessor implements
 				IJavaScriptProject javaProject= fCu.getJavaScriptProject();
 				if (javaProject != null)
 					project= javaProject.getElementName();
-				final String header= Messages.format(RefactoringCoreMessages.RenameLocalVariableProcessor_descriptor_description, new String[] { fCurrentName, JavaElementLabels.getElementLabel(fLocalVariable.getParent(), JavaElementLabels.ALL_FULLY_QUALIFIED), fNewName});
+				final String header= Messages.format(RefactoringCoreMessages.RenameLocalVariableProcessor_descriptor_description, new String[] { fCurrentName, JavaScriptElementLabels.getElementLabel(fLocalVariable.getParent(), JavaScriptElementLabels.ALL_FULLY_QUALIFIED), fNewName});
 				final String description= Messages.format(RefactoringCoreMessages.RenameLocalVariableProcessor_descriptor_description_short, fCurrentName);
 				final String comment= new JDTRefactoringDescriptorComment(project, this, header).asString();
 				final RenameLocalVariableDescriptor descriptor= new RenameLocalVariableDescriptor();
@@ -376,11 +376,11 @@ public class RenameLocalVariableProcessor extends JavaRenameProcessor implements
 			if (handle != null) {
 				final IJavaScriptElement element= JDTRefactoringDescriptor.handleToElement(extended.getProject(), handle, false);
 				if (element != null && element.exists()) {
-					if (element.getElementType() == IJavaScriptElement.COMPILATION_UNIT) {
+					if (element.getElementType() == IJavaScriptElement.JAVASCRIPT_UNIT) {
 						fCu= (IJavaScriptUnit) element;
 					} else if (element.getElementType() == IJavaScriptElement.LOCAL_VARIABLE) {
 						fLocalVariable= (ILocalVariable) element;
-						fCu= (IJavaScriptUnit) fLocalVariable.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+						fCu= (IJavaScriptUnit) fLocalVariable.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 						if (fCu == null)
 							return ScriptableRefactoring.createInputFatalStatus(element, getRefactoring().getName(), IJavaRefactorings.RENAME_LOCAL_VARIABLE);
 					} else
@@ -417,7 +417,7 @@ public class RenameLocalVariableProcessor extends JavaRenameProcessor implements
 							if (fLocalVariable == null)
 								return ScriptableRefactoring.createInputFatalStatus(null, getRefactoring().getName(), IJavaRefactorings.RENAME_LOCAL_VARIABLE);
 						} catch (JavaScriptModelException exception) {
-							JavaPlugin.log(exception);
+							JavaScriptPlugin.log(exception);
 						}
 					} else
 						return RefactoringStatus.createFatalErrorStatus(Messages.format(RefactoringCoreMessages.InitializableRefactoring_illegal_argument, new Object[] { selection, JDTRefactoringDescriptor.ATTRIBUTE_SELECTION}));

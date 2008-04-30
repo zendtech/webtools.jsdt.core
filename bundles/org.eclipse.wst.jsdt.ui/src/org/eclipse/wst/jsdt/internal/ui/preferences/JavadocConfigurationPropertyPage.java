@@ -42,14 +42,14 @@ import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusUtil;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.wst.jsdt.internal.ui.wizards.IStatusChangeListener;
 import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.ArchiveFileFilter;
 import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.BuildPathSupport;
 import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.CPListElement;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 /**
  * Property page used to set the project's Javadoc location for sources
@@ -144,9 +144,9 @@ public class JavadocConfigurationPropertyPage extends PropertyPage implements IS
 		fInitalLocation= null;
 		if (elem != null) {
 			try {
-				fInitalLocation= JavaUI.getJavadocBaseLocation(elem);
+				fInitalLocation= JavaScriptUI.getJSdocBaseLocation(elem);
 			} catch (JavaScriptModelException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		}
 		
@@ -175,7 +175,7 @@ public class JavadocConfigurationPropertyPage extends PropertyPage implements IS
 					}
 				}
 			} catch (CoreException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		}
 		return elem;
@@ -233,7 +233,7 @@ public class JavadocConfigurationPropertyPage extends PropertyPage implements IS
 						String[] changedAttributes= { CPListElement.JAVADOC };
 						BuildPathSupport.modifyClasspathEntry(shell, newEntry, changedAttributes, project, containerPath, monitor);
 					} else {
-						JavaUI.setProjectJavadocLocation(project, javadocLocation);
+						JavaScriptUI.setProjectJSdocLocation(project, javadocLocation);
 					}
 				} catch (CoreException e) {
 					throw new InvocationTargetException(e);

@@ -34,14 +34,14 @@ import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.filters.SyntheticMembersFilter;
 import org.eclipse.wst.jsdt.internal.ui.util.JavaUIHelp;
 import org.eclipse.wst.jsdt.internal.ui.util.SelectionUtil;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.ColoredViewersManager;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.DecoratingJavaLabelProvider;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.ProblemTableViewer;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 import org.eclipse.wst.jsdt.ui.actions.MemberFilterActionGroup;
 import org.eclipse.wst.jsdt.ui.actions.OpenAction;
 
@@ -103,9 +103,9 @@ public class MethodsViewer extends ProblemTableViewer {
 		cprovider.showInheritedMethods(on);
 		fShowInheritedMembersAction.setChecked(on);
 		if (on) {
-			fLabelProvider.setTextFlags(fLabelProvider.getTextFlags() | JavaElementLabels.ALL_POST_QUALIFIED);
+			fLabelProvider.setTextFlags(fLabelProvider.getTextFlags() | JavaScriptElementLabels.ALL_POST_QUALIFIED);
 		} else {
-			fLabelProvider.setTextFlags(fLabelProvider.getTextFlags() & ~JavaElementLabels.ALL_POST_QUALIFIED);
+			fLabelProvider.setTextFlags(fLabelProvider.getTextFlags() & ~JavaScriptElementLabels.ALL_POST_QUALIFIED);
 		}
 		if (on) {
 			sortByDefiningTypeNoRedraw(false);
@@ -290,7 +290,7 @@ public class MethodsViewer extends ProblemTableViewer {
 					newSelection= new StructuredSelection(currElements[0]);
 				}
 			} catch (JavaScriptModelException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		}
 		setSelection(newSelection);

@@ -44,7 +44,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.search.SearchEngine;
 import org.eclipse.wst.jsdt.core.search.TypeNameMatch;
 import org.eclipse.wst.jsdt.internal.corext.CorextMessages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.w3c.dom.Element;
 
 /**
@@ -74,7 +74,7 @@ public class OpenTypeHistory extends History {
 			boolean isRemoved= delta.getKind() == IJavaScriptElementDelta.REMOVED;
 						
 			switch (elem.getElementType()) {
-				case IJavaScriptElement.JAVA_PROJECT:
+				case IJavaScriptElement.JAVASCRIPT_PROJECT:
 					if (isRemoved || (isChanged && 
 							(delta.getFlags() & IJavaScriptElementDelta.F_CLOSED) != 0)) {
 						return true;
@@ -92,14 +92,14 @@ public class OpenTypeHistory extends History {
 						return true;
 					}
 					// type children can be inner classes: fall through
-				case IJavaScriptElement.JAVA_MODEL:
+				case IJavaScriptElement.JAVASCRIPT_MODEL:
 				case IJavaScriptElement.PACKAGE_FRAGMENT:
 				case IJavaScriptElement.CLASS_FILE:
 					if (isRemoved) {
 						return true;
 					}				
 					return processChildrenDelta(delta);
-				case IJavaScriptElement.COMPILATION_UNIT:
+				case IJavaScriptElement.JAVASCRIPT_UNIT:
 					// Not the primary compilation unit. Ignore it 
 					if (!JavaModelUtil.isPrimary((IJavaScriptUnit) elem)) {
 						return false;
@@ -146,7 +146,7 @@ public class OpenTypeHistory extends History {
 		protected IStatus run(IProgressMonitor monitor) {
 			OpenTypeHistory history= OpenTypeHistory.getInstance();
 			history.internalCheckConsistency(monitor);
-			return new Status(IStatus.OK, JavaPlugin.getPluginId(), IStatus.OK, "", null); //$NON-NLS-1$
+			return new Status(IStatus.OK, JavaScriptPlugin.getPluginId(), IStatus.OK, "", null); //$NON-NLS-1$
 		}
 		public boolean belongsTo(Object family) {
 			return FAMILY.equals(family);

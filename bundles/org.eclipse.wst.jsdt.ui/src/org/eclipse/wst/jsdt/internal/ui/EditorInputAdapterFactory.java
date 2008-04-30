@@ -18,7 +18,7 @@ import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.internal.ui.search.JavaSearchPageScoreComputer;
 import org.eclipse.wst.jsdt.internal.ui.search.SearchUtil;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 /**
  * Adapter factory to support basic UI operations for for editor inputs.
@@ -40,7 +40,7 @@ public class EditorInputAdapterFactory implements IAdapterFactory {
 			return fSearchPageScoreComputer;
 		
 		if (IJavaScriptElement.class.equals(key) && element instanceof IEditorInput) {
-			IJavaScriptElement je= JavaUI.getWorkingCopyManager().getWorkingCopy((IEditorInput)element); 
+			IJavaScriptElement je= JavaScriptUI.getWorkingCopyManager().getWorkingCopy((IEditorInput)element); 
 			if (je != null)
 				return je;
 			if (element instanceof IStorageEditorInput) {

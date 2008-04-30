@@ -40,13 +40,13 @@ public interface IJavaScriptElement extends IAdaptable, ILookupScope{
 	 * Constant representing a Java model (workspace level object).
 	 * A Java element with this type can be safely cast to {@link IJavaScriptModel}.
 	 */
-	int JAVA_MODEL = 1;
+	int JAVASCRIPT_MODEL = 1;
 
 	/**
 	 * Constant representing a Java project.
 	 * A Java element with this type can be safely cast to {@link IJavaScriptProject}.
 	 */
-	int JAVA_PROJECT = 2;
+	int JAVASCRIPT_PROJECT = 2;
 
 	/**
 	 * Constant representing a package fragment root.
@@ -64,7 +64,7 @@ public interface IJavaScriptElement extends IAdaptable, ILookupScope{
 	 * Constant representing a Java compilation unit.
 	 * A Java element with this type can be safely cast to {@link IJavaScriptUnit}.
 	 */
-	int COMPILATION_UNIT = 5;
+	int JAVASCRIPT_UNIT = 5;
 
 	/**
 	 * Constant representing a class file.

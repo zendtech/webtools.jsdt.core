@@ -27,7 +27,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptModelMarker;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusInfo;
 
 public final class ContributedProcessorDescriptor {
@@ -113,7 +113,7 @@ public final class ContributedProcessorDescriptor {
 				fLastResult= !(expression.evaluate(evalContext) != EvaluationResult.TRUE);
 				return fLastResult;
 			} catch (CoreException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		}
 		fStatus= Boolean.FALSE;

@@ -42,7 +42,7 @@ import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.ASTProvider;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.ISelectionListenerWithAST;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.SelectionListenerWithASTManager;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 import org.eclipse.wst.jsdt.ui.text.java.IInvocationContext;
 
@@ -175,7 +175,7 @@ public class QuickAssistLightBulbUpdater {
 	}
 
 	private IJavaScriptUnit getCompilationUnit() {
-		IJavaScriptElement elem= JavaUI.getEditorInputJavaElement(fEditor.getEditorInput());
+		IJavaScriptElement elem= JavaScriptUI.getEditorInputJavaElement(fEditor.getEditorInput());
 		if (elem instanceof IJavaScriptUnit) {
 			return (IJavaScriptUnit) elem;
 		}
@@ -183,11 +183,11 @@ public class QuickAssistLightBulbUpdater {
 	}
 
 	private IAnnotationModel getAnnotationModel() {
-		return JavaUI.getDocumentProvider().getAnnotationModel(fEditor.getEditorInput());
+		return JavaScriptUI.getDocumentProvider().getAnnotationModel(fEditor.getEditorInput());
 	}
 
 	private IDocument getDocument() {
-		return JavaUI.getDocumentProvider().getDocument(fEditor.getEditorInput());
+		return JavaScriptUI.getDocumentProvider().getDocument(fEditor.getEditorInput());
 	}
 
 

@@ -98,7 +98,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.typeconstraints.types.TT
 import org.eclipse.wst.jsdt.internal.corext.refactoring.typeconstraints.types.TypeEnvironment;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.util.NoCommentSourceRangeComputer;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.util.RefactoringFileBuffers;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 public class CallInliner {
 
@@ -237,7 +237,7 @@ public class CallInliner {
 		try {
 			RefactoringFileBuffers.release(fCUnit);
 		} catch (CoreException exception) {
-			JavaPlugin.log(exception);
+			JavaScriptPlugin.log(exception);
 		}
 	}
 	
@@ -281,7 +281,7 @@ public class CallInliner {
 			computeRealArguments();
 			computeReceiver();
 		} catch (BadLocationException exception) {
-			JavaPlugin.log(exception);
+			JavaScriptPlugin.log(exception);
 		}
 		checkInvocationContext(result, severity);
 		

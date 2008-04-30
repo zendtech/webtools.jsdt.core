@@ -22,7 +22,7 @@ import org.eclipse.ltk.core.refactoring.CompositeChange;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringCoreMessages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 //import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringCoreMessages;
 
@@ -125,7 +125,7 @@ public class DynamicValidationStateChange extends CompositeChange implements Wor
 					change.dispose();
 				}
 				public void handleException(Throwable exception) {
-					JavaPlugin.log(exception);
+					JavaScriptPlugin.log(exception);
 				}
 			});
 		}

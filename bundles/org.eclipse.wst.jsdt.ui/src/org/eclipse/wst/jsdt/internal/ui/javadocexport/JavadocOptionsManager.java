@@ -46,14 +46,14 @@ import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIStatus;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusInfo;
 import org.eclipse.wst.jsdt.launching.ExecutionArguments;
 import org.eclipse.wst.jsdt.launching.IVMInstall;
 import org.eclipse.wst.jsdt.launching.IVMInstallType;
 import org.eclipse.wst.jsdt.launching.JavaRuntime;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -176,10 +176,10 @@ public class JavadocOptionsManager {
 				}
 				fWizardStatus.setWarning(JavadocExportMessages.JavadocOptionsManager_antfileincorrectCE_warning); 
 			} catch (CoreException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 				fWizardStatus.setWarning(JavadocExportMessages.JavadocOptionsManager_antfileincorrectCE_warning); 
 			} catch (IOException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 				fWizardStatus.setWarning(JavadocExportMessages.JavadocOptionsManager_antfileincorrectIOE_warning); 
 			} catch (SAXException e) {
 				fWizardStatus.setWarning(JavadocExportMessages.JavadocOptionsManager_antfileincorrectSAXE_warning); 
@@ -685,7 +685,7 @@ public class JavadocOptionsManager {
 	
 
 	public IStatus getArgumentArray(List vmArgs, List toolArgs) {
-		MultiStatus status= new MultiStatus(JavaUI.ID_PLUGIN, IStatus.OK, JavadocExportMessages.JavadocOptionsManager_status_title, null);
+		MultiStatus status= new MultiStatus(JavaScriptUI.ID_PLUGIN, IStatus.OK, JavadocExportMessages.JavadocOptionsManager_status_title, null);
 		
 		//bug 38692
 		vmArgs.add(getJavadocCommandHistory()[0]);
@@ -1030,8 +1030,8 @@ public class JavadocOptionsManager {
 
 		if (je != null) {
 			switch (je.getElementType()) {
-				case IJavaScriptElement.JAVA_MODEL :
-				case IJavaScriptElement.JAVA_PROJECT :
+				case IJavaScriptElement.JAVASCRIPT_MODEL :
+				case IJavaScriptElement.JAVASCRIPT_PROJECT :
 				case IJavaScriptElement.CLASS_FILE :
 					break;
 				case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT :
@@ -1045,7 +1045,7 @@ public class JavadocOptionsManager {
 					}
 					break;
 				default :
-					IJavaScriptUnit cu= (IJavaScriptUnit) je.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+					IJavaScriptUnit cu= (IJavaScriptUnit) je.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 					if (cu != null) {
 						return cu;
 					}
@@ -1099,7 +1099,7 @@ public class JavadocOptionsManager {
 
 	
 	private static String initJavadocCommandDefault() {
-		IPreferenceStore store= JavaPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore store= JavaScriptPlugin.getDefault().getPreferenceStore();
 		String cmd= store.getString(PreferenceConstants.JAVADOC_COMMAND);	// old location
 		if (cmd != null && cmd.length() > 0) {
 			store.setToDefault(PreferenceConstants.JAVADOC_COMMAND);

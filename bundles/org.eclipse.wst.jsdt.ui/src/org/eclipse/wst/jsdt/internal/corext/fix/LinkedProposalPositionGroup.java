@@ -26,9 +26,9 @@ import org.eclipse.wst.jsdt.core.dom.ITypeBinding;
 import org.eclipse.wst.jsdt.core.dom.rewrite.ITrackedNodePosition;
 import org.eclipse.wst.jsdt.core.dom.rewrite.ImportRewrite;
 import org.eclipse.wst.jsdt.internal.corext.codemanipulation.StubUtility;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.BindingLabelProvider;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 public class LinkedProposalPositionGroup {
 	
@@ -113,12 +113,12 @@ public class LinkedProposalPositionGroup {
 		private final IJavaScriptUnit fCompilationUnit;
 
 		public JavaLinkedModeProposal(IJavaScriptUnit unit, ITypeBinding typeProposal, int relevance) {
-			super(BindingLabelProvider.getBindingLabel(typeProposal, JavaElementLabels.ALL_DEFAULT | JavaElementLabels.ALL_POST_QUALIFIED), null, relevance);
+			super(BindingLabelProvider.getBindingLabel(typeProposal, JavaScriptElementLabels.ALL_DEFAULT | JavaScriptElementLabels.ALL_POST_QUALIFIED), null, relevance);
 			fTypeProposal= typeProposal;
 			fCompilationUnit= unit;
 			ImageDescriptor desc= BindingLabelProvider.getBindingImageDescriptor(fTypeProposal, BindingLabelProvider.DEFAULT_IMAGEFLAGS);
 			if (desc != null) {
-				setImage(JavaPlugin.getImageDescriptorRegistry().get(desc));
+				setImage(JavaScriptPlugin.getImageDescriptorRegistry().get(desc));
 			}
 		}
 

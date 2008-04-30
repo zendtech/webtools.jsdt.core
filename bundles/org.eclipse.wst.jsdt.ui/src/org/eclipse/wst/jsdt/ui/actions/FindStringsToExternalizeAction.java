@@ -57,14 +57,14 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.reorg.ReorgUtils;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionMessages;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.RefactoringSaveHelper;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.actions.ListDialog;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.actions.RefactoringStarter;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.nls.ExternalizeWizard;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
 
 /**
  * Find all strings in a package or project that are not externalized yet.
@@ -103,7 +103,7 @@ public class FindStringsToExternalizeAction extends SelectionDispatchAction {
 			setEnabled(computeEnablementState(selection));
 		} catch (JavaScriptModelException e) {
 			if (JavaModelUtil.isExceptionToBeLogged(e))
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			setEnabled(false);//no UI - happens on selection changes
 		}
 	}
@@ -121,7 +121,7 @@ public class FindStringsToExternalizeAction extends SelectionDispatchAction {
 			int elementType= javaElement.getElementType();
 			if (elementType != IJavaScriptElement.PACKAGE_FRAGMENT && 
 				elementType != IJavaScriptElement.PACKAGE_FRAGMENT_ROOT &&
-				elementType != IJavaScriptElement.JAVA_PROJECT)
+				elementType != IJavaScriptElement.JAVASCRIPT_PROJECT)
 				return false;
 			if (elementType == IJavaScriptElement.PACKAGE_FRAGMENT_ROOT){
 				IPackageFragmentRoot root= (IPackageFragmentRoot)javaElement;
@@ -177,7 +177,7 @@ public class FindStringsToExternalizeAction extends SelectionDispatchAction {
 					l.addAll(analyze((IPackageFragment) element, new SubProgressMonitor(pm, 1)));
 				else if (element.getElementType() == IJavaScriptElement.PACKAGE_FRAGMENT_ROOT)
 					l.addAll(analyze((IPackageFragmentRoot) element, new SubProgressMonitor(pm, 1)));
-				if (element.getElementType() == IJavaScriptElement.JAVA_PROJECT)
+				if (element.getElementType() == IJavaScriptElement.JAVASCRIPT_PROJECT)
 					l.addAll(analyze((IJavaScriptProject) element, new SubProgressMonitor(pm, 1)));
 			}
 			return (NonNLSElement[]) l.toArray(new NonNLSElement[l.size()]);
@@ -304,7 +304,7 @@ public class FindStringsToExternalizeAction extends SelectionDispatchAction {
 			}
 			return result;
 		} catch (InvalidInputException e) {
-			throw new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.ERROR,
+			throw new CoreException(new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), IStatus.ERROR,
 				Messages.format(ActionMessages.FindStringsToExternalizeAction_error_cannotBeParsed, cu.getElementName()), 
 				e));
 		}	
@@ -413,7 +413,7 @@ public class FindStringsToExternalizeAction extends SelectionDispatchAction {
 		}
 		
 		private static LabelProvider createLabelProvider() {
-			return new JavaElementLabelProvider(JavaElementLabelProvider.SHOW_DEFAULT){ 
+			return new JavaScriptElementLabelProvider(JavaScriptElementLabelProvider.SHOW_DEFAULT){ 
 				public String getText(Object element) {
 					NonNLSElement nlsel= (NonNLSElement)element;
 					String elementName= nlsel.cu.getResource().getFullPath().toString();

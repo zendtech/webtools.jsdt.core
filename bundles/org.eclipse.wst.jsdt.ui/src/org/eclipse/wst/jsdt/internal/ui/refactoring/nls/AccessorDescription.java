@@ -15,7 +15,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 
 /**
@@ -52,7 +52,7 @@ public class AccessorDescription {
 			buf.append('.');
 		}
 		buf.append(getAccessorClassName());
-		buf.append(JavaElementLabels.CONCAT_STRING);
+		buf.append(JavaScriptElementLabels.CONCAT_STRING);
 		IPath propertyFilePath= getResourceBundlePackage().getPath().append(getResourceBundleName());
 		buf.append(propertyFilePath.makeRelative().toString());
 		return buf.toString();

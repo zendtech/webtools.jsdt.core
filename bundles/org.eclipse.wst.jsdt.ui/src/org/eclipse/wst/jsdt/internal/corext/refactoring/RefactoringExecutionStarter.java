@@ -142,13 +142,13 @@ public final class RefactoringExecutionStarter {
 
 	private static RenameSupport createRenameSupport(IJavaScriptElement element, String newName, int flags) throws CoreException {
 		switch (element.getElementType()) {
-			case IJavaScriptElement.JAVA_PROJECT:
+			case IJavaScriptElement.JAVASCRIPT_PROJECT:
 				return RenameSupport.create((IJavaScriptProject) element, newName, flags);
 			case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
 				return RenameSupport.create((IPackageFragmentRoot) element, newName);
 			case IJavaScriptElement.PACKAGE_FRAGMENT:
 				return RenameSupport.create((IPackageFragment) element, newName, flags);
-			case IJavaScriptElement.COMPILATION_UNIT:
+			case IJavaScriptElement.JAVASCRIPT_UNIT:
 				return RenameSupport.create((IJavaScriptUnit) element, newName, flags);
 			case IJavaScriptElement.TYPE:
 				return RenameSupport.create((IType) element, newName, flags);

@@ -36,7 +36,7 @@ import org.eclipse.wst.jsdt.core.dom.SuperMethodInvocation;
 import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.internal.corext.dom.Bindings;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 class CalleeAnalyzerVisitor extends ASTVisitor {
     private CallSearchResultCollector fSearchResults;
@@ -57,7 +57,7 @@ class CalleeAnalyzerVisitor extends ASTVisitor {
             this.fMethodStartPosition = sourceRange.getOffset();
             this.fMethodEndPosition = fMethodStartPosition + sourceRange.getLength();
         } catch (JavaScriptModelException jme) {
-            JavaPlugin.log(jme);
+            JavaScriptPlugin.log(jme);
         }
     }
 
@@ -232,7 +232,7 @@ class CalleeAnalyzerVisitor extends ASTVisitor {
 				fSearchResults.addMember(fMethod, referencedMember, position, position + node.getLength(), number < 1 ? 1 : number);
             }
         } catch (JavaScriptModelException jme) {
-            JavaPlugin.log(jme);
+            JavaScriptPlugin.log(jme);
         }
     }
     

@@ -41,7 +41,7 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.internal.corext.util.Resources;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
 
 /**
@@ -77,7 +77,7 @@ class FileTransferDragAdapter extends DragSourceAdapter implements TransferDragS
 				// valid elements are: roots, units and types. Don't allow dragging
 				// projects outside of eclipse
 				if (type != IJavaScriptElement.PACKAGE_FRAGMENT_ROOT &&
-					type != IJavaScriptElement.COMPILATION_UNIT && type != IJavaScriptElement.TYPE)
+					type != IJavaScriptElement.JAVASCRIPT_UNIT && type != IJavaScriptElement.TYPE)
 					return false;
 				IPackageFragmentRoot root= (IPackageFragmentRoot)jElement.getAncestor(IJavaScriptElement.PACKAGE_FRAGMENT_ROOT);
 				if (root != null && root.isArchive())
@@ -221,13 +221,13 @@ class FileTransferDragAdapter extends DragSourceAdapter implements TransferDragS
 	}
 	
 	private MultiStatus createMultiStatus() {
-		return new MultiStatus(JavaPlugin.getPluginId(), 
+		return new MultiStatus(JavaScriptPlugin.getPluginId(), 
 			IStatus.OK, PackagesMessages.DragAdapter_problem, null); 
 	}
 	
 	private void runOperation(IRunnableWithProgress op, boolean fork, boolean cancelable) {
 		try {
-			Shell parent= JavaPlugin.getActiveWorkbenchShell();
+			Shell parent= JavaScriptPlugin.getActiveWorkbenchShell();
 			new ProgressMonitorDialog(parent).run(fork, cancelable, op);
 		} catch (InvocationTargetException e) {
 			String message= PackagesMessages.DragAdapter_problem; 

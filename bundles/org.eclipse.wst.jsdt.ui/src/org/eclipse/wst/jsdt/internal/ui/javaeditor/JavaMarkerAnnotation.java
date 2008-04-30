@@ -67,7 +67,7 @@ public class JavaMarkerAnnotation extends MarkerAnnotation implements IJavaAnnot
 //					return IProblem.Task;
 //				}
 //			} catch (CoreException e) {
-//				JavaPlugin.log(e); // should no happen, we test for marker.exists
+//				JavaScriptPlugin.log(e); // should no happen, we test for marker.exists
 //			}
 //		}
 

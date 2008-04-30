@@ -30,7 +30,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
 import org.eclipse.wst.jsdt.internal.ui.IJavaStatusConstants;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionMessages;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionUtil;
 import org.eclipse.wst.jsdt.internal.ui.actions.SelectionConverter;
@@ -162,8 +162,8 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
                         enclosingElement= classFile.getElementAt(selection.getOffset());
                     }
                     break;
-                case IJavaScriptElement.COMPILATION_UNIT :
-                    IJavaScriptUnit cu= (IJavaScriptUnit) input.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+                case IJavaScriptElement.JAVASCRIPT_UNIT :
+                    IJavaScriptUnit cu= (IJavaScriptUnit) input.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
                     if (cu != null) {
                         enclosingElement= cu.getElementAt(selection.getOffset());
                     }
@@ -173,7 +173,7 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
                 return enclosingElement;
             }
         } catch (JavaScriptModelException e) {
-            JavaPlugin.log(e);
+            JavaScriptPlugin.log(e);
         }
 
         return null;
@@ -224,7 +224,7 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
     }
     
     private static IStatus compileCandidates(List result, IJavaScriptElement elem) {
-        IStatus ok= new Status(IStatus.OK, JavaPlugin.getPluginId(), 0, "", null); //$NON-NLS-1$        
+        IStatus ok= new Status(IStatus.OK, JavaScriptPlugin.getPluginId(), 0, "", null); //$NON-NLS-1$        
         switch (elem.getElementType()) {
             case IJavaScriptElement.METHOD:
                 result.add(elem);
@@ -234,6 +234,6 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
     }
     
     private static IStatus createStatus(String message) {
-        return new Status(IStatus.INFO, JavaPlugin.getPluginId(), IJavaStatusConstants.INTERNAL_ERROR, message, null);
+        return new Status(IStatus.INFO, JavaScriptPlugin.getPluginId(), IJavaStatusConstants.INTERNAL_ERROR, message, null);
     }           
 }

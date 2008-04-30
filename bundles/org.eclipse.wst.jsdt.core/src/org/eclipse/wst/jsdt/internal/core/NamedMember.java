@@ -162,7 +162,7 @@ public abstract class NamedMember extends Member {
 		if (packageName.length() > 0)
 			key.append('/');
 		String typeQualifiedName = type.getTypeQualifiedName('$');
-		IJavaScriptUnit cu = (IJavaScriptUnit) type.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+		IJavaScriptUnit cu = (IJavaScriptUnit) type.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 		if (cu != null) {
 			String cuName = cu.getElementName();
 			String mainTypeName = cuName.substring(0, cuName.lastIndexOf('.'));
@@ -212,7 +212,7 @@ public abstract class NamedMember extends Member {
 	public String getTypeQualifiedName(char enclosingTypeSeparator, boolean showParameters) throws JavaScriptModelException {
 		NamedMember declaringType;
 		switch (this.parent.getElementType()) {
-			case IJavaScriptElement.COMPILATION_UNIT:
+			case IJavaScriptElement.JAVASCRIPT_UNIT:
 				if (showParameters) {
 					StringBuffer buffer = new StringBuffer(this.name);
 					appendTypeParameters(buffer);

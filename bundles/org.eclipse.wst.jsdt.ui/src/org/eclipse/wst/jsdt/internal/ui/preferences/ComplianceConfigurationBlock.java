@@ -32,7 +32,7 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusInfo;
 import org.eclipse.wst.jsdt.internal.ui.wizards.IStatusChangeListener;
 import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.BuildPathSupport;
@@ -373,7 +373,7 @@ public class ComplianceConfigurationBlock extends OptionsConfigurationBlock {
 				try {
 					install= JavaRuntime.getVMInstall(JavaScriptCore.create(fProject));
 				} catch (CoreException e) {
-					JavaPlugin.log(e);
+					JavaScriptPlugin.log(e);
 				}
 			} else {
 				install= JavaRuntime.getDefaultVMInstall();

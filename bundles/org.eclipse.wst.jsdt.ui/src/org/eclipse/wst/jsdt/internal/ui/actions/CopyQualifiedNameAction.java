@@ -55,17 +55,17 @@ import org.eclipse.wst.jsdt.core.dom.TypeDeclaration;
 import org.eclipse.wst.jsdt.core.dom.TypeParameter;
 import org.eclipse.wst.jsdt.core.dom.VariableDeclaration;
 import org.eclipse.wst.jsdt.internal.corext.dom.NodeFinder;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.ASTProvider;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaEditor;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.ui.actions.SelectionDispatchAction;
 
 public class CopyQualifiedNameAction extends SelectionDispatchAction {
 	
-	private static final long LABEL_FLAGS= new Long(JavaElementLabels.F_FULLY_QUALIFIED | JavaElementLabels.M_FULLY_QUALIFIED | JavaElementLabels.I_FULLY_QUALIFIED | JavaElementLabels.T_FULLY_QUALIFIED | JavaElementLabels.M_PARAMETER_TYPES | JavaElementLabels.USE_RESOLVED | JavaElementLabels.T_TYPE_PARAMETERS | JavaElementLabels.CU_QUALIFIED | JavaElementLabels.CF_QUALIFIED).longValue();
+	private static final long LABEL_FLAGS= new Long(JavaScriptElementLabels.F_FULLY_QUALIFIED | JavaScriptElementLabels.M_FULLY_QUALIFIED | JavaScriptElementLabels.I_FULLY_QUALIFIED | JavaScriptElementLabels.T_FULLY_QUALIFIED | JavaScriptElementLabels.M_PARAMETER_TYPES | JavaScriptElementLabels.USE_RESOLVED | JavaScriptElementLabels.T_TYPE_PARAMETERS | JavaScriptElementLabels.CU_QUALIFIED | JavaScriptElementLabels.CF_QUALIFIED).longValue();
 
     //TODO: Make API
 	public static final String ACTION_DEFINITION_ID= "org.eclipse.wst.jsdt.ui.edit.text.java.copy.qualified.name"; //$NON-NLS-1$
@@ -149,7 +149,7 @@ public class CopyQualifiedNameAction extends SelectionDispatchAction {
 			Transfer[] dataTypes= null;
 			
 			if (elements.length == 1) {
-				String qualifiedName= JavaElementLabels.getElementLabel(elements[0], LABEL_FLAGS);
+				String qualifiedName= JavaScriptElementLabels.getElementLabel(elements[0], LABEL_FLAGS);
 				IResource resource= elements[0].getCorrespondingResource();
 				
 				if (resource != null) {
@@ -167,11 +167,11 @@ public class CopyQualifiedNameAction extends SelectionDispatchAction {
 				}
 			} else {
 				StringBuffer buf= new StringBuffer();
-				buf.append(JavaElementLabels.getElementLabel(elements[0], LABEL_FLAGS));
+				buf.append(JavaScriptElementLabels.getElementLabel(elements[0], LABEL_FLAGS));
 				for (int i= 1; i < elements.length; i++) {
 					IJavaScriptElement element= elements[i];
 					
-					String qualifiedName= JavaElementLabels.getElementLabel(element, LABEL_FLAGS);
+					String qualifiedName= JavaScriptElementLabels.getElementLabel(element, LABEL_FLAGS);
 					buf.append('\r').append('\n').append(qualifiedName);
 				}
 				data= new Object[] {buf.toString()};
@@ -192,7 +192,7 @@ public class CopyQualifiedNameAction extends SelectionDispatchAction {
 				clipboard.dispose();
 			}
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
     }
 
@@ -230,7 +230,7 @@ public class CopyQualifiedNameAction extends SelectionDispatchAction {
 		int length= selectedRange.y;
 		int offset= selectedRange.x;
 		
-		IJavaScriptElement element= JavaUI.getEditorInputJavaElement(editor.getEditorInput());		
+		IJavaScriptElement element= JavaScriptUI.getEditorInputJavaElement(editor.getEditorInput());		
 		JavaScriptUnit ast= ASTProvider.getASTProvider().getAST(element, ASTProvider.WAIT_YES, null);
 		if (ast == null)
 			return null;

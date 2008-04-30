@@ -45,7 +45,7 @@ import org.eclipse.wst.jsdt.internal.corext.util.JavaElementResourceMapping;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.SearchUtils;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 public final class CreateCopyOfCompilationUnitChange extends CreateTextFileChange {
 
@@ -107,7 +107,7 @@ public final class CreateCopyOfCompilationUnitChange extends CreateTextFileChang
 				try {
 					return fTypeOccurrenceCollector.acceptSearchMatch2(copy, match);
 				} catch (CoreException e) {
-					JavaPlugin.log(e);
+					JavaScriptPlugin.log(e);
 					return null;
 				}
 			}

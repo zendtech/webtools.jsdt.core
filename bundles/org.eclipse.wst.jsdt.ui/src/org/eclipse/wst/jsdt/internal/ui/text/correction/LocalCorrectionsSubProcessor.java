@@ -94,7 +94,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.surround.ExceptionAnalyz
 import org.eclipse.wst.jsdt.internal.corext.refactoring.surround.SurroundWithTryCatchRefactoring;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.fix.CodeStyleCleanUp;
 import org.eclipse.wst.jsdt.internal.ui.fix.Java50CleanUp;
@@ -288,9 +288,9 @@ public class LocalCorrectionsSubProcessor {
 						return;
 					ExternalizeWizard wizard= new ExternalizeWizard(refactoring);
 					String dialogTitle= CorrectionMessages.LocalCorrectionsSubProcessor_externalizestrings_dialog_title;
-					new RefactoringStarter().activate(refactoring, wizard, JavaPlugin.getActiveWorkbenchShell(), dialogTitle, RefactoringSaveHelper.SAVE_NON_JAVA_UPDATES);
+					new RefactoringStarter().activate(refactoring, wizard, JavaScriptPlugin.getActiveWorkbenchShell(), dialogTitle, RefactoringSaveHelper.SAVE_NON_JAVA_UPDATES);
 				} catch (JavaScriptModelException e) {
-					JavaPlugin.log(e);
+					JavaScriptPlugin.log(e);
 				}
 			}
 			public String getAdditionalProposalInfo() {
@@ -314,7 +314,7 @@ public class LocalCorrectionsSubProcessor {
 	public static void getUnnecessaryNLSTagProposals(IInvocationContext context, IProblemLocation problem, Collection proposals) throws CoreException {
 		IFix fix= StringFix.createFix(context.getASTRoot(), problem, true, false);
 		if (fix != null) {
-			Image image= JavaPlugin.getDefault().getWorkbench().getSharedImages().getImage(ISharedImages.IMG_TOOL_DELETE);
+			Image image= JavaScriptPlugin.getDefault().getWorkbench().getSharedImages().getImage(ISharedImages.IMG_TOOL_DELETE);
 			Map options= new Hashtable();
 			options.put(CleanUpConstants.REMOVE_UNNECESSARY_NLS_TAGS, CleanUpConstants.TRUE);
 			FixCorrectionProposal proposal= new FixCorrectionProposal(fix, new StringCleanUp(options), 6, image, context);
@@ -478,7 +478,7 @@ public class LocalCorrectionsSubProcessor {
 
 	private static void addProposal(IInvocationContext context, Collection proposals, final UnusedCodeFix fix) {
 		if (fix != null) {
-			Image image= JavaPlugin.getDefault().getWorkbench().getSharedImages().getImage(ISharedImages.IMG_TOOL_DELETE);
+			Image image= JavaScriptPlugin.getDefault().getWorkbench().getSharedImages().getImage(ISharedImages.IMG_TOOL_DELETE);
 			FixCorrectionProposal proposal= new FixCorrectionProposal(fix, fix.getCleanUp(), 10, image, context);
 			proposals.add(proposal);
 		}
@@ -821,7 +821,7 @@ public class LocalCorrectionsSubProcessor {
 			ASTRewrite rewrite= ASTRewrite.create(selectedNode.getAST());
 			rewrite.remove(selectedNode, null);
 			String label= CorrectionMessages.LocalCorrectionsSubProcessor_removeunreachablecode_description;
-			Image image= JavaPlugin.getDefault().getWorkbench().getSharedImages().getImage(ISharedImages.IMG_TOOL_DELETE);
+			Image image= JavaScriptPlugin.getDefault().getWorkbench().getSharedImages().getImage(ISharedImages.IMG_TOOL_DELETE);
 			ASTRewriteCorrectionProposal proposal= new ASTRewriteCorrectionProposal(label, context.getCompilationUnit(), rewrite, 3, image); 
 			proposals.add(proposal);
 		}
@@ -933,7 +933,7 @@ public class LocalCorrectionsSubProcessor {
 		ChangeCorrectionProposal proposal= new ChangeCorrectionProposal(CorrectionMessages.LocalCorrectionsSubProcessor_InferGenericTypeArguments, null, 5, JavaPluginImages.get(JavaPluginImages.IMG_CORRECTION_CHANGE)) {
 			public void apply(IDocument document) {
 				IEditorInput input= new FileEditorInput((IFile) cu.getResource());
-				IWorkbenchPage p= JavaPlugin.getActivePage();
+				IWorkbenchPage p= JavaScriptPlugin.getActivePage();
 				if (p == null)
 					return;
 				

@@ -66,7 +66,7 @@ import org.eclipse.wst.jsdt.internal.corext.dom.LinkedNodeFinder;
 import org.eclipse.wst.jsdt.internal.corext.dom.NodeFinder;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.rename.RenamingNameSuggestor;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.ASTProvider;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.EditorHighlightingSynchronizer;
@@ -180,7 +180,7 @@ public class RenameLinkedMode {
 		int offset= fOriginalSelection.x;
 		
 		try {
-			JavaScriptUnit root= JavaPlugin.getDefault().getASTProvider().getAST(getCompilationUnit(), ASTProvider.WAIT_YES, null);
+			JavaScriptUnit root= JavaScriptPlugin.getDefault().getASTProvider().getAST(getCompilationUnit(), ASTProvider.WAIT_YES, null);
 			
 			fLinkedPositionGroup= new LinkedPositionGroup();
 			ASTNode selectedNode= NodeFinder.perform(root, fOriginalSelection.x, fOriginalSelection.y);
@@ -245,7 +245,7 @@ public class RenameLinkedMode {
 			fgActiveLinkedMode= this;
 			
 		} catch (BadLocationException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 	}
 	
@@ -335,13 +335,13 @@ public class RenameLinkedMode {
 			}
 			JavaModelUtil.reconcile(getCompilationUnit());
 		} catch (CoreException ex) {
-			JavaPlugin.log(ex);
+			JavaScriptPlugin.log(ex);
 		} catch (InterruptedException ex) {
 			// canceling is OK -> redo text changes in that case?
 		} catch (InvocationTargetException ex) {
-			JavaPlugin.log(ex);
+			JavaScriptPlugin.log(ex);
 		} catch (BadLocationException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		} finally {
 			if (label != null)
 				label.dispose();
@@ -406,7 +406,7 @@ public class RenameLinkedMode {
 				});
 			}
 		} catch (InvocationTargetException e) {
-			throw new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), ReorgMessages.RenameLinkedMode_error_saving_editor, e));
+			throw new CoreException(new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), ReorgMessages.RenameLinkedMode_error_saving_editor, e));
 		} catch (InterruptedException e) {
 			// cancelling is OK
 			return null;
@@ -434,9 +434,9 @@ public class RenameLinkedMode {
 			if (renameSupport != null)
 				renameSupport.openDialog(fEditor.getSite().getShell());
 		} catch (CoreException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		} catch (BadLocationException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 	}
 	
@@ -451,7 +451,7 @@ public class RenameLinkedMode {
 		// see RefactoringExecutionStarter#createRenameSupport(..):
 		int elementType= javaElement.getElementType();
 		switch (elementType) {
-			case IJavaScriptElement.JAVA_PROJECT:
+			case IJavaScriptElement.JAVASCRIPT_PROJECT:
 				contributionId= IJavaRefactorings.RENAME_JAVA_PROJECT;
 				break;
 			case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
@@ -460,7 +460,7 @@ public class RenameLinkedMode {
 			case IJavaScriptElement.PACKAGE_FRAGMENT:
 				contributionId= IJavaRefactorings.RENAME_PACKAGE;
 				break;
-			case IJavaScriptElement.COMPILATION_UNIT:
+			case IJavaScriptElement.JAVASCRIPT_UNIT:
 				contributionId= IJavaRefactorings.RENAME_COMPILATION_UNIT;
 				break;
 			case IJavaScriptElement.TYPE:
@@ -496,7 +496,7 @@ public class RenameLinkedMode {
 		if (elementType != IJavaScriptElement.PACKAGE_FRAGMENT_ROOT)
 			descriptor.setUpdateReferences(true);
 		
-		IDialogSettings javaSettings= JavaPlugin.getDefault().getDialogSettings();
+		IDialogSettings javaSettings= JavaScriptPlugin.getDefault().getDialogSettings();
 		IDialogSettings refactoringSettings= javaSettings.getSection(RefactoringWizardPage.REFACTORING_SETTINGS); //TODO: undocumented API
 		if (refactoringSettings == null) {
 			refactoringSettings= javaSettings.addNewSection(RefactoringWizardPage.REFACTORING_SETTINGS); 
@@ -510,7 +510,7 @@ public class RenameLinkedMode {
 		}
 		switch (elementType) {
 			case IJavaScriptElement.TYPE:
-//			case IJavaScriptElement.COMPILATION_UNIT: // TODO
+//			case IJavaScriptElement.JAVASCRIPT_UNIT: // TODO
 				descriptor.setUpdateSimilarDeclarations(refactoringSettings.getBoolean(RenameRefactoringWizard.TYPE_UPDATE_SIMILAR_ELEMENTS));
 				int strategy;
 				try {

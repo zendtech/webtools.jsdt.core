@@ -47,7 +47,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.reorg.IPackageFragmentRootManipulationQuery;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.util.JavaElementUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 public class DeletePackageFragmentRootChange extends AbstractDeleteChange {
 	
@@ -147,7 +147,7 @@ public class DeletePackageFragmentRootChange extends AbstractDeleteChange {
 		try {
 			reader= new InputStreamReader(contents, file.getCharset());
 		} catch (UnsupportedEncodingException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 			reader= new InputStreamReader(contents);
 		}
 		try {

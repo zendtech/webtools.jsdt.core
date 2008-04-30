@@ -22,7 +22,7 @@ import org.eclipse.ui.navigator.ILinkHelper;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.EditorUtility;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 public class JavaFileLinkHelper implements ILinkHelper {
 
@@ -40,7 +40,7 @@ public class JavaFileLinkHelper implements ILinkHelper {
 	}
 
 	public IStructuredSelection findSelection(IEditorInput input) {
-		IJavaScriptElement element= JavaUI.getEditorInputJavaElement(input);
+		IJavaScriptElement element= JavaScriptUI.getEditorInputJavaElement(input);
 		if (element == null) {
 			IFile file = ResourceUtil.getFile(input);
 			if (file != null) {

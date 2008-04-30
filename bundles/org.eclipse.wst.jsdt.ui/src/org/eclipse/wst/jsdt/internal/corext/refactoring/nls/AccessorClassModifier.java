@@ -46,9 +46,9 @@ import org.eclipse.wst.jsdt.internal.corext.dom.GenericVisitor;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.changes.CompilationUnitChange;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaStatusConstants;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.ASTProvider;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 import com.ibm.icu.text.Collator;
 
@@ -65,7 +65,7 @@ public class AccessorClassModifier {
 
 		fCU= cu;
 		
-		fRoot= JavaPlugin.getDefault().getASTProvider().getAST(cu, ASTProvider.WAIT_YES, null);
+		fRoot= JavaScriptPlugin.getDefault().getASTProvider().getAST(cu, ASTProvider.WAIT_YES, null);
 		fAst= fRoot.getAST();
 		fASTRewrite= ASTRewrite.create(fAst);
 		
@@ -99,7 +99,7 @@ public class AccessorClassModifier {
 			});
 			fListRewrite= fASTRewrite.getListRewrite(parent, TypeDeclaration.BODY_DECLARATIONS_PROPERTY);
 		} else {
-			IStatus status= new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IJavaStatusConstants.INTERNAL_ERROR, NLSMessages.AccessorClassModifier_missingType, null); 
+			IStatus status= new Status(IStatus.ERROR, JavaScriptUI.ID_PLUGIN, IJavaStatusConstants.INTERNAL_ERROR, NLSMessages.AccessorClassModifier_missingType, null); 
 			throw new CoreException(status);
 		}
 	}

@@ -15,7 +15,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 public class JavadocMemberContentProvider implements ITreeContentProvider {
 
@@ -61,7 +61,7 @@ public class JavadocMemberContentProvider implements ITreeContentProvider {
 				return cu;
 			}
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		return new Object[0];
 	}

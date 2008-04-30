@@ -135,7 +135,7 @@ public class JavaWorkingSetUpdater implements IWorkingSetUpdater, IElementChange
 		int type= jElement.getElementType();
 		int kind= delta.getKind();
 		int flags= delta.getFlags();
-		if (type == IJavaScriptElement.JAVA_PROJECT && kind == IJavaScriptElementDelta.CHANGED) {
+		if (type == IJavaScriptElement.JAVASCRIPT_PROJECT && kind == IJavaScriptElementDelta.CHANGED) {
 			if (index != -1 && (flags & IJavaScriptElementDelta.F_CLOSED) != 0) {
 				result.set(index, ((IJavaScriptProject)jElement).getProject());
 			} else if ((flags & IJavaScriptElementDelta.F_OPENED) != 0) {

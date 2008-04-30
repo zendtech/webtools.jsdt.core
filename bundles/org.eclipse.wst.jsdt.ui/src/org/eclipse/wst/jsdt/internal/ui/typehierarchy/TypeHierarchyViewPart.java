@@ -98,7 +98,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.CompositeActionGroup;
 import org.eclipse.wst.jsdt.internal.ui.actions.NewWizardsActionGroup;
 import org.eclipse.wst.jsdt.internal.ui.actions.SelectAllAction;
@@ -117,8 +117,8 @@ import org.eclipse.wst.jsdt.internal.ui.viewsupport.StatusBarUpdater;
 import org.eclipse.wst.jsdt.internal.ui.workingsets.WorkingSetFilterActionGroup;
 import org.eclipse.wst.jsdt.ui.IContextMenuConstants;
 import org.eclipse.wst.jsdt.ui.ITypeHierarchyViewPart;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 import org.eclipse.wst.jsdt.ui.actions.CCPActionGroup;
 import org.eclipse.wst.jsdt.ui.actions.GenerateActionGroup;
@@ -249,7 +249,7 @@ public class TypeHierarchyViewPart extends ViewPart implements ITypeHierarchyVie
 			new ToggleViewAction(this, HIERARCHY_MODE_SUBTYPES)
 		};
 		
-		fDialogSettings= JavaPlugin.getDefault().getDialogSettings();
+		fDialogSettings= JavaScriptPlugin.getDefault().getDialogSettings();
 		
 		fHistoryDropDownAction= new HistoryDropDownAction(this);
 		fHistoryDropDownAction.setEnabled(false);
@@ -459,9 +459,9 @@ public class TypeHierarchyViewPart extends ViewPart implements ITypeHierarchyVie
 				}
 			} else {
 				int kind= element.getElementType();
-				if (kind != IJavaScriptElement.JAVA_PROJECT && kind != IJavaScriptElement.PACKAGE_FRAGMENT_ROOT && kind != IJavaScriptElement.PACKAGE_FRAGMENT) {
+				if (kind != IJavaScriptElement.JAVASCRIPT_PROJECT && kind != IJavaScriptElement.PACKAGE_FRAGMENT_ROOT && kind != IJavaScriptElement.PACKAGE_FRAGMENT) {
 					element= null;
-					JavaPlugin.logErrorMessage("Invalid type hierarchy input type.");//$NON-NLS-1$
+					JavaScriptPlugin.logErrorMessage("Invalid type hierarchy input type.");//$NON-NLS-1$
 				}
 			}
 		}	
@@ -506,7 +506,7 @@ public class TypeHierarchyViewPart extends ViewPart implements ITypeHierarchyVie
 			fInputElement= inputElement;
 			fNoHierarchyShownLabel.setText(Messages.format(TypeHierarchyMessages.TypeHierarchyViewPart_createinput, inputElement.getElementName())); 
 			try {
-				fHierarchyLifeCycle.ensureRefreshedTypeHierarchy(inputElement, JavaPlugin.getActiveWorkbenchWindow());
+				fHierarchyLifeCycle.ensureRefreshedTypeHierarchy(inputElement, JavaScriptPlugin.getActiveWorkbenchWindow());
 				// fHierarchyLifeCycle.ensureRefreshedTypeHierarchy(inputElement, getSite().getWorkbenchWindow());
 			} catch (InvocationTargetException e) {
 				ExceptionHandler.handle(e, getSite().getShell(), TypeHierarchyMessages.TypeHierarchyViewPart_exception_title, TypeHierarchyMessages.TypeHierarchyViewPart_exception_message); 
@@ -573,7 +573,7 @@ public class TypeHierarchyViewPart extends ViewPart implements ITypeHierarchyVie
 		}
 		
 		if (fPropertyChangeListener != null) {
-			JavaPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(fPropertyChangeListener);
+			JavaScriptPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(fPropertyChangeListener);
 			fPropertyChangeListener= null;
 		}
 		
@@ -599,7 +599,7 @@ public class TypeHierarchyViewPart extends ViewPart implements ITypeHierarchyVie
 		if (key == IShowInTargetList.class) {
 			return new IShowInTargetList() {
 				public String[] getShowInTargetIds() {
-					return new String[] { JavaUI.ID_PACKAGES, IPageLayout.ID_RES_NAV  };
+					return new String[] { JavaScriptUI.ID_PACKAGES, IPageLayout.ID_RES_NAV  };
 				}
 
 			};
@@ -1002,7 +1002,7 @@ public class TypeHierarchyViewPart extends ViewPart implements ITypeHierarchyVie
 	 * Creates the context menu for the hierarchy viewers
 	 */
 	private void fillTypesViewerContextMenu(TypeHierarchyViewer viewer, IMenuManager menu) {
-		JavaPlugin.createStandardGroups(menu);
+		JavaScriptPlugin.createStandardGroups(menu);
 		
 		menu.appendToGroup(IContextMenuConstants.GROUP_SHOW, new Separator(GROUP_FOCUS));
 		// viewer entries
@@ -1021,7 +1021,7 @@ public class TypeHierarchyViewPart extends ViewPart implements ITypeHierarchyVie
 	 * Creates the context menu for the method viewer
 	 */	
 	private void fillMethodsViewerContextMenu(IMenuManager menu) {
-		JavaPlugin.createStandardGroups(menu);
+		JavaScriptPlugin.createStandardGroups(menu);
 		// viewer entries
 		fMethodsViewer.contributeToContextMenu(menu);
 		fActionGroups.setContext(new ActionContext(getSite().getSelectionProvider().getSelection()));
@@ -1225,11 +1225,11 @@ public class TypeHierarchyViewPart extends ViewPart implements ITypeHierarchyVie
 		if (fInputElement != null) {
 			IWorkingSet workingSet= fWorkingSetActionGroup.getWorkingSet();
 			if (workingSet == null) {
-				String[] args= new String[] { viewerTitle, JavaElementLabels.getElementLabel(fInputElement, JavaElementLabels.ALL_DEFAULT) };
+				String[] args= new String[] { viewerTitle, JavaScriptElementLabels.getElementLabel(fInputElement, JavaScriptElementLabels.ALL_DEFAULT) };
 				title= Messages.format(TypeHierarchyMessages.TypeHierarchyViewPart_title, args); 
 				tooltip= Messages.format(TypeHierarchyMessages.TypeHierarchyViewPart_tooltip, args); 
 			} else {
-				String[] args= new String[] { viewerTitle, JavaElementLabels.getElementLabel(fInputElement, JavaElementLabels.ALL_DEFAULT), workingSet.getLabel() };
+				String[] args= new String[] { viewerTitle, JavaScriptElementLabels.getElementLabel(fInputElement, JavaScriptElementLabels.ALL_DEFAULT), workingSet.getLabel() };
 				title= Messages.format(TypeHierarchyMessages.TypeHierarchyViewPart_ws_title, args); 
 				tooltip= Messages.format(TypeHierarchyMessages.TypeHierarchyViewPart_ws_tooltip, args); 
 			}

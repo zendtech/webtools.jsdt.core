@@ -36,7 +36,7 @@ import org.eclipse.wst.jsdt.core.dom.ASTNode;
 import org.eclipse.wst.jsdt.core.dom.SimpleName;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionUtil;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaEditor;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.ui.text.java.IInvocationContext;
 
 /**
@@ -59,8 +59,8 @@ public class CorrectionCommandHandler extends AbstractHandler {
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		ISelection selection= fEditor.getSelectionProvider().getSelection();
-		IJavaScriptUnit cu= JavaUI.getWorkingCopyManager().getWorkingCopy(fEditor.getEditorInput());
-		IAnnotationModel model= JavaUI.getDocumentProvider().getAnnotationModel(fEditor.getEditorInput());
+		IJavaScriptUnit cu= JavaScriptUI.getWorkingCopyManager().getWorkingCopy(fEditor.getEditorInput());
+		IAnnotationModel model= JavaScriptUI.getDocumentProvider().getAnnotationModel(fEditor.getEditorInput());
 		if (selection instanceof ITextSelection && cu != null && model != null) {
 			if (! ActionUtil.isEditable(fEditor)) {
 				return null;
@@ -116,7 +116,7 @@ public class CorrectionCommandHandler extends AbstractHandler {
 	}
 
 	private IDocument getDocument() {
-		return JavaUI.getDocumentProvider().getDocument(fEditor.getEditorInput());
+		return JavaScriptUI.getDocumentProvider().getDocument(fEditor.getEditorInput());
 	}
 	
 	

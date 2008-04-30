@@ -50,12 +50,12 @@ import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.navigator.ContainerFolder;
 import org.eclipse.wst.jsdt.internal.ui.workingsets.WorkingSetModel;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 import org.eclipse.wst.jsdt.ui.ProjectLibraryRoot;
-import org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider;
+import org.eclipse.wst.jsdt.ui.StandardJavaScriptElementContentProvider;
  
 /**
  * Content provider for the PackageExplorer.
@@ -65,9 +65,9 @@ import org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider;
  * layout.
  * </p>
  * 
- * @see org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider
+ * @see org.eclipse.wst.jsdt.ui.StandardJavaScriptElementContentProvider
  */
-public class PackageExplorerContentProvider extends StandardJavaElementContentProvider implements ITreeContentProvider, IElementChangedListener, IPropertyChangeListener {
+public class PackageExplorerContentProvider extends StandardJavaScriptElementContentProvider implements ITreeContentProvider, IElementChangedListener, IPropertyChangeListener {
 	
 	protected static final int ORIGINAL= 0;
 	protected static final int PARENT= 1 << 0;
@@ -92,7 +92,7 @@ public class PackageExplorerContentProvider extends StandardJavaElementContentPr
 		fIsFlatLayout= false;
 		fFoldPackages= arePackagesFoldedInHierarchicalLayout();
 		fPendingUpdates= null;
-		JavaPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
+		JavaScriptPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
 	}
 	
 	private boolean arePackagesFoldedInHierarchicalLayout(){
@@ -116,7 +116,7 @@ public class PackageExplorerContentProvider extends StandardJavaElementContentPr
 
 			processDelta(event.getDelta(), runnables);
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		} finally {	
 			executeRunnables(runnables);
 		}
@@ -209,11 +209,11 @@ public class PackageExplorerContentProvider extends StandardJavaElementContentPr
 	public void dispose() {
 		super.dispose();
 		JavaScriptCore.removeElementChangedListener(this);
-		JavaPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(this);
+		JavaScriptPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(this);
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider#getPackageFragmentRootContent(org.eclipse.wst.jsdt.core.IPackageFragmentRoot)
+	 * @see org.eclipse.wst.jsdt.ui.StandardJavaScriptElementContentProvider#getPackageFragmentRootContent(org.eclipse.wst.jsdt.core.IPackageFragmentRoot)
 	 */
 	protected Object[] getPackageFragmentRootContent(IPackageFragmentRoot root) throws JavaScriptModelException {
 		if (fIsFlatLayout) {
@@ -233,7 +233,7 @@ public class PackageExplorerContentProvider extends StandardJavaElementContentPr
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider#getPackageContent(org.eclipse.wst.jsdt.core.IPackageFragment)
+	 * @see org.eclipse.wst.jsdt.ui.StandardJavaScriptElementContentProvider#getPackageContent(org.eclipse.wst.jsdt.core.IPackageFragment)
 	 */
 	protected Object[] getPackageContent(IPackageFragment fragment) throws JavaScriptModelException {
 		if (fIsFlatLayout) {
@@ -254,7 +254,7 @@ public class PackageExplorerContentProvider extends StandardJavaElementContentPr
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider#getFolderContent(org.eclipse.core.resources.IFolder)
+	 * @see org.eclipse.wst.jsdt.ui.StandardJavaScriptElementContentProvider#getFolderContent(org.eclipse.core.resources.IFolder)
 	 */
 	protected Object[] getFolderContent(IFolder folder) throws CoreException {
 		if (fIsFlatLayout) {
@@ -355,7 +355,7 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 		return allChildren.toArray();
 	}
 	/* (non-Javadoc)
-	 * @see org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider#getPackageFragmentRoots(org.eclipse.wst.jsdt.core.IJavaScriptProject)
+	 * @see org.eclipse.wst.jsdt.ui.StandardJavaScriptElementContentProvider#getPackageFragmentRoots(org.eclipse.wst.jsdt.core.IJavaScriptProject)
 	 */
 	protected Object[] getPackageFragmentRoots(IJavaScriptProject project) throws JavaScriptModelException {
 		if (!project.getProject().isOpen())
@@ -731,7 +731,7 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 		int elementType= element.getElementType();
 		
 		
-		if (elementType != IJavaScriptElement.JAVA_MODEL && elementType != IJavaScriptElement.JAVA_PROJECT) {
+		if (elementType != IJavaScriptElement.JAVASCRIPT_MODEL && elementType != IJavaScriptElement.JAVASCRIPT_PROJECT) {
 			IJavaScriptProject proj= element.getJavaScriptProject();
 			if (proj == null || !proj.getProject().isOpen()) // TODO: Not needed if parent already did the 'open' check!
 				return false;	
@@ -761,7 +761,7 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 			return false;
 		}
 		
-		if (elementType == IJavaScriptElement.COMPILATION_UNIT) {
+		if (elementType == IJavaScriptElement.JAVASCRIPT_UNIT) {
 			IJavaScriptUnit cu= (IJavaScriptUnit) element;
 			if (!JavaModelUtil.isPrimary(cu)) {
 				return false;
@@ -781,7 +781,7 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 			
 		}
 		
-		if (elementType == IJavaScriptElement.JAVA_PROJECT) {
+		if (elementType == IJavaScriptElement.JAVASCRIPT_PROJECT) {
 			// handle open and closing of a project
 			if ((flags & (IJavaScriptElementDelta.F_CLOSED | IJavaScriptElementDelta.F_OPENED)) != 0) {			
 				postRefresh(element, ORIGINAL, element, runnables);
@@ -847,7 +847,7 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 			}
 		}
 	
-		if (elementType == IJavaScriptElement.COMPILATION_UNIT) {
+		if (elementType == IJavaScriptElement.JAVASCRIPT_UNIT) {
 			if (kind == IJavaScriptElementDelta.CHANGED) {
 				// isStructuralCUChange already performed above
 				postRefresh(element, ORIGINAL, element, runnables);

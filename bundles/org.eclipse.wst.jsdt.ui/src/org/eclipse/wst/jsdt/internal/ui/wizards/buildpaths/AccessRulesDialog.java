@@ -41,7 +41,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.preferences.ProblemSeveritiesPreferencePage;
 import org.eclipse.wst.jsdt.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.DialogField;
@@ -50,7 +50,7 @@ import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.IListAdapter;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.LayoutUtil;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.ListDialogField;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.SelectionButtonDialogField;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 public class AccessRulesDialog extends StatusDialog {
 	
@@ -206,7 +206,7 @@ public class AccessRulesDialog extends StatusDialog {
 				data.widthHint= convertWidthInCharsToPixels(70);
 				text.setLayoutData(data);				
 			} catch (IllegalArgumentException e) {
-				JavaPlugin.log(e); // invalid string
+				JavaScriptPlugin.log(e); // invalid string
 			} finally {
 				toolkit.dispose();
 			}
@@ -238,7 +238,7 @@ public class AccessRulesDialog extends StatusDialog {
 		switch (fCurrElement.getEntryKind()) {
 			case IIncludePathEntry.CPE_CONTAINER:
 				try {
-					name= JavaElementLabels.getContainerEntryLabel(fCurrElement.getPath(), fCurrElement.getJavaProject());
+					name= JavaScriptElementLabels.getContainerEntryLabel(fCurrElement.getPath(), fCurrElement.getJavaProject());
 				} catch (JavaScriptModelException e) {
 				}
 				desc= NewWizardMessages.AccessRulesDialog_container_description;

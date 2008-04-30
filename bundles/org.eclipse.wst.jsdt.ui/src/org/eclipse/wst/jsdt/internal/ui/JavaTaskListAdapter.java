@@ -27,7 +27,7 @@ public class JavaTaskListAdapter implements ITaskListResourceAdapter {
 		if (resource != null)
 			return resource; 
 		
-		IJavaScriptUnit cu= (IJavaScriptUnit) java.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+		IJavaScriptUnit cu= (IJavaScriptUnit) java.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 		if (cu != null) {
 			return cu.getPrimary().getResource();
 		}

@@ -22,7 +22,7 @@ import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchConstants;
 import org.eclipse.wst.jsdt.core.search.SearchEngine;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.OpenTypeSelectionDialog;
 import org.eclipse.wst.jsdt.internal.ui.util.OpenTypeHierarchyUtil;
 
@@ -39,7 +39,7 @@ public class OpenTypeInHierarchyAction extends Action implements IWorkbenchWindo
 	}
 
 	public void run() {
-		Shell parent= JavaPlugin.getActiveWorkbenchShell();
+		Shell parent= JavaScriptPlugin.getActiveWorkbenchShell();
 		OpenTypeSelectionDialog dialog= new OpenTypeSelectionDialog(parent, false, 
 			PlatformUI.getWorkbench().getProgressService(), 
 			SearchEngine.createWorkspaceScope(), IJavaScriptSearchConstants.TYPE);

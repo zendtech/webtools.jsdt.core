@@ -336,7 +336,7 @@ public class ChangeCollector {
 	 */
 	private void getAllTypesFromElement(IJavaScriptElement element, ArrayList allTypes) throws JavaScriptModelException {
 		switch (element.getElementType()) {
-			case IJavaScriptElement.COMPILATION_UNIT:
+			case IJavaScriptElement.JAVASCRIPT_UNIT:
 				IType[] types = ((IJavaScriptUnit)element).getTypes();
 				for (int i = 0, length = types.length; i < length; i++) {
 					IType type = types[i];
@@ -373,7 +373,7 @@ public class ChangeCollector {
 	 */
 	private void getAllTypesFromHierarchy(JavaElement element, ArrayList allTypes) {
 		switch (element.getElementType()) {
-			case IJavaScriptElement.COMPILATION_UNIT:
+			case IJavaScriptElement.JAVASCRIPT_UNIT:
 				ArrayList types = (ArrayList)this.hierarchy.files.get(element);
 				if (types != null) {
 					allTypes.addAll(types);

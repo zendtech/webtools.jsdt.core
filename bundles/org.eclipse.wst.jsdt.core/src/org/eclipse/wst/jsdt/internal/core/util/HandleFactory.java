@@ -188,7 +188,7 @@ public class HandleFactory {
 			case Scope.CLASS_SCOPE :
 				IJavaScriptElement parentElement = createElement(scope.parent, elementPosition, unit, existingElements, knownScopes);
 				switch (parentElement.getElementType()) {
-					case IJavaScriptElement.COMPILATION_UNIT :
+					case IJavaScriptElement.JAVASCRIPT_UNIT :
 						newElement = ((IJavaScriptUnit)parentElement).getType(new String(scope.enclosingSourceType().sourceName));
 						break;
 					case IJavaScriptElement.TYPE :

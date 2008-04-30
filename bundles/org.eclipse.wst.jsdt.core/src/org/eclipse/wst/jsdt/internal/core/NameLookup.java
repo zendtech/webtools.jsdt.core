@@ -615,7 +615,7 @@ public class NameLookup implements SuffixConstants {
 			switch (fromFactory.getElementType()) {
 				case IJavaScriptElement.PACKAGE_FRAGMENT:
 					return (IPackageFragment) fromFactory;
-				case IJavaScriptElement.JAVA_PROJECT:
+				case IJavaScriptElement.JAVASCRIPT_PROJECT:
 					// default package in a default root
 					JavaProject project = (JavaProject) fromFactory;
 					try {

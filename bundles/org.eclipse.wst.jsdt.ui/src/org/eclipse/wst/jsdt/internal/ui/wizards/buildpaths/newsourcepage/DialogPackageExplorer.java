@@ -54,7 +54,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.core.JavaProject;
 import org.eclipse.wst.jsdt.internal.corext.buildpath.ClasspathModifier;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.filters.LibraryFilter;
 import org.eclipse.wst.jsdt.internal.ui.filters.OutputFolderFilter;
 import org.eclipse.wst.jsdt.internal.ui.packageview.PackageExplorerContentProvider;
@@ -67,8 +67,8 @@ import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.CPListElement;
 import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.CPListElementAttribute;
 import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.CPListLabelProvider;
 import org.eclipse.wst.jsdt.internal.ui.workingsets.WorkingSetModel;
-import org.eclipse.wst.jsdt.ui.JavaElementComparator;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementComparator;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 /**
  * A package explorer widget that can be used in dialogs. It uses its own 
@@ -126,7 +126,7 @@ public class DialogPackageExplorer implements IMenuListener, ISelectionProvider,
                     extendedChildren[0]= outputFolder;
                     return extendedChildren;
                 } catch (JavaScriptModelException e) {
-                    JavaPlugin.log(e);
+                    JavaScriptPlugin.log(e);
                 }
                 return null;
             }
@@ -183,7 +183,7 @@ public class DialogPackageExplorer implements IMenuListener, ISelectionProvider,
                             return Messages.format(NewWizardMessages.DialogPackageExplorer_LabelProvider_Excluded, text); 
                 }
             } catch (JavaScriptModelException e) {
-                JavaPlugin.log(e);
+                JavaScriptPlugin.log(e);
             }
             return text;
         }
@@ -212,7 +212,7 @@ public class DialogPackageExplorer implements IMenuListener, ISelectionProvider,
                         return getBlueColor();
                 } 
             } catch (JavaScriptModelException e) {
-                JavaPlugin.log(e);
+                JavaScriptPlugin.log(e);
             }
             return null;
         }
@@ -238,7 +238,7 @@ public class DialogPackageExplorer implements IMenuListener, ISelectionProvider,
      * folder (if any) as first child of a source folder. The other java elements
      * are sorted in the normal way.
      */
-    private final class ExtendedJavaElementSorter extends JavaElementComparator {
+    private final class ExtendedJavaElementSorter extends JavaScriptElementComparator {
         public ExtendedJavaElementSorter() {
             super();
         }
@@ -283,7 +283,7 @@ public class DialogPackageExplorer implements IMenuListener, ISelectionProvider,
                 	return false;
                 }
             } catch (JavaScriptModelException e) {
-                JavaPlugin.log(e);
+                JavaScriptPlugin.log(e);
             }
             /*if (element instanceof IPackageFragmentRoot) {
                 IPackageFragmentRoot root= (IPackageFragmentRoot)element;
@@ -387,7 +387,7 @@ public class DialogPackageExplorer implements IMenuListener, ISelectionProvider,
     public void menuAboutToShow(IMenuManager manager) {
         if (fActionGroup == null) // no context menu
             return;
-        JavaPlugin.createStandardGroups(manager);
+        JavaScriptPlugin.createStandardGroups(manager);
         fActionGroup.fillContextMenu(manager);
     }
     
@@ -401,7 +401,7 @@ public class DialogPackageExplorer implements IMenuListener, ISelectionProvider,
     	}
 		fContentProvider= new PackageContentProvider();
 		fContentProvider.setIsFlatLayout(true);
-		PackageLabelProvider labelProvider= new PackageLabelProvider(AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | JavaElementLabels.P_COMPRESSED,
+		PackageLabelProvider labelProvider= new PackageLabelProvider(AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | JavaScriptElementLabels.P_COMPRESSED,
 				AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS | JavaElementImageProvider.SMALL_ICONS);
 		fPackageViewer.setContentProvider(fContentProvider);
 		fPackageViewer.setLabelProvider(new DecoratingJavaLabelProvider(labelProvider, false));
@@ -456,7 +456,7 @@ public class DialogPackageExplorer implements IMenuListener, ISelectionProvider,
 	            }
 	        }, ResourcesPlugin.getWorkspace().getRoot(), IWorkspace.AVOID_UPDATE, new NullProgressMonitor());
         } catch (CoreException e) {
-	        JavaPlugin.log(e);
+	        JavaScriptPlugin.log(e);
         }
     }
     

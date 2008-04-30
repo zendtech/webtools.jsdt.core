@@ -48,7 +48,7 @@ import org.eclipse.wst.jsdt.core.dom.ASTRequestor;
 import org.eclipse.wst.jsdt.core.dom.IBinding;
 import org.eclipse.wst.jsdt.core.dom.ITypeBinding;
 import org.eclipse.wst.jsdt.internal.corext.template.java.SignatureUtil;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.EditorHighlightingSynchronizer;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.wst.jsdt.ui.text.java.JavaContentAssistInvocationContext;
@@ -216,7 +216,7 @@ public final class LazyGenericTypeProposal extends LazyJavaTypeCompletionProposa
 				}
 			} catch (JavaScriptModelException e) {
 				// log and continue
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		}
 
@@ -522,7 +522,7 @@ public final class LazyGenericTypeProposal extends LazyJavaTypeCompletionProposa
 			// TODO handle local types
 		}
 
-		throw new JavaScriptModelException(new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.OK, "Illegal hierarchy", null))); //$NON-NLS-1$
+		throw new JavaScriptModelException(new CoreException(new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), IStatus.OK, "Illegal hierarchy", null))); //$NON-NLS-1$
 	}
 
 	/**
@@ -710,7 +710,7 @@ public final class LazyGenericTypeProposal extends LazyJavaTypeCompletionProposa
 			fSelectedRegion= ui.getSelectedRegion();
 
 		} catch (BadLocationException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 			openErrorDialog(e);
 		}
 	}
@@ -733,7 +733,7 @@ public final class LazyGenericTypeProposal extends LazyJavaTypeCompletionProposa
 	 * @return  the currently active java editor, or <code>null</code>
 	 */
 	private JavaEditor getJavaEditor() {
-		IEditorPart part= JavaPlugin.getActivePage().getActiveEditor();
+		IEditorPart part= JavaScriptPlugin.getActivePage().getActiveEditor();
 		if (part instanceof JavaEditor)
 			return (JavaEditor) part;
 		else

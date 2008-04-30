@@ -51,7 +51,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.codemanipulation.StubUtility;
 import org.eclipse.wst.jsdt.internal.corext.util.Strings;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaSourceViewer;
 import org.eclipse.wst.jsdt.internal.ui.text.JavaCodeReader;
 import org.eclipse.wst.jsdt.internal.ui.text.SimpleJavaSourceViewerConfiguration;
@@ -59,8 +59,8 @@ import org.eclipse.wst.jsdt.ui.IContextMenuConstants;
 import org.eclipse.wst.jsdt.ui.actions.IJavaEditorActionDefinitionIds;
 import org.eclipse.wst.jsdt.ui.actions.JdtActionConstants;
 import org.eclipse.wst.jsdt.ui.actions.OpenAction;
-import org.eclipse.wst.jsdt.ui.text.IJavaPartitions;
-import org.eclipse.wst.jsdt.ui.text.JavaSourceViewerConfiguration;
+import org.eclipse.wst.jsdt.ui.text.IJavaScriptPartitions;
+import org.eclipse.wst.jsdt.ui.text.JavaScriptSourceViewerConfiguration;
 
 /**
  * View which shows source for a given Java element.
@@ -146,7 +146,7 @@ public class SourceView extends AbstractInfoView implements IMenuListener {
 	/** This view's source viewer */
 	private SourceViewer fViewer;
 	/** The viewers configuration */
-	private JavaSourceViewerConfiguration fViewerConfiguration;
+	private JavaScriptSourceViewerConfiguration fViewerConfiguration;
 	/** The viewer's font properties change listener. */
 	private IPropertyChangeListener fFontPropertyChangeListener= new FontPropertyChangeListener();
 	/**
@@ -168,9 +168,9 @@ public class SourceView extends AbstractInfoView implements IMenuListener {
 	 * @see AbstractInfoView#internalCreatePartControl(Composite)
 	 */
 	protected void internalCreatePartControl(Composite parent) {
-		IPreferenceStore store= JavaPlugin.getDefault().getCombinedPreferenceStore();
+		IPreferenceStore store= JavaScriptPlugin.getDefault().getCombinedPreferenceStore();
 		fViewer= new JavaSourceViewer(parent, null, null, false, SWT.V_SCROLL | SWT.H_SCROLL, store);
-		fViewerConfiguration= new SimpleJavaSourceViewerConfiguration(JavaPlugin.getDefault().getJavaTextTools().getColorManager(), store, null, IJavaPartitions.JAVA_PARTITIONING, false);
+		fViewerConfiguration= new SimpleJavaSourceViewerConfiguration(JavaScriptPlugin.getDefault().getJavaTextTools().getColorManager(), store, null, IJavaScriptPartitions.JAVA_PARTITIONING, false);
 		fViewer.configure(fViewerConfiguration);
 		fViewer.setEditable(false);
 
@@ -301,7 +301,7 @@ public class SourceView extends AbstractInfoView implements IMenuListener {
 
 		ITextSelection textSelection= (ITextSelection)selection;
 
-		Object codeAssist= fCurrentViewInput.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+		Object codeAssist= fCurrentViewInput.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 		if (codeAssist == null)
 			codeAssist= fCurrentViewInput.getAncestor(IJavaScriptElement.CLASS_FILE);
 
@@ -356,7 +356,7 @@ public class SourceView extends AbstractInfoView implements IMenuListener {
 		fViewer= null;
 		fViewerConfiguration= null;
 		JFaceResources.getFontRegistry().removeListener(fFontPropertyChangeListener);
-		JavaPlugin.getDefault().getCombinedPreferenceStore().removePropertyChangeListener(fPropertyChangeListener);
+		JavaScriptPlugin.getDefault().getCombinedPreferenceStore().removePropertyChangeListener(fPropertyChangeListener);
 	}
 
 	/*
@@ -427,7 +427,7 @@ public class SourceView extends AbstractInfoView implements IMenuListener {
 			fViewer.setInput(new Document("")); //$NON-NLS-1$
 		else {
 			IDocument document= new Document(input.toString());
-			JavaPlugin.getDefault().getJavaTextTools().setupJavaDocumentPartitioner(document, IJavaPartitions.JAVA_PARTITIONING);			
+			JavaScriptPlugin.getDefault().getJavaTextTools().setupJavaDocumentPartitioner(document, IJavaScriptPartitions.JAVA_PARTITIONING);			
 			fViewer.setInput(document);
 		}
 	}
@@ -457,7 +457,7 @@ public class SourceView extends AbstractInfoView implements IMenuListener {
 				if (reader != null)
 					reader.close();
 			} catch (IOException ex) {
-				JavaPlugin.log(ex);
+				JavaScriptPlugin.log(ex);
 			}
 		}
 

@@ -28,9 +28,9 @@ import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.text.java.JavaCompletionProposal;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 import org.eclipse.wst.jsdt.ui.text.java.CompletionProposalComparator;
 
@@ -47,7 +47,7 @@ public class JavaPackageCompletionProcessor implements IContentAssistProcessor, 
 	 * The completion context must be set via {@link #setPackageFragmentRoot(IPackageFragmentRoot)}.
 	 */
 	public JavaPackageCompletionProcessor() {
-	    this(new JavaElementLabelProvider(JavaElementLabelProvider.SHOW_SMALL_ICONS));
+	    this(new JavaScriptElementLabelProvider(JavaScriptElementLabelProvider.SHOW_SMALL_ICONS));
 	}
 	
     /**
@@ -60,7 +60,7 @@ public class JavaPackageCompletionProcessor implements IContentAssistProcessor, 
 		fComparator= new CompletionProposalComparator();
 		fLabelProvider= labelProvider;
 
-		IPreferenceStore preferenceStore= JavaPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore preferenceStore= JavaScriptPlugin.getDefault().getPreferenceStore();
 		String triggers= preferenceStore.getString(PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_JAVA);
 		fProposalAutoActivationSet = triggers.toCharArray();
 	}

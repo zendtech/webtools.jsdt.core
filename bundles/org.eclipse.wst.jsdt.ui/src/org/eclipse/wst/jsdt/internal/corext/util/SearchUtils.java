@@ -41,13 +41,13 @@ public class SearchUtils {
 		if (enclosingElement != null){
 			if (enclosingElement instanceof IJavaScriptUnit)
 				return (IJavaScriptUnit) enclosingElement;
-			IJavaScriptUnit cu= (IJavaScriptUnit) enclosingElement.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+			IJavaScriptUnit cu= (IJavaScriptUnit) enclosingElement.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 			if (cu != null)
 				return cu;
 		}
 		
 		IJavaScriptElement jElement= JavaScriptCore.create(match.getResource());
-		if (jElement != null && jElement.exists() && jElement.getElementType() == IJavaScriptElement.COMPILATION_UNIT)
+		if (jElement != null && jElement.exists() && jElement.getElementType() == IJavaScriptElement.JAVASCRIPT_UNIT)
 			return (IJavaScriptUnit) jElement;
 		return null;
 	}

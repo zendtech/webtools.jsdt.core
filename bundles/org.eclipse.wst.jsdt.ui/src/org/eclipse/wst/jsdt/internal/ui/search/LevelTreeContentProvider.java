@@ -24,11 +24,11 @@ import org.eclipse.wst.jsdt.core.IClassFile;
 import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider;
+import org.eclipse.wst.jsdt.ui.StandardJavaScriptElementContentProvider;
 
 public class LevelTreeContentProvider extends JavaSearchContentProvider implements ITreeContentProvider {
 	private Map fChildrenMap;
-	private StandardJavaElementContentProvider fContentProvider;
+	private StandardJavaScriptElementContentProvider fContentProvider;
 	
 	public static final int LEVEL_TYPE= 1;
 	public static final int LEVEL_FILE= 2;
@@ -36,10 +36,10 @@ public class LevelTreeContentProvider extends JavaSearchContentProvider implemen
 	public static final int LEVEL_PROJECT= 4;
 	
 	private static final int[][] JAVA_ELEMENT_TYPES= {{IJavaScriptElement.TYPE},
-			{IJavaScriptElement.CLASS_FILE, IJavaScriptElement.COMPILATION_UNIT},
+			{IJavaScriptElement.CLASS_FILE, IJavaScriptElement.JAVASCRIPT_UNIT},
 			{IJavaScriptElement.PACKAGE_FRAGMENT},
-			{IJavaScriptElement.JAVA_PROJECT, IJavaScriptElement.PACKAGE_FRAGMENT_ROOT},
-			{IJavaScriptElement.JAVA_MODEL}};
+			{IJavaScriptElement.JAVASCRIPT_PROJECT, IJavaScriptElement.PACKAGE_FRAGMENT_ROOT},
+			{IJavaScriptElement.JAVASCRIPT_MODEL}};
 	private static final int[][] RESOURCE_TYPES= {
 			{}, 
 			{IResource.FILE},
@@ -49,7 +49,7 @@ public class LevelTreeContentProvider extends JavaSearchContentProvider implemen
 	
 	private static final int MAX_LEVEL= JAVA_ELEMENT_TYPES.length - 1;
 	private int fCurrentLevel;
-	static class FastJavaElementProvider extends StandardJavaElementContentProvider {
+	static class FastJavaElementProvider extends StandardJavaScriptElementContentProvider {
 		public Object getParent(Object element) {
 			return internalGetParent(element);
 		}

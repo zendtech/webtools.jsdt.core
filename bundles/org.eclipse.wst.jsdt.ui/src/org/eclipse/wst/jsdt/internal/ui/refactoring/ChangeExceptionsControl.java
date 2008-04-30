@@ -48,7 +48,7 @@ import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchConstants;
 import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.core.search.SearchEngine;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.ExceptionInfo;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIStatus;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.FilteredTypesSelectionDialog;
@@ -247,7 +247,7 @@ public class ChangeExceptionsControl extends Composite {
 				try {
 					return checkException((IType)selection[0]);
 				} catch (JavaScriptModelException e) {
-					JavaPlugin.log(e);
+					JavaScriptPlugin.log(e);
 					return StatusInfo.OK_STATUS;
 				}
 			}

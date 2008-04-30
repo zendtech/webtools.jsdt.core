@@ -40,7 +40,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusInfo;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.IViewPartInputProvider;
 import org.eclipse.wst.jsdt.internal.ui.wizards.NewWizardMessages;
@@ -51,9 +51,9 @@ import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.IDialogFieldListene
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.IStringButtonAdapter;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.LayoutUtil;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.StringButtonDialogField;
-import org.eclipse.wst.jsdt.ui.JavaElementComparator;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
-import org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementComparator;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.StandardJavaScriptElementContentProvider;
 
 /**
  * Wizard page that acts as a base class for wizard pages that create new Java elements. 
@@ -143,7 +143,7 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 					}
 				}
 			} catch (JavaScriptModelException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		}	
 		setPackageFragmentRoot(initRoot, true);
@@ -179,9 +179,9 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 			}
 		}
 		if (jelem == null) {
-			IWorkbenchPart part= JavaPlugin.getActivePage().getActivePart();
+			IWorkbenchPart part= JavaScriptPlugin.getActivePage().getActivePart();
 			if (part instanceof ContentOutline) {
-				part= JavaPlugin.getActivePage().getActiveEditor();
+				part= JavaScriptPlugin.getActivePage().getActiveEditor();
 			}
 			
 			if (part instanceof IViewPartInputProvider) {
@@ -192,14 +192,14 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 			}
 		}
 
-		if (jelem == null || jelem.getElementType() == IJavaScriptElement.JAVA_MODEL) {
+		if (jelem == null || jelem.getElementType() == IJavaScriptElement.JAVASCRIPT_MODEL) {
 			try {
 				IJavaScriptProject[] projects= JavaScriptCore.create(getWorkspaceRoot()).getJavaScriptProjects();
 				if (projects.length == 1) {
 					jelem= projects[0];
 				}
 			} catch (JavaScriptModelException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		}
 		return jelem;
@@ -213,7 +213,7 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
      * @since 3.0 
 	 */
 	protected ITextSelection getCurrentTextSelection() {
-		IWorkbenchPart part= JavaPlugin.getActivePage().getActivePart();
+		IWorkbenchPart part= JavaScriptPlugin.getActivePage().getActivePart();
 		if (part instanceof IEditorPart) {
 			ISelectionProvider selectionProvider= part.getSite().getSelectionProvider();
 			if (selectionProvider != null) {
@@ -467,7 +467,7 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 					}
 					return true;
 				} catch (JavaScriptModelException e) {
-					JavaPlugin.log(e.getStatus()); // just log, no UI in validation
+					JavaScriptPlugin.log(e.getStatus()); // just log, no UI in validation
 				}
 				return false;
 			}
@@ -480,7 +480,7 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 					try {
 						return (((IPackageFragmentRoot)element).getKind() == IPackageFragmentRoot.K_SOURCE);
 					} catch (JavaScriptModelException e) {
-						JavaPlugin.log(e.getStatus()); // just log, no UI in validation
+						JavaScriptPlugin.log(e.getStatus()); // just log, no UI in validation
 						return false;
 					}
 				}
@@ -488,11 +488,11 @@ public abstract class NewContainerWizardPage extends NewElementWizardPage {
 			}
 		};		
 
-		StandardJavaElementContentProvider provider= new StandardJavaElementContentProvider();
-		ILabelProvider labelProvider= new JavaElementLabelProvider(JavaElementLabelProvider.SHOW_DEFAULT); 
+		StandardJavaScriptElementContentProvider provider= new StandardJavaScriptElementContentProvider();
+		ILabelProvider labelProvider= new JavaScriptElementLabelProvider(JavaScriptElementLabelProvider.SHOW_DEFAULT); 
 		ElementTreeSelectionDialog dialog= new ElementTreeSelectionDialog(getShell(), labelProvider, provider);
 		dialog.setValidator(validator);
-		dialog.setComparator(new JavaElementComparator());
+		dialog.setComparator(new JavaScriptElementComparator());
 		dialog.setTitle(NewWizardMessages.NewContainerWizardPage_ChooseSourceContainerDialog_title); 
 		dialog.setMessage(NewWizardMessages.NewContainerWizardPage_ChooseSourceContainerDialog_description); 
 		dialog.addFilter(filter);

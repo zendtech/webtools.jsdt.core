@@ -74,12 +74,12 @@ import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.wst.jsdt.internal.ui.util.PixelConverter;
 import org.eclipse.wst.jsdt.internal.ui.util.SWTUtil;
 import org.eclipse.wst.jsdt.internal.ui.util.TableLayoutComposite;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
 
 /**
  * Wizard page for pull up refactoring wizards which allows to specify the
@@ -141,7 +141,7 @@ public class PullUpMemberPage extends UserInputWizardPage {
 				try {
 					Assert.isTrue(action != DECLARE_ABSTRACT_ACTION || !JdtFlags.isStatic(member));
 				} catch (JavaScriptModelException e) {
-					JavaPlugin.log(e);
+					JavaScriptPlugin.log(e);
 				}
 				Assert.isTrue(action == NO_ACTION || action == DECLARE_ABSTRACT_ACTION || action == PULL_UP_ACTION);
 			} else {
@@ -197,7 +197,7 @@ public class PullUpMemberPage extends UserInputWizardPage {
 			try {
 				return !JdtFlags.isStatic(method);
 			} catch (JavaScriptModelException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 				return false;
 			}
 		}
@@ -222,7 +222,7 @@ public class PullUpMemberPage extends UserInputWizardPage {
 
 	private static class MemberActionInfoLabelProvider extends LabelProvider implements ITableLabelProvider {
 
-		private final ILabelProvider fLabelProvider= new JavaElementLabelProvider(JavaElementLabelProvider.SHOW_DEFAULT | JavaElementLabelProvider.SHOW_SMALL_ICONS);
+		private final ILabelProvider fLabelProvider= new JavaScriptElementLabelProvider(JavaScriptElementLabelProvider.SHOW_DEFAULT | JavaScriptElementLabelProvider.SHOW_SMALL_ICONS);
 
 		public void dispose() {
 			super.dispose();
@@ -810,7 +810,7 @@ public class PullUpMemberPage extends UserInputWizardPage {
 	        if (destination != null && destination.isInterface())
 	        	return computeSuccessorPage();
         } catch (JavaScriptModelException exception) {
-	        JavaPlugin.log(exception);
+	        JavaScriptPlugin.log(exception);
         }
 		return super.getNextPage();
 	}
@@ -847,7 +847,7 @@ public class PullUpMemberPage extends UserInputWizardPage {
 	}
 
 	private void initializeCheckBox(final Button checkbox, final String property, final boolean def) {
-		final String s= JavaPlugin.getDefault().getDialogSettings().get(property);
+		final String s= JavaScriptPlugin.getDefault().getDialogSettings().get(property);
 		if (s != null)
 			checkbox.setSelection(new Boolean(s).booleanValue());
 		else
@@ -940,7 +940,7 @@ public class PullUpMemberPage extends UserInputWizardPage {
 	}
 
 	private void storeDialogSettings() {
-		final IDialogSettings settings= JavaPlugin.getDefault().getDialogSettings();
+		final IDialogSettings settings= JavaScriptPlugin.getDefault().getDialogSettings();
 		settings.put(SETTING_REPLACE, fReplaceButton.getSelection());
 		settings.put(SETTING_INSTANCEOF, fInstanceofButton.getSelection());
 	}

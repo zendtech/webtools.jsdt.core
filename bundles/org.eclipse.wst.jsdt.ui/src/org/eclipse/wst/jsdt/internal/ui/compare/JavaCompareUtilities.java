@@ -35,12 +35,12 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.propertiesfileeditor.PropertiesFileDocumentSetupParticipant;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
-import org.eclipse.wst.jsdt.ui.text.IJavaPartitions;
-import org.eclipse.wst.jsdt.ui.text.JavaTextTools;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
+import org.eclipse.wst.jsdt.ui.text.IJavaScriptPartitions;
+import org.eclipse.wst.jsdt.ui.text.JavaScriptTextTools;
 
 
 class JavaCompareUtilities {
@@ -99,7 +99,7 @@ class JavaCompareUtilities {
 			return JavaPluginImages.DESC_OBJS_IMPDECL;
 		case IJavaScriptElement.IMPORT_CONTAINER:
 			return JavaPluginImages.DESC_OBJS_IMPCONT;
-		case IJavaScriptElement.COMPILATION_UNIT:
+		case IJavaScriptElement.JAVASCRIPT_UNIT:
 			return JavaPluginImages.DESC_OBJS_CUNIT;
 		}
 		return ImageDescriptor.getMissingImageDescriptor();
@@ -126,7 +126,7 @@ class JavaCompareUtilities {
 			try {
 				return getTypeImageDescriptor(type.isClass());
 			} catch (CoreException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 				return JavaPluginImages.DESC_OBJS_GHOST;
 			}
 		}
@@ -145,7 +145,7 @@ class JavaCompareUtilities {
 		StringBuffer sb= new StringBuffer();
 		
 		switch (je.getElementType()) {
-		case IJavaScriptElement.COMPILATION_UNIT:
+		case IJavaScriptElement.JAVASCRIPT_UNIT:
 			sb.append(COMPILATIONUNIT);
 			break;
 		case IJavaScriptElement.TYPE:
@@ -158,7 +158,7 @@ class JavaCompareUtilities {
 			break;
 		case IJavaScriptElement.METHOD:
 			sb.append(METHOD);
-			sb.append(JavaElementLabels.getElementLabel(je, JavaElementLabels.M_PARAMETER_TYPES));
+			sb.append(JavaScriptElementLabels.getElementLabel(je, JavaScriptElementLabels.M_PARAMETER_TYPES));
 			break;
 		case IJavaScriptElement.INITIALIZER:
 			String id= je.getHandleIdentifier();
@@ -231,7 +231,7 @@ class JavaCompareUtilities {
 
 	static ImageDescriptor getImageDescriptor(String relativePath) {
 		IPath path= JavaPluginImages.ICONS_PATH.append(relativePath);
-		return JavaPluginImages.createImageDescriptor(JavaPlugin.getDefault().getBundle(), path, true);
+		return JavaPluginImages.createImageDescriptor(JavaScriptPlugin.getDefault().getBundle(), path, true);
 	}
 	
 	static boolean getBoolean(CompareConfiguration cc, String key, boolean dflt) {
@@ -248,24 +248,24 @@ class JavaCompareUtilities {
 		return id.createImage();
 	}
 
-	static JavaTextTools getJavaTextTools() {
-		JavaPlugin plugin= JavaPlugin.getDefault();
+	static JavaScriptTextTools getJavaTextTools() {
+		JavaScriptPlugin plugin= JavaScriptPlugin.getDefault();
 		if (plugin != null)
 			return plugin.getJavaTextTools();
 		return null;
 	}
 	
 	static IDocumentPartitioner createJavaPartitioner() {
-		JavaTextTools tools= getJavaTextTools();
+		JavaScriptTextTools tools= getJavaTextTools();
 		if (tools != null)
 			return tools.createDocumentPartitioner();
 		return null;
 	}
 	
 	static void setupDocument(IDocument document) {
-		JavaTextTools tools= getJavaTextTools();
+		JavaScriptTextTools tools= getJavaTextTools();
 		if (tools != null)
-			tools.setupJavaDocumentPartitioner(document, IJavaPartitions.JAVA_PARTITIONING);
+			tools.setupJavaDocumentPartitioner(document, IJavaScriptPartitions.JAVA_PARTITIONING);
 	}
 	
 	static void setupPropertiesFileDocument(IDocument document) {

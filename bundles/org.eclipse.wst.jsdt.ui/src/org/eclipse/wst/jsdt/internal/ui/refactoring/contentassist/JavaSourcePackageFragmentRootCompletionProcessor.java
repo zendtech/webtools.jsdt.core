@@ -30,9 +30,9 @@ import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.text.java.JavaCompletionProposal;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 import org.eclipse.wst.jsdt.ui.text.java.CompletionProposalComparator;
 
@@ -45,15 +45,15 @@ public class JavaSourcePackageFragmentRootCompletionProcessor implements IConten
 	private char[] fProposalAutoActivationSet;
 	private IJavaScriptModel fRoot;
 	private CompletionProposalComparator fComparator;
-	private JavaElementLabelProvider fLabelProvider;
+	private JavaScriptElementLabelProvider fLabelProvider;
 
 	public JavaSourcePackageFragmentRootCompletionProcessor() {
 		fRoot= JavaScriptCore.create(ResourcesPlugin.getWorkspace().getRoot());
-		IPreferenceStore preferenceStore= JavaPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore preferenceStore= JavaScriptPlugin.getDefault().getPreferenceStore();
 		String triggers= preferenceStore.getString(PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_JAVA);
 		fProposalAutoActivationSet= triggers.toCharArray();
 		fComparator= new CompletionProposalComparator();
-		fLabelProvider= new JavaElementLabelProvider(JavaElementLabelProvider.SHOW_SMALL_ICONS);
+		fLabelProvider= new JavaScriptElementLabelProvider(JavaScriptElementLabelProvider.SHOW_SMALL_ICONS);
 	}
 
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int documentOffset) {

@@ -37,7 +37,7 @@ import org.eclipse.wst.jsdt.internal.corext.dom.Bindings;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.BindingLabelProvider;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 public class TypeChangeCompletionProposal extends LinkedCorrectionProposal {
 
@@ -56,7 +56,7 @@ public class TypeChangeCompletionProposal extends LinkedCorrectionProposal {
 		fNewType= newType;
 		fOfferSuperTypeProposals= offerSuperTypeProposals;
 
-		String typeName= BindingLabelProvider.getBindingLabel(newType, JavaElementLabels.ALL_DEFAULT);
+		String typeName= BindingLabelProvider.getBindingLabel(newType, JavaScriptElementLabels.ALL_DEFAULT);
 		if (binding.getKind() == IBinding.VARIABLE) {
 			IVariableBinding varBinding= (IVariableBinding) binding;
 

@@ -59,7 +59,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.changes.MultiStateCompil
 import org.eclipse.wst.jsdt.internal.corext.refactoring.changes.TextChangeCompatibility;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.util.RefactoringASTParser;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.fix.CodeFormatCleanUp;
 import org.eclipse.wst.jsdt.internal.ui.fix.CommentFormatCleanUp;
 import org.eclipse.wst.jsdt.internal.ui.fix.ControlStatementsCleanUp;
@@ -71,7 +71,7 @@ import org.eclipse.wst.jsdt.internal.ui.fix.StringCleanUp;
 import org.eclipse.wst.jsdt.internal.ui.fix.UnusedCodeCleanUp;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.ASTProvider;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.IScheduledRefactoring;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 public class CleanUpRefactoring extends Refactoring implements IScheduledRefactoring {
 	
@@ -409,7 +409,7 @@ public class CleanUpRefactoring extends Refactoring implements IScheduledRefacto
 				try {
 					cu.discardWorkingCopy();
 				} catch (JavaScriptModelException e) {
-					JavaPlugin.log(e);
+					JavaScriptPlugin.log(e);
 				}
 			}
 		}
@@ -441,7 +441,7 @@ public class CleanUpRefactoring extends Refactoring implements IScheduledRefacto
 					}
 				} catch (JavaScriptModelException e) {
 					saveMode= TextFileChange.LEAVE_DIRTY;
-					JavaPlugin.log(e);
+					JavaScriptPlugin.log(e);
 				}
 				
 				if (changes.size() == 1) {
@@ -736,11 +736,11 @@ public class CleanUpRefactoring extends Refactoring implements IScheduledRefacto
 	
 	private static String getChangeName(IJavaScriptUnit compilationUnit) {
 		StringBuffer buf= new StringBuffer();
-		JavaElementLabels.getCompilationUnitLabel(compilationUnit, JavaElementLabels.ALL_DEFAULT, buf);
-		buf.append(JavaElementLabels.CONCAT_STRING);
+		JavaScriptElementLabels.getCompilationUnitLabel(compilationUnit, JavaScriptElementLabels.ALL_DEFAULT, buf);
+		buf.append(JavaScriptElementLabels.CONCAT_STRING);
 		
 		StringBuffer buf2= new StringBuffer();
-		JavaElementLabels.getPackageFragmentLabel((IPackageFragment)compilationUnit.getParent(), JavaElementLabels.P_QUALIFIED, buf2);
+		JavaScriptElementLabels.getPackageFragmentLabel((IPackageFragment)compilationUnit.getParent(), JavaScriptElementLabels.P_QUALIFIED, buf2);
 		buf.append(buf2.toString().replace('.', '/'));
 		
 		return buf.toString();

@@ -36,11 +36,11 @@ import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.corext.fix.IFix;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.changes.CompilationUnitChange;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusInfo;
 import org.eclipse.wst.jsdt.internal.ui.text.comment.CommentFormattingContext;
 import org.eclipse.wst.jsdt.internal.ui.text.comment.CommentFormattingStrategy;
-import org.eclipse.wst.jsdt.ui.text.IJavaPartitions;
+import org.eclipse.wst.jsdt.ui.text.IJavaScriptPartitions;
 
 public class CommentFormatFix implements IFix {
 	
@@ -87,9 +87,9 @@ public class CommentFormatFix implements IFix {
 		try {
 			resultEdit.apply(document);
 		} catch (MalformedTreeException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		} catch (BadLocationException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		return document.get();
 	}
@@ -97,7 +97,7 @@ public class CommentFormatFix implements IFix {
 	private static List format(IDocument document, boolean singleLine, boolean multiLine, boolean javaDoc, HashMap preferences) {
 		final List edits= new ArrayList();
 		
-		JavaPlugin.getDefault().getJavaTextTools().setupJavaDocumentPartitioner(document, IJavaPartitions.JAVA_PARTITIONING);
+		JavaScriptPlugin.getDefault().getJavaTextTools().setupJavaDocumentPartitioner(document, IJavaScriptPartitions.JAVA_PARTITIONING);
 		
 		String content= document.get();
 		
@@ -109,25 +109,25 @@ public class CommentFormatFix implements IFix {
 		context.setProperty(FormattingContextProperties.CONTEXT_MEDIUM, document);
 		
 		try {
-			ITypedRegion[] regions= TextUtilities.computePartitioning(document, IJavaPartitions.JAVA_PARTITIONING, 0, document.getLength(), false);
+			ITypedRegion[] regions= TextUtilities.computePartitioning(document, IJavaScriptPartitions.JAVA_PARTITIONING, 0, document.getLength(), false);
 			for (int i= 0; i < regions.length; i++) {
 				ITypedRegion region= regions[i];
-				if (singleLine && region.getType().equals(IJavaPartitions.JAVA_SINGLE_LINE_COMMENT)) {
+				if (singleLine && region.getType().equals(IJavaScriptPartitions.JAVA_SINGLE_LINE_COMMENT)) {
 					TextEdit edit= format(region, context, formattingStrategy, content);
 					if (edit != null)
 						edits.add(edit);
-				} else if (multiLine && region.getType().equals(IJavaPartitions.JAVA_MULTI_LINE_COMMENT)) {
+				} else if (multiLine && region.getType().equals(IJavaScriptPartitions.JAVA_MULTI_LINE_COMMENT)) {
 					TextEdit edit= format(region, context, formattingStrategy, content);
 					if (edit != null)
 						edits.add(edit);
-				} else if (javaDoc && region.getType().equals(IJavaPartitions.JAVA_DOC)) {
+				} else if (javaDoc && region.getType().equals(IJavaScriptPartitions.JAVA_DOC)) {
 					TextEdit edit= format(region, context, formattingStrategy, content);
 					if (edit != null)
 						edits.add(edit);
 				}
 			}
 		} catch (BadLocationException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		} finally {
 			context.dispose();
 		}

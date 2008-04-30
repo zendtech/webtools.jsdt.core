@@ -59,7 +59,7 @@ public abstract class RefactoringModifications {
 
 	protected IResource[] collectResourcesOfInterest(IPackageFragment source) throws CoreException {
 		IJavaScriptElement[] children = source.getChildren();
-		int childOfInterest = IJavaScriptElement.COMPILATION_UNIT;
+		int childOfInterest = IJavaScriptElement.JAVASCRIPT_UNIT;
 		if (source.getKind() == IPackageFragmentRoot.K_BINARY) {
 			childOfInterest = IJavaScriptElement.CLASS_FILE;
 		}

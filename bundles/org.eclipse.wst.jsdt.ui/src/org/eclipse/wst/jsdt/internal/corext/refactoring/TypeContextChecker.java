@@ -81,7 +81,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.util.RefactoringFileBuff
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.TypeNameMatchCollector;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.contentassist.JavaTypeCompletionProcessor;
 
 public class TypeContextChecker {
@@ -684,7 +684,7 @@ public class TypeContextChecker {
 						stubTypeContext.getBeforeString() + prolog,
 						epilog + stubTypeContext.getAfterString());
 			} catch (CoreException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 				stubTypeContext= new StubTypeContext(null, null, null);
 			}
 			

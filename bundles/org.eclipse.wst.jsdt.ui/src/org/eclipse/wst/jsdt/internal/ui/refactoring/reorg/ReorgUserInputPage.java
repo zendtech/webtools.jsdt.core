@@ -32,15 +32,15 @@ import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.reorg.IReorgDestinationValidator;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
-import org.eclipse.wst.jsdt.ui.JavaElementComparator;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementComparator;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 
 abstract class ReorgUserInputPage extends UserInputWizardPage{
-	private static final long LABEL_FLAGS= JavaElementLabels.ALL_DEFAULT
-			| JavaElementLabels.M_PRE_RETURNTYPE | JavaElementLabels.M_PARAMETER_NAMES | JavaElementLabels.F_PRE_TYPE_SIGNATURE;
+	private static final long LABEL_FLAGS= JavaScriptElementLabels.ALL_DEFAULT
+			| JavaScriptElementLabels.M_PRE_RETURNTYPE | JavaScriptElementLabels.M_PARAMETER_NAMES | JavaScriptElementLabels.F_PRE_TYPE_SIGNATURE;
 	private TreeViewer fViewer;
 	public ReorgUserInputPage(String pageName) {
 		super(pageName);			
@@ -78,7 +78,7 @@ abstract class ReorgUserInputPage extends UserInputWizardPage{
 		if (resources == 0 && javaElements == 1) {
 			text= Messages.format(
 					ReorgMessages.ReorgUserInputPage_choose_destination_single, 
-					JavaElementLabels.getElementLabel(getJavaElements()[0], LABEL_FLAGS));
+					JavaScriptElementLabels.getElementLabel(getJavaElements()[0], LABEL_FLAGS));
 		} else if (resources == 1 && javaElements == 0) {
 			text= Messages.format(
 					ReorgMessages.ReorgUserInputPage_choose_destination_single, 
@@ -122,7 +122,7 @@ abstract class ReorgUserInputPage extends UserInputWizardPage{
 			else
 				setPageComplete(status);
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 			setPageComplete(false);
 		}
 	}		
@@ -133,9 +133,9 @@ abstract class ReorgUserInputPage extends UserInputWizardPage{
 		gd.widthHint= convertWidthInCharsToPixels(40);
 		gd.heightHint= convertHeightInCharsToPixels(15);
 		treeViewer.getTree().setLayoutData(gd);
-		treeViewer.setLabelProvider(new JavaElementLabelProvider(JavaElementLabelProvider.SHOW_SMALL_ICONS));
+		treeViewer.setLabelProvider(new JavaScriptElementLabelProvider(JavaScriptElementLabelProvider.SHOW_SMALL_ICONS));
 		treeViewer.setContentProvider(new DestinationContentProvider(getDestinationValidator()));
-		treeViewer.setComparator(new JavaElementComparator());
+		treeViewer.setComparator(new JavaScriptElementComparator());
 		treeViewer.setInput(JavaScriptCore.create(ResourcesPlugin.getWorkspace().getRoot()));
 		return treeViewer;
 	}

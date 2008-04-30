@@ -19,7 +19,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.ISourceReference;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.ASTProvider;
 
 public abstract class FindOccurrencesEngine {
@@ -34,7 +34,7 @@ public abstract class FindOccurrencesEngine {
 			fClassFile= file;
 		}
 		protected JavaScriptUnit createAST() {
-			return JavaPlugin.getDefault().getASTProvider().getAST(fClassFile, ASTProvider.WAIT_YES, null);
+			return JavaScriptPlugin.getDefault().getASTProvider().getAST(fClassFile, ASTProvider.WAIT_YES, null);
 		}
 		protected IJavaScriptElement getInput() {
 			return fClassFile;
@@ -52,7 +52,7 @@ public abstract class FindOccurrencesEngine {
 			fCUnit= unit;
 		}
 		protected JavaScriptUnit createAST() {
-			return JavaPlugin.getDefault().getASTProvider().getAST(fCUnit, ASTProvider.WAIT_YES, null);
+			return JavaScriptPlugin.getDefault().getASTProvider().getAST(fCUnit, ASTProvider.WAIT_YES, null);
 		}
 		protected IJavaScriptElement getInput() {
 			return fCUnit;
@@ -70,7 +70,7 @@ public abstract class FindOccurrencesEngine {
 		if (root == null || finder == null)
 			return null;
 		
-		IJavaScriptUnit unit= (IJavaScriptUnit)root.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+		IJavaScriptUnit unit= (IJavaScriptUnit)root.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 		if (unit != null)
 			return new FindOccurencesCUEngine(unit, finder);
 		IClassFile cf= (IClassFile)root.getAncestor(IJavaScriptElement.CLASS_FILE);

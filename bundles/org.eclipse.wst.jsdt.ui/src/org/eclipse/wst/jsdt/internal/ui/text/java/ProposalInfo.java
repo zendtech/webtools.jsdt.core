@@ -19,9 +19,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.text.javadoc.JavaDoc2HTMLTextReader;
-import org.eclipse.wst.jsdt.ui.JavadocContentAccess;
+import org.eclipse.wst.jsdt.ui.JSdocContentAccess;
 
 
 public class ProposalInfo {
@@ -73,9 +73,9 @@ public class ProposalInfo {
 				return extractJavadoc(member, monitor);
 			}
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		} catch (IOException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		return null;
 	}
@@ -101,7 +101,7 @@ public class ProposalInfo {
 	}
 
 	private Reader getHTMLContentReader(IMember member, IProgressMonitor monitor) throws JavaScriptModelException {
-	    Reader contentReader= JavadocContentAccess.getContentReader(member, true);
+	    Reader contentReader= JSdocContentAccess.getContentReader(member, true);
         if (contentReader != null)
         	return new JavaDoc2HTMLTextReader(contentReader);
         

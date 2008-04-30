@@ -33,7 +33,7 @@ public class ResourceAdapterFactory implements IAdapterFactory {
 			
 			// Performance optimization, see https://bugs.eclipse.org/bugs/show_bug.cgi?id=133141
 			if (element instanceof IFile) {
-				IJavaScriptElement je= JavaPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(new FileEditorInput((IFile)element));
+				IJavaScriptElement je= JavaScriptPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(new FileEditorInput((IFile)element));
 				if (je != null)
 					return je;
 			}

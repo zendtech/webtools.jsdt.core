@@ -44,7 +44,7 @@ import org.eclipse.wst.jsdt.core.ElementChangedEvent;
 import org.eclipse.wst.jsdt.core.IElementChangedListener;
 import org.eclipse.wst.jsdt.core.IJavaScriptElementDelta;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.CompilationUnitEditor;
 
 
@@ -282,7 +282,7 @@ public class JavaReconciler extends MonoReconciler {
 		JavaScriptCore.addElementChangedListener(fJavaElementChangedListener);
 
 		fResourceChangeListener= new ResourceChangeListener();
-		IWorkspace workspace= JavaPlugin.getWorkspace();
+		IWorkspace workspace= JavaScriptPlugin.getWorkspace();
 		workspace.addResourceChangeListener(fResourceChangeListener);
 		
 		fPropertyChangeListener= new IPropertyChangeListener() {
@@ -291,7 +291,7 @@ public class JavaReconciler extends MonoReconciler {
 					forceReconciling();
 			}
 		};
-		JavaPlugin.getDefault().getCombinedPreferenceStore().addPropertyChangeListener(fPropertyChangeListener);
+		JavaScriptPlugin.getDefault().getCombinedPreferenceStore().addPropertyChangeListener(fPropertyChangeListener);
 	}
 
 	/*
@@ -312,11 +312,11 @@ public class JavaReconciler extends MonoReconciler {
 		JavaScriptCore.removeElementChangedListener(fJavaElementChangedListener);
 		fJavaElementChangedListener= null;
 
-		IWorkspace workspace= JavaPlugin.getWorkspace();
+		IWorkspace workspace= JavaScriptPlugin.getWorkspace();
 		workspace.removeResourceChangeListener(fResourceChangeListener);
 		fResourceChangeListener= null;
 		
-		JavaPlugin.getDefault().getCombinedPreferenceStore().removePropertyChangeListener(fPropertyChangeListener);
+		JavaScriptPlugin.getDefault().getCombinedPreferenceStore().removePropertyChangeListener(fPropertyChangeListener);
 		fPropertyChangeListener= null;
 
 		super.uninstall();

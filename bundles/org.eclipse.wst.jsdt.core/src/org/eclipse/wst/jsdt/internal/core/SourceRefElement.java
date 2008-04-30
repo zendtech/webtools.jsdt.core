@@ -126,7 +126,7 @@ public IJavaScriptUnit getCompilationUnit() {
  * @see org.eclipse.wst.jsdt.core.IMember
  */
 public IJavaScriptUnit getJavaScriptUnit() {
-	return (IJavaScriptUnit) getAncestor(COMPILATION_UNIT);
+	return (IJavaScriptUnit) getAncestor(JAVASCRIPT_UNIT);
 }
 /**
  * Elements within compilation units and class files have no

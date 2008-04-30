@@ -51,7 +51,7 @@ import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.actions.MultiActionGroup;
 import org.eclipse.wst.jsdt.internal.ui.actions.SelectAllAction;
@@ -62,9 +62,9 @@ import org.eclipse.wst.jsdt.internal.ui.viewsupport.LibraryFilter;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.ProblemTableViewer;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.ProblemTreeViewer;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.StatusBarUpdater;
-import org.eclipse.wst.jsdt.ui.JavaElementComparator;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementComparator;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 
 
@@ -95,7 +95,7 @@ public class PackagesView extends JavaBrowsingPart{
 		private String formatLogicalPackageMessage(LogicalPackage logicalPackage) {
 			IPackageFragment[] fragments= logicalPackage.getFragments();
 			StringBuffer buf= new StringBuffer(logicalPackage.getElementName());
-			buf.append(JavaElementLabels.CONCAT_STRING);
+			buf.append(JavaScriptElementLabels.CONCAT_STRING);
 			String message= ""; //$NON-NLS-1$
 			boolean firstTime= true;
 			for (int i= 0; i < fragments.length; i++) {
@@ -103,7 +103,7 @@ public class PackagesView extends JavaBrowsingPart{
 				IJavaScriptElement element= fragment.getParent();
 				if (element instanceof IPackageFragmentRoot) {
 					IPackageFragmentRoot root= (IPackageFragmentRoot) element;
-					String label= JavaElementLabels.getElementLabel(root, JavaElementLabels.DEFAULT_QUALIFIED | JavaElementLabels.ROOT_QUALIFIED);
+					String label= JavaScriptElementLabels.getElementLabel(root, JavaScriptElementLabels.DEFAULT_QUALIFIED | JavaScriptElementLabels.ROOT_QUALIFIED);
 					if (firstTime) {
 						buf.append(label);
 						firstTime= false;
@@ -160,7 +160,7 @@ public class PackagesView extends JavaBrowsingPart{
 	private void restoreLayoutState(IMemento memento) {
 		if (memento == null) {
 			//read state from the preference store
-			IPreferenceStore store= JavaPlugin.getDefault().getPreferenceStore();
+			IPreferenceStore store= JavaScriptPlugin.getDefault().getPreferenceStore();
 			fCurrViewState= store.getInt(this.getViewSite().getId() + TAG_VIEW_STATE);
 		} else {
 			//restore from memento
@@ -207,7 +207,7 @@ public class PackagesView extends JavaBrowsingPart{
 		if (key == IShowInTargetList.class) {
 			return new IShowInTargetList() {
 				public String[] getShowInTargetIds() {
-					return new String[] { JavaUI.ID_PACKAGES, IPageLayout.ID_RES_NAV  };
+					return new String[] { JavaScriptUI.ID_PACKAGES, IPageLayout.ID_RES_NAV  };
 				}
 			};
 		}
@@ -308,7 +308,7 @@ public class PackagesView extends JavaBrowsingPart{
 		switch (je.getElementType()) {
 			case IJavaScriptElement.PACKAGE_FRAGMENT:
 				return je;
-			case IJavaScriptElement.COMPILATION_UNIT:
+			case IJavaScriptElement.JAVASCRIPT_UNIT:
 				return ((IJavaScriptUnit)je).getParent();
 			case IJavaScriptElement.CLASS_FILE:
 				return ((IClassFile)je).getParent();
@@ -367,8 +367,8 @@ public class PackagesView extends JavaBrowsingPart{
 	}
 
 	//alter sorter to include LogicalPackages
-	protected JavaElementComparator createJavaElementComparator() {
-		return new JavaElementComparator(){
+	protected JavaScriptElementComparator createJavaElementComparator() {
+		return new JavaScriptElementComparator(){
 			public int category(Object element) {
 				if (element instanceof LogicalPackage) {
 					LogicalPackage cp= (LogicalPackage) element;
@@ -486,7 +486,7 @@ public class PackagesView extends JavaBrowsingPart{
 			return;
 		else {
 			fCurrViewState= state;
-			IPreferenceStore store= JavaPlugin.getDefault().getPreferenceStore();
+			IPreferenceStore store= JavaScriptPlugin.getDefault().getPreferenceStore();
 			store.setValue(getViewSite().getId() + TAG_VIEW_STATE, state);
 		}
 
@@ -536,7 +536,7 @@ public class PackagesView extends JavaBrowsingPart{
 		// are accessing the Java element
 		if (je == null)
 			return null;
-		if(je.getElementType() == IJavaScriptElement.PACKAGE_FRAGMENT_ROOT || je.getElementType() == IJavaScriptElement.JAVA_PROJECT)
+		if(je.getElementType() == IJavaScriptElement.PACKAGE_FRAGMENT_ROOT || je.getElementType() == IJavaScriptElement.JAVASCRIPT_PROJECT)
 			return findInputForJavaElement(je, true);
 		else
 			return findInputForJavaElement(je, false);
@@ -551,7 +551,7 @@ public class PackagesView extends JavaBrowsingPart{
 
 			//don't update if input must be project (i.e. project is used as source folder)
 			if (canChangeInputType)
-				fLastInputWasProject= je.getElementType() == IJavaScriptElement.JAVA_PROJECT;
+				fLastInputWasProject= je.getElementType() == IJavaScriptElement.JAVASCRIPT_PROJECT;
 			return je;
 		} else if (fLastInputWasProject) {
 			IPackageFragmentRoot packageFragmentRoot= (IPackageFragmentRoot)je.getAncestor(IJavaScriptElement.PACKAGE_FRAGMENT_ROOT);

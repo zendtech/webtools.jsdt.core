@@ -33,7 +33,7 @@ import org.eclipse.wst.jsdt.core.ISourceRange;
 import org.eclipse.wst.jsdt.core.ISourceReference;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.JavaElementImageProvider;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 public class CompilationUnitChangeNode extends TextEditChangeNode {
 
@@ -57,7 +57,7 @@ public class CompilationUnitChangeNode extends TextEditChangeNode {
 		}
 		
 		public String getText() {
-			return JavaElementLabels.getElementLabel(fJavaElement, JavaElementLabels.ALL_DEFAULT);
+			return JavaScriptElementLabels.getElementLabel(fJavaElement, JavaScriptElementLabels.ALL_DEFAULT);
 		}
 		
 		public ImageDescriptor getImageDescriptor() {
@@ -145,7 +145,7 @@ public class CompilationUnitChangeNode extends TextEditChangeNode {
 			while(true) {
 				ISourceReference ref= (ISourceReference)result;
 				IRegion sRange= new Region(ref.getSourceRange().getOffset(), ref.getSourceRange().getLength());
-				if (result.getElementType() == IJavaScriptElement.COMPILATION_UNIT || result.getParent() == null || coveredBy(edit, sRange))
+				if (result.getElementType() == IJavaScriptElement.JAVASCRIPT_UNIT || result.getParent() == null || coveredBy(edit, sRange))
 					break;
 				result= result.getParent();
 			}

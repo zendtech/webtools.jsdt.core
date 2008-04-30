@@ -20,7 +20,7 @@ import org.eclipse.wst.jsdt.core.IIncludePathEntry;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.BuildPathSupport;
 import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.CPListElement;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 
 public class JavadocLinkRef {
@@ -48,15 +48,15 @@ public class JavadocLinkRef {
 	
 	public URL getURL() {
 		if (isProjectRef()) {
-			return JavaUI.getProjectJavadocLocation(fProject);
+			return JavaScriptUI.getProjectJSdocLocation(fProject);
 		} else {
-			return JavaUI.getLibraryJavadocLocation(fClasspathEntry);
+			return JavaScriptUI.getLibraryJSdocLocation(fClasspathEntry);
 		}
 	}
 	
 	public void setURL(URL url, IProgressMonitor monitor) throws CoreException {
 		if (isProjectRef()) {
-			JavaUI.setProjectJavadocLocation(fProject, url);
+			JavaScriptUI.setProjectJSdocLocation(fProject, url);
 		} else {
 			CPListElement element= CPListElement.createFromExisting(fClasspathEntry, fProject);
 			String location= url != null ? url.toExternalForm() : null;

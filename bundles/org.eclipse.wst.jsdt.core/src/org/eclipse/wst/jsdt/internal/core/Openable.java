@@ -205,7 +205,7 @@ protected void generateInfos(Object info, HashMap newElements, IProgressMonitor 
 	if (JavaModelCache.VERBOSE){
 		String element;
 		switch (getElementType()) {
-			case JAVA_PROJECT:
+			case JAVASCRIPT_PROJECT:
 				element = "project"; //$NON-NLS-1$
 				break;
 			case PACKAGE_FRAGMENT_ROOT:
@@ -217,7 +217,7 @@ protected void generateInfos(Object info, HashMap newElements, IProgressMonitor 
 			case CLASS_FILE:
 				element = "class file"; //$NON-NLS-1$
 				break;
-			case COMPILATION_UNIT:
+			case JAVASCRIPT_UNIT:
 				element = "compilation unit"; //$NON-NLS-1$
 				break;
 			default:
@@ -356,8 +356,8 @@ public boolean hasUnsavedChanges() throws JavaScriptModelException{
 	int elementType = getElementType();
 	if (elementType == PACKAGE_FRAGMENT ||
 		elementType == PACKAGE_FRAGMENT_ROOT ||
-		elementType == JAVA_PROJECT ||
-		elementType == JAVA_MODEL) { // fix for 1FWNMHH
+		elementType == JAVASCRIPT_PROJECT ||
+		elementType == JAVASCRIPT_MODEL) { // fix for 1FWNMHH
 		Enumeration openBuffers= getBufferManager().getOpenBuffers();
 		while (openBuffers.hasMoreElements()) {
 			IBuffer buffer= (IBuffer)openBuffers.nextElement();

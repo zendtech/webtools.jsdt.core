@@ -53,15 +53,15 @@ public class JavaElementTypeComparator implements Comparator {
 
 	int getIdForJavaElementType(int elementType) {
 		switch (elementType) {
-			case IJavaScriptElement.JAVA_MODEL:
+			case IJavaScriptElement.JAVASCRIPT_MODEL:
 				return 130;
-			case IJavaScriptElement.JAVA_PROJECT:
+			case IJavaScriptElement.JAVASCRIPT_PROJECT:
 				return 120;
 			case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
 				return 110;
 			case IJavaScriptElement.PACKAGE_FRAGMENT:
 				return 100;
-			case IJavaScriptElement.COMPILATION_UNIT:
+			case IJavaScriptElement.JAVASCRIPT_UNIT:
 				return 90;
 			case IJavaScriptElement.CLASS_FILE:
 				return 80;

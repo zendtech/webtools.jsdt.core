@@ -29,17 +29,17 @@ import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.EditorUtility;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.InternalClassFileEditorInput;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 public class JavaSearchEditorOpener {
 	
 	private IEditorReference fReusedEditor;
 
 	public IEditorPart openElement(Object element) throws PartInitException, JavaScriptModelException {
-		IWorkbenchPage wbPage= JavaPlugin.getActivePage();
+		IWorkbenchPage wbPage= JavaScriptPlugin.getActivePage();
 		if (NewSearchUI.reuseEditor())
 			return showWithReuse(element, wbPage);
 		else
@@ -67,7 +67,7 @@ public class JavaSearchEditorOpener {
 		} else {
 			IClassFile cf= getClassFile(element);
 			if (cf != null)
-				return showInEditor(wbPage, new InternalClassFileEditorInput(cf), JavaUI.ID_CF_EDITOR);
+				return showInEditor(wbPage, new InternalClassFileEditorInput(cf), JavaScriptUI.ID_CF_EDITOR);
 		}
 		return null;
 	}
@@ -77,7 +77,7 @@ public class JavaSearchEditorOpener {
 			return (IFile) element;
 		if (element instanceof IJavaScriptElement) {
 			IJavaScriptElement jElement= (IJavaScriptElement) element;
-			IJavaScriptUnit cu= (IJavaScriptUnit) jElement.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+			IJavaScriptUnit cu= (IJavaScriptUnit) jElement.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 			if (cu != null) {
 				return (IFile) cu.getCorrespondingResource();
 			}
@@ -91,7 +91,7 @@ public class JavaSearchEditorOpener {
 	private String getEditorID(IFile file) throws PartInitException {
 		IEditorDescriptor desc= IDE.getEditorDescriptor(file);
 		if (desc == null)
-			return JavaPlugin.getDefault().getWorkbench().getEditorRegistry().findEditor(IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID).getId();
+			return JavaScriptPlugin.getDefault().getWorkbench().getEditorRegistry().findEditor(IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID).getId();
 		else
 			return desc.getId();
 	}
@@ -132,7 +132,7 @@ public class JavaSearchEditorOpener {
 			}
 			return editor;
 		} catch (PartInitException ex) {
-			MessageDialog.openError(JavaPlugin.getActiveWorkbenchShell(), SearchMessages.Search_Error_openEditor_title, SearchMessages.Search_Error_openEditor_message); 
+			MessageDialog.openError(JavaScriptPlugin.getActiveWorkbenchShell(), SearchMessages.Search_Error_openEditor_title, SearchMessages.Search_Error_openEditor_message); 
 			return null;
 		}
 	}

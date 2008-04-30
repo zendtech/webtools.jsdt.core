@@ -38,7 +38,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.base.JavaStringStatusCon
 import org.eclipse.wst.jsdt.internal.corext.refactoring.changes.DynamicValidationStateChange;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.ASTProvider;
 
 public class NLSRefactoring extends Refactoring {
@@ -75,7 +75,7 @@ public class NLSRefactoring extends Refactoring {
 		Assert.isNotNull(cu);
 		fCu= cu;
 
-		JavaScriptUnit astRoot= JavaPlugin.getDefault().getASTProvider().getAST(fCu, ASTProvider.WAIT_YES, null);
+		JavaScriptUnit astRoot= JavaScriptPlugin.getDefault().getASTProvider().getAST(fCu, ASTProvider.WAIT_YES, null);
 		NLSHint nlsHint= new NLSHint(fCu, astRoot);
 
 		fSubstitutions= nlsHint.getSubstitutions();

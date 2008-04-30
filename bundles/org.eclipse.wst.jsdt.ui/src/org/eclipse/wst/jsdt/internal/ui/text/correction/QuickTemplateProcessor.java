@@ -35,12 +35,12 @@ import org.eclipse.wst.jsdt.internal.corext.template.java.CompilationUnitContext
 import org.eclipse.wst.jsdt.internal.corext.template.java.CompilationUnitContextType;
 import org.eclipse.wst.jsdt.internal.corext.template.java.JavaContextType;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIStatus;
 import org.eclipse.wst.jsdt.internal.ui.text.template.contentassist.SurroundWithTemplateProposal;
 import org.eclipse.wst.jsdt.internal.ui.text.template.contentassist.TemplateProposal;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.ui.text.java.IInvocationContext;
 import org.eclipse.wst.jsdt.ui.text.java.IJavaCompletionProposal;
 import org.eclipse.wst.jsdt.ui.text.java.IProblemLocation;
@@ -143,7 +143,7 @@ public class QuickTemplateProcessor implements IQuickAssistProcessor {
 
 	private IDocument getDocument(IJavaScriptUnit cu) throws JavaScriptModelException {
 		IFile file= (IFile) cu.getResource();
-		IDocument document= JavaUI.getDocumentProvider().getDocument(new FileEditorInput(file));
+		IDocument document= JavaScriptUI.getDocumentProvider().getDocument(new FileEditorInput(file));
 		if (document == null) {
 			return new Document(cu.getSource()); // only used by test cases
 		}
@@ -151,7 +151,7 @@ public class QuickTemplateProcessor implements IQuickAssistProcessor {
 	}
 
 	private void collectSurroundTemplates(IDocument document, IJavaScriptUnit cu, int offset, int length, Collection result) throws BadLocationException, CoreException {
-		CompilationUnitContextType contextType= (CompilationUnitContextType) JavaPlugin.getDefault().getTemplateContextRegistry().getContextType(JavaContextType.NAME);
+		CompilationUnitContextType contextType= (CompilationUnitContextType) JavaScriptPlugin.getDefault().getTemplateContextRegistry().getContextType(JavaContextType.NAME);
 		CompilationUnitContext context= contextType.createContext(document, offset, length, cu);
 		context.setVariable("selection", document.get(offset, length)); //$NON-NLS-1$
 		context.setForceEvaluation(true);
@@ -163,7 +163,7 @@ public class QuickTemplateProcessor implements IQuickAssistProcessor {
 		AssistContext invocationContext= new AssistContext(cu, start, end - start);
 		Statement[] selectedStatements= SurroundWith.getSelectedStatements(invocationContext);
 		
-		Template[] templates= JavaPlugin.getDefault().getTemplateStore().getTemplates();
+		Template[] templates= JavaScriptPlugin.getDefault().getTemplateStore().getTemplates();
 		for (int i= 0; i != templates.length; i++) {
 			Template currentTemplate= templates[i];
 			if (context.canEvaluate(currentTemplate) && currentTemplate.getContextTypeId().equals(JavaContextType.NAME) && currentTemplate.getPattern().indexOf($_LINE_SELECTION) != -1) {

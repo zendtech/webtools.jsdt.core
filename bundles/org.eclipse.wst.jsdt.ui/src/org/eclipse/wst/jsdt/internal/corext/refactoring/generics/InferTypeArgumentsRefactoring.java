@@ -83,8 +83,8 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.util.TextChangeManager;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaStatusConstants;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 public class InferTypeArgumentsRefactoring extends ScriptableRefactoring {
 
@@ -182,7 +182,7 @@ public class InferTypeArgumentsRefactoring extends ScriptableRefactoring {
 									IProblem[] problems= ast.getProblems();
 									for (int p= 0; p < problems.length; p++) {
 										if (problems[p].isError()) {
-											String cuName= JavaElementLabels.getElementLabel(source, JavaElementLabels.CU_QUALIFIED);
+											String cuName= JavaScriptElementLabels.getElementLabel(source, JavaScriptElementLabels.CU_QUALIFIED);
 											String msg= Messages.format(RefactoringCoreMessages.InferTypeArgumentsRefactoring_error_in_cu_skipped, new Object[] {cuName});
 											result.addError(msg, JavaStatusContext.create(source, new SourceRange(problems[p])));
 											return;
@@ -191,9 +191,9 @@ public class InferTypeArgumentsRefactoring extends ScriptableRefactoring {
 									ast.accept(unitCollector);
 								}
 								public void handleException(Throwable exception) {
-									String cuName= JavaElementLabels.getElementLabel(source, JavaElementLabels.CU_QUALIFIED);
+									String cuName= JavaScriptElementLabels.getElementLabel(source, JavaScriptElementLabels.CU_QUALIFIED);
 									String msg= Messages.format(RefactoringCoreMessages.InferTypeArgumentsRefactoring_internal_error, new Object[] {cuName});
-									JavaPlugin.log(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IJavaStatusConstants.INTERNAL_ERROR, msg, null));
+									JavaScriptPlugin.log(new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), IJavaStatusConstants.INTERNAL_ERROR, msg, null));
 									String msg2= Messages.format(RefactoringCoreMessages.InferTypeArgumentsRefactoring_error_skipped, new Object[] {cuName});
 									result.addError(msg2, JavaStatusContext.create(source));
 								}
@@ -534,7 +534,7 @@ public class InferTypeArgumentsRefactoring extends ScriptableRefactoring {
 					final JDTRefactoringDescriptorComment comment= new JDTRefactoringDescriptorComment(name, this, header);
 					final String[] settings= new String[fElements.length];
 					for (int index= 0; index < settings.length; index++)
-						settings[index]= JavaElementLabels.getTextLabel(fElements[index], JavaElementLabels.ALL_FULLY_QUALIFIED);
+						settings[index]= JavaScriptElementLabels.getTextLabel(fElements[index], JavaScriptElementLabels.ALL_FULLY_QUALIFIED);
 					comment.addSetting(JDTRefactoringDescriptorComment.createCompositeSetting(RefactoringCoreMessages.InferTypeArgumentsRefactoring_original_elements, settings));
 					if (fAssumeCloneReturnsSameType)
 						comment.addSetting(RefactoringCoreMessages.InferTypeArgumentsRefactoring_assume_clone);

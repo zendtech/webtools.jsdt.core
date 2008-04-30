@@ -576,7 +576,7 @@ class JavaScriptUnitResolver extends Compiler {
 			IJavaScriptElement element = elements[i];
 			if (!(element instanceof SourceRefElement))
 				throw new IllegalStateException(element + " is not part of a compilation unit or class file"); //$NON-NLS-1$
-			Object cu = element.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+			Object cu = element.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 			if (cu != null) {
 				// source member
 				IntArrayList intList = (IntArrayList) sourceElementPositions.get(cu);

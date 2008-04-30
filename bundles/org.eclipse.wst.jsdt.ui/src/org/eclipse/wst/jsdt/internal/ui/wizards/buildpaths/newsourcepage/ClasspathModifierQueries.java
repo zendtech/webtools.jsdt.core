@@ -25,7 +25,7 @@ import org.eclipse.wst.jsdt.core.IIncludePathEntry;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.CPListElement;
 import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.ExclusionInclusionDialog;
@@ -402,7 +402,7 @@ public class ClasspathModifierQueries {
                 fOutputLocation= project.getOutputLocation();
 				Display.getDefault().syncExec(new Runnable() {
 					public void run() {                        
-						Shell sh= shell != null ? shell : JavaPlugin.getActiveWorkbenchShell();
+						Shell sh= shell != null ? shell : JavaScriptPlugin.getActiveWorkbenchShell();
 						
 						String title= NewWizardMessages.ClasspathModifier_ChangeOutputLocationDialog_title; 
 						
@@ -476,7 +476,7 @@ public class ClasspathModifierQueries {
 				final boolean[] result= { false };
 				Display.getDefault().syncExec(new Runnable() {
 					public void run() {
-						Shell sh= shell != null ? shell : JavaPlugin.getActiveWorkbenchShell();
+						Shell sh= shell != null ? shell : JavaScriptPlugin.getActiveWorkbenchShell();
 						ExclusionInclusionDialog dialog= new ExclusionInclusionDialog(sh, element, focusOnExcluded);
 						result[0]= dialog.open() == Window.OK;
 						fInclusionPattern= dialog.getInclusionPattern();
@@ -519,7 +519,7 @@ public class ClasspathModifierQueries {
                 final boolean[] isOK= {false};
                 Display.getDefault().syncExec(new Runnable() {
                     public void run() {
-                        Shell sh= shell != null ? shell : JavaPlugin.getActiveWorkbenchShell();
+                        Shell sh= shell != null ? shell : JavaScriptPlugin.getActiveWorkbenchShell();
 
                         LinkFolderDialog dialog= new LinkFolderDialog(sh, project.getProject());
                         isOK[0]= dialog.open() == Window.OK;
@@ -558,7 +558,7 @@ public class ClasspathModifierQueries {
                 final IPath[][] selected= {null};
                 Display.getDefault().syncExec(new Runnable() {
                     public void run() {
-                        Shell sh= shell != null ? shell : JavaPlugin.getActiveWorkbenchShell();
+                        Shell sh= shell != null ? shell : JavaScriptPlugin.getActiveWorkbenchShell();
                         selected[0]= BuildPathDialogAccess.chooseExternalJAREntries(sh);
                     }
                 });
@@ -585,7 +585,7 @@ public class ClasspathModifierQueries {
 				Display.getDefault().syncExec(new Runnable() {
 
 					public final void run() {
-						final RemoveLinkedFolderDialog dialog= new RemoveLinkedFolderDialog((shell != null ? shell : JavaPlugin.getActiveWorkbenchShell()), folder);
+						final RemoveLinkedFolderDialog dialog= new RemoveLinkedFolderDialog((shell != null ? shell : JavaScriptPlugin.getActiveWorkbenchShell()), folder);
 						final int status= dialog.open();
 						if (status == 0)
 							result[0]= dialog.getRemoveStatus();
@@ -615,7 +615,7 @@ public class ClasspathModifierQueries {
                 final IIncludePathEntry[][] selected= {null};
                 Display.getDefault().syncExec(new Runnable() {
                     public void run() {
-                        Shell sh= shell != null ? shell : JavaPlugin.getActiveWorkbenchShell();
+                        Shell sh= shell != null ? shell : JavaScriptPlugin.getActiveWorkbenchShell();
                         selected[0]= BuildPathDialogAccess.chooseContainerEntries(sh, project, entries);
                     }
                 });
@@ -642,7 +642,7 @@ public class ClasspathModifierQueries {
 				final boolean[] isOK= {false};
                 Display.getDefault().syncExec(new Runnable() {
                     public void run() {
-                        Shell sh= shell != null ? shell : JavaPlugin.getActiveWorkbenchShell();
+                        Shell sh= shell != null ? shell : JavaScriptPlugin.getActiveWorkbenchShell();
                         
                         NewFolderDialog dialog= new NewFolderDialog(sh, project.getProject());
                         isOK[0]= dialog.open() == Window.OK;

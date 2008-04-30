@@ -58,7 +58,7 @@ import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.actions.SelectionConverter;
 import org.eclipse.wst.jsdt.internal.ui.filters.EmptyInnerPackageFilter;
@@ -68,8 +68,8 @@ import org.eclipse.wst.jsdt.internal.ui.viewsupport.AppearanceAwareLabelProvider
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.ColoredViewersManager;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.DecoratingJavaLabelProvider;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.JavaElementImageProvider;
-import org.eclipse.wst.jsdt.ui.JavaElementComparator;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementComparator;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 /**
  * The Java working set page allows the user to create
@@ -144,12 +144,12 @@ public class JavaWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		
 		AppearanceAwareLabelProvider fJavaElementLabelProvider= 
 			new AppearanceAwareLabelProvider(
-				AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | JavaElementLabels.P_COMPRESSED,
+				AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | JavaScriptElementLabels.P_COMPRESSED,
 				AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS | JavaElementImageProvider.SMALL_ICONS
 			);
 		
 		fTree.setLabelProvider(new DecoratingJavaLabelProvider(fJavaElementLabelProvider));
-		fTree.setComparator(new JavaElementComparator());
+		fTree.setComparator(new JavaScriptElementComparator());
 		fTree.addFilter(new EmptyInnerPackageFilter());
 		fTree.setUseHashlookup(true);
 		
@@ -403,11 +403,11 @@ public class JavaWorkingSetPage extends WizardPage implements IWorkingSetPage {
 				Object[] elements;
 				if (fWorkingSet == null) {
 					// Use current part's selection for initialization
-					IWorkbenchPage page= JavaPlugin.getActivePage();
+					IWorkbenchPage page= JavaScriptPlugin.getActivePage();
 					if (page == null)
 						return;
 					
-					IWorkbenchPart part= JavaPlugin.getActivePage().getActivePart();
+					IWorkbenchPart part= JavaScriptPlugin.getActivePage().getActivePart();
 					if (part == null)
 						return;
 					

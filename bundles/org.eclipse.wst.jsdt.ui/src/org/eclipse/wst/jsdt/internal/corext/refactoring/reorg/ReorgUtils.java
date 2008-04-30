@@ -81,7 +81,7 @@ public class ReorgUtils {
 
 	public static boolean isInsideCompilationUnit(IJavaScriptElement element) {
 		return 	!(element instanceof IJavaScriptUnit) && 
-				hasAncestorOfType(element, IJavaScriptElement.COMPILATION_UNIT);
+				hasAncestorOfType(element, IJavaScriptElement.JAVASCRIPT_UNIT);
 	}
 	
 	public static boolean isInsideClassFile(IJavaScriptElement element) {
@@ -99,7 +99,7 @@ public class ReorgUtils {
 	public static IJavaScriptUnit getCompilationUnit(IJavaScriptElement javaElement){
 		if (javaElement instanceof IJavaScriptUnit)
 			return (IJavaScriptUnit) javaElement;
-		return (IJavaScriptUnit) javaElement.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+		return (IJavaScriptUnit) javaElement.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 	}
 
 	/**
@@ -162,7 +162,7 @@ public class ReorgUtils {
 		switch(element.getElementType()){
 			case IJavaScriptElement.CLASS_FILE:
 				return new String[]{element.getElementName()};
-			case IJavaScriptElement.COMPILATION_UNIT:
+			case IJavaScriptElement.JAVASCRIPT_UNIT:
 				return new String[]{element.getElementName()};
 			case IJavaScriptElement.FIELD:
 				return new String[]{element.getElementName()};
@@ -172,7 +172,7 @@ public class ReorgUtils {
 				return new String[]{element.getElementName()};
 			case IJavaScriptElement.INITIALIZER:
 				return new String[0];
-			case IJavaScriptElement.JAVA_PROJECT:
+			case IJavaScriptElement.JAVASCRIPT_PROJECT:
 				return new String[]{element.getElementName()};
 			case IJavaScriptElement.METHOD:
 				return new String[]{element.getElementName()};
@@ -203,7 +203,7 @@ public class ReorgUtils {
 		switch(element.getElementType()){
 			case IJavaScriptElement.CLASS_FILE:
 				return RefactoringCoreMessages.ReorgUtils_3; 
-			case IJavaScriptElement.COMPILATION_UNIT:
+			case IJavaScriptElement.JAVASCRIPT_UNIT:
 				return RefactoringCoreMessages.ReorgUtils_4; 
 			case IJavaScriptElement.FIELD:
 				return RefactoringCoreMessages.ReorgUtils_5; 
@@ -213,7 +213,7 @@ public class ReorgUtils {
 				return RefactoringCoreMessages.ReorgUtils_7; 
 			case IJavaScriptElement.INITIALIZER:
 				return RefactoringCoreMessages.ReorgUtils_8; 
-			case IJavaScriptElement.JAVA_PROJECT:
+			case IJavaScriptElement.JAVASCRIPT_PROJECT:
 				return RefactoringCoreMessages.ReorgUtils_9; 
 			case IJavaScriptElement.METHOD:
 				if (((IFunction)element).isConstructor())

@@ -30,7 +30,7 @@ import org.eclipse.wst.jsdt.core.IIncludePathEntry;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.util.PixelConverter;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.JavaUILabelProvider;
 import org.eclipse.wst.jsdt.internal.ui.wizards.NewWizardMessages;
@@ -40,7 +40,7 @@ import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.ITreeListAdapter;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.LayoutUtil;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.ListDialogField;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.TreeListDialogField;
-import org.eclipse.wst.jsdt.ui.JavaElementComparator;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementComparator;
 
 
 public class ProjectsWorkbookPage extends BuildPathBasePage {
@@ -394,7 +394,7 @@ public class ProjectsWorkbookPage extends BuildPathBasePage {
 		if (fSWTControl != null) {
 			return fSWTControl.getShell();
 		}
-		return JavaPlugin.getActiveWorkbenchShell();
+		return JavaScriptPlugin.getActiveWorkbenchShell();
 	}
 
 
@@ -412,7 +412,7 @@ public class ProjectsWorkbookPage extends BuildPathBasePage {
 				selectable.remove(proj);
 			}
 			Object[] selectArr= selectable.toArray();
-			new JavaElementComparator().sort(null, selectArr);
+			new JavaScriptElementComparator().sort(null, selectArr);
 					
 			ListSelectionDialog dialog= new ListSelectionDialog(getShell(), Arrays.asList(selectArr), new ArrayContentProvider(), new JavaUILabelProvider(), NewWizardMessages.ProjectsWorkbookPage_chooseProjects_message); 
 			dialog.setTitle(NewWizardMessages.ProjectsWorkbookPage_chooseProjects_title); 

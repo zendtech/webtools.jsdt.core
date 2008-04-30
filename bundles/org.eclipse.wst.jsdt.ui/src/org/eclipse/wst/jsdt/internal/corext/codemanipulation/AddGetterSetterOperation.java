@@ -45,7 +45,7 @@ import org.eclipse.wst.jsdt.internal.corext.dom.ModifierRewrite;
 import org.eclipse.wst.jsdt.internal.corext.dom.NodeFinder;
 import org.eclipse.wst.jsdt.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 /**
  * Workspace runnable to add accessor methods to fields.
@@ -303,7 +303,7 @@ public final class AddGetterSetterOperation implements IWorkspaceRunnable {
 					listRewriter= astRewrite.getListRewrite(declaration, declaration.getBodyDeclarationsProperty());
 			}
 			if (listRewriter == null) {
-				throw new CoreException(new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IStatus.ERROR, CodeGenerationMessages.AddGetterSetterOperation_error_input_type_not_found, null));
+				throw new CoreException(new Status(IStatus.ERROR, JavaScriptUI.ID_PLUGIN, IStatus.ERROR, CodeGenerationMessages.AddGetterSetterOperation_error_input_type_not_found, null));
 			}
 			
 			fSkipAllExisting= (fSkipExistingQuery == null);

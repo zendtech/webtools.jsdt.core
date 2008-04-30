@@ -92,14 +92,14 @@ public void processDelta(IJavaScriptElementDelta delta) {
 	if (this.needsInitialize) return;
 	IJavaScriptElement element = delta.getElement();
 	switch (element.getElementType()) {
-		case IJavaScriptElement.JAVA_MODEL:
+		case IJavaScriptElement.JAVASCRIPT_MODEL:
 			IJavaScriptElementDelta[] children = delta.getAffectedChildren();
 			for (int i = 0, length = children.length; i < length; i++) {
 				IJavaScriptElementDelta child = children[i];
 				this.processDelta(child);
 			}
 			break;
-		case IJavaScriptElement.JAVA_PROJECT:
+		case IJavaScriptElement.JAVASCRIPT_PROJECT:
 			int kind = delta.getKind();
 			switch (kind) {
 				case IJavaScriptElementDelta.ADDED:

@@ -34,8 +34,8 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.changes.RefactoringDescriptorChange;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.code.ScriptableRefactoring;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 public final class RenameEnumConstProcessor extends RenameFieldProcessor {
 
@@ -97,10 +97,10 @@ public final class RenameEnumConstProcessor extends RenameFieldProcessor {
 				if (declaring.isAnonymous() || declaring.isLocal())
 					flags|= JavaRefactoringDescriptor.JAR_SOURCE_ATTACHMENT;
 			} catch (JavaScriptModelException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			}
 			final String description= Messages.format(RefactoringCoreMessages.RenameEnumConstProcessor_descriptor_description_short, fField.getElementName());
-			final String header= Messages.format(RefactoringCoreMessages.RenameEnumConstProcessor_descriptor_description, new String[] { field.getElementName(), JavaElementLabels.getElementLabel(field.getParent(), JavaElementLabels.ALL_FULLY_QUALIFIED), getNewElementName()});
+			final String header= Messages.format(RefactoringCoreMessages.RenameEnumConstProcessor_descriptor_description, new String[] { field.getElementName(), JavaScriptElementLabels.getElementLabel(field.getParent(), JavaScriptElementLabels.ALL_FULLY_QUALIFIED), getNewElementName()});
 			final String comment= new JDTRefactoringDescriptorComment(project, this, header).asString();
 			final RenameJavaElementDescriptor descriptor= new RenameJavaElementDescriptor(IJavaRefactorings.RENAME_ENUM_CONSTANT);
 			descriptor.setProject(project);

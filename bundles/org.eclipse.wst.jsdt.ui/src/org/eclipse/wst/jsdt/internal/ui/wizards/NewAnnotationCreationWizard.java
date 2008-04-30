@@ -15,7 +15,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.ui.wizards.NewAnnotationWizardPage;
 
@@ -26,7 +26,7 @@ public class NewAnnotationCreationWizard extends NewElementWizard {
 	
 	public NewAnnotationCreationWizard(NewAnnotationWizardPage page, boolean openEditorOnFinish) {
 		setDefaultPageImageDescriptor(JavaPluginImages.DESC_WIZBAN_NEWANNOT);
-		setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
+		setDialogSettings(JavaScriptPlugin.getDefault().getDialogSettings());
 		setWindowTitle(NewWizardMessages.NewAnnotationCreationWizard_title);
 		
 		fPage= page;

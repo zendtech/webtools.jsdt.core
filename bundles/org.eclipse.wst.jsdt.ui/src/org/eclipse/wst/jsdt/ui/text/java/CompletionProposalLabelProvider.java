@@ -26,13 +26,13 @@ import org.eclipse.wst.jsdt.internal.corext.template.java.SignatureUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.JavaElementImageProvider;
-import org.eclipse.wst.jsdt.ui.JavaElementImageDescriptor;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementImageDescriptor;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 
 /**
  * Provides labels for java content assist proposals. The functionality is
- * similar to the one provided by {@link org.eclipse.wst.jsdt.ui.JavaElementLabels},
+ * similar to the one provided by {@link org.eclipse.wst.jsdt.ui.JavaScriptElementLabels},
  * but based on signatures and {@link CompletionProposal}s.
  *
  * @see Signature
@@ -387,7 +387,7 @@ public class CompletionProposalLabelProvider {
 		char[] declarationSignature = typeProposal.getDeclarationSignature();
 		if (declarationSignature!=null && declarationSignature.length>0)
 		{
-			buf.append(JavaElementLabels.CONCAT_STRING);
+			buf.append(JavaScriptElementLabels.CONCAT_STRING);
 			buf.append(declarationSignature);
 		}
 		return buf.toString();
@@ -418,7 +418,7 @@ public class CompletionProposalLabelProvider {
 		StringBuffer buf= new StringBuffer();
 //		buf.append(fullName, qIndex, fullName.length - qIndex);
 //		if (qIndex > 0) {
-//			buf.append(JavaElementLabels.CONCAT_STRING);
+//			buf.append(JavaScriptElementLabels.CONCAT_STRING);
 //			buf.append(fullName, 0, qIndex - 1);
 //		}
 		buf.append(fullName);
@@ -434,7 +434,7 @@ public class CompletionProposalLabelProvider {
 		buf.append(fullName, qIndex, fullName.length - qIndex);
 		buf.append('}');
 		if (qIndex > 0) {
-			buf.append(JavaElementLabels.CONCAT_STRING);
+			buf.append(JavaScriptElementLabels.CONCAT_STRING);
 			buf.append(fullName, 0, qIndex - 1);
 		}
 		return buf.toString();
@@ -722,20 +722,20 @@ public class CompletionProposalLabelProvider {
 		int kind= proposal.getKind();
 
 		if (Flags.isDeprecated(flags))
-			adornments |= JavaElementImageDescriptor.DEPRECATED;
+			adornments |= JavaScriptElementImageDescriptor.DEPRECATED;
 
 		if (kind == CompletionProposal.FIELD_REF || kind == CompletionProposal.METHOD_DECLARATION || kind == CompletionProposal.METHOD_DECLARATION || kind == CompletionProposal.METHOD_NAME_REFERENCE || kind == CompletionProposal.METHOD_REF)
 			if (Flags.isStatic(flags))
-				adornments |= JavaElementImageDescriptor.STATIC;
+				adornments |= JavaScriptElementImageDescriptor.STATIC;
 
 		if (kind == CompletionProposal.METHOD_DECLARATION || kind == CompletionProposal.METHOD_DECLARATION || kind == CompletionProposal.METHOD_NAME_REFERENCE || kind == CompletionProposal.METHOD_REF)
 			if (Flags.isSynchronized(flags))
-				adornments |= JavaElementImageDescriptor.SYNCHRONIZED;
+				adornments |= JavaScriptElementImageDescriptor.SYNCHRONIZED;
 
 		if (kind == CompletionProposal.TYPE_REF && Flags.isAbstract(flags) && !Flags.isInterface(flags))
-			adornments |= JavaElementImageDescriptor.ABSTRACT;
+			adornments |= JavaScriptElementImageDescriptor.ABSTRACT;
 
-		return new JavaElementImageDescriptor(descriptor, adornments, JavaElementImageProvider.SMALL_SIZE);
+		return new JavaScriptElementImageDescriptor(descriptor, adornments, JavaElementImageProvider.SMALL_SIZE);
 	}
 
 	/**

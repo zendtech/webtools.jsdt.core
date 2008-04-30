@@ -33,7 +33,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.OptionalMessageDialog;
 import org.osgi.framework.Bundle;
 
@@ -86,7 +86,7 @@ public class SearchUtil {
 	static IJavaScriptUnit findCompilationUnit(IJavaScriptElement element) {
 		if (element == null)
 			return null;
-		return (IJavaScriptUnit) element.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+		return (IJavaScriptUnit) element.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 	}
 
 
@@ -170,9 +170,9 @@ public class SearchUtil {
 	}
 
 	private static IDialogSettings getDialogStoreSection() {
-		IDialogSettings settingsStore= JavaPlugin.getDefault().getDialogSettings().getSection(DIALOG_SETTINGS_KEY);
+		IDialogSettings settingsStore= JavaScriptPlugin.getDefault().getDialogSettings().getSection(DIALOG_SETTINGS_KEY);
 		if (settingsStore == null)
-			settingsStore= JavaPlugin.getDefault().getDialogSettings().addNewSection(DIALOG_SETTINGS_KEY);
+			settingsStore= JavaScriptPlugin.getDefault().getDialogSettings().addNewSection(DIALOG_SETTINGS_KEY);
 		return settingsStore;
 	}
 

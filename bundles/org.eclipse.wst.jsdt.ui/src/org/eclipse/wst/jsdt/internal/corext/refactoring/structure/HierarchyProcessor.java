@@ -95,8 +95,8 @@ import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.SearchUtils;
 import org.eclipse.wst.jsdt.internal.corext.util.Strings;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 /**
  * Partial implementation of a hierarchy refactoring processor used in pull up,
@@ -181,21 +181,21 @@ public abstract class HierarchyProcessor extends SuperTypeRefactoringProcessor {
 							boolean reported= false;
 							final IExtendedModifier modifier= (IExtendedModifier) iterator.next();
 							if (!reported && modifier.isAnnotation()) {
-								status.merge(RefactoringStatus.createErrorStatus(Messages.format(RefactoringCoreMessages.PullUpRefactoring_incompatible_langauge_constructs, new String[] { JavaElementLabels.getTextLabel(members[index], JavaElementLabels.ALL_FULLY_QUALIFIED), JavaElementLabels.getTextLabel(destination, JavaElementLabels.ALL_DEFAULT)}), JavaStatusContext.create(members[index])));
+								status.merge(RefactoringStatus.createErrorStatus(Messages.format(RefactoringCoreMessages.PullUpRefactoring_incompatible_langauge_constructs, new String[] { JavaScriptElementLabels.getTextLabel(members[index], JavaScriptElementLabels.ALL_FULLY_QUALIFIED), JavaScriptElementLabels.getTextLabel(destination, JavaScriptElementLabels.ALL_DEFAULT)}), JavaStatusContext.create(members[index])));
 								reported= true;
 							}
 						}
 					}
 				} catch (JavaScriptModelException exception) {
-					JavaPlugin.log(exception);
+					JavaScriptPlugin.log(exception);
 				}
 				if (members[index] instanceof IFunction) {
 					final IFunction method= (IFunction) members[index];
 					try {
 						if (Flags.isVarargs(method.getFlags()))
-							status.merge(RefactoringStatus.createErrorStatus(Messages.format(RefactoringCoreMessages.PullUpRefactoring_incompatible_language_constructs1, new String[] { JavaElementLabels.getTextLabel(members[index], JavaElementLabels.ALL_FULLY_QUALIFIED), JavaElementLabels.getTextLabel(destination, JavaElementLabels.ALL_DEFAULT)}), JavaStatusContext.create(members[index])));
+							status.merge(RefactoringStatus.createErrorStatus(Messages.format(RefactoringCoreMessages.PullUpRefactoring_incompatible_language_constructs1, new String[] { JavaScriptElementLabels.getTextLabel(members[index], JavaScriptElementLabels.ALL_FULLY_QUALIFIED), JavaScriptElementLabels.getTextLabel(destination, JavaScriptElementLabels.ALL_DEFAULT)}), JavaStatusContext.create(members[index])));
 					} catch (JavaScriptModelException exception) {
-						JavaPlugin.log(exception);
+						JavaScriptPlugin.log(exception);
 					}
 				}
 			}
@@ -233,7 +233,7 @@ public abstract class HierarchyProcessor extends SuperTypeRefactoringProcessor {
 				final JSdoc successor= (JSdoc) rewrite.createStringPlaceholder(Strings.concatenate(lines, TextUtilities.getDefaultLineDelimiter(buffer)), ASTNode.JSDOC);
 				newDeclaration.setJavadoc(successor);
 			} catch (BadLocationException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			}
 		}
 	}
@@ -252,11 +252,11 @@ public abstract class HierarchyProcessor extends SuperTypeRefactoringProcessor {
 
 	protected static String createLabel(final IMember member) {
 		if (member instanceof IType)
-			return JavaElementLabels.getTextLabel(member, JavaElementLabels.ALL_FULLY_QUALIFIED);
+			return JavaScriptElementLabels.getTextLabel(member, JavaScriptElementLabels.ALL_FULLY_QUALIFIED);
 		else if (member instanceof IFunction)
-			return JavaElementLabels.getTextLabel(member, JavaElementLabels.ALL_FULLY_QUALIFIED);
+			return JavaScriptElementLabels.getTextLabel(member, JavaScriptElementLabels.ALL_FULLY_QUALIFIED);
 		else if (member instanceof IField)
-			return JavaElementLabels.getTextLabel(member, JavaElementLabels.ALL_FULLY_QUALIFIED);
+			return JavaScriptElementLabels.getTextLabel(member, JavaScriptElementLabels.ALL_FULLY_QUALIFIED);
 		else if (member instanceof IInitializer)
 			return RefactoringCoreMessages.HierarchyRefactoring_initializer;
 		Assert.isTrue(false);
@@ -304,9 +304,9 @@ public abstract class HierarchyProcessor extends SuperTypeRefactoringProcessor {
 			rewriter.rewriteAST(document, declaringCu.getJavaScriptProject().getOptions(true)).apply(document, TextEdit.NONE);
 			result= (Expression) rewrite.createStringPlaceholder(document.get(position.getStartPosition(), position.getLength()), ASTNode.FUNCTION_INVOCATION);
 		} catch (MalformedTreeException exception) {
-			JavaPlugin.log(exception);
+			JavaScriptPlugin.log(exception);
 		} catch (BadLocationException exception) {
-			JavaPlugin.log(exception);
+			JavaScriptPlugin.log(exception);
 		}
 		return result;
 	}
@@ -352,9 +352,9 @@ public abstract class HierarchyProcessor extends SuperTypeRefactoringProcessor {
 			rewriter.rewriteAST(document, declaringCu.getJavaScriptProject().getOptions(true)).apply(document, TextEdit.NONE);
 			result= (BodyDeclaration) rewrite.createStringPlaceholder(document.get(position.getStartPosition(), position.getLength()), ASTNode.TYPE_DECLARATION);
 		} catch (MalformedTreeException exception) {
-			JavaPlugin.log(exception);
+			JavaScriptPlugin.log(exception);
 		} catch (BadLocationException exception) {
-			JavaPlugin.log(exception);
+			JavaScriptPlugin.log(exception);
 		}
 		return result;
 	}
@@ -373,9 +373,9 @@ public abstract class HierarchyProcessor extends SuperTypeRefactoringProcessor {
 			rewriter.rewriteAST(document, declaringCu.getJavaScriptProject().getOptions(true)).apply(document, TextEdit.NONE);
 			result= (SingleVariableDeclaration) rewrite.createStringPlaceholder(document.get(position.getStartPosition(), position.getLength()), ASTNode.SINGLE_VARIABLE_DECLARATION);
 		} catch (MalformedTreeException exception) {
-			JavaPlugin.log(exception);
+			JavaScriptPlugin.log(exception);
 		} catch (BadLocationException exception) {
-			JavaPlugin.log(exception);
+			JavaScriptPlugin.log(exception);
 		}
 		return result;
 	}
@@ -394,9 +394,9 @@ public abstract class HierarchyProcessor extends SuperTypeRefactoringProcessor {
 			rewriter.rewriteAST(document, declaringCu.getJavaScriptProject().getOptions(true)).apply(document, TextEdit.NONE);
 			result= (Type) rewrite.createStringPlaceholder(document.get(position.getStartPosition(), position.getLength()), ASTNode.SIMPLE_TYPE);
 		} catch (MalformedTreeException exception) {
-			JavaPlugin.log(exception);
+			JavaScriptPlugin.log(exception);
 		} catch (BadLocationException exception) {
-			JavaPlugin.log(exception);
+			JavaScriptPlugin.log(exception);
 		}
 		return result;
 	}
@@ -415,9 +415,9 @@ public abstract class HierarchyProcessor extends SuperTypeRefactoringProcessor {
 			rewriter.rewriteAST(document, declaringCu.getJavaScriptProject().getOptions(true)).apply(document, TextEdit.NONE);
 			result= (BodyDeclaration) rewrite.createStringPlaceholder(document.get(position.getStartPosition(), position.getLength()), ASTNode.TYPE_DECLARATION);
 		} catch (MalformedTreeException exception) {
-			JavaPlugin.log(exception);
+			JavaScriptPlugin.log(exception);
 		} catch (BadLocationException exception) {
-			JavaPlugin.log(exception);
+			JavaScriptPlugin.log(exception);
 		}
 		return result;
 	}
@@ -529,7 +529,7 @@ public abstract class HierarchyProcessor extends SuperTypeRefactoringProcessor {
 							}
 						}
 					} catch (JavaScriptModelException exception) {
-						JavaPlugin.log(exception);
+						JavaScriptPlugin.log(exception);
 					}
 				}
 			}
@@ -546,7 +546,7 @@ public abstract class HierarchyProcessor extends SuperTypeRefactoringProcessor {
 			monitor.beginTask(RefactoringCoreMessages.PullUpRefactoring_checking, 2);
 			final RefactoringStatus result= new RefactoringStatus();
 			final SearchResultGroup[] groups= ConstructorReferenceFinder.getConstructorReferences(type, fOwner, new SubProgressMonitor(monitor, 1), result);
-			final String message= Messages.format(RefactoringCoreMessages.HierarchyRefactoring_gets_instantiated, new Object[] { JavaElementLabels.getTextLabel(type, JavaElementLabels.ALL_FULLY_QUALIFIED)});
+			final String message= Messages.format(RefactoringCoreMessages.HierarchyRefactoring_gets_instantiated, new Object[] { JavaScriptElementLabels.getTextLabel(type, JavaScriptElementLabels.ALL_FULLY_QUALIFIED)});
 
 			IJavaScriptUnit unit= null;
 			for (int index= 0; index < groups.length; index++) {

@@ -49,7 +49,7 @@ import org.eclipse.wst.jsdt.internal.corext.util.History;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.QualifiedTypeNameHistory;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionMessages;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionUtil;
 import org.eclipse.wst.jsdt.internal.ui.actions.MultiOrganizeImportAction;
@@ -62,7 +62,7 @@ import org.eclipse.wst.jsdt.internal.ui.preferences.JavaPreferencesSettings;
 import org.eclipse.wst.jsdt.internal.ui.util.ElementValidator;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.wst.jsdt.internal.ui.util.TypeNameMatchLabelProvider;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 import com.ibm.icu.text.Collator;
 
@@ -193,7 +193,7 @@ public class OrganizeImportsAction extends SelectionDispatchAction {
 	}
 
 	private static IJavaScriptUnit getCompilationUnit(JavaEditor editor) {
-		IJavaScriptElement element= JavaUI.getEditorInputJavaElement(editor.getEditorInput());
+		IJavaScriptElement element= JavaScriptUI.getEditorInputJavaElement(editor.getEditorInput());
 		if (!(element instanceof IJavaScriptUnit))
 			return null;
 		
@@ -240,13 +240,13 @@ public class OrganizeImportsAction extends SelectionDispatchAction {
 			CodeGenerationSettings settings= JavaPreferencesSettings.getCodeGenerationSettings(cu.getJavaScriptProject());
 			
 			if (fEditor == null && EditorUtility.isOpenInEditor(cu) == null) {
-				IEditorPart editor= JavaUI.openInEditor(cu);
+				IEditorPart editor= JavaScriptUI.openInEditor(cu);
 				if (editor instanceof JavaEditor) {
 					fEditor= (JavaEditor) editor;
 				}			
 			}
 			
-			JavaScriptUnit astRoot= JavaPlugin.getDefault().getASTProvider().getAST(cu, ASTProvider.WAIT_ACTIVE_ONLY, null);
+			JavaScriptUnit astRoot= JavaScriptPlugin.getDefault().getASTProvider().getAST(cu, ASTProvider.WAIT_ACTIVE_ONLY, null);
 			
 			OrganizeImportsOperation op= new OrganizeImportsOperation(cu, astRoot, settings.importIgnoreLowercase, !cu.isWorkingCopy(), true, createChooseImportQuery());
 		

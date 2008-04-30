@@ -76,7 +76,7 @@ import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionMessages;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionUtil;
 import org.eclipse.wst.jsdt.internal.ui.actions.SelectionConverter;
@@ -89,11 +89,11 @@ import org.eclipse.wst.jsdt.internal.ui.util.BusyIndicatorRunnableContext;
 import org.eclipse.wst.jsdt.internal.ui.util.ElementValidator;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.JavaElementImageProvider;
-import org.eclipse.wst.jsdt.ui.JavaElementComparator;
-import org.eclipse.wst.jsdt.ui.JavaElementImageDescriptor;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementComparator;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementImageDescriptor;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 /**
  * Creates getter and setter methods for a type's fields. Opens a dialog with a list of
@@ -170,7 +170,7 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 		} catch (JavaScriptModelException e) {
 			// http://bugs.eclipse.org/bugs/show_bug.cgi?id=19253
 			if (JavaModelUtil.isExceptionToBeLogged(e))
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			setEnabled(false);
 		}
 	}
@@ -286,7 +286,7 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 		}
 		AddGetterSetterContentProvider cp= new AddGetterSetterContentProvider(entries);
 		GetterSetterTreeSelectionDialog dialog= new GetterSetterTreeSelectionDialog(getShell(), lp, cp, fEditor, type);
-		dialog.setComparator(new JavaElementComparator());
+		dialog.setComparator(new JavaScriptElementComparator());
 		dialog.setTitle(DIALOG_TITLE);
 		String message= ActionMessages.AddGetterSetterAction_dialog_label;
 		dialog.setMessage(message);
@@ -521,7 +521,7 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 		else
 			cu= getterSetterFields[0].getJavaScriptUnit();
 		// open the editor, forces the creation of a working copy
-		run(cu, type, getterFields, setterFields, getterSetterFields, JavaUI.openInEditor(cu), unit, elementPosition);
+		run(cu, type, getterFields, setterFields, getterSetterFields, JavaScriptUI.openInEditor(cu), unit, elementPosition);
 	}
 
 	// ---- Java Editor --------------------------------------------------------------
@@ -583,7 +583,7 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 			AddGetterSetterOperation op= new AddGetterSetterOperation(type, getterFields, setterFields, getterSetterFields, unit, skipReplaceQuery(), elementPosition, settings, true, false);
 			setOperationStatusFields(op);
 
-			IRunnableContext context= JavaPlugin.getActiveWorkbenchWindow();
+			IRunnableContext context= JavaScriptPlugin.getActiveWorkbenchWindow();
 			if (context == null) {
 				context= new BusyIndicatorRunnableContext();
 			}
@@ -624,7 +624,7 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 				String replaceLabel= ActionMessages.AddGetterSetterAction_SkipExistingDialog_replace_label; 
 				String skipAllLabel= ActionMessages.AddGetterSetterAction_SkipExistingDialog_skipAll_label; 
 				String[] options= { skipLabel, replaceLabel, skipAllLabel, IDialogConstants.CANCEL_LABEL};
-				String methodName= JavaElementLabels.getElementLabel(method, JavaElementLabels.M_PARAMETER_TYPES);
+				String methodName= JavaScriptElementLabels.getElementLabel(method, JavaScriptElementLabels.M_PARAMETER_TYPES);
 				String formattedMessage= Messages.format(ActionMessages.AddGetterSetterAction_SkipExistingDialog_message, methodName); 
 				return showQueryDialog(formattedMessage, options, returnCodes);
 			}
@@ -634,7 +634,7 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 	private int showQueryDialog(final String message, final String[] buttonLabels, int[] returnCodes) {
 		final Shell shell= getShell();
 		if (shell == null) {
-			JavaPlugin.logErrorMessage("AddGetterSetterAction.showQueryDialog: No active shell found"); //$NON-NLS-1$
+			JavaScriptPlugin.logErrorMessage("AddGetterSetterAction.showQueryDialog: No active shell found"); //$NON-NLS-1$
 			return IRequestQuery.CANCEL;
 		}
 		final int[] result= { Window.CANCEL};
@@ -680,7 +680,7 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 						if (declaringType==null || declaringType.isInterface())
 							return null;
 					} catch (JavaScriptModelException e) {
-						JavaPlugin.log(e);
+						JavaScriptPlugin.log(e);
 						return null;
 					}
 
@@ -694,7 +694,7 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 		return null;
 	}
 
-	private static class AddGetterSetterLabelProvider extends JavaElementLabelProvider {
+	private static class AddGetterSetterLabelProvider extends JavaScriptElementLabelProvider {
 
 		AddGetterSetterLabelProvider() {
 		}
@@ -727,12 +727,12 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 				try {
 					flags= ((GetterSetterEntry) element).field.getFlags();
 				} catch (JavaScriptModelException e) {
-					JavaPlugin.log(e);
+					JavaScriptPlugin.log(e);
 				}
 				ImageDescriptor desc= JavaElementImageProvider.getFieldImageDescriptor(false, Flags.AccPublic);
-				int adornmentFlags= Flags.isStatic(flags) ? JavaElementImageDescriptor.STATIC : 0;
-				desc= new JavaElementImageDescriptor(desc, adornmentFlags, JavaElementImageProvider.BIG_SIZE);
-				return JavaPlugin.getImageDescriptorRegistry().get(desc);
+				int adornmentFlags= Flags.isStatic(flags) ? JavaScriptElementImageDescriptor.STATIC : 0;
+				desc= new JavaScriptElementImageDescriptor(desc, adornmentFlags, JavaElementImageProvider.BIG_SIZE);
+				return JavaScriptPlugin.getImageDescriptorRegistry().get(desc);
 			}
 			return super.getImage(element);
 		}
@@ -887,7 +887,7 @@ public class AddGetterSetterAction extends SelectionDispatchAction {
 			fPreviousSelectedFinals= new ArrayList();
 
 			// http://bugs.eclipse.org/bugs/show_bug.cgi?id=19253
-			IDialogSettings dialogSettings= JavaPlugin.getDefault().getDialogSettings();
+			IDialogSettings dialogSettings= JavaScriptPlugin.getDefault().getDialogSettings();
 			fSettings= dialogSettings.getSection(SETTINGS_SECTION);
 			if (fSettings == null) {
 				fSettings= dialogSettings.addNewSection(SETTINGS_SECTION);

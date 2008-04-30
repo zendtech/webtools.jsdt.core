@@ -3151,7 +3151,7 @@ public class JavaModelManager implements ISaveParticipant, IContentTypeChangeLis
 				if (JavaModelCache.VERBOSE) {
 					String elementType;
 					switch (element.getElementType()) {
-						case IJavaScriptElement.JAVA_PROJECT:
+						case IJavaScriptElement.JAVASCRIPT_PROJECT:
 							elementType = "project"; //$NON-NLS-1$
 							break;
 						case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
@@ -3163,7 +3163,7 @@ public class JavaModelManager implements ISaveParticipant, IContentTypeChangeLis
 						case IJavaScriptElement.CLASS_FILE:
 							elementType = "class file"; //$NON-NLS-1$
 							break;
-						case IJavaScriptElement.COMPILATION_UNIT:
+						case IJavaScriptElement.JAVASCRIPT_UNIT:
 							elementType = "compilation unit"; //$NON-NLS-1$
 							break;
 						default:

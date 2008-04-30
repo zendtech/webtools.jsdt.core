@@ -18,7 +18,7 @@ import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.DialogField;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.IStringButtonAdapter;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
 
 class PackageSelectionStringButtonAdapter implements IStringButtonAdapter {
 
@@ -52,7 +52,7 @@ class PackageSelectionStringButtonAdapter implements IStringButtonAdapter {
 		}
 
 		ElementListSelectionDialog dialog= new ElementListSelectionDialog(field.getLabelControl(null).getShell(),
-			new JavaElementLabelProvider(JavaElementLabelProvider.SHOW_DEFAULT));
+			new JavaScriptElementLabelProvider(JavaScriptElementLabelProvider.SHOW_DEFAULT));
 		dialog.setIgnoreCase(true);
 
 		dialog.setTitle(fTitle);

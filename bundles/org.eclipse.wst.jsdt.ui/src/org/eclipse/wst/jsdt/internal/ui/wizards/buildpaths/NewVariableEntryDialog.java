@@ -42,7 +42,7 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusInfo;
 import org.eclipse.wst.jsdt.internal.ui.preferences.ClasspathVariablesPreferencePage;
 import org.eclipse.wst.jsdt.internal.ui.wizards.NewWizardMessages;
@@ -170,7 +170,7 @@ public class NewVariableEntryDialog extends StatusDialog {
 	 * @see org.eclipse.jface.dialogs.Dialog#getDialogBoundsSettings()
 	 */
 	protected IDialogSettings getDialogBoundsSettings() {
-		return JavaPlugin.getDefault().getDialogSettingsSection(getClass().getName());
+		return JavaScriptPlugin.getDefault().getDialogSettingsSection(getClass().getName());
 	}
 			
 	/* (non-Javadoc)

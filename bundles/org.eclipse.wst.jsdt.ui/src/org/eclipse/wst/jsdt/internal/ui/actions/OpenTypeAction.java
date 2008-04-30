@@ -26,12 +26,12 @@ import org.eclipse.ui.dialogs.SelectionDialog;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchConstants;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIMessages;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.OpenTypeSelectionDialog;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 public class OpenTypeAction extends Action implements IWorkbenchWindowActionDelegate, IActionDelegate2 {
 
@@ -49,7 +49,7 @@ public class OpenTypeAction extends Action implements IWorkbenchWindowActionDele
 	}
 	
 	public void runWithEvent(Event e) {
-		Shell parent= JavaPlugin.getActiveWorkbenchShell();
+		Shell parent= JavaScriptPlugin.getActiveWorkbenchShell();
 		SelectionDialog dialog;
 		if (e != null && e.stateMask == SWT.MOD1) {
 			// use old open type dialog when MOD1 (but no other modifier) is down:
@@ -70,7 +70,7 @@ public class OpenTypeAction extends Action implements IWorkbenchWindowActionDele
 			for (int i= 0; i < types.length; i++) {
 				type= (IType) types[i];
 				try {
-					JavaUI.openInEditor(type, true, true);
+					JavaScriptUI.openInEditor(type, true, true);
 				} catch (CoreException x) {
 					ExceptionHandler.handle(x, JavaUIMessages.OpenTypeAction_errorTitle, JavaUIMessages.OpenTypeAction_errorMessage);
 				}

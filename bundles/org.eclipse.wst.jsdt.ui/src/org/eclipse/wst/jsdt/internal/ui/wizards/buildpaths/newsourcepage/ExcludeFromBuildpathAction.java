@@ -36,7 +36,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.buildpath.BuildpathDelta;
 import org.eclipse.wst.jsdt.internal.corext.buildpath.ClasspathModifier;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.CPListElement;
@@ -114,7 +114,7 @@ public class ExcludeFromBuildpathAction extends BuildpathModifierAction {
 			if (e.getCause() instanceof CoreException) {
 				showExceptionDialog((CoreException)e.getCause(), NewWizardMessages.ExcludeFromBuildathAction_ErrorTitle);
 			} else {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		} catch (final InterruptedException e) {
 		}

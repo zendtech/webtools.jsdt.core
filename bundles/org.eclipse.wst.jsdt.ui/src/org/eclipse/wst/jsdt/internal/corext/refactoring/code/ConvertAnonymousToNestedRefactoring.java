@@ -93,11 +93,11 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.util.RefactoringASTParse
 import org.eclipse.wst.jsdt.internal.corext.refactoring.util.ResourceUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.text.correction.ModifierCorrectionSubProcessor;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.BindingLabelProvider;
 import org.eclipse.wst.jsdt.ui.CodeGeneration;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 public class ConvertAnonymousToNestedRefactoring extends ScriptableRefactoring {
 
@@ -501,14 +501,14 @@ public class ConvertAnonymousToNestedRefactoring extends ScriptableRefactoring {
 
 	private RefactoringChangeDescriptor createRefactoringDescriptor() {
 		final ITypeBinding binding= fAnonymousInnerClassNode.resolveBinding();
-		final String[] labels= new String[] { BindingLabelProvider.getBindingLabel(binding, JavaElementLabels.ALL_FULLY_QUALIFIED), BindingLabelProvider.getBindingLabel(binding.getDeclaringMethod(), JavaElementLabels.ALL_FULLY_QUALIFIED)};
+		final String[] labels= new String[] { BindingLabelProvider.getBindingLabel(binding, JavaScriptElementLabels.ALL_FULLY_QUALIFIED), BindingLabelProvider.getBindingLabel(binding.getDeclaringMethod(), JavaScriptElementLabels.ALL_FULLY_QUALIFIED)};
 		final Map arguments= new HashMap();
 		final String projectName= fCu.getJavaScriptProject().getElementName();
 		final int flags= RefactoringDescriptor.STRUCTURAL_CHANGE | JavaRefactoringDescriptor.JAR_REFACTORING | JavaRefactoringDescriptor.JAR_SOURCE_ATTACHMENT;
 		final String description= RefactoringCoreMessages.ConvertAnonymousToNestedRefactoring_descriptor_description_short;
 		final String header= Messages.format(RefactoringCoreMessages.ConvertAnonymousToNestedRefactoring_descriptor_description, labels);
 		final JDTRefactoringDescriptorComment comment= new JDTRefactoringDescriptorComment(projectName, this, header);
-		comment.addSetting(Messages.format(RefactoringCoreMessages.ConvertAnonymousToNestedRefactoring_original_pattern, BindingLabelProvider.getBindingLabel(binding, JavaElementLabels.ALL_FULLY_QUALIFIED)));
+		comment.addSetting(Messages.format(RefactoringCoreMessages.ConvertAnonymousToNestedRefactoring_original_pattern, BindingLabelProvider.getBindingLabel(binding, JavaScriptElementLabels.ALL_FULLY_QUALIFIED)));
 		comment.addSetting(Messages.format(RefactoringCoreMessages.ConvertAnonymousToNestedRefactoring_class_name_pattern, fClassName));
 		String visibility= JdtFlags.getVisibilityString(fVisibility);
 		if (visibility.length() == 0)
@@ -739,7 +739,7 @@ public class ConvertAnonymousToNestedRefactoring extends ScriptableRefactoring {
 						field.setJavadoc(javadoc);
 					}
 				} catch (CoreException exception) {
-					JavaPlugin.log(exception);
+					JavaScriptPlugin.log(exception);
 				}
 			}
 			
@@ -888,7 +888,7 @@ public class ConvertAnonymousToNestedRefactoring extends ScriptableRefactoring {
 					newConstructor.setJavadoc(javadoc);
 				}
 			} catch (CoreException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			}
 		}
 		return newConstructor;
@@ -1080,7 +1080,7 @@ public class ConvertAnonymousToNestedRefactoring extends ScriptableRefactoring {
 			final String handle= extended.getAttribute(JDTRefactoringDescriptor.ATTRIBUTE_INPUT);
 			if (handle != null) {
 				final IJavaScriptElement element= JDTRefactoringDescriptor.handleToElement(extended.getProject(), handle, false);
-				if (element == null || !element.exists() || element.getElementType() != IJavaScriptElement.COMPILATION_UNIT)
+				if (element == null || !element.exists() || element.getElementType() != IJavaScriptElement.JAVASCRIPT_UNIT)
 					return createInputFatalStatus(element, IJavaRefactorings.CONVERT_ANONYMOUS);
 				else {
 					fCu= (IJavaScriptUnit) element;

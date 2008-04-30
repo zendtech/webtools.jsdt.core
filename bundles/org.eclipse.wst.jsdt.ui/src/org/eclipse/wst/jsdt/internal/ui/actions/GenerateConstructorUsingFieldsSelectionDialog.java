@@ -42,7 +42,7 @@ import org.eclipse.wst.jsdt.core.dom.IFunctionBinding;
 import org.eclipse.wst.jsdt.core.dom.Modifier;
 import org.eclipse.wst.jsdt.internal.corext.template.java.CodeTemplateContextType;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.SourceActionDialog;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.IVisibilityChangeListener;
@@ -105,7 +105,7 @@ public class GenerateConstructorUsingFieldsSelectionDialog extends SourceActionD
 
 		fSuperConstructors= superConstructors;
 
-		IDialogSettings dialogSettings= JavaPlugin.getDefault().getDialogSettings();
+		IDialogSettings dialogSettings= JavaScriptPlugin.getDefault().getDialogSettings();
 		fGenConstructorSettings= dialogSettings.getSection(SETTINGS_SECTION);
 		if (fGenConstructorSettings == null) {
 			fGenConstructorSettings= dialogSettings.addNewSection(SETTINGS_SECTION);
@@ -288,7 +288,7 @@ public class GenerateConstructorUsingFieldsSelectionDialog extends SourceActionD
 			final boolean hasContructor= getSuperConstructorChoice().getParameterTypes().length == 0;
 			fOmitSuperButton.setEnabled(hasContructor && !getType().isEnum());
 		} catch (JavaScriptModelException exception) {
-			JavaPlugin.log(exception);
+			JavaScriptPlugin.log(exception);
 		}
 		GridData gd= new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		gd.horizontalSpan= 2;
@@ -331,7 +331,7 @@ public class GenerateConstructorUsingFieldsSelectionDialog extends SourceActionD
 			if (getType().isEnum())
 				visibilities= new int[] { };
 		} catch (JavaScriptModelException exception) {
-			JavaPlugin.log(exception);
+			JavaScriptPlugin.log(exception);
 		}
 		return createVisibilityControl(parent, visibilityChangeListener, visibilities, correctVisibility);
 	}

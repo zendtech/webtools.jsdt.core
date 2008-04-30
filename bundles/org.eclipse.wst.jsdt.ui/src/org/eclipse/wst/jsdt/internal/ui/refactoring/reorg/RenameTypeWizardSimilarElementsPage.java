@@ -76,7 +76,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.rename.RenameCompilation
 import org.eclipse.wst.jsdt.internal.corext.refactoring.rename.RenameTypeProcessor;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusInfo;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.TextFieldNavigationHandler;
@@ -89,12 +89,12 @@ import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.DialogField;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.IDialogFieldListener;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.LayoutUtil;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.StringDialogField;
-import org.eclipse.wst.jsdt.ui.JavaElementComparator;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementComparator;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
-import org.eclipse.wst.jsdt.ui.text.JavaSourceViewerConfiguration;
-import org.eclipse.wst.jsdt.ui.text.JavaTextTools;
+import org.eclipse.wst.jsdt.ui.text.JavaScriptSourceViewerConfiguration;
+import org.eclipse.wst.jsdt.ui.text.JavaScriptTextTools;
 
 /**
  * 
@@ -294,13 +294,13 @@ class RenameTypeWizardSimilarElementsPage extends UserInputWizardPage {
 
 	}
 
-	private static class SimilarLabelProvider extends JavaElementLabelProvider {
+	private static class SimilarLabelProvider extends JavaScriptElementLabelProvider {
 
 		private Map fDescriptorImageMap= new HashMap();
 		private Map fElementToNewName;
 
 		public SimilarLabelProvider() {
-			super(JavaElementLabelProvider.SHOW_DEFAULT | JavaElementLabelProvider.SHOW_SMALL_ICONS);
+			super(JavaScriptElementLabelProvider.SHOW_DEFAULT | JavaScriptElementLabelProvider.SHOW_SMALL_ICONS);
 		}
 
 		public void initialize(Map elementToNewName) {
@@ -347,7 +347,7 @@ class RenameTypeWizardSimilarElementsPage extends UserInputWizardPage {
 		
 	}
 	
-	private static class SimilarElementComparator extends JavaElementComparator {
+	private static class SimilarElementComparator extends JavaScriptElementComparator {
 
 		/*
 		 * (non-Javadoc)
@@ -385,8 +385,8 @@ class RenameTypeWizardSimilarElementsPage extends UserInputWizardPage {
 
 	public static final String PAGE_NAME= "SimilarElementSelectionPage"; //$NON-NLS-1$
 
-	private final long LABEL_FLAGS= JavaElementLabels.DEFAULT_QUALIFIED | JavaElementLabels.ROOT_POST_QUALIFIED | JavaElementLabels.APPEND_ROOT_PATH | JavaElementLabels.M_PARAMETER_TYPES
-			| JavaElementLabels.M_PARAMETER_NAMES | JavaElementLabels.M_APP_RETURNTYPE | JavaElementLabels.M_EXCEPTIONS | JavaElementLabels.F_APP_TYPE_SIGNATURE | JavaElementLabels.T_TYPE_PARAMETERS;
+	private final long LABEL_FLAGS= JavaScriptElementLabels.DEFAULT_QUALIFIED | JavaScriptElementLabels.ROOT_POST_QUALIFIED | JavaScriptElementLabels.APPEND_ROOT_PATH | JavaScriptElementLabels.M_PARAMETER_TYPES
+			| JavaScriptElementLabels.M_PARAMETER_NAMES | JavaScriptElementLabels.M_APP_RETURNTYPE | JavaScriptElementLabels.M_EXCEPTIONS | JavaScriptElementLabels.F_APP_TYPE_SIGNATURE | JavaScriptElementLabels.T_TYPE_PARAMETERS;
 
 	private Label fSimilarElementsLabel;
 	private SourceViewer fSourceViewer;
@@ -503,9 +503,9 @@ class RenameTypeWizardSimilarElementsPage extends UserInputWizardPage {
 	}
 
 	private void createSourceViewer(Composite c) {
-		IPreferenceStore store= JavaPlugin.getDefault().getCombinedPreferenceStore();
+		IPreferenceStore store= JavaScriptPlugin.getDefault().getCombinedPreferenceStore();
 		fSourceViewer= new JavaSourceViewer(c, null, null, false, SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION, store);
-		fSourceViewer.configure(new JavaSourceViewerConfiguration(getJavaTextTools().getColorManager(), store, null, null));
+		fSourceViewer.configure(new JavaScriptSourceViewerConfiguration(getJavaTextTools().getColorManager(), store, null, null));
 		fSourceViewer.setEditable(false);
 		fSourceViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 		fSourceViewer.getControl().setFont(JFaceResources.getFont(PreferenceConstants.EDITOR_TEXT_FONT));
@@ -514,8 +514,8 @@ class RenameTypeWizardSimilarElementsPage extends UserInputWizardPage {
 		fSourceViewer.setDocument(document);
 	}
 
-	private static JavaTextTools getJavaTextTools() {
-		return JavaPlugin.getDefault().getJavaTextTools();
+	private static JavaScriptTextTools getJavaTextTools() {
+		return JavaScriptPlugin.getDefault().getJavaTextTools();
 	}
 
 	private void createButtonComposite(Composite superComposite) {
@@ -700,7 +700,7 @@ class RenameTypeWizardSimilarElementsPage extends UserInputWizardPage {
 			final IJavaScriptElement selection= getFirstSelectedSourceReference(event);
 			setSourceViewerContents(selection);
 			fEditElementButton.setEnabled(selection != null && (isSimilarElement(selection)));
-			fCurrentElementLabel.setText(selection != null ? JavaElementLabels.getElementLabel(selection, LABEL_FLAGS) : RefactoringMessages.RenameTypeWizardSimilarElementsPage_select_element_to_view_source);
+			fCurrentElementLabel.setText(selection != null ? JavaScriptElementLabels.getElementLabel(selection, LABEL_FLAGS) : RefactoringMessages.RenameTypeWizardSimilarElementsPage_select_element_to_view_source);
 			fCurrentElementLabel.setImage(selection != null ? fTreeViewerLabelProvider.getJavaImage(selection) : null);
 		} catch (JavaScriptModelException e) {
 			ExceptionHandler.handle(e, RefactoringMessages.RenameTypeWizard_defaultPageTitle, RefactoringMessages.RenameTypeWizard_unexpected_exception);
@@ -726,7 +726,7 @@ class RenameTypeWizardSimilarElementsPage extends UserInputWizardPage {
 			fSourceViewer.getDocument().set(EMPTY);
 			return;
 		}
-		IJavaScriptUnit element= (IJavaScriptUnit) el.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+		IJavaScriptUnit element= (IJavaScriptUnit) el.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 		if (element == null) {
 			fSourceViewer.getDocument().set(EMPTY);
 			return;

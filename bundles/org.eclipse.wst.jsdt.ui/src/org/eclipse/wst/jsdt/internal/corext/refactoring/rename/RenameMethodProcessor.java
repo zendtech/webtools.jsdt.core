@@ -84,9 +84,9 @@ import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.SearchUtils;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.RefactoringSaveHelper;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 public abstract class RenameMethodProcessor extends JavaRenameProcessor implements IReferenceUpdating, IDelegateUpdating {
 
@@ -406,7 +406,7 @@ public abstract class RenameMethodProcessor extends JavaRenameProcessor implemen
 				if (method instanceof IFunction) // check for bug 90138: [refactoring] [rename] Renaming method throws internal exception
 					results.add(method);
 				else
-					JavaPlugin.logErrorMessage("Unexpected element in search match: " + match.toString()); //$NON-NLS-1$
+					JavaScriptPlugin.logErrorMessage("Unexpected element in search match: " + match.toString()); //$NON-NLS-1$
 			}
 		};
 		new SearchEngine().search(pattern, SearchUtils.getDefaultSearchParticipants(), scope, requestor, pm);
@@ -690,17 +690,17 @@ public abstract class RenameMethodProcessor extends JavaRenameProcessor implemen
 				if (!Flags.isPrivate(fMethod.getFlags()))
 					flags|= RefactoringDescriptor.MULTI_CHANGE;
 			} catch (JavaScriptModelException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			}
 			final IType declaring= fMethod.getDeclaringType();
 			try {
 				if (declaring!=null && (declaring.isAnonymous() || declaring.isLocal()))
 					flags|= JavaRefactoringDescriptor.JAR_SOURCE_ATTACHMENT;
 			} catch (JavaScriptModelException exception) {
-				JavaPlugin.log(exception);
+				JavaScriptPlugin.log(exception);
 			}
 			final String description= Messages.format(RefactoringCoreMessages.RenameMethodProcessor_descriptor_description_short, fMethod.getElementName());
-			final String header= Messages.format(RefactoringCoreMessages.RenameMethodProcessor_descriptor_description, new String[] { JavaElementLabels.getTextLabel(fMethod, JavaElementLabels.ALL_FULLY_QUALIFIED), getNewElementName()});
+			final String header= Messages.format(RefactoringCoreMessages.RenameMethodProcessor_descriptor_description, new String[] { JavaScriptElementLabels.getTextLabel(fMethod, JavaScriptElementLabels.ALL_FULLY_QUALIFIED), getNewElementName()});
 			final String comment= new JDTRefactoringDescriptorComment(project, this, header).asString();
 			final RenameJavaElementDescriptor descriptor= new RenameJavaElementDescriptor(IJavaRefactorings.RENAME_METHOD);
 			descriptor.setProject(project);

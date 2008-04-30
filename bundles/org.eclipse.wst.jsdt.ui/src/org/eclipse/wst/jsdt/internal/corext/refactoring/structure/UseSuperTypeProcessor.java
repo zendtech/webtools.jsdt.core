@@ -64,8 +64,8 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.util.RefactoringASTParse
 import org.eclipse.wst.jsdt.internal.corext.refactoring.util.ResourceUtil;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.util.TextEditBasedChangeManager;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 /**
  * Refactoring processor to replace type occurrences by a super type.
@@ -206,13 +206,13 @@ public final class UseSuperTypeProcessor extends SuperTypeRefactoringProcessor {
 					if (fSubType.isLocal() || fSubType.isAnonymous())
 						flags|= JavaRefactoringDescriptor.JAR_SOURCE_ATTACHMENT;
 				} catch (JavaScriptModelException exception) {
-					JavaPlugin.log(exception);
+					JavaScriptPlugin.log(exception);
 				}
 				final String name= project != null ? project.getElementName() : null;
 				final String description= Messages.format(RefactoringCoreMessages.UseSuperTypeProcessor_descriptor_description_short, fSuperType.getElementName());
-				final String header= Messages.format(RefactoringCoreMessages.UseSuperTypeProcessor_descriptor_description, new String[] { JavaElementLabels.getElementLabel(fSuperType, JavaElementLabels.ALL_FULLY_QUALIFIED), JavaElementLabels.getElementLabel(fSubType, JavaElementLabels.ALL_FULLY_QUALIFIED) });
+				final String header= Messages.format(RefactoringCoreMessages.UseSuperTypeProcessor_descriptor_description, new String[] { JavaScriptElementLabels.getElementLabel(fSuperType, JavaScriptElementLabels.ALL_FULLY_QUALIFIED), JavaScriptElementLabels.getElementLabel(fSubType, JavaScriptElementLabels.ALL_FULLY_QUALIFIED) });
 				final JDTRefactoringDescriptorComment comment= new JDTRefactoringDescriptorComment(name, this, header);
-				comment.addSetting(Messages.format(RefactoringCoreMessages.UseSuperTypeProcessor_refactored_element_pattern, JavaElementLabels.getElementLabel(fSuperType, JavaElementLabels.ALL_FULLY_QUALIFIED)));
+				comment.addSetting(Messages.format(RefactoringCoreMessages.UseSuperTypeProcessor_refactored_element_pattern, JavaScriptElementLabels.getElementLabel(fSuperType, JavaScriptElementLabels.ALL_FULLY_QUALIFIED)));
 				addSuperTypeSettings(comment, false);
 				final UseSupertypeDescriptor descriptor= new UseSupertypeDescriptor();
 				descriptor.setProject(name);
@@ -287,7 +287,7 @@ public final class UseSuperTypeProcessor extends SuperTypeRefactoringProcessor {
 								}
 							}
 						} catch (CoreException exception) {
-							JavaPlugin.log(exception);
+							JavaScriptPlugin.log(exception);
 							status.merge(RefactoringStatus.createFatalErrorStatus(RefactoringCoreMessages.UseSuperTypeProcessor_internal_error));
 						}
 					}

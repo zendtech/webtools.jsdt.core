@@ -77,7 +77,7 @@ import org.eclipse.wst.jsdt.internal.corext.callhierarchy.CallLocation;
 import org.eclipse.wst.jsdt.internal.corext.callhierarchy.MethodWrapper;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.CompositeActionGroup;
 import org.eclipse.wst.jsdt.internal.ui.dnd.DelegatingDropAdapter;
 import org.eclipse.wst.jsdt.internal.ui.dnd.JdtViewerDragAdapter;
@@ -88,8 +88,8 @@ import org.eclipse.wst.jsdt.internal.ui.util.JavaUIHelp;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.SelectionProviderMediator;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.StatusBarUpdater;
 import org.eclipse.wst.jsdt.ui.IContextMenuConstants;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.ui.actions.CCPActionGroup;
 import org.eclipse.wst.jsdt.ui.actions.GenerateActionGroup;
 import org.eclipse.wst.jsdt.ui.actions.JavaSearchActionGroup;
@@ -176,7 +176,7 @@ public class CallHierarchyViewPart extends ViewPart implements ICallHierarchyVie
     public CallHierarchyViewPart() {
         super();
 
-        fDialogSettings = JavaPlugin.getDefault().getDialogSettings();
+        fDialogSettings = JavaScriptPlugin.getDefault().getDialogSettings();
 
         fMethodHistory = new ArrayList();
     }
@@ -669,7 +669,7 @@ public class CallHierarchyViewPart extends ViewPart implements ICallHierarchyVie
 		if (adapter == IShowInTargetList.class) {
 			return new IShowInTargetList() {
 				public String[] getShowInTargetIds() {
-					return new String[] { JavaUI.ID_PACKAGES, IPageLayout.ID_RES_NAV  };
+					return new String[] { JavaScriptUI.ID_PACKAGES, IPageLayout.ID_RES_NAV  };
 				}
 			};
 		}
@@ -688,7 +688,7 @@ public class CallHierarchyViewPart extends ViewPart implements ICallHierarchyVie
     }
 
     protected void fillLocationViewerContextMenu(IMenuManager menu) {
-        JavaPlugin.createStandardGroups(menu);
+        JavaScriptPlugin.createStandardGroups(menu);
 
         menu.appendToGroup(IContextMenuConstants.GROUP_SHOW, fOpenLocationAction);
         menu.appendToGroup(IContextMenuConstants.GROUP_SHOW, fRefreshAction);
@@ -779,7 +779,7 @@ public class CallHierarchyViewPart extends ViewPart implements ICallHierarchyVie
      * @param menu
      */
     protected void fillCallHierarchyViewerContextMenu(IMenuManager menu) {
-        JavaPlugin.createStandardGroups(menu);
+        JavaScriptPlugin.createStandardGroups(menu);
 
         menu.appendToGroup(IContextMenuConstants.GROUP_SHOW, fRefreshAction);
         menu.appendToGroup(IContextMenuConstants.GROUP_SHOW, new Separator(GROUP_FOCUS));
@@ -901,7 +901,7 @@ public class CallHierarchyViewPart extends ViewPart implements ICallHierarchyVie
 
 			CallHierarchy.getDefault().setSearchScope(getSearchScope());
 
-			String elementName= JavaElementLabels.getElementLabel(fShownMethod, JavaElementLabels.ALL_DEFAULT);
+			String elementName= JavaScriptElementLabels.getElementLabel(fShownMethod, JavaScriptElementLabels.ALL_DEFAULT);
 			String scopeDescription= fSearchScopeActions.getFullDescription();
 			String[] args= new String[] { elementName, scopeDescription };
 			// set input to null so that setSorter does not cause a refresh on the old contents:
@@ -925,7 +925,7 @@ public class CallHierarchyViewPart extends ViewPart implements ICallHierarchyVie
         try {
             callersView = (CallHierarchyViewPart) workbenchPage.showView(CallHierarchyViewPart.ID_CALL_HIERARCHY);
         } catch (PartInitException e) {
-            JavaPlugin.log(e);
+            JavaScriptPlugin.log(e);
         }
 
         return callersView;

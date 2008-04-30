@@ -28,7 +28,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.text.java.JavaCompletionProposal;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.ImageDescriptorRegistry;
@@ -40,7 +40,7 @@ import org.eclipse.wst.jsdt.ui.text.java.CompletionProposalComparator;
  * (ContentAssist should be added to all source folder dialog fields.)
  */
 public class JavaPackageFragmentRootCompletionProcessor implements IContentAssistProcessor, ISubjectControlContentAssistProcessor {
-	private static final ImageDescriptorRegistry IMAGE_DESC_REGISTRY= JavaPlugin.getImageDescriptorRegistry();
+	private static final ImageDescriptorRegistry IMAGE_DESC_REGISTRY= JavaScriptPlugin.getImageDescriptorRegistry();
 	
 	private IPackageFragmentRoot fPackageFragmentRoot;
 	private CompletionProposalComparator fComparator;
@@ -57,7 +57,7 @@ public class JavaPackageFragmentRootCompletionProcessor implements IContentAssis
 		fPackageFragmentRoot= packageFragmentRoot;
 		fComparator= new CompletionProposalComparator();
 
-		IPreferenceStore preferenceStore= JavaPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore preferenceStore= JavaScriptPlugin.getDefault().getPreferenceStore();
 		String triggers= preferenceStore.getString(PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_JAVA);
 		fProposalAutoActivationSet = triggers.toCharArray();
 	}
@@ -139,7 +139,7 @@ public class JavaPackageFragmentRootCompletionProcessor implements IContentAssis
 				proposals.add(proposal);
 			}
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		return (ICompletionProposal[]) proposals.toArray(new ICompletionProposal[proposals.size()]);
 	}

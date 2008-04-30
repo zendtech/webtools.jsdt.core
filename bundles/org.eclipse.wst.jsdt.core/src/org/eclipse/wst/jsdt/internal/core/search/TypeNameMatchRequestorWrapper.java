@@ -87,7 +87,7 @@ public void acceptType(int modifiers, char[] packageName, char[] simpleTypeName,
 			Openable openable = this.handleFactory.createOpenable(path, this.scope);
 			if (openable == null) return;
 			switch (openable.getElementType()) {
-				case IJavaScriptElement.COMPILATION_UNIT:
+				case IJavaScriptElement.JAVASCRIPT_UNIT:
 					IJavaScriptUnit cu = (IJavaScriptUnit) openable;
 					if (enclosingTypeNames != null && enclosingTypeNames.length > 0) {
 						type = cu.getType(new String(enclosingTypeNames[0]));

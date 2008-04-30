@@ -24,7 +24,7 @@ import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.ITypeParameter;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.Signature;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 /**
  * Utilities to create mappings between type variables of different types in a type hierarchy.
@@ -136,7 +136,7 @@ public final class TypeVariableUtil {
 		} else if (member instanceof IType)
 			result= parametersToVariables(((IType) member).getTypeParameters());
 		else {
-			JavaPlugin.logErrorMessage("Unexpected sub-type of IMember: " + member.getClass().getName()); //$NON-NLS-1$
+			JavaScriptPlugin.logErrorMessage("Unexpected sub-type of IMember: " + member.getClass().getName()); //$NON-NLS-1$
 			Assert.isTrue(false);
 		}
 

@@ -22,7 +22,7 @@ import org.eclipse.wst.jsdt.core.IIncludePathAttribute;
 import org.eclipse.wst.jsdt.core.IIncludePathEntry;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.ui.wizards.ClasspathAttributeConfiguration;
 
 public abstract class BuildPathBasePage {
@@ -30,7 +30,7 @@ public abstract class BuildPathBasePage {
 	private ClasspathAttributeConfigurationDescriptors fAttributeDescriptors;
 	
 	public BuildPathBasePage() {
-		fAttributeDescriptors= JavaPlugin.getDefault().getClasspathAttributeConfigurationDescriptors();
+		fAttributeDescriptors= JavaScriptPlugin.getDefault().getClasspathAttributeConfigurationDescriptors();
 	}
 		
 	protected boolean editCustomAttribute(Shell shell, CPListElementAttribute elem) {

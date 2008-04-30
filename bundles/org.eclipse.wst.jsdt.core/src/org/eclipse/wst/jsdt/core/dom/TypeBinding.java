@@ -765,7 +765,7 @@ class TypeBinding implements ITypeBinding {
 					return (IPackageFragment) element;
 				case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
 					return ((IPackageFragmentRoot) element).getPackageFragment(IPackageFragment.DEFAULT_PACKAGE_NAME);
-				case IJavaScriptElement.JAVA_PROJECT:
+				case IJavaScriptElement.JAVASCRIPT_PROJECT:
 					IPackageFragmentRoot root = ((IJavaScriptProject) element).getPackageFragmentRoot(folder);
 					if (root == null) return null;
 					return root.getPackageFragment(IPackageFragment.DEFAULT_PACKAGE_NAME);

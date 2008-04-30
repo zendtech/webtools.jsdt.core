@@ -80,7 +80,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
 import org.eclipse.wst.jsdt.internal.ui.IUIConstants;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusInfo;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.AccessRulesDialog;
@@ -103,7 +103,7 @@ import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.ListDialogField;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.StringButtonDialogField;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.StringDialogField;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.TreeListDialogField;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.ui.wizards.BuildPathDialogAccess;
 import org.eclipse.wst.jsdt.ui.wizards.ClasspathAttributeConfiguration;
 import org.w3c.dom.Document;
@@ -227,7 +227,7 @@ public class UserLibraryPreferencePage extends PreferencePage implements IWorkbe
 		private static final String TAG_RULE_KIND= "kind"; //$NON-NLS-1$
 		private static final String TAG_RULE_PATTERN= "pattern"; //$NON-NLS-1$
 
-		private static final String PREF_LASTPATH= JavaUI.ID_PLUGIN + ".lastuserlibrary"; //$NON-NLS-1$
+		private static final String PREF_LASTPATH= JavaScriptUI.ID_PLUGIN + ".lastuserlibrary"; //$NON-NLS-1$
 		private static final String PREF_USER_LIBRARY_LOADSAVE_SIZE= "UserLibraryLoadSaveDialog.size"; //$NON-NLS-1$
 		
 		private List fExistingLibraries;
@@ -442,7 +442,7 @@ public class UserLibraryPreferencePage extends PreferencePage implements IWorkbe
 						try {
 							encoding= result.getCharset(true);
 						} catch (CoreException exception) {
-							JavaPlugin.log(exception);
+							JavaScriptPlugin.log(exception);
 						}
 					}
 					final List elements= fExportImportList.getCheckedElements();
@@ -472,7 +472,7 @@ public class UserLibraryPreferencePage extends PreferencePage implements IWorkbe
 					String savedMessage= PreferencesMessages.UserLibraryPreferencePage_LoadSaveDialog_save_ok_message; 
 					MessageDialog.openInformation(getShell(), savedTitle, savedMessage);
 				} catch (IOException exception) {
-					JavaPlugin.log(exception);
+					JavaScriptPlugin.log(exception);
 				}
 			} else {
 				HashSet map= new HashSet(fExistingLibraries.size());
@@ -740,17 +740,17 @@ public class UserLibraryPreferencePage extends PreferencePage implements IWorkbe
 	 * Constructor for ClasspathVariablesPreferencePage
 	 */
 	public UserLibraryPreferencePage() {
-		setPreferenceStore(JavaPlugin.getDefault().getPreferenceStore());
+		setPreferenceStore(JavaScriptPlugin.getDefault().getPreferenceStore());
 		fDummyProject= createPlaceholderProject();
 		
-		fAttributeDescriptors= JavaPlugin.getDefault().getClasspathAttributeConfigurationDescriptors();
+		fAttributeDescriptors= JavaScriptPlugin.getDefault().getClasspathAttributeConfigurationDescriptors();
 	
 		// title only used when page is shown programatically
 		setTitle(PreferencesMessages.UserLibraryPreferencePage_title); 
 		setDescription(PreferencesMessages.UserLibraryPreferencePage_description); 
 		noDefaultAndApplyButton();
 
-		fDialogSettings= JavaPlugin.getDefault().getDialogSettings();
+		fDialogSettings= JavaScriptPlugin.getDefault().getDialogSettings();
 		
 		UserLibraryAdapter adapter= new UserLibraryAdapter();
 		String[] buttonLabels= new String[] {
@@ -779,7 +779,7 @@ public class UserLibraryPreferencePage extends PreferencePage implements IWorkbe
 				IJsGlobalScopeContainer container= JavaScriptCore.getJsGlobalScopeContainer(path, fDummyProject);
 				elements.add(new CPUserLibraryElement(names[i], container, fDummyProject));
 			} catch (JavaScriptModelException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 				// ignore
 			}
 		}
@@ -911,7 +911,7 @@ public class UserLibraryPreferencePage extends PreferencePage implements IWorkbe
 		
 		int len= nExisting + oldNames.size();
 		monitor.beginTask(PreferencesMessages.UserLibraryPreferencePage_operation, len); 
-		MultiStatus multiStatus= new MultiStatus(JavaUI.ID_PLUGIN, IStatus.OK, PreferencesMessages.UserLibraryPreferencePage_operation_error, null); 
+		MultiStatus multiStatus= new MultiStatus(JavaScriptUI.ID_PLUGIN, IStatus.OK, PreferencesMessages.UserLibraryPreferencePage_operation_error, null); 
 		
 		JsGlobalScopeContainerInitializer initializer= JavaScriptCore.getJsGlobalScopeContainerInitializer(JavaScriptCore.USER_LIBRARY_CONTAINER_ID);
 		IJavaScriptProject jproject= fDummyProject;

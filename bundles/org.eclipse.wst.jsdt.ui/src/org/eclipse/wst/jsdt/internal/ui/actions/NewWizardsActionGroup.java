@@ -72,10 +72,10 @@ public class NewWizardsActionGroup extends ActionGroup {
 		}
 		if (element instanceof IJavaScriptElement) {
 			int type= ((IJavaScriptElement)element).getElementType();
-			return type == IJavaScriptElement.JAVA_PROJECT ||
+			return type == IJavaScriptElement.JAVASCRIPT_PROJECT ||
 				type == IJavaScriptElement.PACKAGE_FRAGMENT_ROOT || 
 				type == IJavaScriptElement.PACKAGE_FRAGMENT ||
-				type == IJavaScriptElement.COMPILATION_UNIT ||
+				type == IJavaScriptElement.JAVASCRIPT_UNIT ||
 				type == IJavaScriptElement.TYPE;
 		}
 		return false;

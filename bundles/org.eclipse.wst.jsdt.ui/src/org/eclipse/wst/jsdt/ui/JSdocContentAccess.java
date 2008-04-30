@@ -31,7 +31,7 @@ import org.eclipse.wst.jsdt.core.ITypeHierarchy;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.javadoc.JavaDocCommentReader;
 import org.eclipse.wst.jsdt.internal.corext.util.MethodOverrideTester;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.text.javadoc.JavaDoc2HTMLTextReader;
 
 /**
@@ -43,7 +43,7 @@ import org.eclipse.wst.jsdt.internal.ui.text.javadoc.JavaDoc2HTMLTextReader;
  *
  * @since 3.1
  */
-public class JavadocContentAccess {
+public class JSdocContentAccess {
 	
 	
 	public static final String EXTENSION_POINT= "documentationProvider"; //$NON-NLS-1$
@@ -53,7 +53,7 @@ public class JavadocContentAccess {
 
 	private static IDocumentationReader[] docReaders;
 	
-	private JavadocContentAccess() {
+	private JSdocContentAccess() {
 		// do not instantiate
 	}
 	
@@ -191,7 +191,7 @@ public class JavadocContentAccess {
 		ArrayList extList = new ArrayList();
 		if (registry != null) {
 			IExtensionPoint point = registry.getExtensionPoint(
-					JavaPlugin.getPluginId(), EXTENSION_POINT);
+					JavaScriptPlugin.getPluginId(), EXTENSION_POINT);
 
 			if (point != null) {
 				IExtension[] extensions = point.getExtensions();

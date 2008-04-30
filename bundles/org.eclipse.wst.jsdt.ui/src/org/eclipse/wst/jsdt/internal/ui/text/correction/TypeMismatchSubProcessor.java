@@ -49,7 +49,7 @@ import org.eclipse.wst.jsdt.internal.ui.text.correction.ChangeMethodSignaturePro
 import org.eclipse.wst.jsdt.internal.ui.text.correction.ChangeMethodSignatureProposal.InsertDescription;
 import org.eclipse.wst.jsdt.internal.ui.text.correction.ChangeMethodSignatureProposal.RemoveDescription;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.BindingLabelProvider;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 import org.eclipse.wst.jsdt.ui.text.java.IInvocationContext;
 import org.eclipse.wst.jsdt.ui.text.java.IProblemLocation;
 
@@ -254,7 +254,7 @@ public class TypeMismatchSubProcessor {
 		IJavaScriptUnit cu= context.getCompilationUnit();
 
 		String label;
-		String castType= BindingLabelProvider.getBindingLabel(castTypeBinding, JavaElementLabels.ALL_DEFAULT);
+		String castType= BindingLabelProvider.getBindingLabel(castTypeBinding, JavaScriptElementLabels.ALL_DEFAULT);
 		if (nodeToCast.getNodeType() == ASTNode.CAST_EXPRESSION) {
 			label= Messages.format(CorrectionMessages.TypeMismatchSubProcessor_changecast_description, castType);
 		} else {

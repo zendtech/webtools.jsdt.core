@@ -31,7 +31,7 @@ import org.eclipse.wst.jsdt.internal.corext.codemanipulation.ContextSensitiveImp
 import org.eclipse.wst.jsdt.internal.corext.codemanipulation.StubUtility;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.QualifiedTypeNameHistory;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.ASTProvider;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 import org.eclipse.wst.jsdt.ui.text.java.JavaContentAssistInvocationContext;
@@ -123,7 +123,7 @@ public class LazyJavaTypeCompletionProposal extends LazyJavaCompletionProposal {
 				IJavaScriptElement javaElement = this.getProposalInfo().getJavaElement();
 				 packageName=JavaModelUtil.getFilePackage(javaElement);
 			} catch (JavaScriptModelException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 			return fImportRewrite.addImport(qualifiedTypeName,packageName, fImportContext);
 		}
@@ -166,14 +166,14 @@ public class LazyJavaTypeCompletionProposal extends LazyJavaCompletionProposal {
 					return rewrite;
 				}
 			} catch (CoreException x) {
-				JavaPlugin.log(x);
+				JavaScriptPlugin.log(x);
 			}
 		}
 		return null;
 	}
 
 	private JavaScriptUnit getASTRoot(IJavaScriptUnit compilationUnit) {
-		return JavaPlugin.getDefault().getASTProvider().getAST(compilationUnit, ASTProvider.WAIT_NO, new NullProgressMonitor());
+		return JavaScriptPlugin.getDefault().getASTProvider().getAST(compilationUnit, ASTProvider.WAIT_NO, new NullProgressMonitor());
 	}
 
 	/*
@@ -202,9 +202,9 @@ public class LazyJavaTypeCompletionProposal extends LazyJavaCompletionProposal {
 			
 			rememberSelection();
 		} catch (CoreException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		} catch (BadLocationException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 	}
 
@@ -237,7 +237,7 @@ public class LazyJavaTypeCompletionProposal extends LazyJavaCompletionProposal {
 		IType lhs= fInvocationContext.getExpectedType();
 		IType rhs= (IType) getJavaElement();
 		if (lhs != null && rhs != null)
-			JavaPlugin.getDefault().getContentAssistHistory().remember(lhs, rhs);
+			JavaScriptPlugin.getDefault().getContentAssistHistory().remember(lhs, rhs);
 		
 		QualifiedTypeNameHistory.remember(getQualifiedTypeName());
 	}
@@ -277,7 +277,7 @@ public class LazyJavaTypeCompletionProposal extends LazyJavaCompletionProposal {
 				return false;
 		}
 		
-		IPreferenceStore preferenceStore= JavaPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore preferenceStore= JavaScriptPlugin.getDefault().getPreferenceStore();
 		return preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_ADDIMPORT);
 	}
 

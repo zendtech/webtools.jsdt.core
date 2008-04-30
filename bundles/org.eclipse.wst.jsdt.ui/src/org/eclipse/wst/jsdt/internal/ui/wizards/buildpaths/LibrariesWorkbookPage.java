@@ -42,7 +42,7 @@ import org.eclipse.wst.jsdt.core.IIncludePathEntry;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.JsGlobalScopeContainerInitializer;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.WorkbenchRunnableAdapter;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
 import org.eclipse.wst.jsdt.internal.ui.util.PixelConverter;
@@ -161,7 +161,7 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 		if (fSWTControl != null) {
 			return fSWTControl.getShell();
 		}
-		return JavaPlugin.getActiveWorkbenchShell();
+		return JavaScriptPlugin.getActiveWorkbenchShell();
 	}
 	
 	
@@ -338,7 +338,7 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 //									return roots[index];
 //							}
 //						} catch (JavaScriptModelException exception) {
-//							JavaPlugin.log(exception);
+//							JavaScriptPlugin.log(exception);
 //						}
 //					}
 //				}
@@ -724,7 +724,7 @@ public class LibrariesWorkbookPage extends BuildPathBasePage {
 				}
 			} catch (JavaScriptModelException e) {
 				// ignore it here, just log
-				JavaPlugin.log(e.getStatus());
+				JavaScriptPlugin.log(e.getStatus());
 			}
 		}	
 			

@@ -1720,7 +1720,7 @@ private static char[][] enclosingTypeNames(IType type) {
 			return CharOperation.arrayConcat(
 				enclosingTypeNames(declaringType),
 				declaringType.getElementName().toCharArray());
-		case IJavaScriptElement.COMPILATION_UNIT:
+		case IJavaScriptElement.JAVASCRIPT_UNIT:
 			return CharOperation.NO_CHAR_CHAR;
 		case IJavaScriptElement.FIELD:
 		case IJavaScriptElement.INITIALIZER:

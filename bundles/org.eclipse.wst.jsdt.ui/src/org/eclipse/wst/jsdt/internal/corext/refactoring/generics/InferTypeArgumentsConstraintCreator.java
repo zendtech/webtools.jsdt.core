@@ -922,7 +922,7 @@ public class InferTypeArgumentsConstraintCreator extends HierarchicalASTVisitor 
 //		} else {
 //			message+= "Found unexpected node (type: " + node.getNodeType() + "):\n" + node.toString(); //$NON-NLS-1$ //$NON-NLS-2$
 //		}
-//		JavaPlugin.log(new Exception(message).fillInStackTrace());
+//		JavaScriptPlugin.log(new Exception(message).fillInStackTrace());
 //	}
 
 }

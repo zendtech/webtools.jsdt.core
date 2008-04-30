@@ -21,7 +21,7 @@ import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -73,7 +73,7 @@ public class Implementors {
                     }
                 }
             } catch (JavaScriptModelException e) {
-                JavaPlugin.log(e);
+                JavaScriptPlugin.log(e);
             }
         }
 

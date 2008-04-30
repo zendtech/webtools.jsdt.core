@@ -40,16 +40,16 @@ import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIMessages;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.StorageLabelProvider;
 
 /**
- * <code>JavaElementLabels</code> provides helper methods to render names of Java elements.
+ * <code>JavaScriptElementLabels</code> provides helper methods to render names of Java elements.
  * 
  * @since 3.1
  */
-public class JavaElementLabels {
+public class JavaScriptElementLabels {
 	
 	
 	/**
@@ -289,7 +289,7 @@ public class JavaElementLabels {
 	 * Show category for all elements.
 	 * @since 3.2
 	 */
-	public final static long ALL_CATEGORY= new Long(JavaElementLabels.F_CATEGORY | JavaElementLabels.M_CATEGORY | JavaElementLabels.T_CATEGORY).longValue();
+	public final static long ALL_CATEGORY= new Long(JavaScriptElementLabels.F_CATEGORY | JavaScriptElementLabels.M_CATEGORY | JavaScriptElementLabels.T_CATEGORY).longValue();
 	
 	/**
 	 * Qualify all elements
@@ -356,7 +356,7 @@ public class JavaElementLabels {
 	private static int fgPkgNameChars;
 	private static int fgPkgNameLength= -1;
 
-	private JavaElementLabels() {
+	private JavaScriptElementLabels() {
 	}
 
 	private static final boolean getFlag(long flags, long flag) {
@@ -411,7 +411,7 @@ public class JavaElementLabels {
 		int type= element.getElementType();
 		IPackageFragmentRoot root= null;
 		
-		if (type != IJavaScriptElement.JAVA_MODEL && type != IJavaScriptElement.JAVA_PROJECT && type != IJavaScriptElement.PACKAGE_FRAGMENT_ROOT)
+		if (type != IJavaScriptElement.JAVASCRIPT_MODEL && type != IJavaScriptElement.JAVASCRIPT_PROJECT && type != IJavaScriptElement.PACKAGE_FRAGMENT_ROOT)
 			root= JavaModelUtil.getPackageFragmentRoot(element);
 		if (root != null && getFlag(flags, PREPEND_ROOT_PATH)) {
 			getPackageFragmentRootLabel(root, ROOT_QUALIFIED, buf);
@@ -437,7 +437,7 @@ public class JavaElementLabels {
 			case IJavaScriptElement.CLASS_FILE: 
 				getClassFileLabel((IClassFile) element, flags, buf);
 				break;					
-			case IJavaScriptElement.COMPILATION_UNIT: 
+			case IJavaScriptElement.JAVASCRIPT_UNIT: 
 				getCompilationUnitLabel((IJavaScriptUnit) element, flags, buf);
 				break;	
 			case IJavaScriptElement.PACKAGE_FRAGMENT: 
@@ -451,8 +451,8 @@ public class JavaElementLabels {
 			case IJavaScriptElement.PACKAGE_DECLARATION:
 				getDeclarationLabel(element, flags, buf);
 				break;
-			case IJavaScriptElement.JAVA_PROJECT:
-			case IJavaScriptElement.JAVA_MODEL:
+			case IJavaScriptElement.JAVASCRIPT_PROJECT:
+			case IJavaScriptElement.JAVASCRIPT_MODEL:
 				buf.append(element.getDisplayName());
 				break;
 			default:
@@ -556,7 +556,7 @@ public class JavaElementLabels {
 								types= typesWithoutSyntheticParams;
 							} else {
 								// https://bugs.eclipse.org/bugs/show_bug.cgi?id=101029
-								// JavaPlugin.logErrorMessage("JavaElementLabels: Number of param types(" + nParams + ") != number of names(" + names.length + "): " + method.getElementName());   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+								// JavaScriptPlugin.logErrorMessage("JavaScriptElementLabels: Number of param types(" + nParams + ") != number of names(" + names.length + "): " + method.getElementName());   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 								names= null; // no names rendered
 							}
 						}
@@ -659,7 +659,7 @@ public class JavaElementLabels {
 			}
 			
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e); // NotExistsException will not reach this point
+			JavaScriptPlugin.log(e); // NotExistsException will not reach this point
 		}
 	}
 
@@ -745,7 +745,7 @@ public class JavaElementLabels {
 			}
 
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e); // NotExistsException will not reach this point
+			JavaScriptPlugin.log(e); // NotExistsException will not reach this point
 		}			
 	}
 	
@@ -1143,7 +1143,7 @@ public class JavaElementLabels {
 				return true;
 			}
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e); // problems with class path
+			JavaScriptPlugin.log(e); // problems with class path
 		}
 		return false;
 	}

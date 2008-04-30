@@ -32,11 +32,11 @@ import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.ColoredViewersManager;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.FilterUpdater;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.ProblemTreeViewer;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 import org.eclipse.wst.jsdt.ui.actions.ProjectActionGroup;
 
@@ -71,7 +71,7 @@ public class ProjectsView extends JavaBrowsingPart {
 		if (key == IShowInTargetList.class) {
 			return new IShowInTargetList() {
 				public String[] getShowInTargetIds() {
-					return new String[] { JavaUI.ID_PACKAGES, IPageLayout.ID_RES_NAV  };
+					return new String[] { JavaScriptUI.ID_PACKAGES, IPageLayout.ID_RES_NAV  };
 				}
 
 			};
@@ -117,7 +117,7 @@ public class ProjectsView extends JavaBrowsingPart {
 	}
 
 	protected void setInitialInput() {
-		IJavaScriptElement root= JavaScriptCore.create(JavaPlugin.getWorkspace().getRoot());
+		IJavaScriptElement root= JavaScriptCore.create(JavaScriptPlugin.getWorkspace().getRoot());
 		getViewer().setInput(root);
 		updateTitle();
 	}
@@ -155,9 +155,9 @@ public class ProjectsView extends JavaBrowsingPart {
 			return null;
 
 		switch (je.getElementType()) {
-			case IJavaScriptElement.JAVA_MODEL :
+			case IJavaScriptElement.JAVASCRIPT_MODEL :
 				return null;
-			case IJavaScriptElement.JAVA_PROJECT:
+			case IJavaScriptElement.JAVASCRIPT_PROJECT:
 				return je;
 			case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
 				if (je.getElementName().equals(IPackageFragmentRoot.DEFAULT_PACKAGEROOT_PATH))

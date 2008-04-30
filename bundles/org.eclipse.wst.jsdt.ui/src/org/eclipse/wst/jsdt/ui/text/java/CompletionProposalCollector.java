@@ -34,7 +34,7 @@ import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.core.compiler.IProblem;
 import org.eclipse.wst.jsdt.internal.corext.util.TypeFilter;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.text.java.AnonymousTypeCompletionProposal;
 import org.eclipse.wst.jsdt.internal.ui.text.java.AnonymousTypeProposalInfo;
 import org.eclipse.wst.jsdt.internal.ui.text.java.FieldProposalInfo;
@@ -93,7 +93,7 @@ public class CompletionProposalCollector extends CompletionRequestor {
 	protected final static char[] VAR_TRIGGER= new char[] { '\t', ' ', '=', ';', '.' };
 
 	private final CompletionProposalLabelProvider fLabelProvider= new CompletionProposalLabelProvider();
-	private final ImageDescriptorRegistry fRegistry= JavaPlugin.getImageDescriptorRegistry();
+	private final ImageDescriptorRegistry fRegistry= JavaScriptPlugin.getImageDescriptorRegistry();
 
 	private final List fJavaProposals= new ArrayList();
 	private final List fKeywords= new ArrayList();
@@ -215,7 +215,7 @@ public class CompletionProposalCollector extends CompletionRequestor {
 			// all signature processing method may throw IAEs
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=84657
 			// don't abort, but log and show all the valid proposals
-			JavaPlugin.log(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.OK, "Exception when processing proposal for: " + String.valueOf(proposal.getCompletion()), e)); //$NON-NLS-1$
+			JavaScriptPlugin.log(new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), IStatus.OK, "Exception when processing proposal for: " + String.valueOf(proposal.getCompletion()), e)); //$NON-NLS-1$
 		}
 
 		if (DEBUG) fUITime += System.currentTimeMillis() - start;
@@ -595,7 +595,7 @@ public class CompletionProposalCollector extends CompletionRequestor {
 				}
 			}
 		} catch (CoreException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 	}
 

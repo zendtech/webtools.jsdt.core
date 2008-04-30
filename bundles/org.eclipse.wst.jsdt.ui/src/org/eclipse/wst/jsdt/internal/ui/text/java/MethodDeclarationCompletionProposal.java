@@ -31,12 +31,12 @@ import org.eclipse.wst.jsdt.core.formatter.CodeFormatter;
 import org.eclipse.wst.jsdt.internal.corext.codemanipulation.CodeGenerationSettings;
 import org.eclipse.wst.jsdt.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Strings;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.preferences.JavaPreferencesSettings;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.JavaElementImageProvider;
 import org.eclipse.wst.jsdt.ui.CodeGeneration;
-import org.eclipse.wst.jsdt.ui.JavaElementImageDescriptor;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementImageDescriptor;
 
 /**
  * Method declaration proposal.
@@ -86,8 +86,8 @@ public class MethodDeclarationCompletionProposal extends JavaTypeCompletionPropo
 		if (returnTypeSig == null) {
 			setProposalInfo(new ProposalInfo(type));
 
-			ImageDescriptor desc= new JavaElementImageDescriptor(JavaPluginImages.DESC_MISC_PUBLIC, JavaElementImageDescriptor.CONSTRUCTOR, JavaElementImageProvider.SMALL_SIZE);
-			setImage(JavaPlugin.getImageDescriptorRegistry().get(desc));
+			ImageDescriptor desc= new JavaScriptElementImageDescriptor(JavaPluginImages.DESC_MISC_PUBLIC, JavaScriptElementImageDescriptor.CONSTRUCTOR, JavaElementImageProvider.SMALL_SIZE);
+			setImage(JavaScriptPlugin.getImageDescriptorRegistry().get(desc));
 		} else {
 			setImage(JavaPluginImages.get(JavaPluginImages.IMG_MISC_PRIVATE));
 		}

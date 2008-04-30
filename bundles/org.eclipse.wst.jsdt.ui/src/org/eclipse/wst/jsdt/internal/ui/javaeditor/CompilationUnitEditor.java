@@ -103,7 +103,7 @@ import org.eclipse.wst.jsdt.core.formatter.DefaultCodeFormatterConstants;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
 import org.eclipse.wst.jsdt.internal.ui.IJavaStatusConstants;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.AddBlockCommentAction;
 import org.eclipse.wst.jsdt.internal.ui.actions.CompositeActionGroup;
 import org.eclipse.wst.jsdt.internal.ui.actions.IndentAction;
@@ -118,12 +118,12 @@ import org.eclipse.wst.jsdt.internal.ui.text.comment.CommentFormattingContext;
 import org.eclipse.wst.jsdt.internal.ui.text.correction.CorrectionCommandInstaller;
 import org.eclipse.wst.jsdt.internal.ui.text.java.IJavaReconcilingListener;
 import org.eclipse.wst.jsdt.ui.IWorkingCopyManager;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 import org.eclipse.wst.jsdt.ui.actions.GenerateActionGroup;
 import org.eclipse.wst.jsdt.ui.actions.IJavaEditorActionDefinitionIds;
 import org.eclipse.wst.jsdt.ui.actions.RefactorActionGroup;
-import org.eclipse.wst.jsdt.ui.text.IJavaPartitions;
+import org.eclipse.wst.jsdt.ui.text.IJavaScriptPartitions;
 
 
 
@@ -481,7 +481,7 @@ public class CompilationUnitEditor extends JavaEditor implements IJavaReconcilin
 						return;
 				}
 
-				ITypedRegion partition= TextUtilities.getPartition(document, IJavaPartitions.JAVA_PARTITIONING, offset, true);
+				ITypedRegion partition= TextUtilities.getPartition(document, IJavaScriptPartitions.JAVA_PARTITIONING, offset, true);
 				if (!IDocument.DEFAULT_CONTENT_TYPE.equals(partition.getType()))
 					return;
 
@@ -535,9 +535,9 @@ public class CompilationUnitEditor extends JavaEditor implements IJavaReconcilin
 				event.doit= false;
 
 			} catch (BadLocationException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			} catch (BadPositionCategoryException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		}
 
@@ -568,7 +568,7 @@ public class CompilationUnitEditor extends JavaEditor implements IJavaReconcilin
 												 level.fSecondPosition.length,
 												 ""); //$NON-NLS-1$
 							} catch (BadLocationException e) {
-								JavaPlugin.log(e);
+								JavaScriptPlugin.log(e);
 							}
 						}
 
@@ -577,7 +577,7 @@ public class CompilationUnitEditor extends JavaEditor implements IJavaReconcilin
 							try {
 								document.removePositionCategory(CATEGORY);
 							} catch (BadPositionCategoryException e) {
-								JavaPlugin.log(e);
+								JavaScriptPlugin.log(e);
 							}
 						}
 					}
@@ -741,11 +741,11 @@ public class CompilationUnitEditor extends JavaEditor implements IJavaReconcilin
 				fElementLine= getElementLine(document, fElement);
 			} catch (BadLocationException e) {
 				// should not happen
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 				clear();
 			} catch (JavaScriptModelException e) {
 				// should not happen
-				JavaPlugin.log(e.getStatus());
+				JavaScriptPlugin.log(e.getStatus());
 				clear();
 			}
 		}
@@ -818,11 +818,11 @@ public class CompilationUnitEditor extends JavaEditor implements IJavaReconcilin
 				return offset;
 			} catch (BadLocationException e) {
 				// should not happen
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 				return -1;
 			} catch (JavaScriptModelException e) {
 				// should not happen
-				JavaPlugin.log(e.getStatus());
+				JavaScriptPlugin.log(e.getStatus());
 				return -1;
 			}
 		}
@@ -932,7 +932,7 @@ public class CompilationUnitEditor extends JavaEditor implements IJavaReconcilin
 			if (element == null)
 				return null;
 
-			IWorkingCopyManager manager= JavaPlugin.getDefault().getWorkingCopyManager();
+			IWorkingCopyManager manager= JavaScriptPlugin.getDefault().getWorkingCopyManager();
 			IJavaScriptUnit unit= manager.getWorkingCopy(getEditorInput());
 
 			if (unit != null) {
@@ -943,7 +943,7 @@ public class CompilationUnitEditor extends JavaEditor implements IJavaReconcilin
 						return findings[0];
 
 				} catch (JavaScriptModelException x) {
-					JavaPlugin.log(x.getStatus());
+					JavaScriptPlugin.log(x.getStatus());
 					// nothing found, be tolerant and go on
 				}
 			}
@@ -1005,7 +1005,7 @@ public class CompilationUnitEditor extends JavaEditor implements IJavaReconcilin
 	 */
 	public CompilationUnitEditor() {
 		super();
-		setDocumentProvider(JavaPlugin.getDefault().getCompilationUnitDocumentProvider());
+		setDocumentProvider(JavaScriptPlugin.getDefault().getCompilationUnitDocumentProvider());
 		setEditorContextMenuId("#JavaScriptEditorContext"); //$NON-NLS-1$
 		setRulerContextMenuId("#JavaScriptRulerContext"); //$NON-NLS-1$
 		setOutlinerContextMenuId("#JavaScriptOutlinerContext"); //$NON-NLS-1$
@@ -1164,7 +1164,7 @@ public class CompilationUnitEditor extends JavaEditor implements IJavaReconcilin
 
 			} catch (JavaScriptModelException x) {
 				if (!x.isDoesNotExist())
-				JavaPlugin.log(x.getStatus());
+				JavaScriptPlugin.log(x.getStatus());
 				// nothing found, be tolerant and go on
 			}
 		}
@@ -1252,7 +1252,7 @@ public class CompilationUnitEditor extends JavaEditor implements IJavaReconcilin
 			updateState(getEditorInput());
 			validateState(getEditorInput());
 
-			IWorkingCopyManager manager= JavaPlugin.getDefault().getWorkingCopyManager();
+			IWorkingCopyManager manager= JavaScriptPlugin.getDefault().getWorkingCopyManager();
 			IJavaScriptUnit unit= manager.getWorkingCopy(getEditorInput());
 
 			if (unit != null) {
@@ -1270,7 +1270,7 @@ public class CompilationUnitEditor extends JavaEditor implements IJavaReconcilin
 	 */
 	protected void openSaveErrorDialog(String title, String message, CoreException exception) {
 		IStatus status= exception.getStatus();
-		if (JavaUI.ID_PLUGIN.equals(status.getPlugin()) && status.getCode() == IJavaStatusConstants.EDITOR_POST_SAVE_NOTIFICATION) {
+		if (JavaScriptUI.ID_PLUGIN.equals(status.getPlugin()) && status.getCode() == IJavaStatusConstants.EDITOR_POST_SAVE_NOTIFICATION) {
 			int mask= IStatus.OK | IStatus.INFO | IStatus.WARNING | IStatus.ERROR;
 			ErrorDialog dialog = new ErrorDialog(getSite().getShell(), title, message, status, mask) {
 				protected Control createDialogArea(Composite parent) {
@@ -1536,7 +1536,7 @@ public class CompilationUnitEditor extends JavaEditor implements IJavaReconcilin
 	public void aboutToBeReconciled() {
 
 		// Notify AST provider
-		JavaPlugin.getDefault().getASTProvider().aboutToBeReconciled(getInputJavaElement());
+		JavaScriptPlugin.getDefault().getASTProvider().aboutToBeReconciled(getInputJavaElement());
 
 		// Notify listeners
 		Object[] listeners = fReconcilingListeners.getListeners();
@@ -1551,7 +1551,7 @@ public class CompilationUnitEditor extends JavaEditor implements IJavaReconcilin
 	public void reconciled(JavaScriptUnit ast, boolean forced, IProgressMonitor progressMonitor) {
 		
 		// see: https://bugs.eclipse.org/bugs/show_bug.cgi?id=58245
-		JavaPlugin javaPlugin= JavaPlugin.getDefault();
+		JavaScriptPlugin javaPlugin= JavaScriptPlugin.getDefault();
 		if (javaPlugin == null)
 			return;
 		

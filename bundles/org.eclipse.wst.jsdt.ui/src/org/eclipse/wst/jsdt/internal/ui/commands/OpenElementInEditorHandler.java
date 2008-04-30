@@ -17,7 +17,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 /**
  * A command handler to open a java element in its editor.
@@ -33,8 +33,8 @@ public class OpenElementInEditorHandler extends AbstractHandler {
 		IJavaScriptElement javaElement= (IJavaScriptElement) event.getObjectParameterForExecution(PARAM_ID_ELEMENT_REF);
 
 		try {
-			IEditorPart editorPart= JavaUI.openInEditor(javaElement);
-			JavaUI.revealInEditor(editorPart, javaElement);
+			IEditorPart editorPart= JavaScriptUI.openInEditor(javaElement);
+			JavaScriptUI.revealInEditor(editorPart, javaElement);
 		} catch (JavaScriptModelException ex) {
 			throw new ExecutionException("Error opening java element in editor", ex); //$NON-NLS-1$
 		} catch (PartInitException ex) {

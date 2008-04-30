@@ -15,7 +15,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.Signature;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 public class PatternStrings {
 
@@ -39,9 +39,9 @@ public class PatternStrings {
 		StringBuffer buffer= new StringBuffer();
 		if (method.getDeclaringType()!=null)
 		{
-			buffer.append(JavaElementLabels.getElementLabel(
+			buffer.append(JavaScriptElementLabels.getElementLabel(
 			method.getDeclaringType(), 
-			JavaElementLabels.T_FULLY_QUALIFIED | JavaElementLabels.USE_RESOLVED));
+			JavaScriptElementLabels.T_FULLY_QUALIFIED | JavaScriptElementLabels.USE_RESOLVED));
 			boolean isConstructor= method.getElementName().equals(method.getDeclaringType().getElementName());
 			if (!isConstructor) {
 				buffer.append('.');
@@ -79,11 +79,11 @@ public class PatternStrings {
 	}
 
 	public static String getTypeSignature(IType field) {
-		return JavaElementLabels.getElementLabel(field, 
-			JavaElementLabels.T_FULLY_QUALIFIED | JavaElementLabels.T_TYPE_PARAMETERS | JavaElementLabels.USE_RESOLVED);
+		return JavaScriptElementLabels.getElementLabel(field, 
+			JavaScriptElementLabels.T_FULLY_QUALIFIED | JavaScriptElementLabels.T_TYPE_PARAMETERS | JavaScriptElementLabels.USE_RESOLVED);
 	}	
 	
 	public static String getFieldSignature(IField field) {
-		return JavaElementLabels.getElementLabel(field, JavaElementLabels.F_FULLY_QUALIFIED);
+		return JavaScriptElementLabels.getElementLabel(field, JavaScriptElementLabels.F_FULLY_QUALIFIED);
 	}	
 }

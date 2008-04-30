@@ -23,7 +23,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.VariableBlock;
 
 public class ClasspathVariablesPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
@@ -39,7 +39,7 @@ public class ClasspathVariablesPreferencePage extends PreferencePage implements 
 	 * Constructor for ClasspathVariablesPreferencePage
 	 */
 	public ClasspathVariablesPreferencePage() {
-		setPreferenceStore(JavaPlugin.getDefault().getPreferenceStore());
+		setPreferenceStore(JavaScriptPlugin.getDefault().getPreferenceStore());
 		fVariableBlock= new VariableBlock(true, null);
 		fStoredSettings= null;
 		
@@ -86,7 +86,7 @@ public class ClasspathVariablesPreferencePage extends PreferencePage implements 
 	 * @see PreferencePage#performOk()
 	 */
 	public boolean performOk() {
-		JavaPlugin.getDefault().savePluginPreferences();
+		JavaScriptPlugin.getDefault().savePluginPreferences();
 		return fVariableBlock.performOk();
 	}
 	

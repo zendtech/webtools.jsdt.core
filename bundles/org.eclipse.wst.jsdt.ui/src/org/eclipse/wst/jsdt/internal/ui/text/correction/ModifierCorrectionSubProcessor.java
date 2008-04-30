@@ -91,7 +91,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.sef.SelfEncapsulateField
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.fix.Java50CleanUp;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.RefactoringExecutionHelper;
@@ -99,7 +99,7 @@ import org.eclipse.wst.jsdt.internal.ui.refactoring.RefactoringSaveHelper;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.actions.RefactoringStarter;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.sef.SelfEncapsulateFieldWizard;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.ui.text.java.IInvocationContext;
 import org.eclipse.wst.jsdt.ui.text.java.IProblemLocation;
 
@@ -776,7 +776,7 @@ public class ModifierCorrectionSubProcessor {
 				}
 				return edit;
 			} catch (BadLocationException e) {
-				throw new CoreException(new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IStatus.ERROR, e.getMessage(), e));
+				throw new CoreException(new Status(IStatus.ERROR, JavaScriptUI.ID_PLUGIN, IStatus.ERROR, e.getMessage(), e));
 			}
 		}
 	}
@@ -875,14 +875,14 @@ public class ModifierCorrectionSubProcessor {
 				refactoring.setConsiderVisibility(false);//private field references are just searched in local file
 				if (fNoDialog) {
 					IWorkbenchWindow window= PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-					final RefactoringExecutionHelper helper= new RefactoringExecutionHelper(refactoring, RefactoringStatus.ERROR, RefactoringSaveHelper.SAVE_JAVA_ONLY_UPDATES, JavaPlugin.getActiveWorkbenchShell(), window);
+					final RefactoringExecutionHelper helper= new RefactoringExecutionHelper(refactoring, RefactoringStatus.ERROR, RefactoringSaveHelper.SAVE_JAVA_ONLY_UPDATES, JavaScriptPlugin.getActiveWorkbenchShell(), window);
 					if (Display.getCurrent() != null) {
 						try {
 							helper.perform(false, false);
 						} catch (InterruptedException e) {
-							JavaPlugin.log(e);
+							JavaScriptPlugin.log(e);
 						} catch (InvocationTargetException e) {
-							JavaPlugin.log(e);
+							JavaScriptPlugin.log(e);
 						}
 					} else {
 						Display.getDefault().syncExec(new Runnable() {
@@ -890,15 +890,15 @@ public class ModifierCorrectionSubProcessor {
 								try {
 									helper.perform(false, false);
 								} catch (InterruptedException e) {
-									JavaPlugin.log(e);
+									JavaScriptPlugin.log(e);
 								} catch (InvocationTargetException e) {
-									JavaPlugin.log(e);
+									JavaScriptPlugin.log(e);
 								}
 							}
 						});
 					}
 				} else {
-					new RefactoringStarter().activate(refactoring, new SelfEncapsulateFieldWizard(refactoring), JavaPlugin.getActiveWorkbenchShell(), "", RefactoringSaveHelper.SAVE_JAVA_ONLY_UPDATES); //$NON-NLS-1$
+					new RefactoringStarter().activate(refactoring, new SelfEncapsulateFieldWizard(refactoring), JavaScriptPlugin.getActiveWorkbenchShell(), "", RefactoringSaveHelper.SAVE_JAVA_ONLY_UPDATES); //$NON-NLS-1$
 				}
 			} catch (JavaScriptModelException e) {
 				ExceptionHandler.handle(e, CorrectionMessages.ModifierCorrectionSubProcessor_encapsulate_field_error_title, CorrectionMessages.ModifierCorrectionSubProcessor_encapsulate_field_error_message);
@@ -972,7 +972,7 @@ public class ModifierCorrectionSubProcessor {
 					if (RefactoringAvailabilityTester.isSelfEncapsulateAvailable(field))
 						return new SelfEncapsulateFieldProposal(relevance, field, true);
 				} catch (JavaScriptModelException e) {
-					JavaPlugin.log(e);
+					JavaScriptPlugin.log(e);
 				}
 			}
 		}
@@ -1041,7 +1041,7 @@ public class ModifierCorrectionSubProcessor {
 					if (RefactoringAvailabilityTester.isSelfEncapsulateAvailable(field))
 						return new SelfEncapsulateFieldProposal(relevance, field, false);
 				} catch (JavaScriptModelException e) {
-					JavaPlugin.log(e);
+					JavaScriptPlugin.log(e);
 				}
 			}
 		}

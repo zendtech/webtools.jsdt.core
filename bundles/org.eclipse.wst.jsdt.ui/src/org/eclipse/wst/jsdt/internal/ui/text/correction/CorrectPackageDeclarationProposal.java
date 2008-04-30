@@ -24,7 +24,7 @@ import org.eclipse.wst.jsdt.core.ISourceRange;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.codemanipulation.StubUtility;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.ui.text.java.IProblemLocation;
 
@@ -81,7 +81,7 @@ public class CorrectPackageDeclarationProposal extends CUCorrectionProposal {
 				return (Messages.format(CorrectionMessages.CorrectPackageDeclarationProposal_add_description,  parentPack.getElementName()));
 			}
 		} catch(JavaScriptModelException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		return (Messages.format(CorrectionMessages.CorrectPackageDeclarationProposal_change_description, parentPack.getElementName()));
 	}

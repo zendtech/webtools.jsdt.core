@@ -57,7 +57,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.JavaScriptConventions;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.StatusInfo;
 import org.eclipse.wst.jsdt.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.wst.jsdt.internal.ui.wizards.TypedElementSelectionValidator;
@@ -69,7 +69,7 @@ import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.LayoutUtil;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.SelectionButtonDialogField;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.StringButtonDialogField;
 import org.eclipse.wst.jsdt.internal.ui.wizards.dialogfields.StringDialogField;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 import org.eclipse.wst.jsdt.ui.wizards.NewElementWizardPage;
 
@@ -79,7 +79,7 @@ public class AddSourceFolderWizardPage extends NewElementWizardPage {
 	private final class LinkFields implements IStringButtonAdapter, IDialogFieldListener{
 		private StringButtonDialogField fLinkLocation;
 		
-		private static final String DIALOGSTORE_LAST_EXTERNAL_LOC= JavaUI.ID_PLUGIN + ".last.external.project"; //$NON-NLS-1$
+		private static final String DIALOGSTORE_LAST_EXTERNAL_LOC= JavaScriptUI.ID_PLUGIN + ".last.external.project"; //$NON-NLS-1$
 
 		private RootFieldAdapter fAdapter;
 
@@ -130,7 +130,7 @@ public class AddSourceFolderWizardPage extends NewElementWizardPage {
 			dialog.setMessage(NewWizardMessages.JavaProjectWizardFirstPage_directory_message); 
 			String directoryName = fLinkLocation.getText().trim();
 			if (directoryName.length() == 0) {
-				String prevLocation= JavaPlugin.getDefault().getDialogSettings().get(DIALOGSTORE_LAST_EXTERNAL_LOC);
+				String prevLocation= JavaScriptPlugin.getDefault().getDialogSettings().get(DIALOGSTORE_LAST_EXTERNAL_LOC);
 				if (prevLocation != null) {
 					directoryName= prevLocation;
 				}
@@ -145,7 +145,7 @@ public class AddSourceFolderWizardPage extends NewElementWizardPage {
 			if (selectedDirectory != null) {
 				fLinkLocation.setText(selectedDirectory);
 				fRootDialogField.setText(selectedDirectory.substring(selectedDirectory.lastIndexOf(File.separatorChar) + 1));
-				JavaPlugin.getDefault().getDialogSettings().put(DIALOGSTORE_LAST_EXTERNAL_LOC, selectedDirectory);
+				JavaScriptPlugin.getDefault().getDialogSettings().put(DIALOGSTORE_LAST_EXTERNAL_LOC, selectedDirectory);
 				if (fAdapter != null) {
 					fAdapter.dialogFieldChanged(fRootDialogField);
 				}
@@ -608,7 +608,7 @@ public class AddSourceFolderWizardPage extends NewElementWizardPage {
 	 *  specified link target is valid given the linkHandle.
 	 */
 	private IStatus validateLinkLocation(String folderName) {
-		IWorkspace workspace= JavaPlugin.getWorkspace();
+		IWorkspace workspace= JavaScriptPlugin.getWorkspace();
 		IPath path= Path.fromOSString(fLinkFields.fLinkLocation.getText());
 
 		IFolder folder= fNewElement.getJavaProject().getProject().getFolder(new Path(folderName));

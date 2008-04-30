@@ -30,7 +30,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaUIMessages;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.ASTProvider;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.EditorUtility;
@@ -147,7 +147,7 @@ public class SelectionListenerWithASTManager {
 			}
 			// create AST
 			try {
-				JavaScriptUnit astRoot= JavaPlugin.getDefault().getASTProvider().getAST(input, ASTProvider.WAIT_ACTIVE_ONLY, monitor);
+				JavaScriptUnit astRoot= JavaScriptPlugin.getDefault().getASTProvider().getAST(input, ASTProvider.WAIT_ACTIVE_ONLY, monitor);
 			
 				if (astRoot != null && !monitor.isCanceled()) {
 					Object[] listeners;

@@ -44,8 +44,8 @@ import org.eclipse.wst.jsdt.core.IBuffer;
 import org.eclipse.wst.jsdt.core.IBufferChangedListener;
 import org.eclipse.wst.jsdt.core.IOpenable;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 
 /**
@@ -464,7 +464,7 @@ public class DocumentAdapter implements IBuffer, IDocumentListener {
 						existingDelimiters.add(curr);
 					}
 				} catch (BadLocationException e) {
-					JavaPlugin.log(e);
+					JavaScriptPlugin.log(e);
 				}
 			}
 			if (existingDelimiters.isEmpty()) {
@@ -491,11 +491,11 @@ public class DocumentAdapter implements IBuffer, IDocumentListener {
 							buf.append(' ');
 						buf.append((int)curr.charAt(k));
 					}
-					IStatus status= new Status(IStatus.WARNING, JavaUI.ID_PLUGIN, IStatus.OK, buf.toString(), new Throwable());
-					JavaPlugin.log(status);
+					IStatus status= new Status(IStatus.WARNING, JavaScriptUI.ID_PLUGIN, IStatus.OK, buf.toString(), new Throwable());
+					JavaScriptPlugin.log(status);
 				}
 			} catch (BadLocationException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		}
 	}

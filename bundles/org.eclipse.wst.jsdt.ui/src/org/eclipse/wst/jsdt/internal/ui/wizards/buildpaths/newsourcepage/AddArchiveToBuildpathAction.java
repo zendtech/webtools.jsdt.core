@@ -35,7 +35,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.internal.corext.buildpath.BuildpathDelta;
 import org.eclipse.wst.jsdt.internal.corext.buildpath.CPJavaProject;
 import org.eclipse.wst.jsdt.internal.corext.buildpath.ClasspathModifier;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.wst.jsdt.internal.ui.wizards.buildpaths.CPListElement;
@@ -109,11 +109,11 @@ public class AddArchiveToBuildpathAction extends BuildpathModifierAction {
 			if (e.getCause() instanceof CoreException) {
 				showExceptionDialog((CoreException)e.getCause(), NewWizardMessages.AddArchiveToBuildpathAction_ErrorTitle);
 			} else {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		} catch (CoreException e) {
 			showExceptionDialog(e, NewWizardMessages.AddArchiveToBuildpathAction_ErrorTitle);
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
         } catch (InterruptedException e) {
         }
 	}

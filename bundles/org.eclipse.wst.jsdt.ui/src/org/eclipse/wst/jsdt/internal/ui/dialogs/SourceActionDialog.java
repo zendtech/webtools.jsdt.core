@@ -47,13 +47,13 @@ import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.dom.Modifier;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionMessages;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.wst.jsdt.internal.ui.preferences.CodeTemplatePreferencePage;
 import org.eclipse.wst.jsdt.internal.ui.preferences.JavaPreferencesSettings;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.IVisibilityChangeListener;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 /**
  * An advanced version of CheckedTreeSelectionDialog with right-side button layout and
@@ -102,7 +102,7 @@ public class SourceActionDialog extends CheckedTreeSelectionDialog {
 		int insertionDefault= isConstructor ? 0 : 1;
 		boolean generateCommentsDefault= JavaPreferencesSettings.getCodeGenerationSettings(type.getJavaScriptProject()).createComments;
 		
-		IDialogSettings dialogSettings= JavaPlugin.getDefault().getDialogSettings();
+		IDialogSettings dialogSettings= JavaScriptPlugin.getDefault().getDialogSettings();
 		String sectionId= isConstructor ? SETTINGS_SECTION_CONSTRUCTORS : SETTINGS_SECTION_METHODS;
 		fSettings= dialogSettings.getSection(sectionId);		
 		if (fSettings == null)  {
@@ -137,7 +137,7 @@ public class SourceActionDialog extends CheckedTreeSelectionDialog {
 		
 		for (int i = 0; i < methods.length; i++) {
 			IFunction curr= methods[i];
-			String methodLabel= JavaElementLabels.getElementLabel(curr, JavaElementLabels.M_PARAMETER_TYPES);
+			String methodLabel= JavaScriptElementLabels.getElementLabel(curr, JavaScriptElementLabels.M_PARAMETER_TYPES);
 			fLabels.add(Messages.format(ActionMessages.SourceActionDialog_after, methodLabel)); 
 			fInsertPositions.add(findSibling(curr, members));
 		}

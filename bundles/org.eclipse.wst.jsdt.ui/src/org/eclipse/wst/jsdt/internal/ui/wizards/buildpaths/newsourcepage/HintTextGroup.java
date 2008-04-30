@@ -39,7 +39,7 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.preferences.ScrolledPageContent;
 import org.eclipse.wst.jsdt.internal.ui.util.PixelConverter;
 import org.eclipse.wst.jsdt.internal.ui.wizards.NewWizardMessages;
@@ -93,7 +93,7 @@ public final class HintTextGroup implements ISelectionChangedListener {
     }
     
     private Shell getShell() {
-        return JavaPlugin.getActiveWorkbenchShell();
+        return JavaScriptPlugin.getActiveWorkbenchShell();
     }
     
     /**
@@ -132,7 +132,7 @@ public final class HintTextGroup implements ISelectionChangedListener {
 			    formText.setText(text, true, false);
 			} catch (IllegalArgumentException e) {
 			    formText.setText(e.getMessage(), false, false);
-			    JavaPlugin.log(e);
+			    JavaScriptPlugin.log(e);
 			}
 			formText.marginHeight= 2;
 			formText.marginWidth= 0;
@@ -190,7 +190,7 @@ public final class HintTextGroup implements ISelectionChangedListener {
             try {
 	            fNewFolders.add(((IPackageFragmentRoot)result.get(0)).getCorrespondingResource());
             } catch (JavaScriptModelException e) {
-	            JavaPlugin.log(e);
+	            JavaScriptPlugin.log(e);
             }
         }
     }

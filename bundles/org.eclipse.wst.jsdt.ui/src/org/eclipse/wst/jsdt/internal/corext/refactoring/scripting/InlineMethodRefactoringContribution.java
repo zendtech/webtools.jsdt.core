@@ -33,7 +33,7 @@ import org.eclipse.wst.jsdt.internal.corext.refactoring.JavaRefactoringArguments
 import org.eclipse.wst.jsdt.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.code.InlineMethodRefactoring;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 /**
  * Refactoring contribution for the inline method refactoring.
@@ -70,18 +70,18 @@ public final class InlineMethodRefactoringContribution extends JDTRefactoringCon
 					selectionStart= offset;
 					selectionLength= length;
 				} else
-					throw new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), 0, Messages.format(RefactoringCoreMessages.InitializableRefactoring_illegal_argument, new Object[] { selection, JDTRefactoringDescriptor.ATTRIBUTE_SELECTION}), null));
+					throw new CoreException(new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), 0, Messages.format(RefactoringCoreMessages.InitializableRefactoring_illegal_argument, new Object[] { selection, JDTRefactoringDescriptor.ATTRIBUTE_SELECTION}), null));
 			}
 			final String handle= extended.getAttribute(JDTRefactoringDescriptor.ATTRIBUTE_INPUT);
 			if (handle != null) {
 				final IJavaScriptElement element= JDTRefactoringDescriptor.handleToElement(extended.getProject(), handle, false);
 				if (element == null || !element.exists())
-					throw new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), 0, Messages.format(RefactoringCoreMessages.InitializableRefactoring_inputs_do_not_exist, new String[] { RefactoringCoreMessages.InlineMethodRefactoring_name, IJavaRefactorings.INLINE_METHOD}), null));
+					throw new CoreException(new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), 0, Messages.format(RefactoringCoreMessages.InitializableRefactoring_inputs_do_not_exist, new String[] { RefactoringCoreMessages.InlineMethodRefactoring_name, IJavaRefactorings.INLINE_METHOD}), null));
 				else {
 					if (element instanceof IJavaScriptUnit) {
 						unit= (IJavaScriptUnit) element;
 						if (selection == null)
-							throw new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), 0, Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist, JDTRefactoringDescriptor.ATTRIBUTE_SELECTION), null));
+							throw new CoreException(new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), 0, Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist, JDTRefactoringDescriptor.ATTRIBUTE_SELECTION), null));
 					} else if (element instanceof IFunction) {
 						final IFunction method= (IFunction) element;
 						try {
@@ -90,22 +90,22 @@ public final class InlineMethodRefactoringContribution extends JDTRefactoringCon
 								selectionStart= range.getOffset();
 								selectionLength= range.getLength();
 							} else
-								throw new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), 0, Messages.format(RefactoringCoreMessages.InitializableRefactoring_illegal_argument, new Object[] { handle, JDTRefactoringDescriptor.ATTRIBUTE_INPUT}), null));
+								throw new CoreException(new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), 0, Messages.format(RefactoringCoreMessages.InitializableRefactoring_illegal_argument, new Object[] { handle, JDTRefactoringDescriptor.ATTRIBUTE_INPUT}), null));
 						} catch (JavaScriptModelException exception) {
-							throw new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), 0, Messages.format(RefactoringCoreMessages.InitializableRefactoring_inputs_do_not_exist, new String[] { RefactoringCoreMessages.InlineMethodRefactoring_name, IJavaRefactorings.INLINE_METHOD}), exception));
+							throw new CoreException(new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), 0, Messages.format(RefactoringCoreMessages.InitializableRefactoring_inputs_do_not_exist, new String[] { RefactoringCoreMessages.InlineMethodRefactoring_name, IJavaRefactorings.INLINE_METHOD}), exception));
 						}
 						unit= method.getJavaScriptUnit();
 					} else
-						throw new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), 0, Messages.format(RefactoringCoreMessages.InitializableRefactoring_illegal_argument, new Object[] { handle, JDTRefactoringDescriptor.ATTRIBUTE_INPUT}), null));
+						throw new CoreException(new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), 0, Messages.format(RefactoringCoreMessages.InitializableRefactoring_illegal_argument, new Object[] { handle, JDTRefactoringDescriptor.ATTRIBUTE_INPUT}), null));
 					final ASTParser parser= ASTParser.newParser(AST.JLS3);
 					parser.setResolveBindings(true);
 					parser.setSource(unit);
 					node= (JavaScriptUnit) parser.createAST(null);
 				}
 			} else
-				throw new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), 0, Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist, JDTRefactoringDescriptor.ATTRIBUTE_INPUT), null));
+				throw new CoreException(new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), 0, Messages.format(RefactoringCoreMessages.InitializableRefactoring_argument_not_exist, JDTRefactoringDescriptor.ATTRIBUTE_INPUT), null));
 		} else
-			throw new CoreException(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), 0, RefactoringCoreMessages.InitializableRefactoring_inacceptable_arguments, null));
+			throw new CoreException(new Status(IStatus.ERROR, JavaScriptPlugin.getPluginId(), 0, RefactoringCoreMessages.InitializableRefactoring_inacceptable_arguments, null));
 		return InlineMethodRefactoring.create(unit, node, selectionStart, selectionLength);
 	}
 }

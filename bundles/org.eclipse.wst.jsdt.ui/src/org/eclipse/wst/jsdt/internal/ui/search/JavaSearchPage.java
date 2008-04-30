@@ -57,7 +57,7 @@ import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchConstants;
 import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.core.search.SearchPattern;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.SelectionConverter;
 import org.eclipse.wst.jsdt.internal.ui.dialogs.TextFieldNavigationHandler;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaEditor;
@@ -833,7 +833,7 @@ public class JavaSearchPage extends DialogPage implements ISearchPage {
 //				}
 				case IJavaScriptElement.TYPE:
 					return new SearchPatternData(TYPE, REFERENCES, true, PatternStrings.getTypeSignature((IType) element), element, includeMask);
-				case IJavaScriptElement.COMPILATION_UNIT: {
+				case IJavaScriptElement.JAVASCRIPT_UNIT: {
 					IType mainType= ((IJavaScriptUnit) element).findPrimaryType();
 					if (mainType != null) {
 						return new SearchPatternData(TYPE, REFERENCES, true, PatternStrings.getTypeSignature(mainType), mainType, includeMask);
@@ -914,7 +914,7 @@ public class JavaSearchPage extends DialogPage implements ISearchPage {
 	}
 		
 	private IEditorPart getActiveEditor() {
-		IWorkbenchPage activePage= JavaPlugin.getActivePage();
+		IWorkbenchPage activePage= JavaScriptPlugin.getActivePage();
 		if (activePage != null) {
 			return activePage.getActiveEditor();
 		}
@@ -930,7 +930,7 @@ public class JavaSearchPage extends DialogPage implements ISearchPage {
 	 */
 	private IDialogSettings getDialogSettings() {
 		if (fDialogSettings == null) {
-			fDialogSettings= JavaPlugin.getDefault().getDialogSettingsSection(PAGE_NAME);
+			fDialogSettings= JavaScriptPlugin.getDefault().getDialogSettingsSection(PAGE_NAME);
 		}
 		return fDialogSettings;
 	}

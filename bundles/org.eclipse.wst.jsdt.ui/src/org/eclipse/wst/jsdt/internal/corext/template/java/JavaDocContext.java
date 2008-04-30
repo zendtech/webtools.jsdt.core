@@ -24,7 +24,7 @@ import org.eclipse.jface.text.templates.TemplateTranslator;
 import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.internal.corext.util.Strings;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 
 
@@ -187,7 +187,7 @@ public class JavaDocContext extends CompilationUnitContext {
 
 		getContextType().resolve(buffer, this);
 		
-		IPreferenceStore prefs= JavaPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore prefs= JavaScriptPlugin.getDefault().getPreferenceStore();
 		boolean useCodeFormatter= prefs.getBoolean(PreferenceConstants.TEMPLATES_USE_CODEFORMATTER);
 
 		IJavaScriptProject project= getJavaProject();

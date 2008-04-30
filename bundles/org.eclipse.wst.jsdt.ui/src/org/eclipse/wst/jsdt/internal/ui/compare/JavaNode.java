@@ -16,7 +16,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 /**
  * Comparable Java elements are represented as JavaNodes.
@@ -126,7 +126,7 @@ public class JavaNode extends DocumentRangeNode implements ITypedElement {
 					
 		switch (getTypeCode()) {
 		case CU:
-			id= JavaCompareUtilities.getImageDescriptor(IJavaScriptElement.COMPILATION_UNIT);
+			id= JavaCompareUtilities.getImageDescriptor(IJavaScriptElement.JAVASCRIPT_UNIT);
 			break;
 		case PACKAGE:
 			id= JavaCompareUtilities.getImageDescriptor(IJavaScriptElement.PACKAGE_DECLARATION);
@@ -160,7 +160,7 @@ public class JavaNode extends DocumentRangeNode implements ITypedElement {
 			id= JavaCompareUtilities.getAnnotationImageDescriptor();
 			break;
 		}
-		return JavaPlugin.getImageDescriptorRegistry().get(id);
+		return JavaScriptPlugin.getImageDescriptorRegistry().get(id);
 	}
 	
 	/*

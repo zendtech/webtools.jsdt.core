@@ -41,7 +41,7 @@ import org.eclipse.wst.jsdt.core.search.SearchRequestor;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.nls.PropertyFileDocumentModel;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.util.StringMatcher;
 
 class NLSSearchResultRequestor extends SearchRequestor {
@@ -208,7 +208,7 @@ class NLSSearchResultRequestor extends SearchRequestor {
 	 * @throws CoreException if a problem occurs while accessing the <code>enclosingElement</code>
 	 */
 	private String findKey(Position keyPositionResult, IJavaScriptElement enclosingElement) throws CoreException {
-		IJavaScriptUnit unit= (IJavaScriptUnit)enclosingElement.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+		IJavaScriptUnit unit= (IJavaScriptUnit)enclosingElement.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 		if (unit == null)
 			return null;
 
@@ -274,14 +274,14 @@ class NLSSearchResultRequestor extends SearchRequestor {
 			lineReader= new LineReader(stream, encoding);
 		} catch (CoreException cex) {
 			// failed to get input stream
-			JavaPlugin.log(cex);
+			JavaScriptPlugin.log(cex);
 			return -1;
 		} catch (IOException e) {
 			if (stream != null) {
 				try {
 					stream.close();
 				} catch (IOException ce) {
-					JavaPlugin.log(ce);
+					JavaScriptPlugin.log(ce);
 				}
 			}
 			return -1;
@@ -312,13 +312,13 @@ class NLSSearchResultRequestor extends SearchRequestor {
 			if (eols != -17)
 				start= -1; //key not found in file. See bug 63794. This can happen if the key contains escaped characters.
 		} catch (IOException ex) {
-			JavaPlugin.log(ex);			
+			JavaScriptPlugin.log(ex);			
 			return -1;
 		} finally {
 			try {
 				lineReader.close();
 			} catch (IOException ex) {
-				JavaPlugin.log(ex);
+				JavaScriptPlugin.log(ex);
 			}
 		}
 		return start;

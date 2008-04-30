@@ -1528,7 +1528,7 @@ public class JavaProject
 	 * @see IJavaScriptElement
 	 */
 	public int getElementType() {
-		return JAVA_PROJECT;
+		return JAVASCRIPT_PROJECT;
 	}
 
 	/**
@@ -2126,9 +2126,9 @@ public class JavaProject
 		boolean isFolderPath = false;
 		boolean isSource = false;
 		switch (elementType) {
-			case IJavaScriptElement.JAVA_MODEL:
+			case IJavaScriptElement.JAVASCRIPT_MODEL:
 				return false;
-			case IJavaScriptElement.JAVA_PROJECT:
+			case IJavaScriptElement.JAVASCRIPT_PROJECT:
 				break;
 			case IJavaScriptElement.PACKAGE_FRAGMENT_ROOT:
 				isPackageFragmentRoot = true;
@@ -2136,11 +2136,11 @@ public class JavaProject
 			case IJavaScriptElement.PACKAGE_FRAGMENT:
 				isFolderPath = !((IPackageFragmentRoot)element.getParent()).isArchive();
 				break;
-			case IJavaScriptElement.COMPILATION_UNIT:
+			case IJavaScriptElement.JAVASCRIPT_UNIT:
 				isSource = true;
 				break;
 			default:
-				isSource = element.getAncestor(IJavaScriptElement.COMPILATION_UNIT) != null;
+				isSource = element.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT) != null;
 				break;
 		}
 		IPath elementPath = element.getPath();

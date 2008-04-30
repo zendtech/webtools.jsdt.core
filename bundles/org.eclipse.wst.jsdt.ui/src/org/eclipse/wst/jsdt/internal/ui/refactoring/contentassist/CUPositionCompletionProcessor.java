@@ -34,7 +34,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.WorkingCopyOwner;
 import org.eclipse.wst.jsdt.core.compiler.IProblem;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.StubTypeContext;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.refactoring.RefactoringMessages;
 import org.eclipse.wst.jsdt.internal.ui.text.java.JavaCompletionProposal;
 import org.eclipse.wst.jsdt.internal.ui.text.java.JavaTypeCompletionProposal;
@@ -45,7 +45,7 @@ import org.eclipse.wst.jsdt.ui.text.java.CompletionProposalComparator;
 
 public class CUPositionCompletionProcessor implements IContentAssistProcessor, ISubjectControlContentAssistProcessor {
 	
-	private static final ImageDescriptorRegistry IMAGE_DESC_REGISTRY= JavaPlugin.getImageDescriptorRegistry();
+	private static final ImageDescriptorRegistry IMAGE_DESC_REGISTRY= JavaScriptPlugin.getImageDescriptorRegistry();
 	
 	private String fErrorMessage;
 	private char[] fProposalAutoActivationSet;
@@ -64,7 +64,7 @@ public class CUPositionCompletionProcessor implements IContentAssistProcessor, I
 		fCompletionRequestor= completionRequestor;
 		
 		fComparator= new CompletionProposalComparator();
-		IPreferenceStore preferenceStore= JavaPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore preferenceStore= JavaScriptPlugin.getDefault().getPreferenceStore();
 		String triggers= preferenceStore.getString(PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_JAVA);
 		fProposalAutoActivationSet = triggers.toCharArray();
 	}
@@ -189,14 +189,14 @@ public class CUPositionCompletionProcessor implements IContentAssistProcessor, I
 			}
 			return proposals;
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 			return null;
 		} finally {
 			try {
 				if (cu != null)
 					cu.discardWorkingCopy();
 			} catch (JavaScriptModelException e) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		}
 	}

@@ -43,7 +43,7 @@ import org.eclipse.wst.jsdt.internal.ui.javaeditor.saveparticipant.AbstractSaveP
 import org.eclipse.wst.jsdt.internal.ui.preferences.BulletListBlock;
 import org.eclipse.wst.jsdt.internal.ui.preferences.CodeFormatterPreferencePage;
 import org.eclipse.wst.jsdt.internal.ui.util.PixelConverter;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 /**
  * Preference configuration UI for the clean up save participant.
@@ -238,7 +238,7 @@ public class CleanUpSaveParticipantPreferenceConfiguration extends AbstractSaveP
 	public void disableProjectSettings() {
 		super.disableProjectSettings();
 		
-		IEclipsePreferences node= fContext.getNode(JavaUI.ID_PLUGIN);
+		IEclipsePreferences node= fContext.getNode(JavaScriptUI.ID_PLUGIN);
 		
 		Map settings= CleanUpConstants.getSaveParticipantSettings();
 		for (Iterator iterator= settings.keySet().iterator(); iterator.hasNext();) {

@@ -38,7 +38,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.internal.corext.template.java.SignatureUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.EditorHighlightingSynchronizer;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.wst.jsdt.ui.text.java.JavaContentAssistInvocationContext;
@@ -111,11 +111,11 @@ public final class ParameterGuessingProposal extends JavaMethodCompletionProposa
 
 		} catch (BadLocationException e) {
 			ensurePositionCategoryRemoved(document);
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 			openErrorDialog(e);
 		} catch (BadPositionCategoryException e) {
 			ensurePositionCategoryRemoved(document);
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 			openErrorDialog(e);
 		}
 	}
@@ -142,7 +142,7 @@ public final class ParameterGuessingProposal extends JavaMethodCompletionProposa
 		} catch (JavaScriptModelException x) {
 			fPositions= null;
 			fChoices= null;
-			JavaPlugin.log(x);
+			JavaScriptPlugin.log(x);
 			openErrorDialog(x);
 			return super.computeReplacementString();
 		}
@@ -207,7 +207,7 @@ public final class ParameterGuessingProposal extends JavaMethodCompletionProposa
 	 * @return  the currently active java editor, or <code>null</code>
 	 */
 	private JavaEditor getJavaEditor() {
-		IEditorPart part= JavaPlugin.getActivePage().getActiveEditor();
+		IEditorPart part= JavaScriptPlugin.getActivePage().getActiveEditor();
 		if (part instanceof JavaEditor)
 			return (JavaEditor) part;
 		else

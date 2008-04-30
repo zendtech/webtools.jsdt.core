@@ -26,13 +26,13 @@ import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.corext.util.MethodOverrideTester;
 import org.eclipse.wst.jsdt.internal.corext.util.SuperTypeHierarchyCache;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionMessages;
 import org.eclipse.wst.jsdt.internal.ui.actions.ActionUtil;
 import org.eclipse.wst.jsdt.internal.ui.actions.SelectionConverter;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 
 /**
  * The action opens a Java editor on the selected method's super implementation.
@@ -151,7 +151,7 @@ public class OpenSuperImplementationAction extends SelectionDispatchAction {
 		try {
 			IFunction impl= findSuperImplementation(method);
 			if (impl != null) {
-				JavaUI.openInEditor(impl, true, true);
+				JavaScriptUI.openInEditor(impl, true, true);
 			}
 		} catch (CoreException e) {
 			ExceptionHandler.handle(e, getDialogTitle(), ActionMessages.OpenSuperImplementationAction_error_message);
@@ -190,7 +190,7 @@ public class OpenSuperImplementationAction extends SelectionDispatchAction {
 			}
 		} catch (JavaScriptModelException e) {
 			if (!e.isDoesNotExist()) {
-				JavaPlugin.log(e);
+				JavaScriptPlugin.log(e);
 			}
 		}
 		return false;

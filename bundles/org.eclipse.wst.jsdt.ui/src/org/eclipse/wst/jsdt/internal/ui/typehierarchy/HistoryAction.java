@@ -17,7 +17,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.JavaElementImageProvider;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 /**
  * Action used for the type hierarchy forward / backward buttons
@@ -32,7 +32,7 @@ public class HistoryAction extends Action {
 		fViewPart= viewPart;
 		fElement= element;		
 		
-		String elementName= JavaElementLabels.getElementLabel(element, JavaElementLabels.ALL_POST_QUALIFIED | JavaElementLabels.ALL_DEFAULT);
+		String elementName= JavaScriptElementLabels.getElementLabel(element, JavaScriptElementLabels.ALL_POST_QUALIFIED | JavaScriptElementLabels.ALL_DEFAULT);
 		setText(elementName);
 		setImageDescriptor(getImageDescriptor(element));
 				

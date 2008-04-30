@@ -22,7 +22,7 @@ import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 public class JavadocProjectContentProvider implements ITreeContentProvider {
 
@@ -38,7 +38,7 @@ public class JavadocProjectContentProvider implements ITreeContentProvider {
 				return getPackageFragments((IPackageFragmentRoot) parentElement);
 			}
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		return new Object[0];
 	}
@@ -50,7 +50,7 @@ public class JavadocProjectContentProvider implements ITreeContentProvider {
 		try {
 			return JavaScriptCore.create(root).getJavaScriptProjects();
 		} catch (JavaScriptModelException e) {
-			JavaPlugin.log(e);
+			JavaScriptPlugin.log(e);
 		}
 		return new Object[0];
 	}

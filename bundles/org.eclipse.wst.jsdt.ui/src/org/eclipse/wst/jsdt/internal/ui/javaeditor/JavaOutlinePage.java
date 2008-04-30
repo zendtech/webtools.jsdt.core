@@ -94,7 +94,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.ui.IJavaHelpContextIds;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.actions.AbstractToggleLinkingAction;
 import org.eclipse.wst.jsdt.internal.ui.actions.CategoryFilterActionGroup;
@@ -109,9 +109,9 @@ import org.eclipse.wst.jsdt.internal.ui.viewsupport.ColoredViewersManager;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.DecoratingJavaLabelProvider;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.SourcePositionComparator;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.StatusBarUpdater;
-import org.eclipse.wst.jsdt.ui.JavaElementComparator;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementComparator;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 import org.eclipse.wst.jsdt.ui.ProblemsLabelDecorator.ProblemsLabelChangedEvent;
 import org.eclipse.wst.jsdt.ui.actions.CCPActionGroup;
@@ -127,7 +127,7 @@ import org.eclipse.wst.jsdt.ui.actions.RefactorActionGroup;
  * The content outline page of the Java editor. The viewer implements a proprietary
  * update mechanism based on Java model deltas. It does not react on domain changes.
  * It is specified to show the content of ICompilationUnits and IClassFiles.
- * Publishes its context menu under <code>JavaPlugin.getDefault().getPluginId() + ".outline"</code>.
+ * Publishes its context menu under <code>JavaScriptPlugin.getDefault().getPluginId() + ".outline"</code>.
  */
 public class JavaOutlinePage extends Page implements IContentOutlinePage, IAdaptable , IPostSelectionProvider {
 
@@ -247,7 +247,7 @@ public class JavaOutlinePage extends Page implements IContentOutlinePage, IAdapt
 					}
 					
 					//@GINO: Anonymous Filter top level anonymous
-					if (element.getElementType() == IJavaScriptElement.TYPE && element.getParent().getElementType() == IJavaScriptElement.COMPILATION_UNIT ) {
+					if (element.getElementType() == IJavaScriptElement.TYPE && element.getParent().getElementType() == IJavaScriptElement.JAVASCRIPT_UNIT ) {
 						
 						IType type = (IType)element;
 						try {
@@ -295,8 +295,8 @@ public class JavaOutlinePage extends Page implements IContentOutlinePage, IAdapt
 							// don't log NotExist exceptions as this is a valid case
 							// since we might have been posted and the element
 							// removed in the meantime.
-							if (JavaPlugin.isDebug() || !x.isDoesNotExist())
-								JavaPlugin.log(x);
+							if (JavaScriptPlugin.isDebug() || !x.isDoesNotExist())
+								JavaScriptPlugin.log(x);
 						}
 					}
 					return NO_CHILDREN;
@@ -309,7 +309,7 @@ public class JavaOutlinePage extends Page implements IContentOutlinePage, IAdapt
 								IType type= ((ITypeRoot) parent).findPrimaryType();
 								return type != null ? type.getChildren() : NO_CLASS;
 							} catch (JavaScriptModelException e) {
-								JavaPlugin.log(e);
+								JavaScriptPlugin.log(e);
 							}
 						}
 					}
@@ -335,8 +335,8 @@ public class JavaOutlinePage extends Page implements IContentOutlinePage, IAdapt
 							// don't log NotExist exceptions as this is a valid case
 							// since we might have been posted and the element
 							// removed in the meantime.
-							if (JavaPlugin.isDebug() || !x.isDoesNotExist())
-								JavaPlugin.log(x);
+							if (JavaScriptPlugin.isDebug() || !x.isDoesNotExist())
+								JavaScriptPlugin.log(x);
 						}
 					}
 					return false;
@@ -474,7 +474,7 @@ public class JavaOutlinePage extends Page implements IContentOutlinePage, IAdapt
 							try {
 								return ((IFunction)element).isMainMethod();
 							} catch (JavaScriptModelException e) {
-								JavaPlugin.log(e.getStatus());
+								JavaScriptPlugin.log(e.getStatus());
 							}
 						}
 						return "main".equals(element.getElementName()); //$NON-NLS-1$
@@ -768,7 +768,7 @@ public class JavaOutlinePage extends Page implements IContentOutlinePage, IAdapt
 
 			class LexicalSortingAction extends Action {
 
-				private JavaElementComparator fComparator= new JavaElementComparator();
+				private JavaScriptElementComparator fComparator= new JavaScriptElementComparator();
 				private SourcePositionComparator fSourcePositonComparator= new SourcePositionComparator();
 
 				public LexicalSortingAction() {
@@ -779,7 +779,7 @@ public class JavaOutlinePage extends Page implements IContentOutlinePage, IAdapt
 					setToolTipText(JavaEditorMessages.JavaOutlinePage_Sort_tooltip);
 					setDescription(JavaEditorMessages.JavaOutlinePage_Sort_description);
 
-					boolean checked= JavaPlugin.getDefault().getPreferenceStore().getBoolean("LexicalSortingAction.isChecked"); //$NON-NLS-1$
+					boolean checked= JavaScriptPlugin.getDefault().getPreferenceStore().getBoolean("LexicalSortingAction.isChecked"); //$NON-NLS-1$
 					valueChanged(checked, false);
 				}
 
@@ -799,7 +799,7 @@ public class JavaOutlinePage extends Page implements IContentOutlinePage, IAdapt
 					});
 
 					if (store)
-						JavaPlugin.getDefault().getPreferenceStore().setValue("LexicalSortingAction.isChecked", on); //$NON-NLS-1$
+						JavaScriptPlugin.getDefault().getPreferenceStore().setValue("LexicalSortingAction.isChecked", on); //$NON-NLS-1$
 				}
 			}
 
@@ -813,7 +813,7 @@ public class JavaOutlinePage extends Page implements IContentOutlinePage, IAdapt
 				setDescription(JavaEditorMessages.JavaOutlinePage_GoIntoTopLevelType_description);
 				JavaPluginImages.setLocalImageDescriptors(this, "gointo_toplevel_type.gif"); //$NON-NLS-1$
 
-				IPreferenceStore preferenceStore= JavaPlugin.getDefault().getPreferenceStore();
+				IPreferenceStore preferenceStore= JavaScriptPlugin.getDefault().getPreferenceStore();
 				boolean showclass= preferenceStore.getBoolean("GoIntoTopLevelTypeAction.isChecked"); //$NON-NLS-1$
 				setTopLevelTypeOnly(showclass);
 			}
@@ -830,7 +830,7 @@ public class JavaOutlinePage extends Page implements IContentOutlinePage, IAdapt
 				setChecked(show);
 				fOutlineViewer.refresh(false);
 
-				IPreferenceStore preferenceStore= JavaPlugin.getDefault().getPreferenceStore();
+				IPreferenceStore preferenceStore= JavaScriptPlugin.getDefault().getPreferenceStore();
 				preferenceStore.setValue("GoIntoTopLevelTypeAction.isChecked", show); //$NON-NLS-1$
 			}
 		}
@@ -934,7 +934,7 @@ public class JavaOutlinePage extends Page implements IContentOutlinePage, IAdapt
 				doPropertyChange(event);
 			}
 		};
-		JavaPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(fPropertyChangeListener);
+		JavaScriptPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(fPropertyChangeListener);
 	}
 
 	/* (non-Javadoc)
@@ -1037,7 +1037,7 @@ public class JavaOutlinePage extends Page implements IContentOutlinePage, IAdapt
 		Tree tree= new Tree(parent, SWT.MULTI);
 
 		AppearanceAwareLabelProvider lprovider= new AppearanceAwareLabelProvider(
-			AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS |  JavaElementLabels.F_APP_TYPE_SIGNATURE | JavaElementLabels.ALL_CATEGORY,
+			AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS |  JavaScriptElementLabels.F_APP_TYPE_SIGNATURE | JavaScriptElementLabels.ALL_CATEGORY,
 			AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS
 		);
 
@@ -1070,7 +1070,7 @@ public class JavaOutlinePage extends Page implements IContentOutlinePage, IAdapt
 		tree.setMenu(fMenu);
 
 		IPageSite site= getSite();
-		site.registerContextMenu(JavaPlugin.getPluginId() + ".outline", manager, fOutlineViewer); //$NON-NLS-1$
+		site.registerContextMenu(JavaScriptPlugin.getPluginId() + ".outline", manager, fOutlineViewer); //$NON-NLS-1$
 		
 		updateSelectionProvider(site);
 		
@@ -1117,7 +1117,7 @@ public class JavaOutlinePage extends Page implements IContentOutlinePage, IAdapt
 	private void updateSelectionProvider(IPageSite site) {
 		ISelectionProvider provider= fOutlineViewer;
 		if (fInput != null) {
-			IJavaScriptUnit cu= (IJavaScriptUnit)fInput.getAncestor(IJavaScriptElement.COMPILATION_UNIT);
+			IJavaScriptUnit cu= (IJavaScriptUnit)fInput.getAncestor(IJavaScriptElement.JAVASCRIPT_UNIT);
 			if (cu != null && !JavaModelUtil.isPrimary(cu))
 				provider= new EmptySelectionProvider();
 		}
@@ -1155,7 +1155,7 @@ public class JavaOutlinePage extends Page implements IContentOutlinePage, IAdapt
 		fPostSelectionChangedListeners= null;
 
 		if (fPropertyChangeListener != null) {
-			JavaPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(fPropertyChangeListener);
+			JavaScriptPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(fPropertyChangeListener);
 			fPropertyChangeListener= null;
 		}
 
@@ -1228,7 +1228,7 @@ public class JavaOutlinePage extends Page implements IContentOutlinePage, IAdapt
 		if (key == IShowInTargetList.class) {
 			return new IShowInTargetList() {
 				public String[] getShowInTargetIds() {
-					return new String[] { JavaUI.ID_PACKAGES };
+					return new String[] { JavaScriptUI.ID_PACKAGES };
 				}
 
 			};
@@ -1266,7 +1266,7 @@ public class JavaOutlinePage extends Page implements IContentOutlinePage, IAdapt
 
 	protected void contextMenuAboutToShow(IMenuManager menu) {
 
-		JavaPlugin.createStandardGroups(menu);
+		JavaScriptPlugin.createStandardGroups(menu);
 
 		IStructuredSelection selection= (IStructuredSelection)getSelection();
 		fActionGroups.setContext(new ActionContext(selection));
@@ -1297,7 +1297,7 @@ public class JavaOutlinePage extends Page implements IContentOutlinePage, IAdapt
 				IJavaScriptElement parent= type.getParent();
 				if (parent != null) {
 					int parentElementType= parent.getElementType();
-					return (parentElementType != IJavaScriptElement.COMPILATION_UNIT && parentElementType != IJavaScriptElement.CLASS_FILE);
+					return (parentElementType != IJavaScriptElement.JAVASCRIPT_UNIT && parentElementType != IJavaScriptElement.CLASS_FILE);
 				}
 			}
 		}

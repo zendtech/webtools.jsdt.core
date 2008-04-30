@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.ITypeHierarchy;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 
 public class JavaImplementorFinder implements IImplementorFinder {
     /* (non-Javadoc)
@@ -36,7 +36,7 @@ public class JavaImplementorFinder implements IImplementorFinder {
 
             return result;
         } catch (JavaScriptModelException e) {
-            JavaPlugin.log(e);
+            JavaScriptPlugin.log(e);
         }
 
         return null;
@@ -56,7 +56,7 @@ public class JavaImplementorFinder implements IImplementorFinder {
 
             return result;
         } catch (JavaScriptModelException e) {
-            JavaPlugin.log(e);
+            JavaScriptPlugin.log(e);
         }
 
         return null;

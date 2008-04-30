@@ -18,7 +18,7 @@ import org.eclipse.wst.jsdt.core.IParent;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.IClassFileEditorInput;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.JavaElementImageProvider;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
 
 /**
  * An imlementation of the IWorkbenchAdapter for IJavaElements.
@@ -39,7 +39,7 @@ public class JavaWorkbenchAdapter implements IWorkbenchAdapter {
 			try {
 				return ((IParent)je).getChildren();
 			} catch(JavaScriptModelException e) {
-				JavaPlugin.log(e); 
+				JavaScriptPlugin.log(e); 
 			}
 		}
 		return NO_CHILDREN;
@@ -55,7 +55,7 @@ public class JavaWorkbenchAdapter implements IWorkbenchAdapter {
 	}
 
 	public String getLabel(Object element) {
-		return JavaElementLabels.getTextLabel(getJavaElement(element), JavaElementLabels.ALL_DEFAULT);
+		return JavaScriptElementLabels.getTextLabel(getJavaElement(element), JavaScriptElementLabels.ALL_DEFAULT);
 	}
 
 	public Object getParent(Object element) {
