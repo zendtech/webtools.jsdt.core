@@ -19,7 +19,6 @@ import org.eclipse.wst.jsdt.core.IBuffer;
 import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.compiler.IProblem;
-import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.ui.text.java.IInvocationContext;
 import org.eclipse.wst.jsdt.ui.text.java.IJavaCompletionProposal;
 import org.eclipse.wst.jsdt.ui.text.java.IProblemLocation;
@@ -187,9 +186,9 @@ public class QuickFixProcessor implements IQuickFixProcessor {
 			case IProblem.UnhandledWarningToken:
 				return true;
 			default:
-				if (JavaModelUtil.is50OrHigher(cu.getJavaScriptProject())) {
-					return SuppressWarningsSubProcessor.hasSuppressWarningsProposal(problemId);
-				}
+//				if (JavaModelUtil.is50OrHigher(cu.getJavaScriptProject())) {
+//					return SuppressWarningsSubProcessor.hasSuppressWarningsProposal(problemId);
+//				}
 				return false;
 		}
 	}
@@ -536,13 +535,10 @@ public class QuickFixProcessor implements IQuickFixProcessor {
 			case IProblem.FallthroughCase:
 				LocalCorrectionsSubProcessor.addFallThroughProposals(context, problem, proposals);
 				break;
-			case IProblem.UnhandledWarningToken:
-				SuppressWarningsSubProcessor.addUnknownSuppressWarningProposals(context, problem, proposals);
-				break;
 			default:
 		}
-		if (JavaModelUtil.is50OrHigher(context.getCompilationUnit().getJavaScriptProject())) {
-			SuppressWarningsSubProcessor.addSuppressWarningsProposals(context, problem, proposals);
-		}
+//		if (JavaModelUtil.is50OrHigher(context.getCompilationUnit().getJavaScriptProject())) {
+//			SuppressWarningsSubProcessor.addSuppressWarningsProposals(context, problem, proposals);
+//		}
 	}
 }

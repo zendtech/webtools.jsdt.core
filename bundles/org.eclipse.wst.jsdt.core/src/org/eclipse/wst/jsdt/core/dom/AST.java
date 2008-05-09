@@ -1431,39 +1431,6 @@ public final class AST {
 	}
 
 	/**
-	 * Creates an unparented enum constant declaration node owned by this AST.
-	 * The name of the constant is an unspecified, but legal, name;
-	 * no doc comment; no modifiers or annotations; no arguments;
-	 * and does not declare an anonymous class.
-	 *
-	 * @return a new unparented enum constant declaration node
-	 * @exception UnsupportedOperationException if this operation is used in
-	 * a JLS2 AST
-	 * @since 3.1
-	 */
-	public EnumConstantDeclaration newEnumConstantDeclaration() {
-		EnumConstantDeclaration result = new EnumConstantDeclaration(this);
-		return result;
-	}
-
-	/**
-	 * Creates an unparented enum declaration node owned by this AST.
-	 * The name of the enum is an unspecified, but legal, name;
-	 * no doc comment; no modifiers or annotations;
-	 * no superinterfaces; and empty lists of enum constants
-	 * and body declarations.
-	 *
-	 * @return a new unparented enum declaration node
-	 * @exception UnsupportedOperationException if this operation is used in
-	 * a JLS2 AST
-	 * @since 3.1
-	 */
-	public EnumDeclaration newEnumDeclaration() {
-		EnumDeclaration result = new EnumDeclaration(this);
-		return result;
-	}
-
-	/**
 	 * Creates and returns a new unparented type parameter type node with an
 	 * unspecified type variable name and an empty list of type bounds.
 	 *
@@ -1477,36 +1444,6 @@ public final class AST {
 		return result;
 	}
 
-	/**
-	 * Creates and returns a new unparented annotation type declaration
-	 * node for an unspecified, but legal, name; no modifiers; no javadoc;
-	 * and an empty list of member declarations.
-	 *
-	 * @return a new unparented annotation type declaration node
-	 * @exception UnsupportedOperationException if this operation is used in
-	 * a JLS2 AST
-	 * @since 3.1
-	 */
-	public AnnotationTypeDeclaration newAnnotationTypeDeclaration() {
-		AnnotationTypeDeclaration result = new AnnotationTypeDeclaration(this);
-		return result;
-	}
-
-	/**
-	 * Creates and returns a new unparented annotation type
-	 * member declaration node for an unspecified, but legal,
-	 * member name and type; no modifiers; no javadoc;
-	 * and no default value.
-	 *
-	 * @return a new unparented annotation type member declaration node
-	 * @exception UnsupportedOperationException if this operation is used in
-	 * a JLS2 AST
-	 * @since 3.1
-	 */
-	public AnnotationTypeMemberDeclaration newAnnotationTypeMemberDeclaration() {
-		AnnotationTypeMemberDeclaration result = new AnnotationTypeMemberDeclaration(this);
-		return result;
-	}
 
 	/**
 	 * Creates and returns a new unparented modifier node for the given
@@ -2552,65 +2489,6 @@ public final class AST {
 	 */
 	public ConditionalExpression newConditionalExpression() {
 		ConditionalExpression result = new ConditionalExpression(this);
-		return result;
-	}
-
-	//=============================== ANNOTATIONS ====================
-
-	/**
-	 * Creates and returns a new unparented normal annotation node with
-	 * an unspecified type name and an empty list of member value
-	 * pairs.
-	 *
-	 * @return a new unparented normal annotation node
-	 * @exception UnsupportedOperationException if this operation is used in
-	 * a JLS2 AST
-	 * @since 3.1
-	 */
-	public NormalAnnotation newNormalAnnotation() {
-		NormalAnnotation result = new NormalAnnotation(this);
-		return result;
-	}
-
-	/**
-	 * Creates and returns a new unparented marker annotation node with
-	 * an unspecified type name.
-	 *
-	 * @return a new unparented marker annotation node
-	 * @exception UnsupportedOperationException if this operation is used in
-	 * a JLS2 AST
-	 * @since 3.1
-	 */
-	public MarkerAnnotation newMarkerAnnotation() {
-		MarkerAnnotation result = new MarkerAnnotation(this);
-		return result;
-	}
-
-	/**
-	 * Creates and returns a new unparented single member annotation node with
-	 * an unspecified type name and value.
-	 *
-	 * @return a new unparented single member annotation node
-	 * @exception UnsupportedOperationException if this operation is used in
-	 * a JLS2 AST
-	 * @since 3.1
-	 */
-	public SingleMemberAnnotation newSingleMemberAnnotation() {
-		SingleMemberAnnotation result = new SingleMemberAnnotation(this);
-		return result;
-	}
-
-	/**
-	 * Creates and returns a new unparented member value pair node with
-	 * an unspecified member name and value.
-	 *
-	 * @return a new unparented member value pair node
-	 * @exception UnsupportedOperationException if this operation is used in
-	 * a JLS2 AST
-	 * @since 3.1
-	 */
-	public MemberValuePair newMemberValuePair() {
-		MemberValuePair result = new MemberValuePair(this);
 		return result;
 	}
 
