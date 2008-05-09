@@ -106,18 +106,6 @@ public interface IPackageFragment extends IParent, IJavaScriptElement, IOpenable
 	 * @param name the given name
 	 * @return the compilation unit with the specified name in this package
 	 * @see JavaScriptConventions#validateCompilationUnitName(String name, String sourceLevel, String complianceLevel)
-	 * @deprecated Use {@link #getJavaScriptUnit(String)} instead
-	 */
-	IJavaScriptUnit getCompilationUnit(String name);
-	/**
-	 * Returns the compilation unit with the specified name
-	 * in this package (for example, <code>"Object.js"</code>).
-	 * The name has to be a valid compilation unit name.
-	 * This is a handle-only method.  The compilation unit may or may not be present.
-	 *
-	 * @param name the given name
-	 * @return the compilation unit with the specified name in this package
-	 * @see JavaScriptConventions#validateCompilationUnitName(String name, String sourceLevel, String complianceLevel)
 	 */
 	IJavaScriptUnit getJavaScriptUnit(String name);
 	/**
@@ -131,42 +119,8 @@ public interface IPackageFragment extends IParent, IJavaScriptElement, IOpenable
 	 * @exception JavaScriptModelException if this element does not exist or if an
 	 *		exception occurs while accessing its corresponding resource.
 	 * @return all of the compilation units in this package fragment
-	 * @deprecated Use {@link #getJavaScriptUnits()} instead
-	 */
-	IJavaScriptUnit[] getCompilationUnits() throws JavaScriptModelException;
-	/**
-	 * Returns all of the compilation units in this package fragment.
-	 *
-	 * <p>Note: it is possible that a package fragment contains only
-	 * class files (in other words, its kind is <code>K_BINARY</code>), in which
-	 * case this method returns an empty collection.
-	 * </p>
-	 *
-	 * @exception JavaScriptModelException if this element does not exist or if an
-	 *		exception occurs while accessing its corresponding resource.
-	 * @return all of the compilation units in this package fragment
 	 */
 	IJavaScriptUnit[] getJavaScriptUnits() throws JavaScriptModelException;
-	/**
-	 * Returns all of the compilation units in this package fragment that are
-	 * in working copy mode and that have the given owner.
-	 * <p>
-	 * Only existing working copies are returned. So a compilation unit handle that has no
-	 * corresponding resource on disk will be included if and only if is in working copy mode.
-	 * </p>
-	 * <p>Note: it is possible that a package fragment contains only
-	 * class files (in other words, its kind is <code>K_BINARY</code>), in which
-	 * case this method returns an empty collection.
-	 * </p>
-	 *
-	 * @param owner the owner of the returned compilation units
-	 * @exception JavaScriptModelException if this element does not exist or if an
-	 *		exception occurs while accessing its corresponding resource.
-	 * @return all of the compilation units in this package fragment
-	 * @since 3.0
-	 * @deprecated Use {@link #getJavaScriptUnits(WorkingCopyOwner)} instead
-	 */
-	IJavaScriptUnit[] getCompilationUnits(WorkingCopyOwner owner) throws JavaScriptModelException;
 	/**
 	 * Returns all of the compilation units in this package fragment that are
 	 * in working copy mode and that have the given owner.

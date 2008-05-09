@@ -110,30 +110,6 @@ public IType[] getTypes() throws JavaScriptModelException ;
 
 
 /**
- * Returns a working copy on the source associated with this class file using the given
- * factory to create the buffer, or <code>null</code> if there is no source associated
- * with the class file.
- * <p>
- * The buffer will be automatically initialized with the source of the class file
- * upon creation.
- * <p>
- * The only valid operations on this working copy are <code>getBuffer()</code> or <code>getOriginalElement</code>.
- *
- * @param monitor a progress monitor used to report progress while opening this compilation unit
- *                 or <code>null</code> if no progress should be reported
- * @param factory the factory that creates a buffer that is used to get the content of the working copy
- *                 or <code>null</code> if the internal factory should be used
- * @return a  a working copy on the source associated with this class file
- * @exception JavaScriptModelException if the source of this class file can
- *   not be determined. Reasons include:
- * <ul>
- * <li> This class file does not exist (ELEMENT_DOES_NOT_EXIST)</li>
- * </ul>
- * @since 2.0
- * @deprecated Use {@link ITypeRoot#getWorkingCopy(WorkingCopyOwner, IProgressMonitor)} instead
- */
-IJavaScriptElement getWorkingCopy(IProgressMonitor monitor, IBufferFactory factory) throws JavaScriptModelException;
-/**
  * Returns whether this type represents a class. This is not guaranteed to be
  * instantaneous, as it may require parsing the underlying file.
  *

@@ -35,9 +35,6 @@ import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
  * which is an archive.</li>
  * <li>{@link #F_CHILDREN} - A child of the element has changed in some way.  This flag
  * is only valid if the element is an {@link IParent}.</li>
- * <li>{@link #F_INCLUDEPATH_REORDER} - A classpath entry corresponding to the element
- * has changed position in the project's classpath. This flag is only valid if the element is an
- * {@link IPackageFragmentRoot}.</li>
  * <li>{@link #F_CLOSED} - The underlying {@link org.eclipse.core.resources.IProject}
  * has been closed. This flag is only valid if the element is an {@link IJavaScriptProject}.</li>
  * <li>{@link #F_CONTENT} - The contents of the element have been altered.  This flag
@@ -78,8 +75,7 @@ import org.eclipse.wst.jsdt.core.dom.JavaScriptUnit;
  * do not imply anything about the parent or children of the element.
  * </p>
  * <p>
- * The {@link #F_ADDED_TO_CLASSPATH}, {@link #F_REMOVED_FROM_CLASSPATH} and
- * {@link #F_INCLUDEPATH_REORDER} flags are triggered by changes to a project's classpath. They do not mean that
+ * The {@link #F_ADDED_TO_CLASSPATH} and {@link #F_REMOVED_FROM_CLASSPATH} flags are triggered by changes to a project's classpath. They do not mean that
  * the underlying resource was added, removed or changed. For example, if a project P already contains a folder src, then
  * adding a classpath entry with the 'P/src' path to the project's classpath will result in an {@link IJavaScriptElementDelta}
  * with the {@link #F_ADDED_TO_CLASSPATH} flag for the {@link IPackageFragmentRoot} P/src.
@@ -172,12 +168,6 @@ public interface IJavaScriptElementDelta {
 	 */
 	public int F_REMOVED_FROM_CLASSPATH = 0x000080;
 
-	/**
-	 * Change flag indicating that a classpath entry corresponding to the element has changed position in the project's
-	 * classpath. This flag is only valid if the element is an {@link IPackageFragmentRoot}.
-	 * @deprecated Use {@link #F_REORDER} instead.
-	 */
-	public int F_INCLUDEPATH_REORDER = 0x000100;
 	/**
 	 * Change flag indicating that the element has changed position relatively to its siblings.
 	 * If the element is an {@link IPackageFragmentRoot},  a classpath entry corresponding

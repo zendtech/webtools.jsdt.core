@@ -38,7 +38,6 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -70,7 +69,6 @@ import org.eclipse.wst.jsdt.internal.ui.javaeditor.ASTProvider;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.ClassFileDocumentProvider;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.CompilationUnitDocumentProvider;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.DocumentAdapter;
-import org.eclipse.wst.jsdt.internal.ui.javaeditor.EditorUtility;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.ICompilationUnitDocumentProvider;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.WorkingCopyManager;
 import org.eclipse.wst.jsdt.internal.ui.javaeditor.saveparticipant.SaveParticipantRegistry;
@@ -162,7 +160,6 @@ public class JavaScriptPlugin extends AbstractUIPlugin {
 	/**
 	 * @deprecated
 	 */
-	private org.eclipse.wst.jsdt.core.IBufferFactory fBufferFactory;
 	private ICompilationUnitDocumentProvider fCompilationUnitDocumentProvider;
 	private ClassFileDocumentProvider fClassFileDocumentProvider;
 	private JavaScriptTextTools fJavaTextTools;
@@ -260,13 +257,6 @@ public class JavaScriptPlugin extends AbstractUIPlugin {
 		 return null;
 	}
 	
-	/**
-	 * @deprecated Use EditorUtility.getDirtyEditors() instead.
-	 */
-	public static IEditorPart[] getDirtyEditors() {
-		return EditorUtility.getDirtyEditors();
-	}
-		
 	public static String getPluginId() {
 		return JavaScriptUI.ID_PLUGIN;
 	}
@@ -592,15 +582,6 @@ public class JavaScriptPlugin extends AbstractUIPlugin {
 		if (window == null)
 			return null;
 		return window.getActivePage();
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	public synchronized org.eclipse.wst.jsdt.core.IBufferFactory getBufferFactory() {
-		if (fBufferFactory == null)
-			fBufferFactory= new org.eclipse.wst.jsdt.internal.ui.javaeditor.CustomBufferFactory();
-		return fBufferFactory;
 	}
 	
 	public synchronized ICompilationUnitDocumentProvider getCompilationUnitDocumentProvider() {

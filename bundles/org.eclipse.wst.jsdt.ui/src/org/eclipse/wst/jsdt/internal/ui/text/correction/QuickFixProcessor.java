@@ -257,9 +257,9 @@ public class QuickFixProcessor implements IQuickFixProcessor {
 			case IProblem.UndefinedConstructor:
 				UnresolvedElementsSubProcessor.getConstructorProposals(context, problem, proposals);
 				break;
-			case IProblem.UndefinedAnnotationMember:
-				UnresolvedElementsSubProcessor.getAnnotationMemberProposals(context, problem, proposals);
-				break;
+//			case IProblem.UndefinedAnnotationMember:
+//				UnresolvedElementsSubProcessor.getAnnotationMemberProposals(context, problem, proposals);
+//				break;
 			case IProblem.ParameterMismatch:
 				UnresolvedElementsSubProcessor.getMethodProposals(context, problem, true, proposals);
 				break;
@@ -384,9 +384,9 @@ public class QuickFixProcessor implements IQuickFixProcessor {
 			case IProblem.AbstractMethodMustBeImplemented:
 				LocalCorrectionsSubProcessor.addUnimplementedMethodsProposals(context, problem, proposals);
 				break;
-			case IProblem.MissingValueForAnnotationMember:
-				LocalCorrectionsSubProcessor.addValueForAnnotationProposals(context, problem, proposals);
-				break;				
+//			case IProblem.MissingValueForAnnotationMember:
+//				LocalCorrectionsSubProcessor.addValueForAnnotationProposals(context, problem, proposals);
+//				break;				
 			case IProblem.BodyForNativeMethod:
 				ModifierCorrectionSubProcessor.addNativeMethodProposals(context, problem, proposals);
 				break;

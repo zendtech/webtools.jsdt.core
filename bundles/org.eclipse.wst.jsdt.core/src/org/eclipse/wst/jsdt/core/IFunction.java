@@ -57,23 +57,6 @@ String getElementName();
 String[] getExceptionTypes() throws JavaScriptModelException;
 
 /**
- * Returns the formal type parameter signatures for this method.
- * Returns an empty array if this method has no formal type parameters.
- * <p>
- * The formal type parameter signatures may be either unresolved (for source
- * types) or resolved (for binary types). See {@link Signature} for details.
- * </p>
- *
- * @exception JavaScriptModelException if this element does not exist or if an
- *      exception occurs while accessing its corresponding resource.
- * @return the formal type parameter signatures of this method,
- * in the order declared in the source, an empty array if none
- * @see Signature
- * @since 3.0
- * @deprecated Use {@link #getTypeParameters()} instead
- */
-String[] getTypeParameterSignatures() throws JavaScriptModelException;
-/**
  * Returns the formal type parameters for this method.
  * Returns an empty array if this method has no formal type parameters.
  *
@@ -251,9 +234,5 @@ boolean isResolved();
  * @since 2.0
  */
 boolean isSimilar(IFunction method);
-/**
- * @deprecated Use {@link #getFunction(String,String[])} instead
- */
-public IFunction getMethod(String selector, String[] parameterTypeSignatures) ;
 public IFunction getFunction(String selector, String[] parameterTypeSignatures) ;
 }
