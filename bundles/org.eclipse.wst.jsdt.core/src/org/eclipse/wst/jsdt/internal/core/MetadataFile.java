@@ -18,6 +18,8 @@ import java.util.Map;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -329,4 +331,14 @@ public class MetadataFile extends Openable implements
 		return IOAAMetaDataConstants.METADATA_FILE;
 	}
 
+	
+	protected boolean resourceExists() {
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		if (workspace == null) return false; // workaround for http://bugs.eclipse.org/bugs/show_bug.cgi?id=34069
+		Object me = JavaModel.getTarget(workspace.getRoot(), this.getPath(), true) ;
+		if(me!=null) return true;
+		me = JavaModel.getTarget(workspace.getRoot(), this.getPath().makeRelative(), true);
+		return (me!=null);
+
+	}
 }

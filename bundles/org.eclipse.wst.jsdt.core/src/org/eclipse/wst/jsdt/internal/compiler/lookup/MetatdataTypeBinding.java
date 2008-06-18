@@ -190,7 +190,9 @@ public int kind() {
 public char[] computeUniqueKey(boolean isLeaf) {
 	char[] uniqueKey = super.computeUniqueKey(isLeaf);
 	if (uniqueKey.length == 2) return uniqueKey; // problem type's unique key is "L;"
-	if (Util.isClassFileName(this.fileName)) return uniqueKey; // no need to insert compilation unit name for a .class file
+	if (Util.isClassFileName(this.fileName)
+			||org.eclipse.wst.jsdt.internal.core.util.Util.isMetadataFileName(new String(this.fileName))) 
+		return uniqueKey; // no need to insert compilation unit name for a .class file
 
 	// insert compilation unit name if the type name is not the main type name
 	int end = CharOperation.lastIndexOf('.', this.fileName);

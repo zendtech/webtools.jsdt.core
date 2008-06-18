@@ -23,6 +23,7 @@ public class LibraryAPIs {
 	public String description;
 	public String[] authors;
 	public String fileName;
+	public Enum[] enums;
 	
 	
 	public Property getGlobalVar(String name) {
@@ -49,4 +50,14 @@ public class LibraryAPIs {
 			}
 			return null;
 	}
+	public Enum getEnum(String name) {
+		if (this.enums!=null)
+			for (int i = 0; i < this.enums.length; i++) {
+				if (name.equals(this.enums[i].name))
+					return this.enums[i];
+			}
+			return null;
+	}
+	
+	
 }
