@@ -43,6 +43,9 @@ public interface IOAAMetaDataConstants {
     public final static String TAG_DEPRECIATED ="deprecated";
     public final static String ATTRIBUTE_DEPRECIATED_VERSION = "version";
     public final static String TAG_DESCRIPTION ="description";
+    public final static String TAG_ENUM ="enum";
+    public final static String ATTRIBUTE_ENUM_NAME ="name";
+    public final static String ATTRIBUTE_ENUM_TYPE ="type";
     public final static String TAG_EVENT ="event";
     public final static String TAG_EVENTS ="events";
     public final static String TAG_EXAMPLE ="example";

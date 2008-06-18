@@ -81,33 +81,34 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 
 	static final int STATE_DEPRECIATED =	15;
 	static final int STATE_DESCRIPTION =16;
-    static final int STATE_EVENT =17;
-    static final int STATE_EVENTS =18;
-    static final int STATE_EXAMPLE =19;
-    static final int STATE_EXAMPLES =20;
-    static final int STATE_EXCEPTION =21;
-    static final int STATE_EXCEPTIONS =22;
-    static final int STATE_FIELD =23;
-    static final int STATE_FIELDS =24;
+    static final int STATE_ENUM =17;
+    static final int STATE_EVENT =18;
+    static final int STATE_EVENTS =19;
+    static final int STATE_EXAMPLE =20;
+    static final int STATE_EXAMPLES =21;
+    static final int STATE_EXCEPTION =22;
+    static final int STATE_EXCEPTIONS =23;
+    static final int STATE_FIELD =24;
+    static final int STATE_FIELDS =25;
     static final int STATE_INTERFACE =26;
     static final int STATE_INTERFACES =27;
-    static final int STATE_METHODS =29;
-    static final int STATE_MIX =30;
-    static final int STATE_MIXES =31;
-    static final int STATE_MIXIN =32;
-	static final int STATE_MIXINS =33;
-	static final int STATE_NAMESPACE =34;
-    static final int STATE_OPTION =35;
-	static final int STATE_OPTIONS =36;
-    static final int STATE_PARAMETER =37;
-    static final int STATE_PARAMETERS =38;
-    static final int STATE_REMARKS =41;
-    static final int STATE_RETURNS =42;
-	static final int STATE_SEE =43;
-	static final int STATE_TOPIC =44;
-	static final int STATE_TOPICS =45;
-	static final int STATE_USERAGENT =46;
-	static final int STATE_USERAGENTS =47;
+    static final int STATE_METHODS =28;
+    static final int STATE_MIX =29;
+    static final int STATE_MIXES =30;
+    static final int STATE_MIXIN =31;
+	static final int STATE_MIXINS =32;
+	static final int STATE_NAMESPACE =33;
+    static final int STATE_OPTION =34;
+	static final int STATE_OPTIONS =35;
+    static final int STATE_PARAMETER =36;
+    static final int STATE_PARAMETERS =37;
+    static final int STATE_REMARKS =38;
+    static final int STATE_RETURNS =39;
+	static final int STATE_SEE =40;
+	static final int STATE_TOPIC =41;
+	static final int STATE_TOPICS =42;
+	static final int STATE_USERAGENT =43;
+	static final int STATE_USERAGENTS =44;
 	
 	static final ArrayList EMPTY_LIST=new ArrayList();
 
@@ -130,6 +131,7 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 
 		states.put(TAG_DEPRECIATED, new Integer(STATE_DEPRECIATED));
 		states.put(TAG_DESCRIPTION, new Integer(STATE_DESCRIPTION ));
+	    states.put(TAG_ENUM, new Integer(STATE_ENUM ));
 	    states.put(TAG_EVENT, new Integer(STATE_EVENT ));
 	    states.put(TAG_EVENTS, new Integer(STATE_EVENTS));
 	    states.put(TAG_EXAMPLE, new Integer(STATE_EXAMPLE ));
@@ -224,7 +226,7 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 				{
 					if (this.currentObject instanceof DocumentedElement)
 					{
-						((DocumentedElement)this.currentObject).description=this.text.toString();
+						((DocumentedElement)this.currentObject).description=localizedString(this.text.toString());
 					}
 					break;
 				}
@@ -259,6 +261,8 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 				this.apis.globalVars= (Property[])collection.toArray(new Property[collection.size()]);
 				 collection = getCollection(TAG_AUTHOR);
 				this.apis.authors= (String[])collection.toArray(new String[collection.size()]);
+				 collection = getCollection(TAG_ENUM);
+				this.apis.enums= (Enum[])collection.toArray(new Enum[collection.size()]);
 				break;
 			}
 			case STATE_CLASS:
@@ -288,6 +292,13 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 				 collection = getCollection(TAG_PARAMETER);
 				 method.parameters= (Parameter[])collection.toArray(new Parameter[collection.size()]);
 
+				break;
+			}
+			case STATE_ENUM:
+			{
+				Enum enumData=(Enum)this.currentObject;
+				ArrayList collection = getCollection(TAG_OPTION);
+				enumData.options= (Option[])collection.toArray(new Option[collection.size()]);
 				break;
 			}
 
@@ -408,6 +419,18 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 						break;
 					}
 
+					case STATE_ENUM:
+					{
+						Enum enumData =new Enum();
+						this.currentObject=enumData;
+						addCollectionElement(TAG_ENUM, enumData);
+						enumData.name = attributes.getValue(ATTRIBUTE_ENUM_NAME);
+						enumData.type = attributes.getValue(ATTRIBUTE_ENUM_TYPE);
+
+						this.collections=new HashMap();
+						break;
+					}
+
 
 					case STATE_DESCRIPTION:
 					{
@@ -462,5 +485,10 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 	}
 
 
+	private String localizedString(String string)
+	{
+		return string;
+	}
+	
 	
 }

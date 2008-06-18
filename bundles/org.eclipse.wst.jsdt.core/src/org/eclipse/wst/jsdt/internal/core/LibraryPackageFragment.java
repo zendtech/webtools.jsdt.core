@@ -25,6 +25,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptModelStatusConstants;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.compiler.util.SuffixConstants;
 import org.eclipse.wst.jsdt.internal.core.util.Messages;
+import org.eclipse.wst.jsdt.internal.core.util.Util;
 
 /**
  * A package fragment that represents a package fragment found in a JAR.
@@ -137,7 +138,8 @@ protected LibraryFragmentRoot getLibraryFragmentRoot()
 }
 
 public IClassFile getClassFile(String classFileName) {
-	if (!org.eclipse.wst.jsdt.internal.compiler.util.Util.isClassFileName(classFileName)) {
+	if (!org.eclipse.wst.jsdt.internal.compiler.util.Util.isClassFileName(classFileName)
+			&& !Util.isMetadataFileName(classFileName)) {
 		throw new IllegalArgumentException(Messages.element_invalidClassFileName);
 	}
 
