@@ -7241,6 +7241,7 @@ protected void consumeToken(int type) {
 				this.endStatementPosition = this.insertedSemicolonPosition;
 				this.endPosition = this.insertedSemicolonPosition;
 				this.insertedSemicolonPosition=-1;
+				this.problemReporter().missingSemiColon(null, this.endPosition-1,this.endPosition);
 				break;
 			}// else fallthru
 		case TokenNameRBRACE:
