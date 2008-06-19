@@ -147,7 +147,10 @@ public TypeDeclarationPattern(
 			pkg=CharOperation.subarray(simpleName, 0, index);
 			simpleName=CharOperation.subarray(simpleName, index+1, simpleName.length);
 		}
-	
+		else if (pkg==null && simpleName!=null)
+		{
+			pkg=new char[]{};
+		}	
 
 	this.pkg = isCaseSensitive() ? pkg : CharOperation.toLowerCase(pkg);
 	if (isCaseSensitive() || enclosingTypeNames == null) {
