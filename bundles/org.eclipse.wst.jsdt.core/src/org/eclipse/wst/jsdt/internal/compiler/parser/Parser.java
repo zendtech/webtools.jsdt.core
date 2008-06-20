@@ -7238,6 +7238,8 @@ protected void consumeToken(int type) {
 		case TokenNameSEMICOLON :
 			if (this.insertedSemicolonPosition>0)
 			{
+				if (this.insertedSemicolonPosition>=this.scanner.source.length)
+					this.insertedSemicolonPosition--;
 				this.endStatementPosition = this.insertedSemicolonPosition;
 				this.endPosition = this.insertedSemicolonPosition;
 				this.insertedSemicolonPosition=-1;
