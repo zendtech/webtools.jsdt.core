@@ -38,6 +38,7 @@ import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.progress.UIJob;
 import org.eclipse.wst.jsdt.core.ElementChangedEvent;
 import org.eclipse.wst.jsdt.core.IClassFile;
+import org.eclipse.wst.jsdt.core.IIncludePathAttribute;
 import org.eclipse.wst.jsdt.core.IIncludePathEntry;
 import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IElementChangedListener;
@@ -49,6 +50,7 @@ import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
+
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.navigator.ContainerFolder;
@@ -369,6 +371,13 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 		for (int i= 0; i < roots.length; i++) {
 			IPackageFragmentRoot root= roots[i];
 			IIncludePathEntry classpathEntry= root.getRawIncludepathEntry();
+			
+			IIncludePathAttribute[] attribs = classpathEntry.getExtraAttributes();
+			boolean shouldHide = false;
+			for(int p = 0;p<attribs.length;p++){
+				if(attribs[p]==IIncludePathAttribute.HIDE) shouldHide = true;
+			}
+			
 			int entryKind= classpathEntry.getEntryKind();
 			if (entryKind == IIncludePathEntry.CPE_CONTAINER) {
 				// all JsGlobalScopeContainers are added later 
@@ -383,7 +392,7 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 					for (int j= 0; j < fragments.length; j++) {
 						result.add(fragments[j]);
 					}
-				} else {
+				} else if(!shouldHide){
 					result.add(root);
 				}
 			}
