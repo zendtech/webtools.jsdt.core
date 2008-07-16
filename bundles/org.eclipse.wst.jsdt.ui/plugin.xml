@@ -78,6 +78,12 @@
             <adapter type="org.eclipse.wst.jsdt.internal.ui.IResourceLocator"/>
             <adapter type="org.eclipse.team.ui.history.IHistoryPageSource"/>
 		</factory>
+		<factory 
+            class="org.eclipse.wst.jsdt.internal.ui.ContainerFolderAdapterFactory" 
+            adaptableType="org.eclipse.wst.jsdt.internal.ui.navigator.ContainerFolder">
+            <adapter type="org.eclipse.core.resources.IResource"/>
+		</factory>
+		
 		
 		<factory 
             class="org.eclipse.wst.jsdt.internal.ui.JavaProjectAdapterFactory" 

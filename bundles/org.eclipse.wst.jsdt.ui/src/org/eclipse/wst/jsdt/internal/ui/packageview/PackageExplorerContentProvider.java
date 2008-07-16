@@ -458,15 +458,22 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 					Object res = resources[i];
 					if(res!=null && res instanceof IFolder && project.isOnIncludepath((IResource)res)){
 						result.add(new ContainerFolder((IFolder)res,project));
+					}else if(res instanceof IFile && JavaScriptCore.isJavaScriptLikeFileName( ((IFile)res).getName())    ){
+						IJavaScriptElement element = JavaScriptCore.create(((IFile)res).getName()  );
+						if(element!=null)
+							result.add(element);
+						else
+							result.add(res);
 					}else{
-						result.add(resources[i]);
+							result.add(res);
 					}
 				}
 				ProjectLibraryRoot projectLibs = new ProjectLibraryRoot(project);
 				result.add(0,projectLibs);
 				return result.toArray();
-		}
 		
+		
+		}
 	}
 //	private Object[] getContainerPackageFragmentRoots3(PackageFragmentRootContainer container) {
 //		Object[] children = container.getChildren();
