@@ -103,6 +103,9 @@ public class JavaNavigatorContentProvider extends
 		if (parent instanceof IJavaScriptModel) {
 			return getViewerInput() != null ? fRealInput : parent;
 		}
+		if (parent instanceof IJavaScriptProject) {
+			return ((IJavaScriptProject)parent).getProject();
+		}
 		return parent;
 	}
 
@@ -117,6 +120,13 @@ public class JavaNavigatorContentProvider extends
 			return super.getElements(JavaScriptCore.create((IProject)inputElement));
 		}
 		return super.getElements(inputElement);
+	}
+	
+	public boolean hasChildren(Object element) {
+		if (element instanceof IProject) {
+			return ((IProject) element).isAccessible();
+		}
+		return super.hasChildren(element);
 	}
 	
 	public Object[] getChildren(Object parentElement) {
@@ -157,17 +167,17 @@ public class JavaNavigatorContentProvider extends
 		return getParent(object);
 	}
 
-	public PipelinedShapeModification interceptAdd(
-			PipelinedShapeModification addModification) {
+	public PipelinedShapeModification interceptAdd(PipelinedShapeModification addModification) {
 		
-		if(addModification.getParent() instanceof IJavaScriptProject) {
-			addModification.setParent(((IJavaScriptProject)addModification.getParent()).getProject());
-		} else if(addModification.getParent() instanceof IWorkspaceRoot || 
-				addModification.getParent() instanceof IJavaScriptProject){
+		Object parent= addModification.getParent();
 		
+		if (parent instanceof IJavaScriptProject) {
+			addModification.setParent(((IJavaScriptProject)parent).getProject());
+		} 
+		
+		if (parent instanceof IWorkspaceRoot) {		
 			deconvertJavaProjects(addModification);
-		}
-		
+		}		
 		convertToJavaElements(addModification);
 		return addModification;
 	}
@@ -371,6 +381,8 @@ public class JavaNavigatorContentProvider extends
 	protected void postAdd(final Object parent, final Object element, Collection runnables) {
 		if (parent instanceof IJavaScriptModel)
 			super.postAdd(((IJavaScriptModel) parent).getWorkspace(), element, runnables);
+		else if (parent instanceof IJavaScriptProject) 
+			super.postAdd( ((IJavaScriptProject)parent).getProject(), element, runnables);
 		else
 			super.postAdd(parent, element, runnables);
 	}

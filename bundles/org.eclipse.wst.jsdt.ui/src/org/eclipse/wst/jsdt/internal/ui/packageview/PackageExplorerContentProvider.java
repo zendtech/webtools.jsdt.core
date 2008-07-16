@@ -34,6 +34,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.progress.UIJob;
 import org.eclipse.wst.jsdt.core.ElementChangedEvent;
@@ -83,6 +85,8 @@ public class PackageExplorerContentProvider extends StandardJavaScriptElementCon
 	
 	private Collection fPendingUpdates;
 		
+	private UIJob fUpdateJob;
+
 	/**
 	 * Creates a new content provider for Java elements.
 	 * @param provideMembers if set, members of compilation units and class files are shown
@@ -94,6 +98,8 @@ public class PackageExplorerContentProvider extends StandardJavaScriptElementCon
 		fFoldPackages= arePackagesFoldedInHierarchicalLayout();
 		fPendingUpdates= null;
 		JavaScriptPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
+
+		fUpdateJob= null;
 	}
 	
 	private boolean arePackagesFoldedInHierarchicalLayout(){
@@ -129,7 +135,7 @@ public class PackageExplorerContentProvider extends StandardJavaScriptElementCon
 		final Control ctrl= fViewer.getControl();
 		if (ctrl != null && !ctrl.isDisposed()) {
 			//Are we in the UIThread? If so spin it until we are done
-			if ((ctrl.getDisplay().getThread() == Thread.currentThread()) /*&& !fViewer.isBusy()*/) {
+			if ((ctrl.getDisplay().getThread() == Thread.currentThread()) && !fViewer.isBusy()) {
 				runUpdates(runnables);
 			} else {
 				synchronized (this) {
@@ -139,30 +145,28 @@ public class PackageExplorerContentProvider extends StandardJavaScriptElementCon
 						fPendingUpdates.addAll(runnables);
 					}
 				}
-				ctrl.getDisplay().asyncExec(new Runnable(){
-					public void run() {
-						postAsyncUpdate(ctrl.getDisplay());
-					}
-				});
+				postAsyncUpdate(ctrl.getDisplay());
 			}
 		}
 	}
 	
 	private void postAsyncUpdate(final Display display) {
-		UIJob updateJob= new UIJob(display, PackagesMessages.PackageExplorerContentProvider_update_job_description) {
-			public IStatus runInUIThread(IProgressMonitor monitor) {
-				TreeViewer viewer= fViewer;
-				if (viewer != null && viewer.isBusy()) {
-					schedule(100); // reschedule when viewer is busy: bug 184991
-				} else {
-					runPendingUpdates();
+		if (fUpdateJob == null) {
+			fUpdateJob= new UIJob(display, PackagesMessages.PackageExplorerContentProvider_update_job_description) {
+				public IStatus runInUIThread(IProgressMonitor monitor) {
+					TreeViewer viewer= fViewer;
+					if (viewer != null && viewer.isBusy()) {
+						schedule(100); // reschedule when viewer is busy: bug 184991
+					} else {
+						runPendingUpdates();
+					}
+					return Status.OK_STATUS;
 				}
-				return Status.OK_STATUS;
-			}
-		};
-		updateJob.setSystem(true);
-		updateJob.schedule();
-	} 	         
+			};
+			fUpdateJob.setSystem(true);
+		}
+		fUpdateJob.schedule();
+	}         
 	
 	/**
 	 * Run all of the runnables that are the widget updates. Must be called in the display thread.
@@ -310,9 +314,12 @@ public class PackageExplorerContentProvider extends StandardJavaScriptElementCon
 				return ((ProjectLibraryRoot)parentElement).getChildren();
 			}
 			
-			if (parentElement instanceof IProject) 
-				return ((IProject)parentElement).members();
-			
+			if (parentElement instanceof IProject) {
+				IProject project= (IProject) parentElement;
+				if (project.isAccessible())
+					return project.members();
+				return NO_CHILDREN;
+			}			
 			if(parentElement instanceof IPackageFragmentRoot && ((IPackageFragmentRoot)parentElement).isVirtual()) {
 				return getLibraryChildren((IPackageFragmentRoot)parentElement);
 			}
@@ -1019,6 +1026,12 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 				return false;
 			}
 		}
+		if ((status & IResourceDelta.CHANGED) != 0) {
+			if ((flags & IResourceDelta.TYPE) != 0) {
+				postRefresh(parent, PARENT, resource, runnables);
+				return true;
+			}
+		}
 		// open/close state change of a project
 		if ((flags & IResourceDelta.OPEN) != 0) {
 			postProjectStateChanged(internalGetParent(parent), runnables);
@@ -1036,7 +1049,7 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 					return true;
 				}
 			}
-		}
+		}	
 		for (int i= 0; i < resourceDeltas.length; i++) {
 			if (processResourceDelta(resourceDeltas[i], resource, runnables)) {
 				return false; // early return, element got refreshed
@@ -1064,6 +1077,13 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 		postRefresh(toRefresh, true, runnables);
 	}
 	
+	/**
+	 * Can be implemented by subclasses to add additional elements to refresh
+	 * 
+	 * @param toRefresh the elements to refresh
+	 * @param relation the relation to the affected element ({@link #GRANT_PARENT}, {@link #PARENT}, {@link #ORIGINAL}, {@link #PROJECT})
+	 * @param affectedElement the affected element
+	 */
 	protected void augmentElementToRefresh(List toRefresh, int relation, Object affectedElement) {
 	}
 
@@ -1089,9 +1109,18 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 	protected void postAdd(final Object parent, final Object element, Collection runnables) {
 		runnables.add(new Runnable() {
 			public void run() {
-				if (fViewer.testFindItem(element) == null) 
-					fViewer.add(parent, element);
+				Widget[] items= fViewer.testFindItems(element);
+				for (int i= 0; i < items.length; i++) {
+					Widget item= items[i];
+					if (item instanceof TreeItem && !item.isDisposed()) {
+						TreeItem parentItem= ((TreeItem) item).getParentItem();
+						if (parentItem != null && !parentItem.isDisposed() && parent.equals(parentItem.getData())) {
+							return; // no add, element already added (most likely by a refresh)
+						}
+					}
 				}
+				fViewer.add(parent, element);
+			}
 		});
 	}
 
