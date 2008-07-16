@@ -21,12 +21,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.wst.jsdt.core.IClassFile;
-import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IJarEntryResource;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IJavaScriptElementDelta;
 import org.eclipse.wst.jsdt.core.IJavaScriptModel;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.IParent;
@@ -35,6 +35,7 @@ import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.ITypeRoot;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
+import org.eclipse.wst.jsdt.internal.ui.navigator.ContainerFolder;
  
 /**
  * A base content provider for JavaScriptelements. It provides access to the
@@ -168,6 +169,10 @@ public class StandardJavaScriptElementContentProvider implements ITreeContentPro
 				
 			if (element instanceof IFolder)
 				return getFolderContent((IFolder)element);
+			
+			if(element instanceof ContainerFolder){
+				return getFolderContent(((ContainerFolder)element).enclosed());
+			}
 			
 			if (element instanceof IJarEntryResource) {
 				return ((IJarEntryResource) element).getChildren();
@@ -396,7 +401,7 @@ public class StandardJavaScriptElementContentProvider implements ITreeContentPro
 				if (javaProject.findPackageFragmentRoot(member.getFullPath()) == null) {
 					nonJavaResources.add(member);
 				} 
-			} else if (!javaProject.isOnIncludepath(member)) {
+			} else{ //else if (!javaProject.isOnIncludepath(member) && !(member instanceof Folder)) {
 				nonJavaResources.add(member);
 			}
 		}

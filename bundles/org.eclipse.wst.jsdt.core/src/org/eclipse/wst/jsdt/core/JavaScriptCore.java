@@ -2979,6 +2979,7 @@ public final class JavaScriptCore extends Plugin {
 	 * @see #getJavaScriptLikeExtensions()
 	 */
 	public static boolean isJavaScriptLikeFileName(String fileName) {
+		if(fileName==null) return false;
 		return Util.isJavaLikeFileName(fileName);
 	}
 

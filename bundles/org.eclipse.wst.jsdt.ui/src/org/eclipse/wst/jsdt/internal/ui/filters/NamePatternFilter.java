@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.internal.ui.navigator.ContainerFolder;
 import org.eclipse.wst.jsdt.internal.ui.util.StringMatcher;
 
 /**
@@ -64,7 +65,9 @@ public class NamePatternFilter extends ViewerFilter {
 			matchName= ((IJavaScriptElement) element).getElementName();
 		} else if (element instanceof IResource) {
 			matchName= ((IResource) element).getName();
-		} else if (element instanceof IStorage) {
+		}else if(element instanceof ContainerFolder){ 
+			matchName = ((ContainerFolder)element).enclosed().getName();
+		}else if (element instanceof IStorage) {
 			matchName= ((IStorage) element).getName();
 		} else if (element instanceof IWorkingSet) {
 			matchName= ((IWorkingSet) element).getLabel();

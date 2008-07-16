@@ -16,7 +16,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -38,19 +38,18 @@ import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.progress.UIJob;
 import org.eclipse.wst.jsdt.core.ElementChangedEvent;
 import org.eclipse.wst.jsdt.core.IClassFile;
+import org.eclipse.wst.jsdt.core.IElementChangedListener;
 import org.eclipse.wst.jsdt.core.IIncludePathAttribute;
 import org.eclipse.wst.jsdt.core.IIncludePathEntry;
-import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
-import org.eclipse.wst.jsdt.core.IElementChangedListener;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IJavaScriptElementDelta;
 import org.eclipse.wst.jsdt.core.IJavaScriptModel;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.navigator.ContainerFolder;
@@ -262,17 +261,38 @@ public class PackageExplorerContentProvider extends StandardJavaScriptElementCon
 		if (fIsFlatLayout) {
 			return super.getFolderContent(folder);
 		}
-		
 		// hierarchical package mode
 		ArrayList result= new ArrayList();
-		
-		getHierarchicalPackagesInFolder(folder, result);
-		Object[] others= super.getFolderContent(folder);
-		if (result.isEmpty())
-			return others;
-		for (int i= 0; i < others.length; i++) {
-			result.add(others[i]);
+		IResource members[] = folder.members();
+		for(int i =0;i<members.length;i++){
+			if(members[i] instanceof IFile && JavaScriptCore.isJavaScriptLikeFileName( ((IFile)members[i]).getName())    ){
+				IJavaScriptElement element = JavaScriptCore.create(members[i]);
+				if(element!=null)
+					result.add(element);
+				else
+					result.add(members[i]);
+			}else if (members[i] instanceof IFolder ){
+				IFolder folder1 = (IFolder)members[i];
+				IJavaScriptProject project = JavaScriptCore.create(members[i].getProject());	
+				 if(project.isOnIncludepath(folder1)){
+					 result.add( new ContainerFolder(folder1,project));
+				 }else{
+					 result.add(folder1);
+				 }
+			 }else{
+				result.add(members[i]);
+			}
 		}
+		
+		
+		
+//		getHierarchicalPackagesInFolder(folder, result);
+//		Object[] others= super.getFolderContent(folder);
+//		if (result.isEmpty())
+//			return others;
+//		for (int i= 0; i < others.length; i++) {
+//			result.add(others[i]);
+//		}
 		return result.toArray();
 	}
 	
@@ -282,9 +302,7 @@ public class PackageExplorerContentProvider extends StandardJavaScriptElementCon
 			if (parentElement instanceof IJavaScriptModel) 
 				return concatenate(getJavaProjects((IJavaScriptModel)parentElement), getNonJavaProjects((IJavaScriptModel)parentElement));
 
-			if(parentElement instanceof ContainerFolder) {
-				return getContainerPackageFragmentRoots((PackageFragmentRootContainer)((ContainerFolder)parentElement).getParentObject());
-			}
+			
 			if (parentElement instanceof PackageFragmentRootContainer)
 				return getContainerPackageFragmentRoots((PackageFragmentRootContainer)parentElement, true);
 			
@@ -304,6 +322,8 @@ public class PackageExplorerContentProvider extends StandardJavaScriptElementCon
 			return NO_CHILDREN;
 		}
 	}
+	
+
 private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 		
 		
@@ -364,59 +384,82 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 			return NO_CHILDREN;
 			
 		List result= new ArrayList();
-
-		boolean addJARContainer= false;
-		ArrayList projectPackageFragmentRoots  = new ArrayList();
-		IPackageFragmentRoot[] roots= project.getPackageFragmentRoots();
-		for (int i= 0; i < roots.length; i++) {
-			IPackageFragmentRoot root= roots[i];
-			IIncludePathEntry classpathEntry= root.getRawIncludepathEntry();
-			
-			IIncludePathAttribute[] attribs = classpathEntry.getExtraAttributes();
-			boolean shouldHide = false;
-			for(int p = 0;p<attribs.length;p++){
-				if(attribs[p]==IIncludePathAttribute.HIDE) shouldHide = true;
-			}
-			
-			int entryKind= classpathEntry.getEntryKind();
-			if (entryKind == IIncludePathEntry.CPE_CONTAINER) {
-				// all JsGlobalScopeContainers are added later 
-			} else if (fShowLibrariesNode && (entryKind != IIncludePathEntry.CPE_SOURCE) && entryKind!=IIncludePathEntry.CPE_CONTAINER) {
-				addJARContainer= true;
-				projectPackageFragmentRoots.add(root);
-			} else {
-				if (isProjectPackageFragmentRoot(root)) {
-					// filter out package fragments that correspond to projects and
-					// replace them with the package fragments directly
-					Object[] fragments= getPackageFragmentRootContent(root);
-					for (int j= 0; j < fragments.length; j++) {
-						result.add(fragments[j]);
+		if(fIsFlatLayout){
+				boolean addJARContainer= false;
+				ArrayList projectPackageFragmentRoots  = new ArrayList();
+				IPackageFragmentRoot[] roots= project.getPackageFragmentRoots();
+				for (int i= 0; i < roots.length; i++) {
+					IPackageFragmentRoot root= roots[i];
+					IIncludePathEntry classpathEntry= root.getRawIncludepathEntry();
+					
+					IIncludePathAttribute[] attribs = classpathEntry.getExtraAttributes();
+					boolean shouldHide = false;
+					for(int p = 0;p<attribs.length;p++){
+						if(attribs[p]==IIncludePathAttribute.HIDE) shouldHide = true;
 					}
-				} else if(!shouldHide){
-					result.add(root);
+					
+					int entryKind= classpathEntry.getEntryKind();
+					if (entryKind == IIncludePathEntry.CPE_CONTAINER) {
+						// all JsGlobalScopeContainers are added later 
+					} else if (fShowLibrariesNode && (entryKind != IIncludePathEntry.CPE_SOURCE) && entryKind!=IIncludePathEntry.CPE_CONTAINER) {
+						addJARContainer= true;
+						projectPackageFragmentRoots.add(root);
+					} else {
+						if (isProjectPackageFragmentRoot(root)) {
+							// filter out package fragments that correspond to projects and
+							// replace them with the package fragments directly
+							Object[] fragments= getPackageFragmentRootContent(root);
+							for (int j= 0; j < fragments.length; j++) {
+								result.add(fragments[j]);
+							}
+						} else if(!shouldHide){
+							result.add(root);
+						}
+					}
 				}
-			}
+				
+				if (addJARContainer) {
+					projectPackageFragmentRoots.add(new LibraryContainer(project));
+				}
+				
+				// separate loop to make sure all containers are on the classpath
+				IIncludePathEntry[] rawClasspath= project.getRawIncludepath();
+				for (int i= 0; i < rawClasspath.length; i++) {
+					IIncludePathEntry classpathEntry= rawClasspath[i];
+					if (classpathEntry.getEntryKind() == IIncludePathEntry.CPE_CONTAINER) {
+						projectPackageFragmentRoots.add(new JsGlobalScopeContainer(project, classpathEntry));
+					}	
+				}
+				
+				Object[] resources= project.getNonJavaScriptResources();
+				for (int i= 0; i < resources.length; i++) {
+					result.add(resources[i]);
+				}
+				
+				ProjectLibraryRoot projectLibs = new ProjectLibraryRoot(project);
+				result.add(0,projectLibs);
+				return result.toArray();
+		}else{
+				Object[] resources = new Object[0];
+				try {
+					resources = project.getProject().members();
+				} catch (CoreException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				for (int i= 0; i < resources.length; i++) {
+					Object res = resources[i];
+					if(res!=null && res instanceof IFolder && project.isOnIncludepath((IResource)res)){
+						result.add(new ContainerFolder((IFolder)res,project));
+					}else{
+						result.add(resources[i]);
+					}
+				}
+				ProjectLibraryRoot projectLibs = new ProjectLibraryRoot(project);
+				result.add(0,projectLibs);
+				return result.toArray();
 		}
 		
-		if (addJARContainer) {
-			projectPackageFragmentRoots.add(new LibraryContainer(project));
-		}
-		
-		// separate loop to make sure all containers are on the classpath
-		IIncludePathEntry[] rawClasspath= project.getRawIncludepath();
-		for (int i= 0; i < rawClasspath.length; i++) {
-			IIncludePathEntry classpathEntry= rawClasspath[i];
-			if (classpathEntry.getEntryKind() == IIncludePathEntry.CPE_CONTAINER) {
-				projectPackageFragmentRoots.add(new JsGlobalScopeContainer(project, classpathEntry));
-			}	
-		}	
-		Object[] resources= project.getNonJavaScriptResources();
-		for (int i= 0; i < resources.length; i++) {
-			result.add(resources[i]);
-		}
-		ProjectLibraryRoot projectLibs = new ProjectLibraryRoot(project);
-		result.add(0,projectLibs);
-		return result.toArray();
 	}
 //	private Object[] getContainerPackageFragmentRoots3(PackageFragmentRootContainer container) {
 //		Object[] children = container.getChildren();
@@ -482,77 +525,7 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 		
 		
 	}
-	private Object[] getContainerPackageFragmentRootsDeprc(PackageFragmentRootContainer container, boolean createFolder) {
-		
-		
-		if(container!=null) {	
-			
-			Object[] children = container.getChildren();
-			if(children==null) return null;
-			ArrayList allChildren = new ArrayList();
-			
-			boolean unique = false;
-			
-				while(!unique && children!=null && children.length>0) {
-					String display1=null;
-					for(int i = 0;i<children.length;i++) {
-						display1 = ((IJavaScriptElement)children[0]).getDisplayName();
-						String display2 = ((IJavaScriptElement)children[i]).getDisplayName();
-						if(!(   (display1==display2) || (display1!=null && display1.compareTo(display2)==0))){
-							allChildren.addAll(Arrays.asList(children));
-							unique=true;
-							break;
-						}
-					}
-					if(!unique && createFolder) {
-						ContainerFolder folder = new ContainerFolder(display1, container);
-						return new Object[] {folder};
-					}
-					ArrayList more = new ArrayList();
-					for(int i = 0;!unique && i<children.length;i++) {
-					
-						try {
-							if(children[i] instanceof IPackageFragment) {
-								more.addAll(Arrays.asList(((IPackageFragment)children[i]).getChildren()));
-							}else if(children[i] instanceof IPackageFragmentRoot) {
-								more.addAll(Arrays.asList(((IPackageFragmentRoot)children[i]).getChildren()));
-							}else if(children[i] instanceof IClassFile) {
-								more.addAll(Arrays.asList( filter(((IClassFile)children[i]).getChildren())) );
-							}else if(children[i] instanceof IJavaScriptUnit) {
-								more.addAll(Arrays.asList( filter(((IJavaScriptUnit)children[i]).getChildren())) );
-							}else {
-								/* bottomed out, now at javaElement level */
-								unique=true;
-								break;
-							}
-						} catch (JavaScriptModelException ex) {
-							// TODO Auto-generated catch block
-							ex.printStackTrace();
-						}
-						
-					}
-					if(!unique) children = more.toArray();
-				}
-		
-			
-			
-			return allChildren.toArray();
-		}else {
-		
-			
-			Object[] children = container.getChildren();
-			if(children==null) return null;
-			ArrayList allChildren = new ArrayList();
-			for(int i=0;i<children.length;i++) {
-				try {
-					allChildren.addAll(Arrays.asList(((IPackageFragmentRoot)children[i]).getChildren()));
-				} catch (JavaScriptModelException ex) {
-					
-				}
-			}
-			return allChildren.toArray();
-		}
-	}
+	
 
 	private Object[] getNonJavaProjects(IJavaScriptModel model) throws JavaScriptModelException {
 		return model.getNonJavaScriptResources();

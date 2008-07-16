@@ -13,32 +13,45 @@
  */
 package org.eclipse.wst.jsdt.internal.ui.navigator;
 
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+
 
 /**
  * @author childsb
  *
  */
 public class ContainerFolder {
-	
 
-	
-	
-		Object parent;
-		String name;
-		public ContainerFolder(String fullPath, Object parent){
-
-			this.parent = parent;
-			name = fullPath;
-		}
+		IFolder resource;	
+		IJavaScriptProject project;
 		
-		public Object getParentObject() {
-			return parent;
-		}
-		
-		public String getName() {
-			return name;
+		public ContainerFolder(IFolder resource, IJavaScriptProject project){
 			
+			this.resource = resource;
+			this.project = project;
 		}
-		public String toString() { return name;}
-	
+		
+		public IFolder enclosed(){
+			return this.resource;
+		}
+		public String toString() {
+			return resource.toString();
+			}
+
+		public IJavaScriptProject getProject(){
+			return this.project;
+		}
+
+		public boolean equals(Object obj) {
+			if(obj instanceof IFolder){
+				return this.resource.equals(obj);
+			}
+			if(obj instanceof ContainerFolder){
+				ContainerFolder fol = (ContainerFolder)obj;
+				return fol.resource==this.resource;
+			}
+			return false;
+		}
+		
 }

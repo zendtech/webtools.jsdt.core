@@ -83,7 +83,7 @@ public class PackageExplorerLabelProvider extends AppearanceAwareLabelProvider {
 	
 	public String getText(Object element) {
 		if(element instanceof ContainerFolder) {
-			return ((ContainerFolder)element).toString();
+			element = ((ContainerFolder)element).enclosed();
 		}
 		String text= getSpecificText(element);
 		if (text != null) {
@@ -127,7 +127,7 @@ public class PackageExplorerLabelProvider extends AppearanceAwareLabelProvider {
 	public Image getImage(Object element) {
 		
 		if(element instanceof ContainerFolder) {
-			return super.getImage(((ContainerFolder)element).getParentObject());
+			return super.getImage(element);
 		}
 		
 		if (element instanceof IWorkingSet) {
