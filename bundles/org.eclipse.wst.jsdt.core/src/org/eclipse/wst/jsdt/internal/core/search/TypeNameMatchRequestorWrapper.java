@@ -83,6 +83,10 @@ public TypeNameMatchRequestorWrapper(TypeNameMatchRequestor requestor, IJavaScri
 public void acceptType(int modifiers, char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, String path, AccessRestriction access) {
 	try {
 		IType type = null;
+		if (packageName!=null && packageName.length>0)
+		{
+			simpleTypeName=CharOperation.concat(packageName, simpleTypeName, '.');
+		}
 		if (this.handleFactory != null) {
 			Openable openable = this.handleFactory.createOpenable(path, this.scope);
 			if (openable == null) return;

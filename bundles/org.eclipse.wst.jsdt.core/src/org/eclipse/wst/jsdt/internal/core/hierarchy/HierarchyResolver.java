@@ -778,7 +778,7 @@ public void resolve(Openable[] openables, HashSet localTypes, IProgressMonitor m
 				// cache binary type binding
 				ClassFile classFile = (ClassFile)openable;
 				org.eclipse.wst.jsdt.internal.compiler.batch.CompilationUnit sourceUnit =
-					new org.eclipse.wst.jsdt.internal.compiler.batch.CompilationUnit(null,classFile.getPath().toOSString(),this.options.defaultEncoding);
+					new org.eclipse.wst.jsdt.internal.compiler.batch.CompilationUnit(null,new String(classFile.getFileName()),this.options.defaultEncoding);
 				sourceUnit.packageName=Util.toCharArrays(new String[]{classFile.getParent().getElementName()});
 				CompilationResult unitResult = new CompilationResult(sourceUnit, i, openablesLength, this.options.maxProblemsPerUnit);
 				CompilationUnitDeclaration parsedUnit = parser.dietParse(sourceUnit, unitResult);
