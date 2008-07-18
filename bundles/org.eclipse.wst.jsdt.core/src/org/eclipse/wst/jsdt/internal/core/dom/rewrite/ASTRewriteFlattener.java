@@ -533,7 +533,8 @@ public class ASTRewriteFlattener extends ASTVisitor {
 	 */
 	public boolean visit(ExpressionStatement node) {
 		getChildNode(node, ExpressionStatement.EXPRESSION_PROPERTY).accept(this);
-		this.result.append(';');
+		if (node.getParent().getNodeType()!=ASTNode.FOR_IN_STATEMENT)
+			this.result.append(';');
 		return false;
 	}
 
