@@ -13,8 +13,8 @@ package org.eclipse.wst.jsdt.internal.core.search;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.jsdt.core.IClassFile;
-import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.IType;
@@ -24,7 +24,6 @@ import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.core.search.TypeNameMatchRequestor;
 import org.eclipse.wst.jsdt.internal.compiler.env.AccessRestriction;
 import org.eclipse.wst.jsdt.internal.core.LibraryFragmentRoot;
-import org.eclipse.wst.jsdt.internal.core.LibraryPackageFragment;
 import org.eclipse.wst.jsdt.internal.core.Openable;
 import org.eclipse.wst.jsdt.internal.core.PackageFragmentRoot;
 import org.eclipse.wst.jsdt.internal.core.util.HandleFactory;
@@ -172,7 +171,8 @@ private IType createTypeFromPath(String resourcePath, String simpleTypeName, cha
 		this.packageHandles = new HashtableOfArrayToObject(5);
 	}
 
-	boolean isLibrary = this.lastPkgFragmentRoot instanceof LibraryFragmentRoot;
+	
+	boolean isLibrary = this.lastPkgFragmentRoot instanceof LibraryFragmentRoot ;
 	// create handle
 	if(isLibrary) {
 		String[] pkgName = new String[] {this.lastPkgFragmentRootPath};
@@ -200,7 +200,7 @@ private IType createTypeFromPath(String resourcePath, String simpleTypeName, cha
 			this.packageHandles.put(pkgName, pkgFragment);
 		}
 		String simpleName= simpleNames[length];
-		if (org.eclipse.wst.jsdt.internal.core.util.Util.isJavaLikeFileName(simpleName) && !(pkgFragment instanceof LibraryPackageFragment)) {
+		if (org.eclipse.wst.jsdt.internal.core.util.Util.isJavaLikeFileName(simpleName) && this.lastPkgFragmentRoot.getKind()!=IPackageFragmentRoot.K_BINARY) {
 			IJavaScriptUnit unit= pkgFragment.getJavaScriptUnit(simpleName);
 			int etnLength = enclosingTypeNames == null ? 0 : enclosingTypeNames.length;
 			IType type = (etnLength == 0) ? unit.getType(simpleTypeName) : unit.getType(new String(enclosingTypeNames[0]));
