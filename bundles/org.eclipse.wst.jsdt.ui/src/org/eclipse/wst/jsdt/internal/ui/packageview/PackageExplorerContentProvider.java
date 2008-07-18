@@ -54,7 +54,6 @@ import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
-import org.eclipse.wst.jsdt.internal.ui.navigator.ContainerFolder;
 import org.eclipse.wst.jsdt.internal.ui.workingsets.WorkingSetModel;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 import org.eclipse.wst.jsdt.ui.ProjectLibraryRoot;
@@ -275,15 +274,7 @@ public class PackageExplorerContentProvider extends StandardJavaScriptElementCon
 					result.add(element);
 				else
 					result.add(members[i]);
-			}else if (members[i] instanceof IFolder ){
-				IFolder folder1 = (IFolder)members[i];
-				IJavaScriptProject project = JavaScriptCore.create(members[i].getProject());	
-				 if(project.isOnIncludepath(folder1)){
-					 result.add( new ContainerFolder(folder1,project));
-				 }else{
-					 result.add(folder1);
-				 }
-			 }else{
+			}else{
 				result.add(members[i]);
 			}
 		}
@@ -456,9 +447,7 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 				}
 				for (int i= 0; i < resources.length; i++) {
 					Object res = resources[i];
-					if(res!=null && res instanceof IFolder && project.isOnIncludepath((IResource)res)){
-						result.add(new ContainerFolder((IFolder)res,project));
-					}else if(res instanceof IFile && JavaScriptCore.isJavaScriptLikeFileName( ((IFile)res).getName())    ){
+					if(res instanceof IFile && JavaScriptCore.isJavaScriptLikeFileName( ((IFile)res).getName())    ){
 						IJavaScriptElement element = JavaScriptCore.create(((IFile)res).getName()  );
 						if(element!=null)
 							result.add(element);

@@ -39,7 +39,6 @@ import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
 import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
-import org.eclipse.wst.jsdt.internal.ui.navigator.ContainerFolder;
 import org.eclipse.wst.jsdt.internal.ui.packageview.PackageFragmentRootContainer;
 import org.eclipse.wst.jsdt.internal.ui.preferences.MembersOrderPreferenceCache;
 
@@ -159,7 +158,7 @@ public class JavaScriptElementComparator extends ViewerComparator {
 			return RESOURCES;
 		} else if (element instanceof IProject) {
 			return PROJECTS;
-		} else if (element instanceof IContainer  || (element instanceof ContainerFolder)) {
+		} else if (element instanceof IContainer ) {
 			return RESOURCEFOLDERS;
 		} else if (element instanceof IJarEntryResource) {
 			if (((IJarEntryResource) element).isFile()) {

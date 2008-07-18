@@ -292,18 +292,7 @@ public class JavaNavigatorContentProvider extends
 //		}
 		
 		
-		
-		
-		for(int i=0;i<javaElements.length;i++){
-			if(javaElements[i] instanceof ContainerFolder){
-				ContainerFolder a = (ContainerFolder)javaElements[i];
-				proposedChildren.remove(a.enclosed());
-			}else{
-				proposedChildren.remove(javaElements[i]);
-			}
-			
-		}
-		
+		proposedChildren.removeAll(Arrays.asList(javaElements));
 		proposedChildren.addAll(Arrays.asList(javaElements));
 			
 		Vector allJavaElements = new Vector(Arrays.asList(javaElements));

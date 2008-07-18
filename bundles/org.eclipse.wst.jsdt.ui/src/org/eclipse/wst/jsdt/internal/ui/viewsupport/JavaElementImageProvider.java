@@ -12,6 +12,7 @@
 package org.eclipse.wst.jsdt.internal.ui.viewsupport;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
@@ -34,7 +35,6 @@ import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaWorkbenchAdapter;
-import org.eclipse.wst.jsdt.internal.ui.navigator.ContainerFolder;
 import org.eclipse.wst.jsdt.ui.JavaScriptElementImageDescriptor;
 
 /**
@@ -102,10 +102,21 @@ public class JavaElementImageProvider {
 
 	private ImageDescriptor computeDescriptor(Object element, int flags){
 		
+		boolean isFolderOnSource = false;
+		
+		if (element instanceof IFolder ){
+			IFolder folder1 = (IFolder)element;
+			IJavaScriptProject project = JavaScriptCore.create(folder1.getProject());	
+			 if(project.isOnIncludepath(folder1)){
+				 isFolderOnSource = true;
+			 }else{
+				 isFolderOnSource = false;
+			 }
+		}
 		
 		if (element instanceof IJavaScriptElement) {
 			return getJavaImageDescriptor((IJavaScriptElement) element, flags);
-		}else if(element instanceof ContainerFolder) {
+		}else if(isFolderOnSource) {
 			Point size= useSmallSize(flags) ? SMALL_SIZE : BIG_SIZE;
 
 			ImageDescriptor baseDesc= JavaPluginImages.DESC_OBJS_PACKFRAG_ROOT;

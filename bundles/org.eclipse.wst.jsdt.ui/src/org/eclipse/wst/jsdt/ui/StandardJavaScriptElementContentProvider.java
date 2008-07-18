@@ -35,7 +35,6 @@ import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.ITypeRoot;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
-import org.eclipse.wst.jsdt.internal.ui.navigator.ContainerFolder;
  
 /**
  * A base content provider for JavaScriptelements. It provides access to the
@@ -169,10 +168,7 @@ public class StandardJavaScriptElementContentProvider implements ITreeContentPro
 				
 			if (element instanceof IFolder)
 				return getFolderContent((IFolder)element);
-			
-			if(element instanceof ContainerFolder){
-				return getFolderContent(((ContainerFolder)element).enclosed());
-			}
+		
 			
 			if (element instanceof IJarEntryResource) {
 				return ((IJarEntryResource) element).getChildren();
