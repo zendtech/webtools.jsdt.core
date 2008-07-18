@@ -67,7 +67,7 @@ private void buildFields() {
 		int modifiers=0;
 		if (field.isStatic())
 			modifiers|=ClassFileConstants.AccStatic;
-			TypeBinding fieldTypeBinding = libraryScope.resolveType(field.type);
+			TypeBinding fieldTypeBinding = libraryScope.resolveType(field.dataType);
 			
 			FieldBinding fieldBinding = new  FieldBinding(fieldName, fieldTypeBinding, modifiers | ExtraCompilerModifiers.AccUnresolved, this, null);
 			fieldBinding.id = count;
@@ -168,7 +168,7 @@ private MethodBinding createMethodBinding(Method method, boolean isConstructor) 
 	}
 	else
 	{
-		TypeBinding returnType = (method.returns!=null ) ? this.libraryScope.resolveType(method.returns.type) : TypeBinding.UNKNOWN;
+		TypeBinding returnType = (method.returns!=null ) ? this.libraryScope.resolveType(method.returns.dataType) : TypeBinding.UNKNOWN;
 //		TypeBinding returnType =
 //		 (method instanceof FunctionDeclaration && ((FunctionDeclaration)method).returnType!=null && method.inferredMethod!=null)?method.inferredType.resolveType(this,((FunctionDeclaration)method).returnType):TypeBinding.ANY;
 		
@@ -869,7 +869,7 @@ public MethodBinding resolveTypesFor(MethodBinding method) {
 		for (int i = 0; i < size; i++) {
 			Parameter arg = arguments[i];
 			TypeBinding parameterType = TypeBinding.UNKNOWN;
-			parameterType = libraryScope.resolveType(arg.type) ;
+			parameterType = libraryScope.resolveType(arg.dataType) ;
 			
 			
 //			else 
