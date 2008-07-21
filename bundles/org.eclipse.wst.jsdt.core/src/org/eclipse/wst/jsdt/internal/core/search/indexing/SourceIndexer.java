@@ -107,7 +107,7 @@ public class SourceIndexer extends AbstractIndexer implements SuffixConstants {
 			packageName[0]=pkgName.toCharArray();
 		}
 		
-		LibraryAPIs apis = MetadataReader.readAPIsFromString(new String(source));
+		LibraryAPIs apis = MetadataReader.readAPIsFromString(new String(source),documentPath);
 		new MetadataSourceElementNotifier(apis,requestor).notifyRequestor();
 		
 	}

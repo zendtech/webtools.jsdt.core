@@ -134,7 +134,7 @@ public class MetadataFile extends Openable implements
 		{
 			IFile file = (IFile) getResource();
 				try {
-					apis = MetadataReader.readAPIsFromStream(new InputSource(file.getContents()));
+					apis = MetadataReader.readAPIsFromStream(new InputSource(file.getContents()),file.getLocation().toOSString());
 					apis.fileName=file.getFullPath().toPortableString();
 				} catch (CoreException e) {
 					Util.log(e, "error reading metadata");

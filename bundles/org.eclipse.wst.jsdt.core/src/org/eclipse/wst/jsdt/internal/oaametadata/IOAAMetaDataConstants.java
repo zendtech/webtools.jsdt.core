@@ -57,6 +57,7 @@ public interface IOAAMetaDataConstants {
     public final static String TAG_DEPRECIATED ="deprecated";
     public final static String ATTRIBUTE_DEPRECIATED_VERSION = "version";
     public final static String TAG_DESCRIPTION ="description";
+    public final static String ATTRIBUTE_DESCRIPTION_TYPE ="type";
     public final static String TAG_ENUM ="enum";
     public final static String ATTRIBUTE_ENUM_NAME ="name";
     public final static String ATTRIBUTE_ENUM_DATATYPE ="datatype";
@@ -74,6 +75,7 @@ public interface IOAAMetaDataConstants {
     public final static String ATTRIBUTE_FIELD_VISIBILITY = "visibility"; 
     public final static String ATTRIBUTE_FIELD_SCOPE = "scope"; 
     public final static String TAG_FIELDS ="fields";
+    public final static String TAG_FRAGMENT ="fragment";
     public final static String TAG_GLOBALS ="globals";
     public final static String TAG_INCLUDE ="include";
     public final static String ATTRIBUTE_INCLUDE_SRC ="src";
@@ -128,6 +130,25 @@ public interface IOAAMetaDataConstants {
 	public final static String USAGE_STATIC ="static";
 	public final static String USAGE_INSTANCE ="instance";
 	
+	public final static String VISIBILITY_PUBLIC ="public";
+	public final static String VISIBILITY_PRIVATE ="private";
+	public final static String VISIBILITY_PROTECTED ="protected";
+	public final static String VISIBILITY_INTERNAL ="internal";
+	public final static String VISIBILITY_PROTECTED_INTERNAL ="protected-internal";
+
 	
-	  
+	public final static String  MIME_TYPE_TEXT="text/plain";
+	public final static String MIME_TYPE_HTML="text/html";
+
+//	
+//	LOCALIZATION
+//	
+	public final static String TAG_MESSAGEBUNDLE ="messagebundle";
+	public final static String TAG_MSG ="msg";
+    public final static String ATTRIBUTE_MSG_NAME ="name";
+
+    public final static String VARIABLE_SUBSTITUTION_STRING ="%%";
+    
+    
+	
 }

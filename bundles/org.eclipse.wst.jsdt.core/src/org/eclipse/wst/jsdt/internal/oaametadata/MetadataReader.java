@@ -10,18 +10,23 @@
  *******************************************************************************/
 package org.eclipse.wst.jsdt.internal.oaametadata;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Stack;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.jsdt.internal.core.util.Util;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -39,7 +44,10 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 	HashMap states=new HashMap();
 
 	boolean collectText=false;
+	boolean collectHTML=false;
 	boolean pendingEndElement=false;
+	
+	boolean doTranslation=true;
 
 	String collectTextElement;
 
@@ -49,6 +57,9 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 	StringBuffer text=new StringBuffer();
 	HashMap collections;
 
+	String filePath;
+
+	HashMap messages=new HashMap();
 	
 	
 	static class StackElement {
@@ -117,7 +128,9 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 	static final int STATE_TOPICS =50;
 	static final int STATE_USERAGENT =51;
 	static final int STATE_USERAGENTS =52;
-	
+
+	static final int STATE_INCLUDE =53;
+
 	static final ArrayList EMPTY_LIST=new ArrayList();
 
 	{
@@ -180,13 +193,22 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 		states.put(TAG_USERAGENT, new Integer(STATE_USERAGENT ));
 		states.put(TAG_USERAGENTS, new Integer(STATE_USERAGENTS ));
 
+		states.put(TAG_INCLUDE, new Integer(STATE_INCLUDE ));
 	
 	}
 	
 	
-	public static LibraryAPIs readAPIsFromStream(InputSource inputSource)   {
+	public static LibraryAPIs readAPIsFromStream(InputSource inputSource, String path)   {
 		
-		final MetadataReader handler= new MetadataReader();
+		 MetadataReader handler= new MetadataReader();
+		handler.filePath=path;
+		handler.loadMessageBundle();
+		parseMetadata(inputSource, handler);
+		return handler.apis;
+	}
+
+	private static void parseMetadata(InputSource inputSource,
+			 MetadataReader handler) {
 		try {
 		    final SAXParserFactory factory= SAXParserFactory.newInstance();
 			final SAXParser parser= factory.newSAXParser();
@@ -201,17 +223,16 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 		} catch (ParserConfigurationException e) {
 			Util.log(e, "error reading oaametadata");
 		}
-		return handler.apis;
 	}
 	
-	public static LibraryAPIs readAPIsFromString(String metadata) {
-		return readAPIsFromStream(new InputSource(new StringReader(metadata)));
+	public static LibraryAPIs readAPIsFromString(String metadata, String path) {
+		return readAPIsFromStream(new InputSource(new StringReader(metadata)),path);
 	}
 	
 	public static LibraryAPIs readAPIsFromFile(String fileName) {
 		try {
 			FileInputStream file = new FileInputStream(fileName);
-			LibraryAPIs apis= readAPIsFromStream(new InputSource(file));
+			LibraryAPIs apis= readAPIsFromStream(new InputSource(file),fileName);
 			apis.fileName=fileName;
 			return apis;
 		} catch (FileNotFoundException e) {
@@ -225,7 +246,7 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 			throws SAXException {
 		if (collectText)
 		{
-			if (pendingEndElement)
+			if (collectHTML && pendingEndElement)
 			{
 				text.append("/>");
 				pendingEndElement=false;
@@ -237,8 +258,6 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 	public void endElement(String uri, String localName, String name)
 			throws SAXException {
 		
-//TODO: HANLDE INCLUDE HERE
-		
 		if (collectText)
 		{
 			if (NAMESPACE_API.equals(uri)&& localName.equals(collectTextElement))
@@ -249,7 +268,9 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 				{
 					if (this.currentObject instanceof DocumentedElement)
 					{
-						((DocumentedElement)this.currentObject).description=localizedString(this.text.toString());
+						DocumentedElement documentedElement=((DocumentedElement)this.currentObject);
+						documentedElement.description=localizedString(this.text.toString());
+						documentedElement.isHTMLDescription=this.collectHTML;
 					}
 					break;
 				}
@@ -280,6 +301,7 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 				}
 				popState();
 				this.collectText=false;
+				this.collectHTML=false;
 				this.collectTextElement=null;
 				this.text=new StringBuffer();
 			}
@@ -294,7 +316,6 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 		}
 		else
 		{
-			
 			
 			switch (this.currentState)
 			{
@@ -329,6 +350,8 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 				 collection = getCollection(TAG_EVENT);
 				 clazz.events= (Event[])collection.toArray(new Event[collection.size()]);
 				 collection = getCollection(TAG_PROPERTY);
+				clazz.properties= (Property[])collection.toArray(new Property[collection.size()]);
+				collection = getCollection(TAG_FIELD);
 				clazz.fields= (Property[])collection.toArray(new Property[collection.size()]);
 				collection = getCollection(TAG_METHOD);
 				clazz.methods= (Method[])collection.toArray(new Method[collection.size()]);
@@ -384,22 +407,24 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 			Attributes attributes) throws SAXException {
 		if (collectText)
 		{
-			text.append("<").append(localName);
-			int nAttributes=attributes.getLength();
-			for (int i=0; i<nAttributes; i++)
-			{
-				String qname=attributes.getQName(i);
-				String value=attributes.getValue(i);
-				text.append(" ").append(qname).append("=\"").append(value).append("\"");
+			if (collectHTML) {
+				text.append("<").append(localName);
+				int nAttributes = attributes.getLength();
+				for (int i = 0; i < nAttributes; i++) {
+					String qname = attributes.getQName(i);
+					String value = attributes.getValue(i);
+					text.append(" ").append(qname).append("=\"").append(value)
+							.append("\"");
+				}
 			}
 			pendingEndElement=true;
 		}
 		else
 		{
 			Integer stateObj=null;
+			pushState();
 			if (NAMESPACE_API.equals(uri))
 			{
-				pushState();
 				stateObj=(Integer)states.get(localName);
 				if (stateObj!=null)
 				{
@@ -409,7 +434,7 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 					
 					case STATE_ABOUTME:
 					{
-						startCollectingText(localName);
+						startCollectingText(localName,attributes);
 						break;
 					}
 
@@ -421,7 +446,6 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 						alias.name = attributes.getValue(ATTRIBUTE_ALAIS_NAME);
 						alias.datatype = attributes.getValue(ATTRIBUTE_ALAIS_TYPE);
 						
-						this.collections=new HashMap();
 						break;
 					}
 
@@ -451,7 +475,6 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 					 	author.website = attributes.getValue(ATTRIBUTE_AUTHOR_WEBSITE);
 
 					 	addCollectionElement(TAG_AUTHOR, author);
-						this.collections=new HashMap();
  					break;
 					}
 
@@ -461,7 +484,7 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 						if (this.currentObject instanceof VersionableElement)
 							((VersionableElement)this.currentObject).available=available;
 						available.version = attributes.getValue(ATTRIBUTE_AVAILABLE_VERSION);
-						startCollectingText(localName);
+						startCollectingText(localName,attributes);
 						break;
 					}
 
@@ -501,9 +524,9 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 						else
 							addCollectionElement(TAG_METHOD, method);
 						this.currentObject=method;
-						addCollectionElement(TAG_CONSTRUCTOR, method);
 						method.scope = attributes.getValue(ATTRIBUTE_CONSTRUCTOR_SCOPE);
 						method.visibility = attributes.getValue(ATTRIBUTE_CONSTRUCTOR_VISIBILITY);
+						method.name = attributes.getValue(ATTRIBUTE_METHOD_NAME);
 						
 						this.collections=new HashMap();
 						break;
@@ -517,13 +540,13 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 							((VersionableElement)this.currentObject).depreciated=depreciated;
 						depreciated.isDepreciated=true;
 						depreciated.version = attributes.getValue(ATTRIBUTE_DEPRECIATED_VERSION);
-						startCollectingText(localName);
+						startCollectingText(localName,attributes);
 						break;
 					}
 
 					case STATE_DESCRIPTION:
 					{
-						startCollectingText(localName);
+						startCollectingText(localName,attributes);
 						break;
 					}
 
@@ -535,7 +558,6 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 						enumData.name = attributes.getValue(ATTRIBUTE_ENUM_NAME);
 						enumData.datatype = attributes.getValue(ATTRIBUTE_ENUM_DATATYPE);
 
-						this.collections=new HashMap();
 						break;
 					}
 
@@ -565,8 +587,13 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 					{
 						Property property=new Property();
 						this.currentObject=property;
-						property.isField=(STATE_FIELD==state);
-						addCollectionElement(TAG_FIELD, property);
+						if (STATE_FIELD==state)
+						{
+							property.isField=true;
+							addCollectionElement(TAG_FIELD, property);
+						}
+						else
+							addCollectionElement(TAG_PROPERTY, property);
 						property.name = attributes.getValue(ATTRIBUTE_FIELD_NAME);
 						property.dataType = attributes.getValue(ATTRIBUTE_FIELD_DATATYPE);
 						property.scope = attributes.getValue(ATTRIBUTE_FIELD_SCOPE);
@@ -576,6 +603,15 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 						break;
 					}
 
+					
+					case STATE_INCLUDE:
+					{
+						String src= attributes.getValue(ATTRIBUTE_INCLUDE_SRC);
+						handleInclude(src);
+						break;
+					}
+
+					
 					case STATE_MIX:
 					{
 						Mix mix=new Mix();
@@ -585,7 +621,7 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 						mix.fromScope = attributes.getValue(ATTRIBUTE_MIX_FROMSCOPE);
 						mix.toScope = attributes.getValue(ATTRIBUTE_MIX_TOSCOPE);
 
-						this.collections=new HashMap();
+						break;
 						
 					}
 
@@ -598,7 +634,7 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 						mixin.scope = attributes.getValue(ATTRIBUTE_MIXIN_SCOPE);
 						mixin.visibility = attributes.getValue(ATTRIBUTE_MIXIN_VISIBILITY);
 
-						this.collections=new HashMap();
+						break;
 						
 					}
 
@@ -610,7 +646,7 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 						namespace.name = attributes.getValue(ATTRIBUTE_NAMESPACE_NAME);
 						namespace.visibility = attributes.getValue(ATTRIBUTE_NAMESPACE_VISIBILITY);
 
-						this.collections=new HashMap();
+						break;
 						
 					}
 
@@ -629,7 +665,7 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 					
 					case STATE_QOUTE:
 					{
-						startCollectingText(localName);
+						startCollectingText(localName,attributes);
 						break;
 					}
 
@@ -656,9 +692,10 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 		}
 	}
 
-	private void startCollectingText(String localName) {
+	private void startCollectingText(String localName,Attributes attributes) {
 		this.collectText=true;
 		this.collectTextElement=localName;
+		this.collectHTML=MIME_TYPE_HTML.equals(attributes.getValue(ATTRIBUTE_DESCRIPTION_TYPE));
 		this.text=new StringBuffer();
 	}
 
@@ -697,8 +734,137 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 
 	private String localizedString(String string)
 	{
-		return string;
+		if (!this.doTranslation)
+			return string;
+		int subLength=VARIABLE_SUBSTITUTION_STRING.length();
+	    int index=string.indexOf(VARIABLE_SUBSTITUTION_STRING);
+	    if (index<0)
+	    	return string;
+	    StringBuffer text=new StringBuffer();
+	    int start=0;
+	    while (index>=0)
+	    {
+	    	text.append(string.substring(start, index));
+	    	start=index+subLength;
+		    index=string.indexOf(VARIABLE_SUBSTITUTION_STRING,start);
+		    if (index<0)
+		    {
+		    	text.append(string.substring(start-subLength));
+		    	break;
+		    }
+		    String key=string.substring(start,index);
+		    String value=(String)this.messages.get(key);
+		    String replace=(value!=null)? 
+		    		value :
+		    		VARIABLE_SUBSTITUTION_STRING+key+VARIABLE_SUBSTITUTION_STRING;
+		    text.append(replace);
+	    	start=index+subLength;
+		    index=string.indexOf(VARIABLE_SUBSTITUTION_STRING,start);
+	    }
+	    return text.toString();
+	    
 	}
 	
+	private void handleInclude(String src)
+	{
+		IPath basePath = new Path(this.filePath);
+		Path srcPath= new Path (src);
+		basePath=basePath.removeLastSegments(1);
+		basePath=basePath.append(srcPath);
+		
+		String fileName = basePath.toOSString();
+		String savePath=this.filePath;
+		try {
+			FileInputStream file = new FileInputStream(fileName);
+			this.filePath=fileName;
+			parseMetadata(	new InputSource(file),this);
+		} catch (FileNotFoundException e) {
+			Util.log(e,  "error reading oaametadata");
+		}
+		this.filePath=savePath;
+		
+	}
 	
+	private void loadMessageBundle()
+	{
+
+		class MessageBundleHandler extends DefaultHandler 
+		{
+			String currentID;
+			StringBuffer text;
+			public void startElement(String uri, String localName, String name,
+					Attributes attributes) throws SAXException {
+				if (TAG_MSG.equals(localName))
+				{
+					currentID = attributes.getValue(ATTRIBUTE_MSG_NAME);
+                    if (currentID!=null && currentID.length()>0)
+                    	text=new StringBuffer();
+                    else
+                    	currentID=null;
+				}
+			}			
+			public void endElement(String uri, String localName, String name)
+			throws SAXException {
+				if (currentID!=null)
+				{
+					messages.put(currentID, text.toString());
+				}
+				currentID=null;
+				text=null;
+			}
+			public void characters(char[] ch, int start, int length)
+			throws SAXException {
+				if (currentID!=null && text!=null)
+				{
+					text.append(ch,start,length);
+				}
+			}
+		}
+		
+		
+		final String[] variants = buildVariants();
+		for (int i = 0; i < variants.length; i++) {
+			// loader==null if we're launched off the Java boot classpath
+			File file = new File(variants[i]);
+			if (!file.exists())
+				continue;
+			
+			try {
+				InputSource inputSource = new InputSource(new FileReader(file));
+			} catch (FileNotFoundException e) {
+				Util.log(e,  "error reading oaametadata");
+			}
+		}
+
+		
+	}
+
+	private static final String EXTENSION = ".xml"; //$NON-NLS-1$
+	private static final String ALL = "ALL"; //$NON-NLS-1$
+	private static String[] nlSuffixes;
+
+	private static String[] buildVariants() {
+		if (nlSuffixes == null) {
+			//build list of suffixes for loading resource bundles
+			String nl = Locale.getDefault().toString();
+			ArrayList result = new ArrayList(4);
+			int lastSeparator;
+			String defaultStr="";
+			while (true) {
+				result.add( nl +defaultStr+ EXTENSION);
+				lastSeparator = nl.lastIndexOf('_');
+				if (lastSeparator == -1)
+					break;
+				defaultStr="_"+ALL;
+				nl = nl.substring(0, lastSeparator);
+			}
+			//add the empty suffix last (most general)
+			result.add(ALL+"_"+ALL+EXTENSION);
+			nlSuffixes = (String[]) result.toArray(new String[result.size()]);
+		}
+		String[] variants = new String[nlSuffixes.length];
+		for (int i = 0; i < variants.length; i++)
+			variants[i] = nlSuffixes[i];
+		return variants;
+	}
 }

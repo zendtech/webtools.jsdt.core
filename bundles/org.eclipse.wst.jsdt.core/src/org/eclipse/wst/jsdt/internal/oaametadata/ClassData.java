@@ -53,6 +53,7 @@ public class ClassData extends VersionableElement{
 	public Event [] events;
 	public Method [] methods;
 	public Property [] fields;
+	public Property [] properties;
 	public Mix [] mixins;
 
 	public String name;
