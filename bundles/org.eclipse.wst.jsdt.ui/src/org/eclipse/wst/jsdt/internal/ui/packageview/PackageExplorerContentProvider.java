@@ -448,7 +448,7 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 				for (int i= 0; i < resources.length; i++) {
 					Object res = resources[i];
 					if(res instanceof IFile && JavaScriptCore.isJavaScriptLikeFileName( ((IFile)res).getName())    ){
-						IJavaScriptElement element = JavaScriptCore.create(((IFile)res).getName()  );
+						IJavaScriptElement element =  JavaScriptCore.create((IResource)res);
 						if(element!=null)
 							result.add(element);
 						else
