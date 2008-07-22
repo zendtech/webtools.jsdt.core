@@ -12,7 +12,6 @@
 package org.eclipse.wst.jsdt.internal.ui.viewsupport;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
@@ -23,17 +22,17 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.eclipse.wst.jsdt.core.Flags;
-import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IMember;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
-import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
 import org.eclipse.wst.jsdt.internal.ui.JavaWorkbenchAdapter;
 import org.eclipse.wst.jsdt.ui.JavaScriptElementImageDescriptor;
 
@@ -101,33 +100,9 @@ public class JavaElementImageProvider {
 	
 
 	private ImageDescriptor computeDescriptor(Object element, int flags){
-		
-		boolean isFolderOnSource = false;
-		
-		if (element instanceof IFolder ){
-			IFolder folder1 = (IFolder)element;
-			IJavaScriptProject project = JavaScriptCore.create(folder1.getProject());	
-			 if(project.isOnIncludepath(folder1)){
-				 isFolderOnSource = true;
-			 }else{
-				 isFolderOnSource = false;
-			 }
-		}
-		
 		if (element instanceof IJavaScriptElement) {
 			return getJavaImageDescriptor((IJavaScriptElement) element, flags);
-		}else if(isFolderOnSource) {
-			Point size= useSmallSize(flags) ? SMALL_SIZE : BIG_SIZE;
-
-			ImageDescriptor baseDesc= JavaPluginImages.DESC_OBJS_PACKFRAG_ROOT;
-			if (baseDesc != null) {
-				int adornmentFlags= 0;
-				return new JavaScriptElementImageDescriptor(baseDesc, adornmentFlags, size);
-			}
-			return new JavaScriptElementImageDescriptor(JavaPluginImages.DESC_OBJS_GHOST, 0, size);
-			
-		
-		}else if (element instanceof IFile) {
+		} else if (element instanceof IFile) {
 			IFile file= (IFile) element;
 			if (JavaScriptCore.isJavaScriptLikeFileName(file.getName())) {
 				return getCUResourceImageDescriptor(file, flags); // image for a CU not on the build path

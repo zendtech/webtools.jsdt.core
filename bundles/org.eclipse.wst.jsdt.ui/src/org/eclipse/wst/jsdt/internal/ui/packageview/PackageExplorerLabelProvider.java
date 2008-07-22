@@ -23,6 +23,7 @@ import org.eclipse.ui.IWorkingSet;
 import org.eclipse.wst.jsdt.core.IClassFile;
 import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
+import org.eclipse.wst.jsdt.internal.ui.navigator.ContainerFolder;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.AppearanceAwareLabelProvider;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.ColoredString;
 import org.eclipse.wst.jsdt.internal.ui.viewsupport.JavaElementImageProvider;
@@ -81,7 +82,9 @@ public class PackageExplorerLabelProvider extends AppearanceAwareLabelProvider {
 	}
 	
 	public String getText(Object element) {
-		
+		if(element instanceof ContainerFolder) {
+			return ((ContainerFolder)element).toString();
+		}
 		String text= getSpecificText(element);
 		if (text != null) {
 			return decorateText(text, element);
@@ -123,8 +126,8 @@ public class PackageExplorerLabelProvider extends AppearanceAwareLabelProvider {
 	
 	public Image getImage(Object element) {
 		
-		if(element instanceof IFolder) {
-			return super.getImage(element);
+		if(element instanceof ContainerFolder) {
+			return super.getImage(((ContainerFolder)element).getParentObject());
 		}
 		
 		if (element instanceof IWorkingSet) {

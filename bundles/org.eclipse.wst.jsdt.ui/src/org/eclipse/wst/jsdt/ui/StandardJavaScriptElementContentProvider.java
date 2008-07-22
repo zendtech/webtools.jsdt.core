@@ -21,12 +21,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.wst.jsdt.core.IClassFile;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IJarEntryResource;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IJavaScriptElementDelta;
 import org.eclipse.wst.jsdt.core.IJavaScriptModel;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
-import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.IParent;
@@ -168,7 +168,6 @@ public class StandardJavaScriptElementContentProvider implements ITreeContentPro
 				
 			if (element instanceof IFolder)
 				return getFolderContent((IFolder)element);
-		
 			
 			if (element instanceof IJarEntryResource) {
 				return ((IJarEntryResource) element).getChildren();
@@ -397,7 +396,7 @@ public class StandardJavaScriptElementContentProvider implements ITreeContentPro
 				if (javaProject.findPackageFragmentRoot(member.getFullPath()) == null) {
 					nonJavaResources.add(member);
 				} 
-			} else{ //else if (!javaProject.isOnIncludepath(member) && !(member instanceof Folder)) {
+			} else if (!javaProject.isOnIncludepath(member)) {
 				nonJavaResources.add(member);
 			}
 		}

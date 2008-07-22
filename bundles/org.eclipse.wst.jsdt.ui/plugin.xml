@@ -79,8 +79,6 @@
             <adapter type="org.eclipse.team.ui.history.IHistoryPageSource"/>
 		</factory>
 		
-		
-		
 		<factory 
             class="org.eclipse.wst.jsdt.internal.ui.JavaProjectAdapterFactory" 
             adaptableType="org.eclipse.wst.jsdt.core.IJavaScriptProject">
@@ -5356,7 +5354,6 @@
          <triggerPoints>
             <or>
                <instanceof value="org.eclipse.core.resources.IFolder" />
-            
                <instanceof value="org.eclipse.wst.jsdt.core.IJavaScriptElement" />
                <instanceof value="org.eclipse.wst.jsdt.internal.ui.model.JavaModelProvider"/>
                <instanceof value="org.eclipse.ltk.core.refactoring.history.RefactoringHistory"/>
@@ -5384,7 +5381,6 @@
              <instanceof value="org.eclipse.wst.jsdt.core.IJavaScriptElement"/>
              <instanceof value="org.eclipse.core.resources.IFolder"/>
              <instanceof value="org.eclipse.core.resources.IFile"/>
-             
              <instanceof value="org.eclipse.ltk.core.refactoring.history.RefactoringHistory"/>
              <instanceof value="org.eclipse.ltk.core.refactoring.RefactoringDescriptorProxy"/>
              <instanceof value="org.eclipse.ltk.core.refactoring.RefactoringDescriptor"/>
@@ -5415,16 +5411,13 @@
 				id="org.eclipse.wst.jsdt.java.ui.javaContent"
 				labelProvider="org.eclipse.wst.jsdt.internal.ui.navigator.JavaNavigatorLabelProvider"
 				name="%commonNavigatorContentName"
-				priority="highest">
+				priority="high">
 			<triggerPoints>
 				<or>
 					<adapt type="org.eclipse.core.resources.IProject" >
 						<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.wst.jsdt.core.jsNature"/>
 					</adapt>
-					
 					<instanceof	value="org.eclipse.core.resources.IResource" />
-					<instanceof  value="org.eclipse.core.resources.IFolder" /> 
-					
 					<instanceof value="org.eclipse.wst.jsdt.core.IJavaScriptElement" />
 					<instanceof value="org.eclipse.wst.jsdt.core.IJarEntryResource" />
 					<instanceof value="org.eclipse.wst.jsdt.internal.ui.packageview.PackageFragmentRootContainer" />
@@ -5432,7 +5425,6 @@
 			</triggerPoints>
 			<possibleChildren>
 				<or>
-				 	<instanceof  value="org.eclipse.core.resources.IFolder" /> 
 					<instanceof	value="org.eclipse.core.resources.IResource" />
 					<instanceof value="org.eclipse.wst.jsdt.core.IJavaScriptElement" />
 					<instanceof value="org.eclipse.wst.jsdt.core.IJarEntryResource" />
@@ -5463,7 +5455,6 @@
 						<instanceof value="org.eclipse.wst.jsdt.core.IJavaScriptElement" />
 						<instanceof value="org.eclipse.wst.jsdt.core.IJarEntryResource" /> 
 						<instanceof	value="org.eclipse.wst.jsdt.internal.ui.packageview.PackageFragmentRootContainer" /> 
-						
 						<adapt type="java.util.Collection"> 
 							<count value="0" />
 						</adapt>

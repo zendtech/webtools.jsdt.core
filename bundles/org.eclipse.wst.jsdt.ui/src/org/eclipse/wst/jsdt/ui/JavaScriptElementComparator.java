@@ -25,12 +25,12 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.eclipse.wst.jsdt.core.Flags;
 import org.eclipse.wst.jsdt.core.IField;
-import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.IInitializer;
 import org.eclipse.wst.jsdt.core.IJarEntryResource;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IMember;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.IType;
@@ -62,10 +62,10 @@ public class JavaScriptElementComparator extends ViewerComparator {
 	private static final int PACKAGEFRAGMENTROOTS= 2;
 	private static final int PACKAGEFRAGMENT= 3;
 
-	private static final int JAVASCRIPTUNITS= 5;
-	private static final int CLASSFILES= 6;
+	private static final int JAVASCRIPTUNITS= 4;
+	private static final int CLASSFILES= 5;
 	
-	private static final int RESOURCEFOLDERS= 4;
+	private static final int RESOURCEFOLDERS= 7;
 	private static final int RESOURCES= 8;
 	
 	private static final int PACKAGE_DECL=	10;
@@ -158,7 +158,7 @@ public class JavaScriptElementComparator extends ViewerComparator {
 			return RESOURCES;
 		} else if (element instanceof IProject) {
 			return PROJECTS;
-		} else if (element instanceof IContainer ) {
+		} else if (element instanceof IContainer) {
 			return RESOURCEFOLDERS;
 		} else if (element instanceof IJarEntryResource) {
 			if (((IJarEntryResource) element).isFile()) {

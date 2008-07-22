@@ -37,7 +37,10 @@ import org.eclipse.ui.navigator.PipelinedViewerUpdate;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IJavaScriptModel;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.IPackageFragment;
+import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.ui.navigator.IExtensionStateConstants.Values;
 import org.eclipse.wst.jsdt.internal.ui.packageview.PackageExplorerContentProvider;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
@@ -167,7 +170,7 @@ public class JavaNavigatorContentProvider extends
 		return getParent(object);
 	}
 
-	public PipelinedShapeModification interceptAdd(PipelinedShapeModification addModification) {
+		public PipelinedShapeModification interceptAdd(PipelinedShapeModification addModification) {
 		
 		Object parent= addModification.getParent();
 		
@@ -292,11 +295,14 @@ public class JavaNavigatorContentProvider extends
 //		}
 		
 		
+			
 		proposedChildren.removeAll(Arrays.asList(javaElements));
 		proposedChildren.addAll(Arrays.asList(javaElements));
 			
-		Vector allJavaElements = new Vector(Arrays.asList(javaElements));
+			
 		
+		Vector allJavaElements = new Vector(Arrays.asList(javaElements));
+		boolean addedPfRoot = false;
 		while(allJavaElements.size()>0) {
 			Object element=null;
 			try {
@@ -305,64 +311,45 @@ public class JavaNavigatorContentProvider extends
 			catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
-			}		
+			}
+			
 			if (element instanceof IJavaScriptElement) {
 				IJavaScriptElement cElement= (IJavaScriptElement)element;
 				IResource resource= cElement.getResource();
 				proposedChildren.remove(resource);
+				if(cElement instanceof IPackageFragmentRoot) {
+					IPackageFragmentRoot root = (IPackageFragmentRoot)cElement;
+					try {
+						Object[] nonJava = root.getNonJavaScriptResources();
+						allJavaElements.addAll(Arrays.asList(root.getChildren()));
+						proposedChildren.removeAll(Arrays.asList(nonJava));
+					}
+					catch (JavaScriptModelException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}else if(cElement instanceof IPackageFragment) {
+						IPackageFragment root = (IPackageFragment)cElement;
+						
+						if(root.isDefaultPackage()) {
+							IPackageFragmentRoot pfRoot = (IPackageFragmentRoot)root.getParent();
+							if(!addedPfRoot) allJavaElements.add(pfRoot);
+							addedPfRoot = true;
+						}
+						
+						try {
+							Object[] nonJava = root.getNonJavaScriptResources();
+							Object[] children = root.getChildren();
+							allJavaElements.addAll(Arrays.asList(children));
+							proposedChildren.removeAll(Arrays.asList(nonJava));
+						}
+						catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+				}
 			}
-
 		}
-		
-//		Vector allJavaElements = new Vector(Arrays.asList(javaElements));
-//		boolean addedPfRoot = false;
-//		while(allJavaElements.size()>0) {
-//			Object element=null;
-//			try {
-//				element = allJavaElements.remove(0);
-//			}
-//			catch (Exception e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			}
-//			
-//			if (element instanceof IJavaScriptElement) {
-//				IJavaScriptElement cElement= (IJavaScriptElement)element;
-//				IResource resource= cElement.getResource();
-//				proposedChildren.remove(resource);
-//				if(cElement instanceof IPackageFragmentRoot) {
-//					IPackageFragmentRoot root = (IPackageFragmentRoot)cElement;
-//					try {
-//						Object[] nonJava = root.getNonJavaScriptResources();
-//						allJavaElements.addAll(Arrays.asList(root.getChildren()));
-//						proposedChildren.removeAll(Arrays.asList(nonJava));
-//					}
-//					catch (JavaScriptModelException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//				}else if(cElement instanceof IPackageFragment) {
-//						IPackageFragment root = (IPackageFragment)cElement;
-//						
-//						if(root.isDefaultPackage()) {
-//							IPackageFragmentRoot pfRoot = (IPackageFragmentRoot)root.getParent();
-//							if(!addedPfRoot) allJavaElements.add(pfRoot);
-//							addedPfRoot = true;
-//						}
-//						
-//						try {
-//							Object[] nonJava = root.getNonJavaScriptResources();
-//							Object[] children = root.getChildren();
-//							allJavaElements.addAll(Arrays.asList(children));
-//							proposedChildren.removeAll(Arrays.asList(nonJava));
-//						}
-//						catch (Exception e) {
-//							// TODO Auto-generated catch block
-//							e.printStackTrace();
-//						}
-//				}
-//			}
-//		}
 		
 	}
 
@@ -376,6 +363,7 @@ public class JavaNavigatorContentProvider extends
 	public boolean interceptUpdate(PipelinedViewerUpdate updateSynchronization) {		
 		return convertToJavaElements(updateSynchronization.getRefreshTargets());
 	}
+
 
 	protected void postAdd(final Object parent, final Object element, Collection runnables) {
 		if (parent instanceof IJavaScriptModel)
