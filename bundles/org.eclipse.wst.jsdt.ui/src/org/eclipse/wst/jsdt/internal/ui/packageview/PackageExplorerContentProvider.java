@@ -165,7 +165,7 @@ public class PackageExplorerContentProvider extends StandardJavaScriptElementCon
 			fUpdateJob.setSystem(true);
 		}
 		fUpdateJob.schedule();
-	}          
+	}         
 	
 	/**
 	 * Run all of the runnables that are the widget updates. Must be called in the display thread.
@@ -294,9 +294,12 @@ public class PackageExplorerContentProvider extends StandardJavaScriptElementCon
 				return ((ProjectLibraryRoot)parentElement).getChildren();
 			}
 			
-			if (parentElement instanceof IProject) 
-				return ((IProject)parentElement).members();
-			
+			if (parentElement instanceof IProject) {
+				IProject project= (IProject) parentElement;
+				if (project.isAccessible())
+					return project.members();
+				return NO_CHILDREN;
+			}			
 			if(parentElement instanceof IPackageFragmentRoot && ((IPackageFragmentRoot)parentElement).isVirtual()) {
 				return getLibraryChildren((IPackageFragmentRoot)parentElement);
 			}
@@ -306,6 +309,8 @@ public class PackageExplorerContentProvider extends StandardJavaScriptElementCon
 			return NO_CHILDREN;
 		}
 	}
+	
+
 private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 		
 		
@@ -1017,7 +1022,7 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 	 * @param runnables the resulting view changes as runnables (type {@link Runnable})
 	 * @return true if the parent got refreshed
 	 */
-private boolean processResourceDelta(IResourceDelta delta, Object parent, Collection runnables) {
+	private boolean processResourceDelta(IResourceDelta delta, Object parent, Collection runnables) {
 		int status= delta.getKind();
 		int flags= delta.getFlags();
 		
@@ -1099,6 +1104,13 @@ private boolean processResourceDelta(IResourceDelta delta, Object parent, Collec
 		postRefresh(toRefresh, true, runnables);
 	}
 	
+	/**
+	 * Can be implemented by subclasses to add additional elements to refresh
+	 * 
+	 * @param toRefresh the elements to refresh
+	 * @param relation the relation to the affected element ({@link #GRANT_PARENT}, {@link #PARENT}, {@link #ORIGINAL}, {@link #PROJECT})
+	 * @param affectedElement the affected element
+	 */
 	protected void augmentElementToRefresh(List toRefresh, int relation, Object affectedElement) {
 	}
 
@@ -1121,7 +1133,7 @@ private boolean processResourceDelta(IResourceDelta delta, Object parent, Collec
 		});
 	}
 
-protected void postAdd(final Object parent, final Object element, Collection runnables) {
+	protected void postAdd(final Object parent, final Object element, Collection runnables) {
 		runnables.add(new Runnable() {
 			public void run() {
 				Widget[] items= fViewer.testFindItems(element);
