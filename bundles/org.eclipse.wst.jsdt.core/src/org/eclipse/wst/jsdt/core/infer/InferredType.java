@@ -75,6 +75,8 @@ public class InferredType extends ASTNode {
 
 	public Object userData;
 	
+	boolean allStatic=false;
+	
 	/**
 	 * Create a new inferred type
 	 * 

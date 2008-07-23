@@ -403,7 +403,8 @@ public class InferEngine extends ASTVisitor {
 						 */
 						char [] possibleTypeName = constructTypeName( fRef.receiver );
 
-						if( possibleTypeName != null && compUnit.findInferredType( possibleTypeName ) != null )
+						if( receiverType.allStatic ||
+								(possibleTypeName != null && compUnit.findInferredType( possibleTypeName ) != null ))
 							attr.isStatic = true;
 						else
 							attr.isStatic = false;
@@ -471,11 +472,11 @@ public class InferEngine extends ASTVisitor {
 							{
 								method = receiverType.addMethod(fRef.token, definedFunction,false);
 								method.nameStart=nameStart;
+								method.isStatic=receiverType.allStatic;
 							}
 							else
 							{
 							  attr = receiverType.addAttribute( fRef.token, assignment );
-
 							  attr.type=exprType;
 							/*
 							 * determine if static
@@ -484,7 +485,8 @@ public class InferEngine extends ASTVisitor {
 							 */
 							  char [] possibleTypeName = constructTypeName( fRef.receiver );
 
-							  if( possibleTypeName != null && compUnit.findInferredType( possibleTypeName ) != null )
+							  if( receiverType.allStatic||
+									  (possibleTypeName != null && compUnit.findInferredType( possibleTypeName ) != null ))
 								attr.isStatic = true;
 							  else
 								attr.isStatic = false;
@@ -557,7 +559,7 @@ public class InferEngine extends ASTVisitor {
 	 * Creates an anonymous type based in the location in the document. This information is used
 	 * to avoid creating duplicates because of the 2-pass nature of this engine.
 	 */
-	private InferredType createAnonymousType( ObjectLiteral objLit ) {
+	private InferredType createAnonymousType( ObjectLiteral objLit, boolean asStatic ) {
 
 		if (objLit.inferredType!=null)
 			return objLit.inferredType;
@@ -572,8 +574,9 @@ public class InferEngine extends ASTVisitor {
 
 		anonType.sourceStart = objLit.sourceStart;
 		anonType.sourceEnd = objLit.sourceEnd;
+		anonType.allStatic=asStatic;
 
-		populateType( anonType, objLit );
+		populateType( anonType, objLit ,asStatic);
 
 		return anonType;
 	}
@@ -654,7 +657,8 @@ public class InferEngine extends ASTVisitor {
 						 */
 						char [] possibleInTypeName = constructTypeName( fieldReference.receiver );
 
-						if( possibleInTypeName != null && compUnit.findInferredType( possibleInTypeName ) != null )
+						if( receiverType.allStatic ||  
+								(possibleInTypeName != null && compUnit.findInferredType( possibleInTypeName ) != null) )
 							method.isStatic = true;
 						else
 							method.isStatic = false;
@@ -755,7 +759,7 @@ public class InferEngine extends ASTVisitor {
 				else if( assignment.expression instanceof ObjectLiteral ){
 					//rather than creating an anonymous type, is better just to set the members directly
 					//on newType
-					populateType( newType, (ObjectLiteral)assignment.expression );
+					populateType( newType, (ObjectLiteral)assignment.expression,false );
 
 					//check if it is set already because it might be set by jsdocs
 					if( newType.superClass == null )
@@ -939,7 +943,7 @@ public class InferEngine extends ASTVisitor {
 		else if ( expression instanceof ObjectLiteral ){
 
 			//create an annonymous type based on the ObjectLiteral
-			InferredType type = createAnonymousType( (ObjectLiteral)expression );
+			InferredType type = createAnonymousType( (ObjectLiteral)expression,true );
 
 			//set the start and end
 			type.sourceStart = expression.sourceStart();
@@ -959,7 +963,7 @@ public class InferEngine extends ASTVisitor {
 		return null;
 	}
 
-	private void populateType(InferredType type, ObjectLiteral objLit) {
+	private void populateType(InferredType type, ObjectLiteral objLit, boolean isStatic) {
 		if (objLit.inferredType==null) {
 			objLit.inferredType=type;
 			if (objLit.fields != null) {
@@ -1011,6 +1015,7 @@ public class InferEngine extends ASTVisitor {
 						InferredMember method = type.addMethod(name,
 								functionExpression.methodDeclaration, false);
 						method.nameStart = nameStart;
+						method.isStatic=isStatic;
 						if (javaDoc!=null)
 						{
 						    functionExpression.methodDeclaration.modifiers=javaDoc.modifiers;
@@ -1027,7 +1032,7 @@ public class InferEngine extends ASTVisitor {
 						InferredAttribute attribute = type.addAttribute(name,
 								field.fieldName);
 						attribute.nameStart = nameStart;
-
+						attribute.isStatic=isStatic;
 						//@GINO: recursion might not be the best idea
 						if (returnType!=null)
 							attribute.type=returnType;
@@ -1049,12 +1054,42 @@ public class InferEngine extends ASTVisitor {
 
 	public void endVisit(IReturnStatement returnStatement) {
 
+//			if (currentContext.currentMethod!=null)
+//			{
+//				if (returnStatement.getExpression()!=null)
+//				{
+//
+//					InferredType type = getTypeOf(returnStatement.getExpression());
+//
+//					if (currentContext.currentMethod.inferredType==VoidType)
+//						currentContext.currentMethod.inferredType=type;
+//					else if (type==null || !type.equals(currentContext.currentMethod.inferredType))
+//						currentContext.currentMethod.inferredType=null;
+//				}
+//			}
+
+	}
+	
+
+	public boolean visit(IReturnStatement returnStatement) {
+
 			if (currentContext.currentMethod!=null)
 			{
 				if (returnStatement.getExpression()!=null)
 				{
 
-					InferredType type = getTypeOf(returnStatement.getExpression());
+					InferredType type = null;
+					IExpression expression = returnStatement.getExpression();
+					if (expression instanceof IObjectLiteral)
+					{
+						type = createAnonymousType( (ObjectLiteral)expression,false );
+
+						//set the start and end
+						type.sourceStart = expression.sourceStart();
+						type.sourceEnd = expression.sourceEnd();
+					}
+					else 
+						type=getTypeOf(expression);
 
 					if (currentContext.currentMethod.inferredType==VoidType)
 						currentContext.currentMethod.inferredType=type;
@@ -1062,8 +1097,9 @@ public class InferEngine extends ASTVisitor {
 						currentContext.currentMethod.inferredType=null;
 				}
 			}
-
+			return false;
 	}
+
 
 	public void endVisit(IFunctionDeclaration methodDeclaration) {
 		popContext();
@@ -1635,7 +1671,7 @@ public class InferEngine extends ASTVisitor {
 
 	public boolean visit(IObjectLiteral literal) {
 		if (this.passNumber==1 && literal.getInferredType()==null)
-			createAnonymousType((ObjectLiteral)literal);
+			createAnonymousType((ObjectLiteral)literal,true);
 		pushContext();
 		this.currentContext.currentType=literal.getInferredType();
 		return true;

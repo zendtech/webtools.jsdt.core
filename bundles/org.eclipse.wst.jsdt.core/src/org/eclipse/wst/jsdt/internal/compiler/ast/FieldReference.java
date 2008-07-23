@@ -405,7 +405,7 @@ public TypeBinding resolveType(BlockScope scope, boolean define, TypeBinding use
 	}
 	
 	Binding memberBinding = scope.getFieldOrMethod(this.receiverType, token, this);
-	boolean receiverIsType = (receiver instanceof NameReference || receiver instanceof FieldReference)
+	boolean receiverIsType = (receiver instanceof NameReference || receiver instanceof FieldReference || receiver instanceof ThisReference)
 		&& ( receiver.bits & Binding.TYPE) != 0;
 	if (!memberBinding.isValidBinding() && (this.receiverType!=null && this.receiverType.isFunctionType()))
 	{
