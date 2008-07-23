@@ -994,6 +994,9 @@ public final class JavaScriptCore extends Plugin {
 	 */
 	public static final String JAVA_SOURCE_CONTENT_TYPE = JavaScriptCore.PLUGIN_ID+".jsSource" ; //$NON-NLS-1$
 
+	
+	public static final String READ_ONLY_SOURCE_PROPERTY =  "readOnlyResource" ; //$NON-NLS-1$
+
 	/**
 	 * Creates the JavaScript core plug-in.
 	 * <p>
@@ -4205,5 +4208,17 @@ public final class JavaScriptCore extends Plugin {
 	}
 
 
+	public static boolean isReadOnly(IResource resource)
+	{
+		QualifiedName qn=new QualifiedName(JavaScriptCore.PLUGIN_ID,JavaScriptCore.READ_ONLY_SOURCE_PROPERTY);
+		try {
+			String persistentProperty = resource.getPersistentProperty(qn);
+			return "true".equals(persistentProperty);
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
 
 }

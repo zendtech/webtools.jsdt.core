@@ -200,7 +200,7 @@ private IType createTypeFromPath(String resourcePath, String simpleTypeName, cha
 			this.packageHandles.put(pkgName, pkgFragment);
 		}
 		String simpleName= simpleNames[length];
-		if (org.eclipse.wst.jsdt.internal.core.util.Util.isJavaLikeFileName(simpleName) && this.lastPkgFragmentRoot.getKind()!=IPackageFragmentRoot.K_BINARY) {
+		if (org.eclipse.wst.jsdt.internal.core.util.Util.isJavaLikeFileName(simpleName) && pkgFragment.getKind()!=IPackageFragmentRoot.K_BINARY) {
 			IJavaScriptUnit unit= pkgFragment.getJavaScriptUnit(simpleName);
 			int etnLength = enclosingTypeNames == null ? 0 : enclosingTypeNames.length;
 			IType type = (etnLength == 0) ? unit.getType(simpleTypeName) : unit.getType(new String(enclosingTypeNames[0]));

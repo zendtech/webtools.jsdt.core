@@ -626,7 +626,11 @@ private IStatus validateClassFile() {
 	IPackageFragmentRoot root = getPackageFragmentRoot();
 	try {
 		if (root.getKind() != IPackageFragmentRoot.K_BINARY)
-			return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_ELEMENT_TYPES, root);
+		{
+			if (((PackageFragment)this.getParent()).getKind()!= IPackageFragmentRoot.K_BINARY)
+			 return new JavaModelStatus(IJavaScriptModelStatusConstants.INVALID_ELEMENT_TYPES, root);
+			
+		}
 	} catch (JavaScriptModelException e) {
 		return e.getJavaScriptModelStatus();
 	}

@@ -192,6 +192,8 @@ protected void addAllSourceFiles(final ArrayList sourceFiles) throws CoreExcepti
 							if (isAlsoProject)
 								if (isExcludedFromProject(folderPath = proxy.requestFullPath()))
 									return false;
+							if (JavaScriptCore.isReadOnly(proxy.requestResource()))
+								return false;
 							if (exclusionPatterns != null) {
 								if (folderPath == null)
 									folderPath = proxy.requestFullPath();
@@ -602,6 +604,9 @@ protected void storeProblemsFor(SourceFile sourceFile, CategorizedProblem[] prob
 	if (!this.keepStoringProblemMarkers) return; // only want the one error recorded on this source file
 
 	IResource resource = sourceFile.resource;
+	IResource container=(resource instanceof IFile)? resource.getParent():resource;
+	if (JavaScriptCore.isReadOnly(container))
+		return;
 	HashSet managedMarkerTypes = JavaModelManager.getJavaModelManager().validationParticipants.managedMarkerTypes();
 	for (int i = 0, l = problems.length; i < l; i++) {
 		CategorizedProblem problem = problems[i];

@@ -324,7 +324,13 @@ protected char getHandleMementoDelimiter() {
  * @see IPackageFragment#getKind()
  */
 public int getKind() throws JavaScriptModelException {
-	return ((IPackageFragmentRoot)getParent()).getKind();
+	int kind= ((IPackageFragmentRoot)getParent()).getKind();
+	if (kind==IPackageFragmentRoot.K_SOURCE)
+	{
+		if (JavaScriptCore.isReadOnly(getUnderlyingResource()))
+			kind=IPackageFragmentRoot.K_BINARY;
+	}
+	return kind;
 }
 /**
  * Returns an array of non-java resources contained in the receiver.
