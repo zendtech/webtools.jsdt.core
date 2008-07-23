@@ -489,14 +489,21 @@ protected char getHandleMementoDelimiter() {
 protected void getHandleMemento(StringBuffer buff) {
 	
 	PackageFragmentRoot root = getPackageFragmentRoot();
-	if (root.isArchive() || (root instanceof LibraryFragmentRoot && root.getPath().lastSegment().equalsIgnoreCase(getElementName()))) {
-	
-	((JavaElement)getParent()).getHandleMemento(buff);
-	buff.append(getHandleMementoDelimiter());
-	escapeMementoName(buff, getPath().toPortableString());
+	try {
+		if (root.isArchive() ||
+				(( root instanceof LibraryFragmentRoot || (getParent() instanceof PackageFragment && ((PackageFragment)getParent()).getKind()==IPackageFragmentRoot.K_BINARY))
+						&& root.getPath().lastSegment().equalsIgnoreCase(getElementName()))
+			) {
+		
+		((JavaElement)getParent()).getHandleMemento(buff);
+		buff.append(getHandleMementoDelimiter());
+		escapeMementoName(buff, getPath().toPortableString());
+		}
+		else
+			super.getHandleMemento(buff);
+	} catch (JavaScriptModelException e) {
+		e.printStackTrace();
 	}
-	else
-		super.getHandleMemento(buff);
 }
 /*
  * @see IJavaScriptElement
