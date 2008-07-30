@@ -18,18 +18,15 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceProxy;
 import org.eclipse.core.resources.IResourceProxyVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.jsdt.core.IJavaScriptModelMarker;
 import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.core.ISourceRange;
-import org.eclipse.wst.jsdt.core.JavaScriptConventions;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.compiler.BuildContext;
@@ -201,17 +198,6 @@ protected void addAllSourceFiles(final ArrayList sourceFiles) throws CoreExcepti
 									// must walk children if inclusionPatterns != null, can skip them if == null
 									// but folder is excluded so do not create it in the output folder
 									return inclusionPatterns != null;
-								}
-							}
-							if (!isOutputFolder) {
-								if (folderPath == null)
-									folderPath = proxy.requestFullPath();
-								String packageName = folderPath.lastSegment();
-								if (packageName.length() > 0) {
-									String sourceLevel = javaBuilder.javaProject.getOption(JavaScriptCore.COMPILER_SOURCE, true);
-									String complianceLevel = javaBuilder.javaProject.getOption(JavaScriptCore.COMPILER_COMPLIANCE, true);
-									if (JavaScriptConventions.validatePackageName(packageName, sourceLevel, complianceLevel).getSeverity() != IStatus.ERROR)
-										createFolder(folderPath.removeFirstSegments(segmentCount), outputFolder);
 								}
 							}
 					}
@@ -396,15 +382,7 @@ protected void finishedWith(String sourceLocator, CompilationResult result, char
 	newState.record(sourceLocator, qualifiedRefs, simpleRefs, mainTypeName, definedTypeNames);
 }
 
-protected IContainer createFolder(IPath packagePath, IContainer outputFolder) throws CoreException {
-	if (packagePath.isEmpty()) return outputFolder;
-	IFolder folder = outputFolder.getFolder(packagePath);
-	if (!folder.exists()) {
-		createFolder(packagePath.removeLastSegments(1), outputFolder);
-		folder.create(IResource.FORCE | IResource.DERIVED, true, null);
-	}
-	return folder;
-}
+
 
 
 
