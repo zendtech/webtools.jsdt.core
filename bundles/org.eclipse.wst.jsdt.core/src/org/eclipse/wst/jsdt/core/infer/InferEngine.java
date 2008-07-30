@@ -1569,7 +1569,7 @@ public class InferEngine extends ASTVisitor {
 					{
 						type = addType(possibleTypeName,true);
 					}
-					else if (this.passNumber==2 && this.isKnownType(possibleTypeName))
+					else if (/*this.passNumber==2 && */this.isKnownType(possibleTypeName))
 					{
 						type = addType(possibleTypeName,true);
 //						if (type!=null)
