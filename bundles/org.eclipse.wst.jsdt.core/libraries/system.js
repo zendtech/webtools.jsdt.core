@@ -730,6 +730,21 @@ Date.prototype = new Object();
  */
 Date.MakeTime =function(hour, min, sec, ms){};
 /**
+ * function UTC(hour, min, sec, ms)
+ * @class Date
+ * @param hour Number
+ * @param min Number
+ * @param sec Number
+ * @param ms Number  
+ * @type Number
+ * @return Number
+ * @since Standard ECMA-262 3rd. Edition
+ * @since Level 2 Document Object Model Core Definition.
+    
+*/
+Date.UTC =function(hour, min, sec, ms){};
+
+/**
   * function MakeDay(year, month, date)
   * @class Date
   * @param year Number
@@ -1210,7 +1225,16 @@ Date.prototype.setFullYear=function(year, month,date){};
      
  */
 Date.prototype.setUTCFullYear=function(year, month,date){};
-
+/**
+ * function toUTCString()
+ * @class Date
+ * @type Date
+ * @return String
+ * @since Standard ECMA-262 3rd. Edition
+ * @since Level 2 Document Object Model Core Definition.
+    
+*/
+Date.prototype.toUTCString=function(){};
 /**
   * Object Global
   * @super Object
@@ -1282,6 +1306,28 @@ Global.prototype.parseInt=function(s,radix){};
  */
 Global.prototype.parseFloat=function(s){};
 /**
+ * function escape(s)
+ * @class Global
+ * @param s String
+ * @type String
+ * @return String;
+ * @since   Standard ECMA-262 3rd. Edition 
+ * @since   Level 2 Document Object Model Core Definition.
+ * @link    http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/ecma-script-binding.html     
+*/
+Global.prototype.escape=function(s){};
+/**
+ * function unescape(s)
+ * @class Global
+ * @param s String
+ * @type String
+ * @return String;
+ * @since   Standard ECMA-262 3rd. Edition 
+ * @since   Level 2 Document Object Model Core Definition.
+ * @link    http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/ecma-script-binding.html     
+*/
+Global.prototype.unescape=function(s){};
+/**
   * function isNaN(number)
   * @class Global
   * @param number String
@@ -1303,6 +1349,50 @@ Global.prototype.isNaN=function(number){};
   * @link    http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/ecma-script-binding.html     
  */
 Global.prototype.isFinite=function(number){};
+/**
+ * function decodeURI(encodedURI)
+ * @class Global
+ * @param encodedURI String
+ * @type String
+ * @return String
+ * @since   Standard ECMA-262 3rd. Edition 
+ * @since   Level 2 Document Object Model Core Definition.
+ * @link    http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/ecma-script-binding.html     
+*/
+Global.prototype.decodeURI=function(encodedURI){};
+/**
+ * @class Global
+ * @param uriComponent String
+ * @type String
+ * @return String
+ * @since   Standard ECMA-262 3rd. Edition 
+ * @since   Level 2 Document Object Model Core Definition.
+ * @link    http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/ecma-script-binding.html     
+*/
+Global.prototype.decodeURIComponent=function(uriComponent){};
+/**
+ * function encodeURIComponent(uriComponent)
+ * @class Global
+ * @param uriComponent String
+ * @type String
+ * @return String
+ * @since   Standard ECMA-262 3rd. Edition 
+ * @since   Level 2 Document Object Model Core Definition.
+ * @link    http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/ecma-script-binding.html     
+*/
+Global.prototype.encodeURIComponent=function(uriComponent){};
+
+/**
+ * function encodeURIComponent(URI)
+ * @class Global
+ * @param URI String
+ * @type String
+ * @return String
+ * @since   Standard ECMA-262 3rd. Edition 
+ * @since   Level 2 Document Object Model Core Definition.
+ * @link    http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/ecma-script-binding.html     
+*/
+Global.prototype.encodeURI=function(URI){};
 
 /**
   * Object Math(\s)
