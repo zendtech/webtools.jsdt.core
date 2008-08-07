@@ -1366,6 +1366,8 @@ public class Main implements ProblemSeverities, SuffixConstants {
 
 	public boolean showProgress = false;
 	public long startTime;
+	
+	public boolean showError=true;
 
 public boolean systemExitWhenFinished = true;
 
@@ -2592,6 +2594,11 @@ public void configure(String[] argv) throws InvalidInputException {
 					this.timing = true;
 					continue;
 				}
+				if (currentArg.equals("-noErrors")) { //$NON-NLS-1$
+					mode = DEFAULT;
+					this.showError = false;
+					continue;
+				}
 				if (currentArg.equals("-version") //$NON-NLS-1$
 						|| currentArg.equals("-v")) { //$NON-NLS-1$
 					this.logger.logVersion(true);
@@ -3186,7 +3193,7 @@ public ICompilerRequestor getBatchRequestor() {
 				}
 			}
 			Main.this.logger.startLoggingSource(compilationResult);
-			if (compilationResult.hasProblems() || compilationResult.hasTasks()) {
+			if (Main.this.showError && (compilationResult.hasProblems() || compilationResult.hasTasks())) {
 				int localErrorCount = Main.this.logger.logProblems(compilationResult.getAllProblems(), compilationResult.compilationUnit.getContents(), Main.this);
 				// exit?
 				if (Main.this.systemExitWhenFinished && !Main.this.proceedOnError && (localErrorCount > 0)) {
