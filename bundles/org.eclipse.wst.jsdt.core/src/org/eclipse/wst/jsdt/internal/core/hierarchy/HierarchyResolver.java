@@ -520,8 +520,14 @@ private void rememberAllTypes(CompilationUnitDeclaration parsedUnit, Object cont
 	}
 	for (int i=0;i<parsedUnit.numberInferredTypes;i++) {
 		InferredType inferredType = parsedUnit.inferredTypes[i];
-			IType typeHandle= (cu!=null) ? cu.getType(new String(inferredType.getName())) : classFile.getType(new String(inferredType.getName()));
-			rememberInferredType(inferredType,typeHandle,inferredType.binding);
+		
+			if (inferredType.isDefinition && !inferredType.isEmptyGlobal()) {
+				IType typeHandle = (cu != null) ? cu.getType(new String(
+						inferredType.getName())) : classFile
+						.getType(new String(inferredType.getName()));
+				rememberInferredType(inferredType, typeHandle,
+						inferredType.binding);
+			}
 	}
 //	if (includeLocalTypes && parsedUnit.localTypes != null) {
 //		HandleFactory factory = new HandleFactory();
