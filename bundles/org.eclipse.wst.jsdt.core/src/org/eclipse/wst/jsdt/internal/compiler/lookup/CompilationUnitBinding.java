@@ -18,7 +18,6 @@ import org.eclipse.wst.jsdt.core.infer.InferredType;
 import org.eclipse.wst.jsdt.internal.compiler.ASTVisitor;
 import org.eclipse.wst.jsdt.internal.compiler.ast.AbstractMethodDeclaration;
 import org.eclipse.wst.jsdt.internal.compiler.ast.Assignment;
-import org.eclipse.wst.jsdt.internal.compiler.ast.FieldReference;
 import org.eclipse.wst.jsdt.internal.compiler.ast.FunctionExpression;
 import org.eclipse.wst.jsdt.internal.compiler.ast.Javadoc;
 import org.eclipse.wst.jsdt.internal.compiler.ast.MethodDeclaration;
@@ -571,11 +570,6 @@ public class CompilationUnitBinding  extends SourceTypeBinding {
 						return false;
 					}
 					return true;
-				}
-
-				public boolean visit(FieldReference fieldReference,		// not possible to contain method
-						BlockScope scope) {
-					return false;
 				}
 
 				public boolean visit(InferredType inferredType, BlockScope scope) {	// not possible to contain method
