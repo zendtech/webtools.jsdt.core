@@ -96,9 +96,9 @@ public FlowInfo analyseCode(BlockScope currentScope, FlowContext flowContext,
 		}
 		TypeBinding originalLhsType = lhs.resolveType(scope);
 		TypeBinding originalExpressionType = expression.resolveType(scope);
+		this.resolvedType=TypeBinding.ANY;
 		if (originalLhsType == null || originalExpressionType == null)
 		{
-			this.resolvedType=TypeBinding.ANY;
 			return null;
 		}
 
