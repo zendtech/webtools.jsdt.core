@@ -6328,8 +6328,13 @@ protected void consumeRule(int act) {
 
 
 private void comsumeElisionList() {
+	int flag=this.intStack[this.intPtr];
+	if ((flag&UNCONSUMED_ELISION)!=0)
+	{
+		pushOnExpressionStack(new EmptyExpression(this.endPosition,this.endPosition));
+	}
 	concatExpressionLists();
-    this.intStack[this.intPtr]&= ~(UNCONSUMED_ELISION|UNCONSUMED_LIT_ELEMENT);
+//    this.intStack[this.intPtr]&= ~(UNCONSUMED_ELISION|UNCONSUMED_LIT_ELEMENT);
 }
 private void comsumeElisionOne() {
 	pushOnExpressionStack(new EmptyExpression(this.endPosition,this.endPosition));
