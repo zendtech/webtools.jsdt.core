@@ -457,9 +457,8 @@ public TypeBinding resolveType(BlockScope scope, boolean define, TypeBinding use
 		if (fieldBinding.isStatic()) {
 			// static field accessed through receiver? legal but unoptimal (optional warning)
 			if (!(isImplicitThisRcv
-					|| (receiver instanceof NameReference
-						&& receiverIsType
-						))) {
+					||  receiverIsType
+						)) {
 				scope.problemReporter().nonStaticAccessToStaticField(this, fieldBinding);
 			}
 			if (!isImplicitThisRcv
@@ -580,6 +579,10 @@ public IExpression getReceiver() {
 
 public char[] getToken() {
 	return token;
+}
+
+public boolean isTypeReference() {
+	return (this.bits & Binding.TYPE) ==Binding.TYPE;
 }
 
 }
