@@ -254,10 +254,10 @@ public class InferEngine extends ASTVisitor {
 	}
 
 	private void createTypeIfNecessary(Javadoc javadoc) {
-		if (javadoc.classDef!=null)
+		if (javadoc.memberOf!=null)
 		{
 			char [][]namespace={};
-			char[][] typeName = javadoc.classDef.getTypeName();
+			char[][] typeName = javadoc.memberOf.getTypeName();
 			if (javadoc.namespace!=null)
 			{
 				namespace=javadoc.namespace.getTypeName();
