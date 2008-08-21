@@ -1248,7 +1248,7 @@ public void notifySourceElementRequestor(CompilationUnitDeclaration parsedUnit) 
 
 public void notifySourceElementRequestor( InferredType type ) {
 
-	if ( !type.isDefinition)
+	if ( !type.isDefinition || type.isEmptyGlobal())
 		return;
 
 	if (type.isAnonymous && !type.isNamed())
