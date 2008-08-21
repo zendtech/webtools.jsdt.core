@@ -172,7 +172,7 @@ private IType createTypeFromPath(String resourcePath, String simpleTypeName, cha
 	}
 
 	
-	boolean isLibrary = this.lastPkgFragmentRoot instanceof LibraryFragmentRoot ;
+	boolean isLibrary = this.lastPkgFragmentRoot instanceof LibraryFragmentRoot && !((LibraryFragmentRoot)this.lastPkgFragmentRoot).isDirectory();
 	// create handle
 	if(isLibrary) {
 		String[] pkgName = new String[] {this.lastPkgFragmentRootPath};
