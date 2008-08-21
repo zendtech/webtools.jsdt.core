@@ -208,7 +208,8 @@ class AddLibraryFileToIndex extends IndexRequest {
 	private void indexDirectory(File file,SearchParticipant participant, Index index, IPath libraryFilePath)
 	{
 		File[] files = file.listFiles();
-		for (int i = 0; i < files.length; i++) {
+		if (files!=null)
+		 for (int i = 0; i < files.length; i++) {
 			if (files[i].isDirectory())
 			  indexDirectory(files[i], participant, index, libraryFilePath);
 			else if (Util.isClassFileName(files[i].getName()))
