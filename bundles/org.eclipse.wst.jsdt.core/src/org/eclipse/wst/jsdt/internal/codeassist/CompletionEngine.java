@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Michael Spector <spektom@gmail.com> Bug 242989 
  *******************************************************************************/
 package org.eclipse.wst.jsdt.internal.codeassist;
 
@@ -2502,7 +2503,6 @@ public final class CompletionEngine
 			// for now until we can change the UI.
 			CompilationResult result = new CompilationResult(sourceUnit, 1, 1, this.compilerOptions.maxProblemsPerUnit);
 			CompilationUnitDeclaration parsedUnit = this.parser.dietParse(sourceUnit, result, this.actualCompletionPosition);
-
 			//		boolean completionNodeFound = false;
 			if (parsedUnit != null) {
 				if(DEBUG) {
@@ -7139,7 +7139,15 @@ public final class CompletionEngine
 
 				if (typeLength > sourceType.sourceName.length) continue next;
 
-				if (!CharOperation.prefixEquals(token, sourceType.sourceName, false)
+				int index = CharOperation.lastIndexOf('.', sourceType.sourceName);
+				if (index > 0) {
+//					char[] pkg = CharOperation.subarray(sourceType.sourceName, 0, index);
+					char[] simpleName = CharOperation.subarray(sourceType.sourceName, index+1, sourceType.sourceName.length);
+					
+					if (!CharOperation.prefixEquals(token, simpleName, false)
+							&& !(this.options.camelCaseMatch && CharOperation.camelCaseMatch(token, simpleName))) continue ;
+					
+				} else if (!CharOperation.prefixEquals(token, sourceType.sourceName, false)
 						&& !(this.options.camelCaseMatch && CharOperation.camelCaseMatch(token, sourceType.sourceName))) continue ;
 
 				if (this.assistNodeIsAnnotation && !hasPossibleAnnotationTarget(sourceType, scope)) {
