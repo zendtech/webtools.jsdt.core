@@ -1566,6 +1566,10 @@ private FieldBinding resolveTypeFor(FieldBinding field) {
 //	return null; // should never reach this point
 }
 public MethodBinding resolveTypesFor(MethodBinding method) {
+	return resolveTypesFor(method,null);
+}
+
+public MethodBinding resolveTypesFor(MethodBinding method,AbstractMethodDeclaration methodDecl) {
 	if ((method.modifiers & ExtraCompilerModifiers.AccUnresolved) == 0)
 		return method;
 
@@ -1578,7 +1582,8 @@ public MethodBinding resolveTypesFor(MethodBinding method) {
 	if (hasRestrictedAccess())
 		method.modifiers |= ExtraCompilerModifiers.AccRestrictedAccess;
 
-	AbstractMethodDeclaration methodDecl = method.sourceMethod();
+	if (methodDecl==null)
+		methodDecl = method.sourceMethod();
 	if (methodDecl == null) return null; // method could not be resolved in previous iteration
 
 	TypeParameter[] typeParameters = methodDecl.typeParameters();
