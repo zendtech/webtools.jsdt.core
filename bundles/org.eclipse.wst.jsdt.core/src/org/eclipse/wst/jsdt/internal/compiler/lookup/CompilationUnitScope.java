@@ -304,7 +304,7 @@ void buildTypeBindings(AccessRestriction accessRestriction) {
 //	nextType:
 	for (int i = 0; i < typeLength; i++) {
 		InferredType typeDecl =  referenceContext.inferredTypes[i];
-		if (typeDecl.isDefinition) {
+		if (typeDecl.isDefinition && !typeDecl.isEmptyGlobal()) {
 			ReferenceBinding typeBinding = environment.defaultPackage
 					.getType0(typeDecl.getName());
 			recordSimpleReference(typeDecl.getName()); // needed to detect collision cases
