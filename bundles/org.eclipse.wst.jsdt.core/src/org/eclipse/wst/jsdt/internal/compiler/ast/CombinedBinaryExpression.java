@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Michael Spector <spektom@gmail.com>  Bug 242754
  *******************************************************************************/
 package org.eclipse.wst.jsdt.internal.compiler.ast;
 
@@ -128,21 +129,23 @@ public FlowInfo analyseCode(BlockScope currentScope, FlowContext flowContext,
 	if (this.referencesTable == null) {
 		return super.analyseCode(currentScope, flowContext, flowInfo);
 	}
-	BinaryExpression cursor;
-	if ((cursor = this.referencesTable[0]).resolvedType.id !=
-			TypeIds.T_JavaLangString) {
-		cursor.left.checkNPE(currentScope, flowContext, flowInfo);
-	}
-	flowInfo = cursor.left.analyseCode(currentScope, flowContext, flowInfo).
-		unconditionalInits();
-	for (int i = 0, end = this.arity; i < end; i ++) {
-		if ((cursor = this.referencesTable[i]).resolvedType.id !=
+	if (this.referencesTable[0] != null && this.referencesTable[0].resolvedType != null) {
+		BinaryExpression cursor;
+		if ((cursor = this.referencesTable[0]).resolvedType.id !=
 				TypeIds.T_JavaLangString) {
-			cursor.right.checkNPE(currentScope, flowContext, flowInfo);
+			cursor.left.checkNPE(currentScope, flowContext, flowInfo);
 		}
-		flowInfo = cursor.right.
-			analyseCode(currentScope, flowContext, flowInfo).
-				unconditionalInits();
+		flowInfo = cursor.left.analyseCode(currentScope, flowContext, flowInfo).
+			unconditionalInits();
+		for (int i = 0, end = this.arity; i < end; i ++) {
+			if ((cursor = this.referencesTable[i]).resolvedType.id !=
+					TypeIds.T_JavaLangString) {
+				cursor.right.checkNPE(currentScope, flowContext, flowInfo);
+			}
+			flowInfo = cursor.right.
+				analyseCode(currentScope, flowContext, flowInfo).
+					unconditionalInits();
+		}
 	}
 	if (this.resolvedType.id != TypeIds.T_JavaLangString) {
 		this.right.checkNPE(currentScope, flowContext, flowInfo);
