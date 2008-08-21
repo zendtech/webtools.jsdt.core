@@ -145,19 +145,19 @@ public FlowInfo analyseCode(BlockScope currentScope, FlowContext flowContext,
 			scope.problemReporter().invalidOperator(this, lhsType, expressionType);
 			return null;
 		}
-		if (operator == PLUS){
-			if(lhsID == T_JavaLangObject) {
-				// <Object> += <String> is illegal (39248)
-				scope.problemReporter().invalidOperator(this, lhsType, expressionType);
-				return null;
-			} else {
-				// <int | boolean> += <String> is illegal
-				if ((lhsType.isNumericType() || lhsID == T_boolean) && !expressionType.isNumericType()){
-					scope.problemReporter().invalidOperator(this, lhsType, expressionType);
-					return null;
-				}
-			}
-		}
+//		if (operator == PLUS){
+//			if(lhsID == T_JavaLangObject) {
+//				// <Object> += <String> is illegal (39248)
+//				scope.problemReporter().invalidOperator(this, lhsType, expressionType);
+//				return null;
+//			} else {
+//				// <int | boolean> += <String> is illegal
+//				if ((lhsType.isNumericType() || lhsID == T_boolean) && !expressionType.isNumericType()){
+//					scope.problemReporter().invalidOperator(this, lhsType, expressionType);
+//					return null;
+//				}
+//			}
+//		}
 		this.lhs.computeConversion(scope, TypeBinding.wellKnownType(scope, (result >>> 16) & 0x0000F), originalLhsType);
 		this.expression.computeConversion(scope, TypeBinding.wellKnownType(scope, (result >>> 8) & 0x0000F), originalExpressionType);
 		this.preAssignImplicitConversion =  (unboxedLhs ? BOXING : 0) | (lhsID << 4) | (result & 0x0000F);
