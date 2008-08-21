@@ -2634,6 +2634,7 @@ public final class CompletionEngine
 						}
 					}
 				}
+				parsedUnit.cleanUp();
 			}
 
 			if(this.noProposal && this.problem != null) {
@@ -2681,6 +2682,7 @@ public final class CompletionEngine
 				e.printStackTrace(System.out);
 			}
 		} finally {
+			this.parser=null;
 			reset();
 			if(!contextAccepted) {
 				contextAccepted = true;
