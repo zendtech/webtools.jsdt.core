@@ -367,7 +367,7 @@ public TypeBinding resolveType(BlockScope scope, boolean define, TypeBinding use
 	}
 	if (receiverDefined)
 	  this.receiverType = receiver.resolveType(scope);
-	if (this.receiverType == null) {
+	if (this.receiverType == null || this.receiverType==scope.getJavaLangObject()) {
 		Binding possibleTypeBinding =null;
 		if (possibleTypeName!=null)
 		   possibleTypeBinding = scope.getBinding( possibleTypeName, Binding.TYPE  & RestrictiveFlagMASK, this, true /*resolve*/);
