@@ -20,7 +20,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -136,9 +135,10 @@ public class MetadataFile extends Openable implements
 				try {
 					apis = MetadataReader.readAPIsFromStream(new InputSource(file.getContents()),file.getLocation().toOSString());
 					apis.fileName=file.getFullPath().toPortableString();
-				} catch (CoreException e) {
+				} catch (Exception e) {
 					Util.log(e, "error reading metadata");
 					apis=new LibraryAPIs();
+					apis.fileName=file.getFullPath().toPortableString();
 				}
 		}
 		return apis;
