@@ -31,6 +31,7 @@ import org.eclipse.wst.jsdt.core.IField;
 import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.core.IProblemRequestor;
 import org.eclipse.wst.jsdt.core.ISourceRange;
 import org.eclipse.wst.jsdt.core.IType;
@@ -39,6 +40,8 @@ import org.eclipse.wst.jsdt.core.JsGlobalScopeContainerInitializer;
 import org.eclipse.wst.jsdt.core.WorkingCopyOwner;
 import org.eclipse.wst.jsdt.internal.core.util.MementoTokenizer;
 import org.eclipse.wst.jsdt.internal.core.util.Util;
+import org.eclipse.wst.jsdt.internal.oaametadata.ClassData;
+import org.eclipse.wst.jsdt.internal.oaametadata.DocumentedElement;
 import org.eclipse.wst.jsdt.internal.oaametadata.IOAAMetaDataConstants;
 import org.eclipse.wst.jsdt.internal.oaametadata.LibraryAPIs;
 import org.eclipse.wst.jsdt.internal.oaametadata.MetadataReader;
@@ -340,5 +343,34 @@ public class MetadataFile extends Openable implements
 		me = JavaModel.getTarget(workspace.getRoot(), this.getPath().makeRelative(), true);
 		return (me!=null);
 
+	}
+	
+	public DocumentedElement getDocumentation(IMember member)
+	{
+		IJavaScriptElement parent = member.getParent();
+		String elementName = member.getElementName();
+		LibraryAPIs apis = getAPIs();
+		switch (member.getElementType()) {
+		case IJavaScriptElement.TYPE:
+			return apis.getClass(elementName);
+
+		case IJavaScriptElement.METHOD:
+			if (parent.equals(this))
+				return apis.getGlobalMethod(elementName);
+			ClassData clazz = apis.getClass(parent.getElementName());
+			if (clazz!=null)
+				return clazz.getMethod(elementName);
+			return null;
+
+		case IJavaScriptElement.FIELD:
+			if (parent.equals(this))
+				return apis.getGlobalVar(elementName);
+			 clazz = apis.getClass(parent.getElementName());
+			if (clazz!=null)
+				return clazz.getField(elementName);
+			return null;
+ 
+		}
+		return null;
 	}
 }
