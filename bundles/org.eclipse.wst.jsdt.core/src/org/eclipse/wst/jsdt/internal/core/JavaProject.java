@@ -1934,7 +1934,27 @@ public class JavaProject
 
 		return this.projectPrerequisites(getResolvedClasspath());
 	}
-
+	/*
+	 * Returns the cached resolved classpath, or compute it ignoring unresolved entries and cache it.
+	
+	 * this is how the JRE does it.
+	 */
+//	public IIncludePathEntry[] getResolvedClasspath() throws JavaScriptModelException {
+//		PerProjectInfo perProjectInfo = getPerProjectInfo();
+//		IIncludePathEntry[] resolvedClasspath = perProjectInfo.resolvedClasspath;
+//		if (resolvedClasspath == null) {
+//			resolveClasspath(perProjectInfo);
+//			resolvedClasspath = perProjectInfo.resolvedClasspath;
+//			if (resolvedClasspath == null) {
+//				// another thread reset the resolved classpath, use a temporary PerProjectInfo
+//				PerProjectInfo temporaryInfo = new PerProjectInfo(getProject());
+//				temporaryInfo.rawClasspath = getDefaultClasspath();
+//				resolveClasspath(temporaryInfo);
+//				resolvedClasspath = temporaryInfo.resolvedClasspath;
+//			}
+//		}
+//		return resolvedClasspath;
+//	}
 	/*
 	 * Returns the cached resolved classpath, or compute it ignoring unresolved entries and cache it.
 	 */
@@ -1948,7 +1968,8 @@ public class JavaProject
 			if (e.getStatus().getCode()==IJavaScriptModelStatusConstants.ELEMENT_DOES_NOT_EXIST)
 			{
 				IIncludePathEntry[] defaultClasspath = defaultClasspath();
-				return resolveClasspath(defaultClasspath);
+				return defaultClasspath; 
+				//return resolveClasspath(defaultClasspath);
 			}
 			else
 				throw e;
