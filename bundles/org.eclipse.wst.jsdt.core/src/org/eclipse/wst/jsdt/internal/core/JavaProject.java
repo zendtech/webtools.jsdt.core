@@ -1945,7 +1945,7 @@ public class JavaProject
 			if (e.getStatus().getCode()==IJavaScriptModelStatusConstants.ELEMENT_DOES_NOT_EXIST)
 			{
 				IIncludePathEntry[] defaultClasspath = defaultClasspath();
-				return resolveClasspath(defaultClasspath);
+				return defaultClasspath;
 			}
 			else
 				throw e;
