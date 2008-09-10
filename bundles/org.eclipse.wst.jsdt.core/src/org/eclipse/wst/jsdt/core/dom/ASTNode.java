@@ -2462,6 +2462,9 @@ public abstract class ASTNode {
 	 *    if none
 	 */
 	final void acceptChildren(ASTVisitor visitor, ASTNode.NodeList children) {
+		if(children == null){
+			return;
+		}
 		// use a cursor to keep track of where we are up to
 		// (the list may be changing under foot)
 		NodeList.Cursor cursor = children.newCursor();
