@@ -673,14 +673,14 @@ Function.prototype.apply=function(thisArg, argArray){};
   * function call (thisArg, argArray)
 
   * @param {Object} thisArg
-  * @param {Array} argArray
+  * @param {Object} args
   * @type Object
   * @returns {Object}
   * @since   Standard ECMA-262 3rd. Edition 
   * @since   Level 2 Document Object Model Core Definition.
   * @see    http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/ecma-script-binding.html     
  */ 
-Function.prototype.call=function(thisArg, argArray){};
+Function.prototype.call=function(thisArg, args){};
 /**
   * property length
   * @type    Number
