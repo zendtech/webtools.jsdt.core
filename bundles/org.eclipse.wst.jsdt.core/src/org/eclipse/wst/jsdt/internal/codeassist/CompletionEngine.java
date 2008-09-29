@@ -2503,7 +2503,6 @@ public final class CompletionEngine
 			// for now until we can change the UI.
 			CompilationResult result = new CompilationResult(sourceUnit, 1, 1, this.compilerOptions.maxProblemsPerUnit);
 			CompilationUnitDeclaration parsedUnit = this.parser.dietParse(sourceUnit, result, this.actualCompletionPosition);
-
 			//		boolean completionNodeFound = false;
 			if (parsedUnit != null) {
 				if(DEBUG) {
