@@ -474,6 +474,21 @@ public TypeBinding resolveType(BlockScope scope, boolean define, TypeBinding use
 				: fieldBinding.type);
 	}
 	else if( memberBinding instanceof MethodBinding ){
+		MethodBinding methodBinding=(MethodBinding) memberBinding;
+		if (!methodBinding.isStatic()) {
+			// the "receiver" must not be a type, in other words, a NameReference that the TC has bound to a Type
+			if (receiverIsType && methodBinding.isValidBinding()) {
+				scope.problemReporter().mustUseAStaticMethod(this, methodBinding);
+			}
+		}
+		else 
+		{
+			if (!receiverIsType && methodBinding.isValidBinding())
+				scope.problemReporter().nonStaticAccessToStaticMethod(this,
+						methodBinding);
+
+		}
+		
 		this.resolvedType= scope.getJavaLangFunction();
 		this.binding=new ProblemFieldBinding(null,this.token,ProblemReasons.NotFound);
 		if( memberBinding.isValidBinding() )

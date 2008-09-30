@@ -4896,7 +4896,7 @@ public void mustSpecifyPackage(CompilationUnitDeclaration compUnitDecl) {
 		compUnitDecl.sourceStart,
 		compUnitDecl.sourceStart + 1);
 }
-public void mustUseAStaticMethod(MessageSend messageSend, MethodBinding method) {
+public void mustUseAStaticMethod(ASTNode messageSend, MethodBinding method) {
 	this.handle(
 		IProblem.StaticMethodRequested,
 		new String[] {new String(method.declaringClass.readableName()), new String(method.selector), typesAsString(method.isVarargs(), method.parameters, false)},
