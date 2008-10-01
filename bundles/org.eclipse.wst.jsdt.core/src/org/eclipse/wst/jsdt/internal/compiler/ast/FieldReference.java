@@ -332,7 +332,7 @@ public TypeBinding resolveType(BlockScope scope, boolean define, TypeBinding use
 	 * By default, the prototype is of type Object, but if there is an InferredType
 	 * for the receiver, it should yeild the receiver type.
 	 */
-	if( this.isPrototype() ){
+if( this.isPrototype() ){
 
 		//construc the name of the type based on the receiver
 		char [] possibleTypeName = Util.getTypeName( receiver );
@@ -475,9 +475,9 @@ public TypeBinding resolveType(BlockScope scope, boolean define, TypeBinding use
 	}
 	else if( memberBinding instanceof MethodBinding ){
 		MethodBinding methodBinding=(MethodBinding) memberBinding;
+
 		if (!methodBinding.isStatic()) {
-			// the "receiver" must not be a type, in other words, a NameReference that the TC has bound to a Type
-			if (receiverIsType && methodBinding.isValidBinding()) {
+			if (receiverIsType && methodBinding.isValidBinding() && !methodBinding.isConstructor()) {
 				scope.problemReporter().mustUseAStaticMethod(this, methodBinding);
 			}
 		}
