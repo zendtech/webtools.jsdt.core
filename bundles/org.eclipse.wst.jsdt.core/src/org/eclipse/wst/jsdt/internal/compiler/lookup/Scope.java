@@ -1186,7 +1186,10 @@ public abstract class Scope implements TypeConstants, TypeIds {
 		{
 			Binding binding = getTypeOrPackage(selector, Binding.METHOD);
 			if (binding instanceof MethodBinding)
+			{
+				((MethodBinding) binding).ensureBindingsAreComplete();
 				found.add(binding);
+			}
 		}
 		// if found several candidates, then eliminate those not matching argument types
 		int foundSize = found.size;
@@ -1199,6 +1202,7 @@ public abstract class Scope implements TypeConstants, TypeIds {
 			for (int i = 0; i < foundSize; i++) {
 				MethodBinding methodBinding = (MethodBinding) found.elementAt(i);
 				MethodBinding compatibleMethod = methodBinding;//computeCompatibleMethod(methodBinding, argumentTypes, invocationSite);
+				
 				if (compatibleMethod != null) {
 					if (compatibleMethod.isValidBinding()) {
 						if (foundSize == 1 && compatibleMethod.canBeSeenBy(receiverType, invocationSite, this)) {

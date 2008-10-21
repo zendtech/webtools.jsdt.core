@@ -36,6 +36,7 @@ import org.eclipse.wst.jsdt.internal.compiler.util.Util;
 public class SourceTypeBinding extends ReferenceBinding {
 	public ReferenceBinding superclass;
 	public ReferenceBinding[] superInterfaces= Binding.NO_SUPERINTERFACES;
+	public ReferenceBinding[] mixins= Binding.NO_MIXINS;
 	protected FieldBinding[] fields;
 	protected MethodBinding[] methods;
 	public ReferenceBinding[] memberTypes=Binding.NO_MEMBER_TYPES;
@@ -55,6 +56,7 @@ public class SourceTypeBinding extends ReferenceBinding {
 	
 	public SourceTypeBinding nextType;
 
+	
 	private SimpleLookupTable storedAnnotations = null; // keys are this ReferenceBinding & its fields and methods, value is an AnnotationHolder
 
 public SourceTypeBinding(char[][] compoundName, PackageBinding fPackage,  Scope scope) {
@@ -1012,8 +1014,17 @@ private MethodBinding getExactMethod0(char[] selector, TypeBinding[] argumentTyp
 		} else if (this.superclass != null && this.superclass!=this) {
 			if (refScope != null)
 				refScope.recordTypeReference(this.superclass);
-			return this.superclass.getExactMethod(selector, argumentTypes, refScope);
+			 MethodBinding exactMethod = this.superclass.getExactMethod(selector, argumentTypes, refScope);
+			 if (exactMethod!=null && exactMethod.isValidBinding())
+				 return exactMethod;
+			 for (int i = 0; i < this.mixins.length; i++) {
+				 exactMethod = this.mixins[i].getExactMethod(selector, argumentTypes, refScope);
+				 if (exactMethod!=null && exactMethod.isValidBinding())
+					 return exactMethod;
+				
+			}
 		}
+		
 	}
 	return null;
 }

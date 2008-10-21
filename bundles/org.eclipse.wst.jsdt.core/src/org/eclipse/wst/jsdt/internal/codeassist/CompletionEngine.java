@@ -3783,6 +3783,30 @@ public final class CompletionEngine
 					missingElementsEnds,
 					missingElementsHaveProblems);
 			}
+			
+			if (currentType instanceof SourceTypeBinding) {
+				SourceTypeBinding sourceType = (SourceTypeBinding) currentType;
+				for (int i = 0; i < sourceType.mixins.length; i++) {
+					fields  = sourceType.mixins[i].availableFields();
+					findFields(
+							fieldName,
+							fields,
+							scope,
+							fieldsFound,
+							localsFound,
+							onlyStaticFields,
+							receiverType,
+							invocationSite,
+							invocationScope,
+							implicitCall,
+							canBePrefixed,
+							missingElements,
+							missingElementsStarts,
+							missingElementsEnds,
+							missingElementsHaveProblems);
+				}
+			}
+			
 			currentType = currentType.superclass();
 		} while (notInJavadoc && currentType != null);
 
@@ -6751,6 +6775,33 @@ public final class CompletionEngine
 				}
 			}
 
+			if (currentType instanceof SourceTypeBinding) {
+				SourceTypeBinding sourceType = (SourceTypeBinding) currentType;
+				for (int i = 0; i < sourceType.mixins.length; i++) {
+					methods = sourceType.mixins[i].availableMethods();
+					findLocalMethods(
+							selector,
+							typeArgTypes,
+							argTypes,
+							methods,
+							methods.length,
+							scope,
+							methodsFound,
+							onlyStaticMethods,
+							exactMatch,
+							receiverType,
+							invocationSite,
+							invocationScope,
+							implicitCall,
+							superCall,
+							canBePrefixed,
+							missingElements,
+							missingElementsStarts,
+							missingElementsEnds,
+							missingElementsHaveProblems);
+				}
+			}
+			
 			if (notInJavadoc &&
 					hasPotentialDefaultAbstractMethods &&
 					(currentType.isAbstract() || currentType.isTypeVariable() || currentType.isIntersectionType())){
