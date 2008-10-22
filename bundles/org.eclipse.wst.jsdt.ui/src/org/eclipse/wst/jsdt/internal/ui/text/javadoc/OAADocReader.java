@@ -35,40 +35,45 @@ public class OAADocReader extends Reader {
 				buffer.append("</p>");
 			}
 
-			buffer.append("<dl>"); //$NON-NLS-1$
-			if (method != null && method.parameters != null
-					&& method.parameters.length > 0) {
-				printSectionHead(JavaDocMessages.JavaDoc2HTMLTextReader_parameters_section);
-				for (int i = 0; i < method.parameters.length; i++) {
-					Parameter parameter = method.parameters[i];
-					buffer.append("<dd>"); //$NON-NLS-1$
-					buffer.append("<b>").append(parameter.name).append("</b> ");
-					if (parameter.description!=null)
-						buffer.append(parameter.description); //$NON-NLS-1$
-					buffer.append("</dd>"); //$NON-NLS-1$
-				}
-			}
-
-			if (method.returns != null)
-				printSection(
-						JavaDocMessages.JavaDoc2HTMLTextReader_returns_section,
-						method.returns.dataType, method.returns.description);
-
-			if (method != null && method.exceptions != null
-					&& method.exceptions.length > 0) {
-				printSectionHead(JavaDocMessages.JavaDoc2HTMLTextReader_throws_section);
-				for (int i = 0; i < method.exceptions.length; i++) {
-					Exception exception = method.exceptions[i];
-					buffer.append("<dd>"); //$NON-NLS-1$
-					buffer.append(exception.description); //$NON-NLS-1$
-					buffer.append("</dd>"); //$NON-NLS-1$
-				}
-			}
+			if (method!=null)
+			  printMethod(method);
 
 		}
 		buffer.append("</dl>"); //$NON-NLS-1$
 
 		sr = new StringReader(buffer.toString());
+	}
+
+	private void printMethod(Method method) {
+		buffer.append("<dl>"); //$NON-NLS-1$
+		if ( method.parameters != null
+				&& method.parameters.length > 0) {
+			printSectionHead(JavaDocMessages.JavaDoc2HTMLTextReader_parameters_section);
+			for (int i = 0; i < method.parameters.length; i++) {
+				Parameter parameter = method.parameters[i];
+				buffer.append("<dd>"); //$NON-NLS-1$
+				buffer.append("<b>").append(parameter.name).append("</b> ");
+				if (parameter.description!=null)
+					buffer.append(parameter.description); //$NON-NLS-1$
+				buffer.append("</dd>"); //$NON-NLS-1$
+			}
+		}
+
+		if (method.returns != null)
+			printSection(
+					JavaDocMessages.JavaDoc2HTMLTextReader_returns_section,
+					method.returns.dataType, method.returns.description);
+
+		if ( method.exceptions != null
+				&& method.exceptions.length > 0) {
+			printSectionHead(JavaDocMessages.JavaDoc2HTMLTextReader_throws_section);
+			for (int i = 0; i < method.exceptions.length; i++) {
+				Exception exception = method.exceptions[i];
+				buffer.append("<dd>"); //$NON-NLS-1$
+				buffer.append(exception.description); //$NON-NLS-1$
+				buffer.append("</dd>"); //$NON-NLS-1$
+			}
+		}
 	}
 
 	public void close() throws IOException {
