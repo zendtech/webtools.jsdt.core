@@ -654,12 +654,14 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 				IFolder curr= (IFolder) resource;
 				IJavaScriptElement element= JavaScriptCore.create(curr);
 				if (element instanceof IPackageFragment) {
-					if (fFoldPackages) {
-						IPackageFragment fragment= (IPackageFragment) element;
-						IPackageFragmentRoot root= (IPackageFragmentRoot) fragment.getParent();
-						element= getFolded(root.getChildren(), fragment);
+					if (element.exists()) {
+						if (fFoldPackages) {
+							IPackageFragment fragment= (IPackageFragment) element;
+							IPackageFragmentRoot root= (IPackageFragmentRoot) fragment.getParent();
+							element= getFolded(root.getChildren(), fragment);
+						}
+						result.add(element);
 					}
-					result.add(element);	
 				} 
 			}	
 		}
