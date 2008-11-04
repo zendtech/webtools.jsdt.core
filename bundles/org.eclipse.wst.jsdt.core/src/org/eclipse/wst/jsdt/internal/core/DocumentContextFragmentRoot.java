@@ -518,7 +518,8 @@ public class DocumentContextFragmentRoot extends PackageFragmentRoot{
 	}
 
 	public String getElementName() {
-		return this.fRelativeFile.getName();
+		if(fRelativeFile!=null) return this.fRelativeFile.getName();
+		return super.getElementName();
 	}
 
 	public int hashCode() {

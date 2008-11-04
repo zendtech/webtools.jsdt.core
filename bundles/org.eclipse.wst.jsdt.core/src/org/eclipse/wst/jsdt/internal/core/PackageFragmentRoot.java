@@ -767,7 +767,8 @@ public boolean hasChildren() throws JavaScriptModelException {
 }
 
 public int hashCode() {
-	return this.resource.hashCode();
+	if(this.resource!=null) return this.resource.hashCode();
+	return super.hashCode();
 }
 
 /**
