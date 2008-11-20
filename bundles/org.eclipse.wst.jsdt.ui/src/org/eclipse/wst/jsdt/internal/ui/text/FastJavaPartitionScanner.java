@@ -105,7 +105,7 @@ public class FastJavaPartitionScanner implements IPartitionTokenScanner, IJavaSc
 		int ch2=-1;
 		int lastch=-1;
 		while (true) {
-			if (!Character.isWhitespace(ch2))
+			if (!Character.isWhitespace((char)ch2))
 				lastch=ch2;
 			final int ch= fScanner.read();
 		    ch2=ch;
