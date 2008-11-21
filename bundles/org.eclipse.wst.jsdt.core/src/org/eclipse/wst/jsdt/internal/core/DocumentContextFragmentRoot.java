@@ -430,6 +430,11 @@ public class DocumentContextFragmentRoot extends PackageFragmentRoot{
 	}
 
 	public IPath resolveChildPath(String childPathString) {
+        // Genuitec Begin Fix 6149: Exception opening external HTML file
+	    if (getResource() == null) {
+	        return null;
+	    }
+	    // Genuitec End Fix 6149: Exception opening external HTML file
 		/* relative paths:
 		 * ./testfile.js  are relative to file scope
 		 * absolute paths: /scripts/file.js are relative to absolutePath, and must be made relative to this resource
