@@ -287,6 +287,9 @@ public static long getIrritant(int problemID) {
 
 		case IProblem.PotentialNullLocalVariableReference:
 			return CompilerOptions.PotentialNullReference;
+			
+		case IProblem.RedefinedLocal:
+			return CompilerOptions.DuplicateLocalVariables;
 
 		case IProblem.RedundantLocalVariableNullAssignment:
 		case IProblem.RedundantNullCheckOnNonNullLocalVariable:
@@ -490,6 +493,7 @@ public static int getProblemCategory(int severity, int problemID) {
 				case (int)(CompilerOptions.VarargsArgumentNeedCast >>> 32):
 				case (int)(CompilerOptions.NullReference >>> 32):
 				case (int)(CompilerOptions.PotentialNullReference >>> 32):
+				case (int)(CompilerOptions.DuplicateLocalVariables >>> 32):
 				case (int)(CompilerOptions.RedundantNullCheck >>> 32):
 				case (int)(CompilerOptions.IncompleteEnumSwitch >>> 32):
 				case (int)(CompilerOptions.FallthroughCase >>> 32):
