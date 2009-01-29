@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2008 IBM Corporation and others.
+ * Copyright (c) 2003, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -101,7 +101,7 @@ public class JavaNavigatorContentProvider extends
 	public Object getParent(Object element) {
 		Object parent= super.getParent(element);
 		if (parent instanceof IJavaScriptModel) {
-			return getViewerInput() != null ? fRealInput : parent;
+			return parent.equals(getViewerInput()) ? fRealInput : parent;
 		}
 		if (parent instanceof IJavaScriptProject) {
 			return ((IJavaScriptProject)parent).getProject();
@@ -322,9 +322,9 @@ public class JavaNavigatorContentProvider extends
 	protected void postRefresh(final List toRefresh, final boolean updateLabels, Collection runnables) {
 		for (Iterator iter = toRefresh.iterator(); iter.hasNext();) {
 			Object element = iter.next();
-			if(element instanceof IJavaScriptModel) {
+			if (element instanceof IJavaScriptModel) {
 				iter.remove();
-				toRefresh.add(fRealInput);
+				toRefresh.add(element.equals(getViewerInput()) ? fRealInput : element);
 				super.postRefresh(toRefresh, updateLabels, runnables);
 				return;
 			}
