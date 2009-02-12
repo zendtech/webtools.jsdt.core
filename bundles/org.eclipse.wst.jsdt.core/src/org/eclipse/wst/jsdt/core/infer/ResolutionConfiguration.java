@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ package org.eclipse.wst.jsdt.core.infer;
  * (repeatedly) as the API evolves.
  */
 public class ResolutionConfiguration {
+	private final static String[] empty_includes = new String[0];
 
 	
 	/**
@@ -29,7 +30,7 @@ public class ResolutionConfiguration {
 	 */
 	public String [] getContextIncludes()
 	{
-		return null;
+		return empty_includes;
 	}
 	
 	/**
