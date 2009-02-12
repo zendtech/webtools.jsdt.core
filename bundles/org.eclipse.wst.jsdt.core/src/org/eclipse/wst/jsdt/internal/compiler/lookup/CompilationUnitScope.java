@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.wst.jsdt.internal.compiler.lookup;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import org.eclipse.wst.jsdt.core.LibrarySuperType;
 import org.eclipse.wst.jsdt.core.compiler.CharOperation;
@@ -990,40 +991,32 @@ ImportBinding[] getDefaultImports() {
 		environment.defaultImports=new ImportBinding[]{systemJSBinding};
 	}
 
-	
-	
-	ImportBinding[] defaultImports=null;
-	String[] contextIncludes=null;
+    List list = new ArrayList();
+    list.add(systemJSBinding);
 	InferrenceProvider[] inferenceProviders = InferrenceManager.getInstance().getInferenceProviders(this.referenceContext);
-    if (inferenceProviders!=null &&inferenceProviders.length>0)
-    {
-    	contextIncludes = inferenceProviders[0].getResolutionConfiguration().getContextIncludes();
-    }
-    if (contextIncludes!=null && contextIncludes.length>0)
-    {
-      ArrayList list = new ArrayList();
-      list.add(systemJSBinding);
-      for (int i = 0; i < contextIncludes.length; i++) {
-		String include=contextIncludes[i];
-		if (include!=null)
-		{
-			int index=Util.indexOfJavaLikeExtension(include);
-			if (index>=0)
+	for (int j = 0; j < inferenceProviders.length; j++) {
+	  String[] contextIncludes = inferenceProviders[j].getResolutionConfiguration().getContextIncludes();
+      if (contextIncludes!=null && contextIncludes.length>0)
+      {
+        for (int i = 0; i < contextIncludes.length; i++) {
+		  String include=contextIncludes[i];
+		  if (include!=null)
+		  {
+			  int index=Util.indexOfJavaLikeExtension(include);
+			  if (index>=0)
 				include=include.substring(0,index);
-			include=include.replace('.', FILENAME_DOT_SUBSTITUTION);
-			char [][] qualifiedName=CharOperation.splitOn('/', include.toCharArray());
-			Binding binding=findImport(qualifiedName, qualifiedName.length);
-			if (binding.isValidBinding())
-			{
+			  include=include.replace('.', FILENAME_DOT_SUBSTITUTION);
+			  char [][] qualifiedName=CharOperation.splitOn('/', include.toCharArray());
+			  Binding binding=findImport(qualifiedName, qualifiedName.length);
+			  if (binding.isValidBinding())
+			  {
 				list.add(new ImportBinding(qualifiedName, true, binding, null));
-			}
-		}
+			  }
+		  }
+	    }
 	  }
-      defaultImports = ( ImportBinding[])list.toArray( new ImportBinding[list.size()]);
-    }
-    else
-    	defaultImports = new ImportBinding[] {systemJSBinding};
-	return defaultImports ;
+	}
+    return (ImportBinding[])list.toArray( new ImportBinding[list.size()]);
 }
 // NOT Public API
 public final Binding getImport(char[][] compoundName, boolean onDemand, boolean isStaticImport) {
