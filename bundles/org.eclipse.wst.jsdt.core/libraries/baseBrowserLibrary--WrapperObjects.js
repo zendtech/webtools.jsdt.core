@@ -859,7 +859,7 @@ Document.prototype.createCDATASection=function(data){};
   * @type Method
   * @memberOf Document
   * @param {String} target
-  * @param {String;} data
+  * @param {String} data
   * @returns {ProcessingInstruction}
   * @throws DOMException
   * @see Document
