@@ -981,6 +981,10 @@ public class InferEngine extends ASTVisitor {
 						SingleNameReference singleNameReference = (SingleNameReference) field.fieldName;
 						name = singleNameReference.token;
 						nameStart = singleNameReference.sourceStart;
+					} else if(field.fieldName instanceof StringLiteral) {
+						StringLiteral stringLiteral = (StringLiteral) field.fieldName;
+						name = stringLiteral.source();
+						nameStart = stringLiteral.sourceStart;
 					} else
 						continue; //not supporting this case right now
 
