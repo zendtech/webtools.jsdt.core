@@ -219,7 +219,7 @@ DOMImplementation.prototype = new Object();
 
   * @see   http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/ecma-script-binding.html     
  */ 
-DOMImplementation.prototype.hasFeature = new function(feature, version);
+DOMImplementation.prototype.hasFeature = new function(feature, version){};
 
 /**
   * function createDocumentType()
@@ -853,7 +853,7 @@ Document.prototype.createComment=function(data){};
  
   * @see    http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/ecma-script-binding.html     
  */
-Document.prototype.createCDATASection(data) 
+Document.prototype.createCDATASection=function(data){}; 
  /**
   * function createProcessingInstruction(target, data) 
   * @type Method
@@ -1545,7 +1545,7 @@ Element.prototype.hasAttributeNS=function(namespaceURI, localName){};
   * @see   http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/ecma-script-binding.html     
  */  
 function Text(){};
-Text.prototype = new ChracterData();
+Text.prototype = new CharacterData();
  /**
   * function splitText(offset)     
   * @type Method
@@ -1576,7 +1576,7 @@ Text.prototype.splitText=function(offset){};
   * @see   http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/ecma-script-binding.html     
  */  
 function Comment(){};
-Comment.prototype = new ChracterData();
+Comment.prototype = new CharacterData();
 /**
   * Object CDATASection()
   * Comment inherits all of the methods and properties from Text.

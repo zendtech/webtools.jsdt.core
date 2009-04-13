@@ -904,7 +904,7 @@ Document.prototype.createComment=function(data){};
  
   * @see    http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/ecma-script-binding.html     
  */
-Document.prototype.createCDATASection(data) 
+Document.prototype.createCDATASection=function(data){}; 
  /**
   * function createProcessingInstruction(target, data) 
   * @type ProcessingInstruction
