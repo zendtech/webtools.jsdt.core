@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1382,7 +1382,10 @@ public class CodeFormatterVisitor extends ASTVisitor {
 		do {
 			try {
 				this.scribe.alignFragment(cascadingMessageSendAlignment, 0);
-				this.scribe.printNextToken(TerminalTokens.TokenNameDOT);
+				//this.scribe.printNextToken(TerminalTokens.TokenNameDOT);
+				// Fix for https://bugs.eclipse.org/bugs/show_bug.cgi?id=221018
+				// functions can return functions in javascript so there won't always be a dot
+				this.scribe.printOptionalNextToken(TerminalTokens.TokenNameDOT, false);
 				for (int i = startingPositionInCascade; i < size; i++) {
 					MessageSend currentMessageSend = fragments[i];
 					final int numberOfParens = (currentMessageSend.bits & ASTNode.ParenthesizedMASK) >> ASTNode.ParenthesizedSHIFT;
@@ -1412,7 +1415,9 @@ public class CodeFormatterVisitor extends ASTVisitor {
 							}
 					}
 					ASTNode[] arguments = currentMessageSend.arguments;
-					this.scribe.printNextToken(TerminalTokens.TokenNameIdentifier); // selector
+					// Fix for https://bugs.eclipse.org/bugs/show_bug.cgi?id=221018
+					// functions can return functions in javascript so there won't always be another identifier name
+					this.scribe.printOptionalNextToken(TerminalTokens.TokenNameIdentifier, false); // selector
 					this.scribe.printNextToken(TerminalTokens.TokenNameLPAREN, this.preferences.insert_space_before_opening_paren_in_method_invocation);
 					if (arguments != null) {
 						if (this.preferences.insert_space_after_opening_paren_in_method_invocation) {
