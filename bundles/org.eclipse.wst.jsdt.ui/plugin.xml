@@ -5434,15 +5434,17 @@
 				name="%commonNavigatorContentName"
 				priority="high">
 			<triggerPoints>
-				<or>
+				<and>
 					<adapt type="org.eclipse.core.resources.IProject" >
 						<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.wst.jsdt.core.jsNature"/>
 					</adapt>
-					<instanceof	value="org.eclipse.core.resources.IResource" />
-					<instanceof value="org.eclipse.wst.jsdt.core.IJavaScriptElement" />
-					<instanceof value="org.eclipse.wst.jsdt.core.IJarEntryResource" />
-					<instanceof value="org.eclipse.wst.jsdt.internal.ui.packageview.PackageFragmentRootContainer" />
- 				</or>
+					<or>
+						<instanceof	value="org.eclipse.core.resources.IResource" />
+						<instanceof value="org.eclipse.wst.jsdt.core.IJavaScriptElement" />
+						<instanceof value="org.eclipse.wst.jsdt.core.IJarEntryResource" />
+						<instanceof value="org.eclipse.wst.jsdt.internal.ui.packageview.PackageFragmentRootContainer" />
+	 				</or>
+	 			</and>
 			</triggerPoints>
 			<possibleChildren>
 				<or>
@@ -5514,7 +5516,7 @@
 			<commonSorter
 					class="org.eclipse.wst.jsdt.ui.JavaElementSorter"
 					id="org.eclipse.wst.jsdt.ui.javaElementSorter"/>
-		   
+		   <!--
 		   <commonWizard
 		        menuGroupId="org.eclipse.wst.jsdt.ui.java"
 		        type="new"
@@ -5530,10 +5532,11 @@
 		        </or>
 		     </enablement>
 		  </commonWizard>
+		  -->
 		  <commonWizard
 		        menuGroupId="org.eclipse.wst.jsdt.ui.java"
 		        type="new"
-		        wizardId="org.eclipse.wst.jsdt.ui.wizards.NewClassCreationWizard">
+		        wizardId="org.eclipse.wst.jsdt.ui.NewJSWizard">
 		     <enablement>
 		        <or>
 		           <instanceof value="org.eclipse.wst.jsdt.core.IPackageFragment"/>
@@ -5546,6 +5549,7 @@
 		     </enablement>
 		  </commonWizard>
 
+   	      <!--
    	      <commonWizard
 		        menuGroupId="org.eclipse.wst.jsdt.ui.java"
 		        type="new"
@@ -5591,7 +5595,8 @@
 						</adapt>
 					</or>
 				 </enablement>
-		    </commonWizard>	 
+		    </commonWizard>
+		    -->	 
 		    <commonWizard
 		          menuGroupId="org.eclipse.wst.jsdt.ui.java"
 		          type="new"
