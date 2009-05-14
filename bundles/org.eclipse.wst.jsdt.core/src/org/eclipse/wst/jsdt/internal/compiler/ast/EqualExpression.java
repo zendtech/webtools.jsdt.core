@@ -13,6 +13,7 @@ package org.eclipse.wst.jsdt.internal.compiler.ast;
 import org.eclipse.wst.jsdt.core.ast.IASTNode;
 import org.eclipse.wst.jsdt.core.ast.IEqualExpression;
 import org.eclipse.wst.jsdt.internal.compiler.ASTVisitor;
+import org.eclipse.wst.jsdt.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.wst.jsdt.internal.compiler.flow.FlowContext;
 import org.eclipse.wst.jsdt.internal.compiler.flow.FlowInfo;
 import org.eclipse.wst.jsdt.internal.compiler.flow.UnconditionalFlowInfo;
@@ -152,15 +153,33 @@ public class EqualExpression extends BinaryExpression implements IEqualExpressio
 	public TypeBinding resolveType(BlockScope scope) {
 
 		constant = Constant.NotAConstant;
-		TypeBinding leftType = left.resolveType(scope);
-		TypeBinding rightType = right.resolveType(scope);
+			boolean leftIsCast, rightIsCast;
+			if ((leftIsCast = left instanceof CastExpression) == true) left.bits |= DisableUnnecessaryCastCheck; // will check later on
+			TypeBinding originalLeftType = left.resolveType(scope);
+
+			if ((rightIsCast = right instanceof CastExpression) == true) right.bits |= DisableUnnecessaryCastCheck; // will check later on
+			TypeBinding originalRightType = right.resolveType(scope);
 
 		// always return BooleanBinding
-		if (leftType == null || rightType == null){
+		if (originalLeftType == null || originalRightType == null){
 			constant = Constant.NotAConstant;
 			return null;
 		}
 
+		// autoboxing support
+		boolean use15specifics = scope.compilerOptions().sourceLevel >= ClassFileConstants.JDK1_5;
+		TypeBinding leftType = originalLeftType, rightType = originalRightType;
+		if (use15specifics) {
+			if (leftType != TypeBinding.NULL && leftType.isBaseType()) {
+				if (!rightType.isBaseType()) {
+					rightType = scope.environment().computeBoxingType(rightType);
+				}
+			} else {
+				if (rightType != TypeBinding.NULL && rightType.isBaseType()) {
+					leftType = scope.environment().computeBoxingType(leftType);
+				}
+			}
+		}
 		// both base type
 		if (leftType.isAnyType() || rightType.isAnyType())
 		{
@@ -175,15 +194,18 @@ public class EqualExpression extends BinaryExpression implements IEqualExpressio
 			//  0000   0000       0000   0000      0000
 			//  <<16   <<12       <<8    <<4       <<0
 			int operatorSignature = OperatorSignatures[EQUAL_EQUAL][ (leftTypeID << 4) + rightTypeID];
-			left.computeConversion(scope, TypeBinding.wellKnownType(scope, (operatorSignature >>> 16) & 0x0000F), leftType);
-			right.computeConversion(scope, TypeBinding.wellKnownType(scope, (operatorSignature >>> 8) & 0x0000F), rightType);
+			left.computeConversion(scope, TypeBinding.wellKnownType(scope, (operatorSignature >>> 16) & 0x0000F), originalLeftType);
+			right.computeConversion(scope, TypeBinding.wellKnownType(scope, (operatorSignature >>> 8) & 0x0000F), originalRightType);
 			bits |= operatorSignature & 0xF;
 			if ((operatorSignature & 0x0000F) == T_undefined) {
 				constant = Constant.NotAConstant;
 				scope.problemReporter().invalidOperator(this, leftType, rightType);
 				return null;
 			}
-			
+			// check need for operand cast
+			if (leftIsCast || rightIsCast) {
+				CastExpression.checkNeedForArgumentCasts(scope, EQUAL_EQUAL, operatorSignature, left, leftType.id, leftIsCast, right, rightType.id, rightIsCast);
+			}
 			computeConstant(leftType, rightType);
 			return this.resolvedType = TypeBinding.BOOLEAN;
 		}
@@ -219,7 +241,8 @@ public class EqualExpression extends BinaryExpression implements IEqualExpressio
 			return this.resolvedType = TypeBinding.BOOLEAN;
 		}
 		constant = Constant.NotAConstant;
-		return this.resolvedType = TypeBinding.BOOLEAN;
+		scope.problemReporter().notCompatibleTypesError(this, leftType, rightType);
+		return null;
 	}
 	public void traverse(ASTVisitor visitor, BlockScope scope) {
 		if (visitor.visit(this, scope)) {
