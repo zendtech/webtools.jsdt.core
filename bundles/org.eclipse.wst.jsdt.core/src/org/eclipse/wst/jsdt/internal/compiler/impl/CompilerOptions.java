@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Michael Spector <spektom@gmail.com> -  Bug 243886
  *******************************************************************************/
 package org.eclipse.wst.jsdt.internal.compiler.impl;
 
@@ -359,7 +360,7 @@ public class CompilerOptions {
 	public InferOptions inferOptions=new InferOptions();
 
 
-    public boolean onlyReportSyntaxErrors=false;
+	public boolean enableSemanticValidation=true;
 	
 
 	/**
@@ -367,11 +368,15 @@ public class CompilerOptions {
 	 */
 	public CompilerOptions(){
 		// use default options
-		try {
-			this.onlyReportSyntaxErrors=JavaScriptCore.getPlugin().getPluginPreferences().getBoolean("onlySyntaxErrors");
-		} catch (Exception ex) 
-		{this.onlyReportSyntaxErrors=false;}
 
+		try {
+			if (JavaScriptCore.getPlugin().getPluginPreferences().contains("semanticValidation")) { //$NON-NLS-1$
+				this.enableSemanticValidation = JavaScriptCore.getPlugin().getPluginPreferences().getBoolean("semanticValidation"); //$NON-NLS-1$
+			}
+		}
+		catch (Exception ex) {
+			this.enableSemanticValidation = true;
+		}
 	}
 
 	/**
@@ -699,9 +704,13 @@ public class CompilerOptions {
 	public void set(Map optionsMap) {
 
 		try {
-			this.onlyReportSyntaxErrors=JavaScriptCore.getPlugin().getPluginPreferences().getBoolean("onlySyntaxErrors");
-		} catch (Exception ex) 
-		{this.onlyReportSyntaxErrors=false;}
+			if (JavaScriptCore.getPlugin().getPluginPreferences().contains("semanticValidation")) { //$NON-NLS-1$
+				this.enableSemanticValidation = JavaScriptCore.getPlugin().getPluginPreferences().getBoolean("semanticValidation"); //$NON-NLS-1$
+			}
+		}
+		catch (Exception ex) {
+			this.enableSemanticValidation = true;
+		}
 
 		Object optionValue;
 		if ((optionValue = optionsMap.get(OPTION_LocalVariableAttribute)) != null) {

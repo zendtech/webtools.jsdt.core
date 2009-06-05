@@ -4,7 +4,7 @@ Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.eclipse.wst.jsdt.ui; singleton:=true
 Bundle-Name: %pluginName
 Bundle-Vendor: %providerName
-Bundle-Version: 1.0.105.qualifier
+Bundle-Version: 1.0.106.qualifier
 Bundle-Activator: org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin
 Export-Package: org.eclipse.wst.jsdt.internal.corext;x-friends:="org.eclipse.wst.jsdt.junit",
  org.eclipse.wst.jsdt.internal.corext.buildpath;x-internal:=true,

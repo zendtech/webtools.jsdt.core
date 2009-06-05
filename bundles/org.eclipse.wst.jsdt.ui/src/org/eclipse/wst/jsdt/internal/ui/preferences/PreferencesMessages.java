@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -390,6 +390,7 @@ public final class PreferencesMessages extends NLS {
 	public static String ProblemSeveritiesConfigurationBlock_needsfullbuild_message;
 	public static String ProblemSeveritiesConfigurationBlock_needsprojectbuild_message;
 	public static String ProblemSeveritiesConfigurationBlock_common_description;
+	public static String ProblemSeveritiesConfigurationBlock_enableSemanticValidation;
 	public static String ProblemSeveritiesConfigurationBlock_pb_unsafe_type_op_label;
 	public static String ProblemSeveritiesConfigurationBlock_pb_raw_type_reference;
 	public static String ProblemSeveritiesConfigurationBlock_pb_final_param_bound_label;

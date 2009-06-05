@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,10 +7,12 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Michael Spector <spektom@gmail.com> -  Bug 243886
  *******************************************************************************/
 package org.eclipse.wst.jsdt.internal.ui.preferences;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.jface.dialogs.ControlEnableState;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -31,6 +33,8 @@ import org.eclipse.wst.jsdt.internal.ui.wizards.IStatusChangeListener;
 public class ProblemSeveritiesConfigurationBlock extends OptionsConfigurationBlock {
 
 	private static final String SETTINGS_SECTION_NAME= "ProblemSeveritiesConfigurationBlock";  //$NON-NLS-1$
+	
+	private static final Key PREF_PB_SEMANTIC_VALIDATION_ENABLEMENT = getJDTCoreKey("semanticValidation"); //$NON-NLS-1$
 	
 	// Preference store keys, see JavaScriptCore.getOptions
 	private static final Key PREF_PB_UNDEFINED_FIELD= getJDTCoreKey(JavaScriptCore.COMPILER_PB_UNDEFINED_FIELD);
@@ -116,8 +120,10 @@ public class ProblemSeveritiesConfigurationBlock extends OptionsConfigurationBlo
 	private static final String ENABLED= JavaScriptCore.ENABLED;
 	private static final String DISABLED= JavaScriptCore.DISABLED;
 	
-
 	private PixelConverter fPixelConverter;
+
+	private ControlEnableState fBlockEnableState;
+	private Composite fControlsComposite;
 	
 	public ProblemSeveritiesConfigurationBlock(IStatusChangeListener context, IProject project, IWorkbenchPreferenceContainer container) {
 		super(context, project, getKeys(), container);
@@ -130,6 +136,7 @@ public class ProblemSeveritiesConfigurationBlock extends OptionsConfigurationBlo
 	
 	private static Key[] getKeys() {
 		return new Key[] {
+				PREF_PB_SEMANTIC_VALIDATION_ENABLEMENT,
 				PREF_PB_UNDEFINED_FIELD,
 				/*PREF_PB_METHOD_WITH_CONSTRUCTOR_NAME,*/ PREF_PB_DEPRECATION, PREF_PB_HIDDEN_CATCH_BLOCK, PREF_PB_UNUSED_LOCAL,
 				PREF_PB_UNUSED_PARAMETER, PREF_PB_UNUSED_PARAMETER_INCLUDE_DOC_COMMENT_REFERENCE,
@@ -168,11 +175,21 @@ public class ProblemSeveritiesConfigurationBlock extends OptionsConfigurationBlo
 		layout.marginHeight= 0;
 		layout.marginWidth= 0;
 		mainComp.setLayout(layout);
-		
+
+		if (fProject == null) {
+			String label = PreferencesMessages.ProblemSeveritiesConfigurationBlock_enableSemanticValidation;
+			addCheckBox(mainComp, label, PREF_PB_SEMANTIC_VALIDATION_ENABLEMENT, new String[]{"true", "false"}, 0); //$NON-NLS-1$ //$NON-NLS-2$
+			Label horizontalLine= new Label(mainComp, SWT.SEPARATOR | SWT.HORIZONTAL);
+			horizontalLine.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false, 2, 1));
+			horizontalLine.setFont(mainComp.getFont());
+		}
+
 		Composite commonComposite= createStyleTabContent(mainComp);
 		GridData gridData= new GridData(GridData.FILL, GridData.FILL, true, true);
 		gridData.heightHint= fPixelConverter.convertHeightInCharsToPixels(20);
 		commonComposite.setLayoutData(gridData);
+
+		fControlsComposite = commonComposite;
 		
 		validateSettings(null, null, null);
 	
@@ -494,7 +511,7 @@ public class ProblemSeveritiesConfigurationBlock extends OptionsConfigurationBlo
 		}
 		
 		if (changedKey != null) {
-			if (PREF_PB_UNUSED_PARAMETER.equals(changedKey)  )
+			if (PREF_PB_UNUSED_PARAMETER.equals(changedKey) || PREF_PB_SEMANTIC_VALIDATION_ENABLEMENT.equals(changedKey) )
 //					PREF_PB_DEPRECATION.equals(changedKey) ||
 //					PREF_PB_LOCAL_VARIABLE_HIDING.equals(changedKey) ||
 //					PREF_PB_UNUSED_DECLARED_THROWN_EXCEPTION.equals(changedKey)) 
@@ -513,6 +530,10 @@ public class ProblemSeveritiesConfigurationBlock extends OptionsConfigurationBlo
 	}
 	
 	private void updateEnableStates() {
+		boolean semantecValidationEnablement = checkValue(PREF_PB_SEMANTIC_VALIDATION_ENABLEMENT, "true"); //$NON-NLS-1$
+		enableConfigControls(semantecValidationEnablement);
+		
+		if (!semantecValidationEnablement) {
 		boolean enableUnusedParams= !checkValue(PREF_PB_UNUSED_PARAMETER, IGNORE);
 //		getCheckBox(PREF_PB_SIGNAL_PARAMETER_IN_OVERRIDING).setEnabled(enableUnusedParams);
 		getCheckBox(PREF_PB_UNUSED_PARAMETER_INCLUDE_DOC_COMMENT_REFERENCE).setEnabled(enableUnusedParams);
@@ -526,6 +547,20 @@ public class ProblemSeveritiesConfigurationBlock extends OptionsConfigurationBlo
 
 //		boolean enableHiding= !checkValue(PREF_PB_LOCAL_VARIABLE_HIDING, IGNORE);
 //		getCheckBox(PREF_PB_SPECIAL_PARAMETER_HIDING_FIELD).setEnabled(enableHiding);
+		}
+	}
+	
+	protected void enableConfigControls(boolean enable) {
+		if (enable) {
+			if (fBlockEnableState != null) {
+				fBlockEnableState.restore();
+				fBlockEnableState= null;
+			}
+		} else {
+			if (fBlockEnableState == null) {
+				fBlockEnableState= ControlEnableState.disable(fControlsComposite);
+			}
+		}	
 	}
 
 	protected String[] getFullBuildDialogStrings(boolean workspaceSettings) {

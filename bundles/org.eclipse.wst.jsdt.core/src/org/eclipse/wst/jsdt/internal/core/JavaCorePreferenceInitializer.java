@@ -110,6 +110,8 @@ public class JavaCorePreferenceInitializer extends AbstractPreferenceInitializer
 		// Time out for parameter names
 		defaultOptionsMap.put(JavaScriptCore.TIMEOUT_FOR_PARAMETER_NAME_FROM_ATTACHED_JAVADOC, "50"); //$NON-NLS-1$
 
+		defaultOptionsMap.put("semanticValidation", "true"); //$NON-NLS-1$
+
 		// Store default values to default preferences
 	 	IEclipsePreferences defaultPreferences = ((IScopeContext) new DefaultScope()).getNode(JavaScriptCore.PLUGIN_ID);
 		for (Iterator iter = defaultOptionsMap.entrySet().iterator(); iter.hasNext();) {
