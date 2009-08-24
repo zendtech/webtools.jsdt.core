@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -163,7 +163,7 @@ public class EqualExpression extends BinaryExpression implements IEqualExpressio
 		// always return BooleanBinding
 		if (originalLeftType == null || originalRightType == null){
 			constant = Constant.NotAConstant;
-			return null;
+			return TypeBinding.BOOLEAN;
 		}
 
 		// autoboxing support
@@ -199,8 +199,8 @@ public class EqualExpression extends BinaryExpression implements IEqualExpressio
 			bits |= operatorSignature & 0xF;
 			if ((operatorSignature & 0x0000F) == T_undefined) {
 				constant = Constant.NotAConstant;
-				scope.problemReporter().invalidOperator(this, leftType, rightType);
-				return null;
+				//scope.problemReporter().invalidOperator(this, leftType, rightType);
+				return TypeBinding.BOOLEAN;
 			}
 			// check need for operand cast
 			if (leftIsCast || rightIsCast) {

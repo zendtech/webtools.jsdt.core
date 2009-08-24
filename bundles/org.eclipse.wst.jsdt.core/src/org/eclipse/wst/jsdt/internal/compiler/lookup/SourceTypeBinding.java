@@ -1754,10 +1754,18 @@ SimpleLookupTable storedAnnotations(boolean forceInitialize) {
 	return this.storedAnnotations;
 }
 public ReferenceBinding superclass() {
-	if (this.nextType==null)
+	if (this.nextType == null) {
+		//fix for https://bugs.eclipse.org/bugs/show_bug.cgi?id=282372
+		if(this == this.superclass)
+			return null;
 		return this.superclass;
-	if (this.superclass!=null && this.superclass.id!=TypeIds.T_JavaLangObject)
+	}
+	if (this.superclass!=null && this.superclass.id!=TypeIds.T_JavaLangObject) {
+		//fix for https://bugs.eclipse.org/bugs/show_bug.cgi?id=282372
+		if(this == this.superclass)
+			return null;
 		return this.superclass;
+	}
 	return this.nextType.superclass();
 
 }
