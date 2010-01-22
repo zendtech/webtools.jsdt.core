@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2009 IBM Corporation and others.
+ * Copyright (c) 2000, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -391,7 +391,7 @@ public void indexLibrary(IIncludePathEntry entry, IProject requestingProject) {
 	if (JavaScriptCore.getPlugin() == null) return;
 	IndexRequest request = null;
 	Object target = JavaModel.getTarget(ResourcesPlugin.getWorkspace().getRoot(), entry.getPath(), true);
-	if(target instanceof IFolder || (target instanceof File && ((File)target).isDirectory())
+	if(target instanceof IFolder
 			|| target instanceof IProject){
 		char[][] inclusionPatterns = ((ClasspathEntry)entry).fullInclusionPatternChars();
 		char[][] exclusionPatterns = ((ClasspathEntry)entry).fullExclusionPatternChars();
