@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1359,7 +1359,7 @@ public class Util {
 	 * @param complianceLevel the compliance level
 	 */
 	public static boolean isValidFolderNameForPackage(String folderName, String sourceLevel, String complianceLevel) {
-		return JavaScriptConventions.validateIdentifier(folderName, sourceLevel, complianceLevel).getSeverity() != IStatus.ERROR;
+		return JavaScriptConventions.validatePackageName(folderName, sourceLevel, complianceLevel).getSeverity() != IStatus.ERROR;
 	}
 
 	/**
