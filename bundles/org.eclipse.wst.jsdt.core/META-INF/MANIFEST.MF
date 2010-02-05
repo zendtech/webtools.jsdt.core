@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.eclipse.wst.jsdt.core; singleton:=true
-Bundle-Version: 1.0.107.qualifier
+Bundle-Version: 1.0.108.qualifier
 Bundle-Name: %pluginName
 Bundle-Vendor: %providerName
 Require-Bundle: org.eclipse.core.resources;bundle-version="[3.4.0,4.0.0)",
