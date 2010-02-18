@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -170,8 +170,14 @@ public class InferredType extends ASTNode {
 
 			attributesHash.put(name, newAttribute);
 
-			if( !isAnonymous )
-				this.updatePositions(definer.sourceStart(), definer.sourceEnd());
+			if (!isAnonymous) {
+				if (definer != null) {
+					this.updatePositions(definer.sourceStart(), definer.sourceEnd());
+				}
+				else {
+					this.updatePositions(newAttribute.sourceStart(), newAttribute.sourceEnd());
+				}
+			}
 		}
 		return newAttribute;
 	}
