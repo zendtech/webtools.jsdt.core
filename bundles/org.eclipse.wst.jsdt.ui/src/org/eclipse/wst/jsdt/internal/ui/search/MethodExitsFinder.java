@@ -111,7 +111,9 @@ public class MethodExitsFinder extends ASTVisitor {
 		if (block != null) {
 			List statements= block.statements();
 			if (statements.size() > 0) {
-				Statement last= (Statement)statements.get(statements.size() - 1);
+				Object lastObject = statements.get(statements.size() - 1);
+				if(lastObject instanceof Statement) {
+				Statement last = (Statement) lastObject;
 				int maxVariableId= LocalVariableIndex.perform(fMethodDeclaration);
 				FlowContext flowContext= new FlowContext(0, maxVariableId + 1);
 				flowContext.setConsiderAccessMode(false);
@@ -121,6 +123,7 @@ public class MethodExitsFinder extends ASTVisitor {
 				if (!info.isNoReturn() && !isVoid) {
 					if (!info.isPartialReturn())
 						return;
+				}
 				}
 			}
 			SimpleName name= fAST.newSimpleName("x"); //$NON-NLS-1$
