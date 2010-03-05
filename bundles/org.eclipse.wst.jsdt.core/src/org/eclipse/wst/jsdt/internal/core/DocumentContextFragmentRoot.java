@@ -22,12 +22,11 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-
 import org.eclipse.wst.jsdt.core.IAccessRule;
 import org.eclipse.wst.jsdt.core.IIncludePathAttribute;
 import org.eclipse.wst.jsdt.core.IIncludePathEntry;
-import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.JSDScopeUtil;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
@@ -503,11 +502,11 @@ public class DocumentContextFragmentRoot extends PackageFragmentRoot{
 
 
 
-		boolean equals = (this.fRelativeFile.equals(other.fRelativeFile)) &&
+		boolean equalRelativeFileAndIncludedFileLengths = (this.fRelativeFile!=null && this.fRelativeFile.equals(other.fRelativeFile)) &&
 						  this.includedFiles!=null && (other.includedFiles !=null) &&
 						  this.includedFiles.length == other.includedFiles.length;
 
-		if(!equals) return equals;
+		if(!equalRelativeFileAndIncludedFileLengths) return false;
 
 		/* try some more cases */
 
