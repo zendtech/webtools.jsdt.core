@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7727,7 +7727,8 @@ public final class CompletionEngine
 						fieldsFound,
 						methodsFound);
 			}
-			if (proposeMethod)
+			
+			if (proposeMethod && token.length > 0)
 			{
 				this.nameEnvironment.findBindings(
 						token,
@@ -7736,7 +7737,7 @@ public final class CompletionEngine
 						this);
 				acceptBindings(token,false,false);
 			}
-			if (proposeField)
+			if (proposeField && token.length > 0)
 			{
 				this.nameEnvironment.findBindings(
 						token,
@@ -9441,6 +9442,8 @@ public final class CompletionEngine
 		try {
 			Parser localParser = new Parser(this.problemReporter, this.compilerOptions.parseLiteralExpressionsAsConstants);
 
+			// fix for 315266
+			localParser.scanner.taskTags = null;
 			CompilationUnitDeclaration parsedUnit = localParser.parse(unit, unitResult);
 			localParser.inferTypes(parsedUnit,this.compilerOptions);
 			return parsedUnit;
