@@ -6410,7 +6410,7 @@ public final class CompletionEngine
 						fieldsFound,
 						methodsFound);
 			}
-			if (proposeMethod)
+			if (proposeMethod  && token.length > 0)
 			{
 				this.nameEnvironment.findBindings(
 						token,
@@ -6419,7 +6419,7 @@ public final class CompletionEngine
 						this);
 				acceptBindings(token,false,false);
 			}
-			if (proposeField)
+			if (proposeField  && token.length > 0)
 			{
 				this.nameEnvironment.findBindings(
 						token,
