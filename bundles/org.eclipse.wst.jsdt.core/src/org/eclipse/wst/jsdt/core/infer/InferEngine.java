@@ -1317,7 +1317,7 @@ public class InferEngine extends ASTVisitor implements IInferEngine {
 
 		if (javadoc.extendsType!=null)
 		{
-			InferredType superType=this.addType(javadoc.extendsType.getSimpleTypeName());
+			InferredType superType=this.addType(javadoc.extendsType.getFullTypeName());
 			type.superClass=superType;
 		}
 		
