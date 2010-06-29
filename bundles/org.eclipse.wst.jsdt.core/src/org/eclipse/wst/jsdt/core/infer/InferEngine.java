@@ -1276,7 +1276,7 @@ public class InferEngine extends ASTVisitor implements IInferEngine {
 
 				if (javadoc.returnType!=null)
 				{
-				   InferredType type = this.addType(javadoc.returnType.getSimpleTypeName());
+				   InferredType type = this.addType(changePrimitiveToObject(javadoc.returnType.getSimpleTypeName()));
 				   methodDeclaration.setInferredType(type);
 				   ((MethodDeclaration)methodDeclaration).bits |= ASTNode.IsInferredJsDocType;
 				}
