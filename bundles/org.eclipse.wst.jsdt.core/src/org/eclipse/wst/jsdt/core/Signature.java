@@ -1473,6 +1473,21 @@ private static int appendClassTypeSignature(char[] string, int start, boolean fu
 					buffer.append('/');
 				}
 				break;
+			 case C_DOLLAR :
+			 	innerTypeStart = buffer.length();
+			 	inAnonymousType = false;
+			 	if (resolved) {
+					// once we hit "$" there are no more package prefixes
+					removePackageQualifiers = false;
+					/**
+					 * Convert '$' in resolved type signatures into '.'.
+					 * NOTE: This assumes that the type signature is an inner type
+					 * signature. This is true in most cases, but someone can define a
+					 * non-inner type name containing a '$'.
+					 */
+					buffer.append('.');
+			 	}
+			 	break;
 			 default :
 				if (innerTypeStart != -1 && !inAnonymousType && Character.isDigit(c)) {
 					inAnonymousType = true;
