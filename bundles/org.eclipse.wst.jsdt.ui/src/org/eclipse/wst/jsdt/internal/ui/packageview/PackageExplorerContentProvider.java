@@ -374,6 +374,9 @@ public class PackageExplorerContentProvider extends StandardJavaScriptElementCon
 				return getSourceChildren(((NamespaceGroup) parentElement).getJavaScriptUnit(), true, ((NamespaceGroup) parentElement));
 			}
 			return super.getChildren(parentElement);
+		} catch (JavaScriptModelException e) {
+			//ignore, caused by trying to get children of files in libraries
+			return NO_CHILDREN;
 		} catch (CoreException e) {
 			e.printStackTrace();
 			return NO_CHILDREN;
