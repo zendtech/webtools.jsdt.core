@@ -360,7 +360,7 @@ public class CompilerOptions {
 	public InferOptions inferOptions=new InferOptions();
 
 
-	public boolean enableSemanticValidation=true;
+	public boolean enableSemanticValidation=false;
 	
 
 	/**
@@ -375,7 +375,7 @@ public class CompilerOptions {
 			}
 		}
 		catch (Exception ex) {
-			this.enableSemanticValidation = true;
+			this.enableSemanticValidation = false;
 		}
 	}
 
@@ -709,7 +709,7 @@ public class CompilerOptions {
 			}
 		}
 		catch (Exception ex) {
-			this.enableSemanticValidation = true;
+			this.enableSemanticValidation = false;
 		}
 
 		Object optionValue;
