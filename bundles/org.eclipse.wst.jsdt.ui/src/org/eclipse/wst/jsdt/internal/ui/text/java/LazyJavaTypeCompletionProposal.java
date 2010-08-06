@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,9 +18,8 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.text.edits.TextEdit;
 import org.eclipse.wst.jsdt.core.CompletionProposal;
-import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
-import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
@@ -117,16 +116,16 @@ public class LazyJavaTypeCompletionProposal extends LazyJavaCompletionProposal {
 		/* Add imports if the preference is on. */
 		fImportRewrite= createImportRewrite();
 
-		if (fImportRewrite != null) {
-			String packageName=null;
-			try {
-				IJavaScriptElement javaElement = this.getProposalInfo().getJavaElement();
-				 packageName=JavaModelUtil.getFilePackage(javaElement);
-			} catch (JavaScriptModelException e) {
-				JavaScriptPlugin.log(e);
-			}
-			return fImportRewrite.addImport(qualifiedTypeName,packageName, fImportContext);
-		}
+//		if (fImportRewrite != null) {
+//			String packageName=null;
+//			try {
+//				IJavaScriptElement javaElement = this.getProposalInfo().getJavaElement();
+//				 packageName=JavaModelUtil.getFilePackage(javaElement);
+//			} catch (JavaScriptModelException e) {
+//				JavaScriptPlugin.log(e);
+//			}
+//			return fImportRewrite.addImport(qualifiedTypeName,packageName, fImportContext);
+//		}
 		
 		// fall back for the case we don't have an import rewrite (see allowAddingImports)
 		
