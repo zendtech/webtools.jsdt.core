@@ -16,5 +16,7 @@ package org.eclipse.wst.jsdt.libraries;
  * change significantly before reaching stability. It is being made available at this early stage to solicit feedback 
  * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken 
  * (repeatedly) as the API evolves.
+ * 
+ * @deprecated
  */
 public class BasicLibraryContainer {}
