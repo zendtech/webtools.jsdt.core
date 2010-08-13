@@ -797,6 +797,9 @@ public class PackageExplorerContentProvider extends StandardJavaScriptElementCon
 							}
 						}
 					}
+					else {
+						allChildren.add(next);
+					}
 				} catch (JavaScriptModelException ex) {
 					ex.printStackTrace();
 				}
