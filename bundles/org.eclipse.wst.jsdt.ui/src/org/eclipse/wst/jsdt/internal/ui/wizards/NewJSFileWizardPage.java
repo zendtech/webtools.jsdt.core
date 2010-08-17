@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * Copyright (c) 2006, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,17 +15,25 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.internal.corext.codemanipulation.StubUtility;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
+import org.eclipse.wst.jsdt.ui.CodeGeneration;
 
 class NewJSFileWizardPage extends WizardNewFileCreationPage {
 	
@@ -252,6 +260,15 @@ path.append("/"); //$NON-NLS-1$
 		
 		return path;
 	}
-	
-	
+
+	public void addFileComment(IFile file) {
+		IJavaScriptUnit cu= JavaScriptCore.createCompilationUnitFrom(file);
+		try {
+			cu.becomeWorkingCopy(new NullProgressMonitor());
+			cu.getBuffer().setContents(CodeGeneration.getFileComment(cu, StubUtility.getLineDelimiterUsed(cu)));
+			cu.commitWorkingCopy(true, new NullProgressMonitor());
+		} catch (CoreException e) {
+			JavaScriptPlugin.log(e);
+		}
+	}	
 }
