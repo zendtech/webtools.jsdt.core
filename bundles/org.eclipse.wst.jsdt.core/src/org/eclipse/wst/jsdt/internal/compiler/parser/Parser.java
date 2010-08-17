@@ -1322,8 +1322,9 @@ protected void checkAndSetModifiers(int flag){
 public void checkComment() {
 
 	// discard obsolete comments while inside methods or fields initializer (see bug 74369)
-	if (!(this.diet && this.dietInt==0) && this.scanner.commentPtr >= 0) {
-		flushCommentsDefinedPriorTo(this.endStatementPosition);
+	// don't discard if the expression being worked on is an ObjectLiteral (see bug 322412 )
+		if (!(this.diet && this.dietInt == 0) && this.scanner.commentPtr >= 0 && !(expressionPtr >= 0 && expressionStack[expressionPtr] instanceof ObjectLiteral)) {
+			flushCommentsDefinedPriorTo(this.endStatementPosition);
 	}
 
 	int lastComment = this.scanner.commentPtr;
@@ -3704,8 +3705,9 @@ private void consumeLiteralField() {
 	ObjectLiteralField literalField = new ObjectLiteralField(field, value, start, end);
 	pushOnExpressionStack(literalField);
 
-	if (this.javadoc!=null)
+	if (this.javadoc!=null) {
 		literalField.javaDoc = this.javadoc;
+	}
 	else if (value instanceof FunctionExpression)
 	{
 		MethodDeclaration methodDeclaration = ((FunctionExpression)value).methodDeclaration;
@@ -4352,7 +4354,7 @@ protected void consumeToken(int type) {
 		case TokenNameRBRACE:
 			this.endStatementPosition = this.scanner.currentPosition - 1;
 			this.endPosition = this.scanner.startPosition - 1;
-			//the item is not part of the potential futur expression/statement
+			//the item is not part of the potential future expression/statement
 			break;
 		case TokenNameRPAREN :
 			// in order to handle ( expression) ////// (cast)expression///// foo(x)

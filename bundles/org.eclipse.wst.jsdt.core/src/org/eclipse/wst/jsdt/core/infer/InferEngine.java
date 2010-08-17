@@ -1091,7 +1091,7 @@ public class InferEngine extends ASTVisitor implements IInferEngine {
 					{
 						if (javaDoc.memberOf!=null)
 						{
-							char[] typeName = javaDoc.memberOf.getSimpleTypeName();
+							char[] typeName = javaDoc.memberOf.getFullTypeName();
 							convertAnonymousTypeToNamed(type,typeName);
 							type.isDefinition=true;
 						}
@@ -1110,7 +1110,7 @@ public class InferEngine extends ASTVisitor implements IInferEngine {
 						}
 						if (javaDoc.returnType!=null)
 						{
-							returnType=this.addType(javaDoc.returnType.getSimpleTypeName());
+							returnType=this.addType(javaDoc.returnType.getFullTypeName());
 						}
 					}
 					
@@ -1139,8 +1139,13 @@ public class InferEngine extends ASTVisitor implements IInferEngine {
 							handleAttributeDeclaration(attribute, field.getInitializer());
 							attribute.isStatic=isStatic;
 							//@GINO: recursion might not be the best idea
-							if (returnType!=null)
-								attribute.type=returnType;
+							if (returnType!=null) {
+								attribute.type = returnType;
+								// apply (force) type onto OL initializer
+								if (field.getInitializer() instanceof ObjectLiteral) {
+									((ObjectLiteral) field.getInitializer()).setInferredType(returnType);
+								}
+							}
 							else
 							  attribute.type = getTypeOf(field.getInitializer());
 						}
