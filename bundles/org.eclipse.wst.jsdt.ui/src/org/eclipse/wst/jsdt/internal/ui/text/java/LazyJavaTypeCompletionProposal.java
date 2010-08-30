@@ -296,6 +296,10 @@ public class LazyJavaTypeCompletionProposal extends LazyJavaCompletionProposal {
 	protected boolean isValidPrefix(String prefix) {
 		return isPrefix(prefix, getSimpleTypeName()) || isPrefix(prefix, getQualifiedTypeName());
 	}
+	  	
+	public boolean isValidTypePrefix(String prefix) {
+		return isValidPrefix(prefix);
+	}
 
 	/*
 	 * @see org.eclipse.wst.jsdt.internal.ui.text.java.JavaCompletionProposal#getCompletionText()
