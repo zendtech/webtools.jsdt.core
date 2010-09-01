@@ -1736,4 +1736,12 @@ public class CompilationUnitEditor extends JavaEditor implements IJavaReconcilin
 			}
 		}
 	}
+
+	/**
+	 * @param offset
+	 * @param length
+	 */
+	void reveal(int offset, int length) {
+		getSourceViewer().revealRange(offset, length);
+	}
 }
