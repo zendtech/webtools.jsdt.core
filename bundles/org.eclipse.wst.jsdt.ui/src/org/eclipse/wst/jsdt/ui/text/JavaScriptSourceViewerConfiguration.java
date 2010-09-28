@@ -341,6 +341,8 @@ public class JavaScriptSourceViewerConfiguration extends TextSourceViewerConfigu
 			ContentAssistProcessor stringProcessor= new JavaCompletionProcessor(getEditor(), assistant, IJavaScriptPartitions.JAVA_STRING);
 			assistant.setContentAssistProcessor(stringProcessor, IJavaScriptPartitions.JAVA_STRING);
 			
+			assistant.setContentAssistProcessor(stringProcessor, IJavaScriptPartitions.JAVA_CHARACTER);
+			
 			ContentAssistProcessor multiLineProcessor= new JavaCompletionProcessor(getEditor(), assistant, IJavaScriptPartitions.JAVA_MULTI_LINE_COMMENT);
 			assistant.setContentAssistProcessor(multiLineProcessor, IJavaScriptPartitions.JAVA_MULTI_LINE_COMMENT);
 
