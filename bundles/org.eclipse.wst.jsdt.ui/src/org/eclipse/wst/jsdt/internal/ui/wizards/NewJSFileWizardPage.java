@@ -267,6 +267,7 @@ path.append("/"); //$NON-NLS-1$
 			cu.becomeWorkingCopy(new NullProgressMonitor());
 			cu.getBuffer().setContents(CodeGeneration.getFileComment(cu, StubUtility.getLineDelimiterUsed(cu)));
 			cu.commitWorkingCopy(true, new NullProgressMonitor());
+			cu.discardWorkingCopy();
 		} catch (CoreException e) {
 			JavaScriptPlugin.log(e);
 		}
