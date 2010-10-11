@@ -63,7 +63,10 @@ public class SuperTypeHierarchyViewer extends TypeHierarchyViewer {
 			ITypeHierarchy hierarchy= getHierarchy();
 			if (hierarchy != null) {
 				IType superClass= hierarchy.getSuperclass(type);
-				res.add(superClass);
+
+				if (superClass != null) {
+					res.add(superClass);
+				}
 			}
 		}
 		
