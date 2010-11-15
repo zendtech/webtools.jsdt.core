@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.wst.jsdt.internal.ui.navigator;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ILabelDecorator;
@@ -19,6 +20,7 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IMemento;
+import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.eclipse.ui.navigator.ICommonContentExtensionSite;
 import org.eclipse.ui.navigator.ICommonLabelProvider;
 import org.eclipse.ui.navigator.IExtensionStateModel;
@@ -26,7 +28,9 @@ import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.internal.ui.navigator.IExtensionStateConstants.Values;
 import org.eclipse.wst.jsdt.internal.ui.packageview.PackageExplorerContentProvider;
 import org.eclipse.wst.jsdt.internal.ui.packageview.PackageExplorerLabelProvider;
+import org.eclipse.wst.jsdt.internal.ui.packageview.PackageFragmentRootContainer;
 import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
+import org.eclipse.wst.jsdt.ui.ProjectLibraryRoot;
 
 /**
  * Provides the labels for the Project Explorer.
@@ -155,6 +159,18 @@ public class JavaNavigatorLabelProvider implements ICommonLabelProvider {
 		} else if (element instanceof IResource) {
 			return formatResourceMessage((IResource) element);
 		}
+		else if (element instanceof PackageFragmentRootContainer) {
+			return formatPackageFragmentRootContainerMessage((PackageFragmentRootContainer) element);
+		}
+		else if (element instanceof ProjectLibraryRoot) {
+			return formatProjectLibraryRootMessage((ProjectLibraryRoot) element);
+		}
+		if (element instanceof IAdaptable) {
+			IWorkbenchAdapter adapter = (IWorkbenchAdapter) ((IAdaptable) element).getAdapter(IWorkbenchAdapter.class);
+			if (adapter != null) {
+				return adapter.getLabel(element);
+			}
+		}
 		return ""; //$NON-NLS-1$
 	}
 
@@ -179,4 +195,12 @@ public class JavaNavigatorLabelProvider implements ICommonLabelProvider {
 		
 	}
  
+	private String formatProjectLibraryRootMessage(ProjectLibraryRoot element) {
+		return element.getText() + JavaScriptElementLabels.CONCAT_STRING + formatJavaElementMessage(element.getProject());
+	}
+
+	private String formatPackageFragmentRootContainerMessage(PackageFragmentRootContainer element) {
+		return element.getLabel() + JavaScriptElementLabels.CONCAT_STRING + formatJavaElementMessage(element.getJavaProject());
+	}
+
 }

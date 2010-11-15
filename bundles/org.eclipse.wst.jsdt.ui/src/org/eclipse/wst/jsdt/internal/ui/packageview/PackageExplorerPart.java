@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -107,11 +107,11 @@ import org.eclipse.ui.views.framelist.IFrameSource;
 import org.eclipse.ui.views.framelist.TreeFrame;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 import org.eclipse.wst.jsdt.core.IClassFile;
-import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IJarEntryResource;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IJavaScriptModel;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.IType;
@@ -703,7 +703,7 @@ public class PackageExplorerPart extends ViewPart
 		IPreferenceStore store= PreferenceConstants.getPreferenceStore();
 		boolean showCUChildren= store.getBoolean(PreferenceConstants.SHOW_CU_CHILDREN);
 		if (showProjects()) 
-			return new PackageExplorerContentProvider(showCUChildren);
+			return new ScriptExplorerContentProvider(showCUChildren);
 		else
 			return new WorkingSetAwareContentProvider(showCUChildren, fWorkingSetModel);
 	}
@@ -1148,6 +1148,10 @@ public class PackageExplorerPart extends ViewPart
 				
 		if (element == null) // try a non Java resource
 			element= input;
+		
+		if (element instanceof IJavaScriptUnit || element instanceof IClassFile) {
+			element = ((IJavaScriptElement) element).getResource();
+		}
 				
 		if (element != null) {
 			ISelection newSelection= new StructuredSelection(element);

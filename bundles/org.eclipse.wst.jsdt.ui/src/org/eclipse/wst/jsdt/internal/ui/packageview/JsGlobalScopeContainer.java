@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,18 +23,17 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.model.IWorkbenchAdapter;
-import org.eclipse.wst.jsdt.core.JsGlobalScopeContainerInitializer;
-import org.eclipse.wst.jsdt.core.IJsGlobalScopeContainer;
 import org.eclipse.wst.jsdt.core.IIncludePathEntry;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.IJsGlobalScopeContainer;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
-
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
+import org.eclipse.wst.jsdt.core.JsGlobalScopeContainerInitializer;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.IJsGlobalScopeContainerInitializerExtension;
-import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.JavaPluginImages;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.jsdt.internal.ui.util.JSDScopeUiUtil;
 
 /**
@@ -179,4 +178,11 @@ public class JsGlobalScopeContainer extends PackageFragmentRootContainer {
 		return false;
 	}
 
+	public String toString() {
+		return fClassPathEntry.toString();
+	}
+
+	public boolean hasChildren() {
+		return getPackageFragmentRoots().length > 0;
+	}
 }

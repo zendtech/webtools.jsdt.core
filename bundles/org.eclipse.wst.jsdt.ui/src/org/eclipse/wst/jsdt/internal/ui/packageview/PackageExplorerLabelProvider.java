@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.wst.jsdt.core.IClassFile;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.internal.ui.navigator.ContainerFolder;
@@ -90,6 +91,22 @@ public class PackageExplorerLabelProvider extends AppearanceAwareLabelProvider {
 			return decorateText(text, element);
 		}
 		text = super.getText(element);
+		if (!isFlatLayout() && element instanceof IJavaScriptElement) {
+			switch (((IJavaScriptElement) element).getElementType()) {
+				case IJavaScriptElement.TYPE :
+				case IJavaScriptElement.METHOD :
+				case IJavaScriptElement.FIELD :
+				case IJavaScriptElement.LOCAL_VARIABLE :
+				case IJavaScriptElement.INITIALIZER : {
+					int groupEnd = text.lastIndexOf('.');
+					if (groupEnd > 0 && groupEnd < text.length() - 1) {
+						text = text.substring(groupEnd + 1);
+					}
+					return text;
+				}
+			}
+		}
+
 		if(element instanceof IClassFile) {
 			text = ((IClassFile)element).getPath().lastSegment();
 		}else if (element instanceof IJavaScriptUnit) {
@@ -107,6 +124,10 @@ public class PackageExplorerLabelProvider extends AppearanceAwareLabelProvider {
 			return fullName.substring(prefix.length());
 		}
 		return fullName;
+	}
+	
+	public boolean isFlatLayout() {
+		return fIsFlatLayout;
 	}
 	
 	private String getNameDelta(IFolder parent, IPackageFragment fragment) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,12 +25,12 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.eclipse.wst.jsdt.core.Flags;
 import org.eclipse.wst.jsdt.core.IField;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.IInitializer;
 import org.eclipse.wst.jsdt.core.IJarEntryResource;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IMember;
-import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.IType;
@@ -39,6 +39,7 @@ import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.JdtFlags;
 import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
+import org.eclipse.wst.jsdt.internal.ui.packageview.NamespaceGroup;
 import org.eclipse.wst.jsdt.internal.ui.packageview.PackageFragmentRootContainer;
 import org.eclipse.wst.jsdt.internal.ui.preferences.MembersOrderPreferenceCache;
 
@@ -68,7 +69,6 @@ public class JavaScriptElementComparator extends ViewerComparator {
 	private static final int RESOURCEFOLDERS= 7;
 	private static final int RESOURCES= 8;
 	
-	private static final int PACKAGE_DECL=	10;
 	private static final int IMPORT_CONTAINER= 11;
 	private static final int IMPORT_DECLARATION= 12;
 	
@@ -113,9 +113,6 @@ public class JavaScriptElementComparator extends ViewerComparator {
 					case IJavaScriptElement.FIELD :
 						{
 							int flags= ((IField) je).getFlags();
-							if (Flags.isEnum(flags)) {
-								return getMemberCategory(MembersOrderPreferenceCache.ENUM_CONSTANTS_INDEX);
-							}
 							if (Flags.isStatic(flags))
 								return getMemberCategory(MembersOrderPreferenceCache.STATIC_FIELDS_INDEX);
 							else
@@ -131,8 +128,6 @@ public class JavaScriptElementComparator extends ViewerComparator {
 						}
 					case IJavaScriptElement.TYPE :
 						return getMemberCategory(MembersOrderPreferenceCache.TYPE_INDEX);
-					case IJavaScriptElement.PACKAGE_DECLARATION :
-						return PACKAGE_DECL;
 					case IJavaScriptElement.IMPORT_CONTAINER :
 						return IMPORT_CONTAINER;
 					case IJavaScriptElement.IMPORT_DECLARATION :
@@ -146,7 +141,8 @@ public class JavaScriptElementComparator extends ViewerComparator {
 					case IJavaScriptElement.CLASS_FILE :
 						return CLASSFILES;
 					case IJavaScriptElement.JAVASCRIPT_UNIT :
-						return JAVASCRIPTUNITS;
+//						return JAVASCRIPTUNITS;
+						return RESOURCES;
 				}
 
 			} catch (JavaScriptModelException e) {
@@ -167,7 +163,12 @@ public class JavaScriptElementComparator extends ViewerComparator {
 			return RESOURCEFOLDERS;
 		} else if (element instanceof PackageFragmentRootContainer) {
 			return PACKAGEFRAGMENTROOTS;
+		} else if (element instanceof ProjectLibraryRoot) {
+			return PROJECTS;
+		} else if (element instanceof NamespaceGroup) {
+			return PROJECTS;
 		}
+
 		return OTHERS;
 	}
 	

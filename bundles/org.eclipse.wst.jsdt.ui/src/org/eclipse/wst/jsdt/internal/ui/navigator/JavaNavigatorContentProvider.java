@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2009 IBM Corporation and others.
+ * Copyright (c) 2003, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.jsdt.internal.ui.navigator;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -23,7 +22,6 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -37,7 +35,9 @@ import org.eclipse.ui.navigator.PipelinedViewerUpdate;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IJavaScriptModel;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.ui.navigator.IExtensionStateConstants.Values;
 import org.eclipse.wst.jsdt.internal.ui.packageview.PackageExplorerContentProvider;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
@@ -90,7 +90,9 @@ public class JavaNavigatorContentProvider extends
 	
 	public void dispose() { 
 		super.dispose();
-		fStateModel.removePropertyChangeListener(fLayoutPropertyListener);
+		if (fStateModel != null) {
+			fStateModel.removePropertyChangeListener(fLayoutPropertyListener);
+		}
 	}
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) { 
@@ -126,6 +128,13 @@ public class JavaNavigatorContentProvider extends
 		if (element instanceof IProject) {
 			return ((IProject) element).isAccessible();
 		}
+		if (getProvideMembers() && element instanceof IFile && JavaScriptCore.isJavaScriptLikeFileName(((IFile) element).getName())) {
+			/*
+			 * TODO: gives false positives for .js files not on an Include
+			 * Path
+			 */
+			return JavaScriptCore.create((IFile) element) != null;
+		}
 		return super.hasChildren(element);
 	}
 	
@@ -133,9 +142,12 @@ public class JavaNavigatorContentProvider extends
 		if (parentElement instanceof IWorkspaceRoot) {
 			IWorkspaceRoot root = (IWorkspaceRoot) parentElement;
 			return root.getProjects();
-		} 
+		}
 		if (parentElement instanceof IProject) {
-			return super.getChildren(JavaScriptCore.create((IProject)parentElement));
+			return super.getChildren(JavaScriptCore.create((IProject) parentElement));
+		}
+		if (getProvideMembers() && parentElement instanceof IFile && JavaScriptCore.isJavaScriptLikeFileName(((IFile) parentElement).getName())) {
+			return super.getChildren(JavaScriptCore.create((IFile) parentElement));
 		}
 		return super.getChildren(parentElement);
 	}
@@ -155,38 +167,70 @@ public class JavaNavigatorContentProvider extends
 
 	}
 
-	public void getPipelinedChildren(Object parent, Set currentChildren) { 
-		customize(getChildren(parent), currentChildren);
+	private void customizeChildren(Object parent, Set currentChildren) {
+		if(!getProvideMembers())
+			return;
+		
+		// Append CU's children to Files
+		if(parent instanceof IFile  && JavaScriptCore.isJavaScriptLikeFileName(((IFile)parent).getName())) {
+			Object[] children = getChildren(parent);
+			for (int i = 0; i < children.length; i++) {
+				currentChildren.add(children[i]);
+			}
+		}
+
+		// append JS Model children as children of IProjects
+		if (parent instanceof IProject) {
+			Object[] projectChildren = super.getChildren(JavaScriptCore.create((IProject) parent));
+			for (int i = 0; i < projectChildren.length; i++) {
+				currentChildren.add(projectChildren[i]);
+			}
+		}
 	}
 
+	public void getPipelinedChildren(Object parent, Set currentChildren) {
+		customizeChildren(parent, currentChildren);
+	}
 	public void getPipelinedElements(Object input, Set currentElements) {
-		customize(getElements(input), currentElements);
+		customizeChildren(input, currentElements);
 	}
 
 	public Object getPipelinedParent(Object object, Object suggestedParent) {
-		return getParent(object);
+		if (object instanceof IJavaScriptElement && ((IJavaScriptElement) object).getElementType() == IJavaScriptElement.JAVASCRIPT_UNIT) {
+			try {
+				IResource underlyingResource = ((IJavaScriptUnit) object).getUnderlyingResource();
+				if (underlyingResource != null && underlyingResource.getType() < IResource.PROJECT) {
+					return underlyingResource.getParent();
+				}
+			}
+			catch (JavaScriptModelException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return suggestedParent;
 	}
 
 	public PipelinedShapeModification interceptAdd(PipelinedShapeModification addModification) {
-		
-		Object parent= addModification.getParent();
-		
-		if (parent instanceof IJavaScriptProject) {
-			addModification.setParent(((IJavaScriptProject)parent).getProject());
-		} 
-		
-		if (parent instanceof IWorkspaceRoot) {		
-			deconvertJavaProjects(addModification);
-		}
-		
-		convertToJavaElements(addModification);
+//		
+//		Object parent= addModification.getParent();
+//		
+//		if (parent instanceof IJavaScriptProject) {
+//			addModification.setParent(((IJavaScriptProject)parent).getProject());
+//		} 
+//		
+//		if (parent instanceof IWorkspaceRoot) {		
+//			deconvertJavaProjects(addModification);
+//		}
+//		
+//		convertToJavaElements(addModification);
 		return addModification;
 	}
  
 	public PipelinedShapeModification interceptRemove(
 			PipelinedShapeModification removeModification) {
-		deconvertJavaProjects(removeModification);
-		convertToJavaElements(removeModification.getChildren());
+//		deconvertJavaProjects(removeModification);
+//		convertToJavaElements(removeModification.getChildren());
 		return removeModification;
 	}
 	
@@ -260,53 +304,16 @@ public class JavaNavigatorContentProvider extends
 		return false;
 
 	}
-	
-	/**
-	 * Adapted from the C Navigator Content Provider
-	 * @param javaElements
-	 * @param proposedChildren
-	 */
-	private void customize(Object[] javaElements, Set proposedChildren) {
-		List elementList= Arrays.asList(javaElements);
-		for (Iterator iter= proposedChildren.iterator(); iter.hasNext();) {
-			Object element= iter.next();
-			IResource resource= null;
-			if (element instanceof IResource) {
-				resource= (IResource)element;
-			} else if (element instanceof IAdaptable) {
-				resource= (IResource)((IAdaptable)element).getAdapter(IResource.class);
-			}
-			if (resource != null) {
-				int i= elementList.indexOf(resource);
-				if (i >= 0) {
-					javaElements[i]= null;
-				}
-			}
-		}
-		for (int i= 0; i < javaElements.length; i++) {
-			Object element= javaElements[i];
-			if (element instanceof IJavaScriptElement) {
-				IJavaScriptElement cElement= (IJavaScriptElement)element;
-				IResource resource= cElement.getResource();
-				if (resource != null) {
-					proposedChildren.remove(resource);
-				}
-				proposedChildren.add(element);
-			} else if (element != null) {
-				proposedChildren.add(element);
-			}
-		}
-	}
 
-
-
-	public boolean interceptRefresh(PipelinedViewerUpdate refreshSynchronization) {		
-		return convertToJavaElements(refreshSynchronization.getRefreshTargets());
+	public boolean interceptRefresh(PipelinedViewerUpdate refreshSynchronization) {
+		return false;
+//		return convertToJavaElements(refreshSynchronization.getRefreshTargets());
 
 	}
 
 	public boolean interceptUpdate(PipelinedViewerUpdate updateSynchronization) {		
-		return convertToJavaElements(updateSynchronization.getRefreshTargets());
+		return false;
+//		return convertToJavaElements(updateSynchronization.getRefreshTargets());
 	}
 
 	protected void postAdd(final Object parent, final Object element, Collection runnables) {

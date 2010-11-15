@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.console.IConsoleConstants;
 import org.eclipse.ui.progress.IProgressConstants;
 import org.eclipse.wst.jsdt.ui.JavaScriptUI;
@@ -32,8 +33,15 @@ public class JavaPerspectiveFactory implements IPerspectiveFactory {
  		String editorArea = layout.getEditorArea();
 		
 		IFolderLayout folder= layout.createFolder("left", IPageLayout.LEFT, (float)0.25, editorArea); //$NON-NLS-1$
-		folder.addView(JavaScriptUI.ID_PACKAGES);
-		folder.addView(JavaScriptUI.ID_TYPE_HIERARCHY);
+		String explorerViewID = ProductProperties.getProperty(IProductConstants.PERSPECTIVE_EXPLORER_VIEW);
+		// make sure the specified view ID is known
+		if (PlatformUI.getWorkbench().getViewRegistry().find(explorerViewID) != null)
+			folder.addView(explorerViewID);
+		else
+			folder.addView(ProductProperties.ID_PERSPECTIVE_EXPLORER_VIEW);
+
+		folder.addPlaceholder(JavaScriptUI.ID_PACKAGES);
+		folder.addPlaceholder(JavaScriptUI.ID_TYPE_HIERARCHY);
 		folder.addPlaceholder(IPageLayout.ID_RES_NAV);
 		
 		IFolderLayout outputfolder= layout.createFolder("bottom", IPageLayout.BOTTOM, (float)0.75, editorArea); //$NON-NLS-1$

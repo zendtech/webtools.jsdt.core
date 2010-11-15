@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,8 +13,10 @@ package org.eclipse.wst.jsdt.internal.ui.packageview;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -49,6 +51,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
+import org.eclipse.wst.jsdt.core.IParent;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
@@ -288,42 +291,241 @@ public class PackageExplorerContentProvider extends StandardJavaScriptElementCon
 				return getContainerPackageFragmentRoots((PackageFragmentRootContainer)((ContainerFolder)parentElement).getParentObject());
 			}
 			if (parentElement instanceof PackageFragmentRootContainer)
-				return getContainerPackageFragmentRoots((PackageFragmentRootContainer)parentElement, true);
-			
-			if(parentElement instanceof ProjectLibraryRoot) {
-				return ((ProjectLibraryRoot)parentElement).getChildren();
+				return getContainerPackageFragmentRoots((PackageFragmentRootContainer)parentElement, fIsFlatLayout, null);
+			else if (parentElement instanceof NamespaceGroup && ((NamespaceGroup) parentElement).getPackageFragmentRootContainer() != null) {
+				return getContainerPackageFragmentRoots(((NamespaceGroup) parentElement).getPackageFragmentRootContainer(), true, ((NamespaceGroup) parentElement));
 			}
 			
+			if(parentElement instanceof ProjectLibraryRoot) {
+//				return ((ProjectLibraryRoot)parentElement).getChildren();
+				// Include source folders (and also scour their model contents)
+				Object[] children1 = ((ProjectLibraryRoot) parentElement).getChildren();
+				List sourceRoots = new ArrayList();
+				try {
+					IPackageFragmentRoot[] packageFragmentRoots = ((ProjectLibraryRoot) parentElement).getProject().getPackageFragmentRoots();
+					for (int i = 0; i < packageFragmentRoots.length; i++) {
+						IIncludePathEntry entry = packageFragmentRoots[i].getRawIncludepathEntry();
+						if (IIncludePathEntry.CPE_SOURCE == entry.getEntryKind()) {
+							boolean hidden = false;
+							IIncludePathAttribute[] attribs = entry.getExtraAttributes();
+							for (int k = 0; !hidden && attribs != null && k < attribs.length; k++) {
+								hidden |= (attribs[k] == IIncludePathAttribute.HIDE);
+							}
+							if (!hidden) {
+								sourceRoots.add(packageFragmentRoots[i]);
+							}
+						}
+					}
+				}
+				catch (JavaScriptModelException e) {
+					e.printStackTrace();
+				}
+				Object[] combined = new Object[children1.length + sourceRoots.size()];
+				System.arraycopy(children1, 0, combined, 0, children1.length);
+				if (!sourceRoots.isEmpty()) {
+					System.arraycopy(sourceRoots.toArray(), 0, combined, children1.length, sourceRoots.size());
+				}
+				return combined;
+			}
+//			if (parentElement instanceof IPackageFragmentRoot) {
+//				Object[] children = super.getChildren(parentElement);
+//				for (int i = 0; i < children.length; i++) {
+//					// replace the "default package" with its contents
+//					if (children[i] instanceof IPackageFragment && ((IPackageFragment) children[i]).isDefaultPackage()) {
+//						List combined = new ArrayList(children.length);
+//						for (int j = 0; j < children.length; j++) {
+//							if (j != i) {
+//								combined.add(children[j]);
+//							}
+//							else {
+//								Object[] defaultChildren = super.getChildren(children[j]);
+//								for (int k = 0; k < defaultChildren.length; k++) {
+//									combined.add(defaultChildren[k]);
+//								}
+//							}
+//						}
+//						return combined.toArray();
+//					}
+//				}
+//				return children;
+//			}
 			if (parentElement instanceof IProject) {
 				IProject project= (IProject) parentElement;
 				if (project.isAccessible())
 					return project.members();
 				return NO_CHILDREN;
 			}			
-			if(parentElement instanceof IPackageFragmentRoot && ((IPackageFragmentRoot)parentElement).isVirtual()) {
-				return getLibraryChildren((IPackageFragmentRoot)parentElement);
+			if (parentElement instanceof IPackageFragmentRoot && ((IPackageFragmentRoot)parentElement).isVirtual()) {
+				return getLibraryChildren((IPackageFragmentRoot)parentElement, fIsFlatLayout, null);
 			}
-			
+			else if (parentElement instanceof NamespaceGroup && ((NamespaceGroup) parentElement).getPackageFragmentRoot() != null && ((NamespaceGroup) parentElement).getPackageFragmentRoot().isVirtual()) {
+				return getLibraryChildren(((NamespaceGroup) parentElement).getPackageFragmentRoot(), true, ((NamespaceGroup) parentElement));
+			}
+			else if(parentElement instanceof IPackageFragmentRoot && IIncludePathEntry.CPE_SOURCE == ((IPackageFragmentRoot) parentElement).getRawIncludepathEntry().getEntryKind()) {
+				return getSourceChildren(parentElement, fIsFlatLayout, null);
+			}
+			else if (parentElement instanceof NamespaceGroup && ((NamespaceGroup) parentElement).getPackageFragmentRoot() != null && IIncludePathEntry.CPE_SOURCE == ((NamespaceGroup) parentElement).getPackageFragmentRoot().getRawIncludepathEntry().getEntryKind()) {
+				return getSourceChildren(((NamespaceGroup) parentElement).getPackageFragmentRoot(), true, ((NamespaceGroup) parentElement));
+			}
+			// if script unit
+			else if (parentElement instanceof IJavaScriptUnit) {
+				return getSourceChildren(parentElement, fIsFlatLayout, null);
+			}
+			// if group with script unit as parent
+			else if(parentElement instanceof NamespaceGroup && ((NamespaceGroup) parentElement).getJavaScriptUnit() != null) {
+				return getSourceChildren(((NamespaceGroup) parentElement).getJavaScriptUnit(), true, ((NamespaceGroup) parentElement));
+			}
 			return super.getChildren(parentElement);
+		} catch (JavaScriptModelException e) {
+			//ignore, caused by trying to get children of files in libraries
+			return NO_CHILDREN;
 		} catch (CoreException e) {
+			e.printStackTrace();
 			return NO_CHILDREN;
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.ui.StandardJavaScriptElementContentProvider#hasChildren(java.lang.Object)
+	 */
+	public boolean hasChildren(Object element) {
+		if (element instanceof JsGlobalScopeContainer) {
+			return ((JsGlobalScopeContainer) element).hasChildren();
+		}
+		if (element instanceof ProjectLibraryRoot) {
+			return ((ProjectLibraryRoot) element).hasChildren();
+		}
+		return super.hasChildren(element);
+	}
 
-private Object[] getLibraryChildren(IPackageFragmentRoot container) {
+	private Object[] getSourceChildren(Object parentElement, boolean neverGroup, NamespaceGroup onlyGroup) throws JavaScriptModelException {
+		/* if the parent is a fragment root use its children
+		 * else if parent element is a script unit, use it as the child
+		 */
+		Object[] rawChildren = new Object[0];
+		if(parentElement instanceof IPackageFragmentRoot) {
+			rawChildren = ((IParent) parentElement).getChildren();
+		} else if(parentElement instanceof IJavaScriptUnit) {
+			rawChildren = new Object[] { parentElement };
+		}
 		
-		
+		if (rawChildren == null)
+			return new Object[0];
+
+		ArrayList allChildren = new ArrayList();
+		ArrayList expanded = new ArrayList();
+		expanded.addAll(Arrays.asList(rawChildren));
+
+		if (expanded.isEmpty())
+			return new Object[0];
+
+		Object next = expanded.remove(0);
+		Map groups = new HashMap();
+
+		while (next != null) {
+			if (next instanceof IPackageFragment) {
+				expanded.addAll(Arrays.asList(((IPackageFragment) next).getChildren()));
+			}
+			else if (next instanceof IPackageFragmentRoot) {
+				expanded.addAll(Arrays.asList(((IPackageFragmentRoot) next).getChildren()));
+			}
+			else if (next instanceof IClassFile || next instanceof IJavaScriptUnit) {
+				IJavaScriptElement[] filtered = filter(((IParent) next).getChildren());
+				List newChildren = Arrays.asList(filtered);
+				allChildren.removeAll(newChildren);
+				if (fIsFlatLayout || neverGroup) {
+					if (onlyGroup == null) {
+						allChildren.addAll(newChildren);
+					}
+					else {
+						for (int j = 0; j < filtered.length; j++) {
+							switch(filtered[j].getElementType()) {
+								case IJavaScriptElement.TYPE :
+								case IJavaScriptElement.FIELD :
+								case IJavaScriptElement.METHOD :
+								case IJavaScriptElement.INITIALIZER :
+								case IJavaScriptElement.LOCAL_VARIABLE : {
+									String displayName = filtered[j].getDisplayName();
+									int groupNamesEnd = displayName.lastIndexOf('.');
+									if (groupNamesEnd == onlyGroup.fNamePrefixLength && displayName.startsWith(onlyGroup.fNamePrefix)) {
+										allChildren.add(filtered[j]);
+									}
+									break;
+								}
+								default : {
+									allChildren.add(filtered[j]);
+								}
+							}
+						}
+					}
+				}
+				else {
+					for (int j = 0; j < filtered.length; j++) {
+						switch(filtered[j].getElementType()) {
+							case IJavaScriptElement.TYPE :
+							case IJavaScriptElement.FIELD :
+							case IJavaScriptElement.METHOD :
+							case IJavaScriptElement.INITIALIZER :
+							case IJavaScriptElement.LOCAL_VARIABLE : {
+								String displayName = filtered[j].getDisplayName();
+								int groupEnd = displayName.lastIndexOf('.');
+								if (groupEnd > 0) {
+									String groupName = displayName.substring(0, groupEnd);
+									if (!groups.containsKey(groupName)) {
+										// create the group based on the parent type
+										NamespaceGroup group = null;
+										if(parentElement instanceof IPackageFragmentRoot) {
+											group = new NamespaceGroup((IPackageFragmentRoot) parentElement, groupName);
+										} else if(parentElement instanceof IJavaScriptUnit) {
+											group = new NamespaceGroup((IJavaScriptUnit) parentElement, groupName);
+										}
+										
+										if(group != null) {
+											groups.put(groupName, group);
+											allChildren.add(group);
+										}
+									}
+								}
+								else {
+									allChildren.add(filtered[j]);
+								}
+
+								break;
+							}
+							default : {
+								allChildren.add(filtered[j]);
+							}
+						}
+					}
+				}
+			}
+
+			if (expanded.size() > 0)
+				next = expanded.remove(0);
+			else
+				next = null;
+
+		}
+
+		return allChildren.toArray();
+	}
+	
+	
+	private Object[] getLibraryChildren(IPackageFragmentRoot container, boolean neverGroup, NamespaceGroup onlyGroup) {		
 		Object[] children=null;
 		try {
 			children = container.getChildren();
 		} catch (JavaScriptModelException ex1) {
-			// TODO Auto-generated catch block
 			ex1.printStackTrace();
 		}
 		if(children==null) return null;
 		ArrayList allChildren = new ArrayList();
 		
+		Map groups = null;
+		if (!fIsFlatLayout) {
+			groups = new HashMap();
+		}
+	
 		boolean unique = false;
 		try {
 			while(!unique && children!=null && children.length>0) {
@@ -336,18 +538,75 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 						break;
 					}
 				}
-				ArrayList more = new ArrayList();
+				List more = new ArrayList();
 				for(int i = 0;!unique && i<children.length;i++) {
 					if(children[i] instanceof IPackageFragment) {
 						more.addAll(Arrays.asList(((IPackageFragment)children[i]).getChildren()));
 					}else if(children[i] instanceof IPackageFragmentRoot) {
 						more.addAll(Arrays.asList(((IPackageFragmentRoot)children[i]).getChildren()));
-					}else if(children[i] instanceof IClassFile) {
-						more.addAll(Arrays.asList( filter(((IClassFile)children[i]).getChildren())) );
-					}else if(children[i] instanceof IJavaScriptUnit) {
-						more.addAll(Arrays.asList( filter(((IJavaScriptUnit)children[i]).getChildren())) );
-					}else {
-						/* bottomed out, now at javaElement level */
+					}else if(children[i] instanceof IClassFile || children[i] instanceof IJavaScriptUnit) {
+						IJavaScriptElement[] filtered = filter(((IParent) children[i]).getChildren());
+						List newChildren = Arrays.asList(filtered);
+						allChildren.removeAll(newChildren);
+						if (fIsFlatLayout || neverGroup) {
+							if (onlyGroup == null) {
+								allChildren.addAll(newChildren);
+							}
+							else {
+								for (int j = 0; j < filtered.length; j++) {
+									switch(filtered[j].getElementType()) {
+										case IJavaScriptElement.TYPE :
+										case IJavaScriptElement.FIELD :
+										case IJavaScriptElement.METHOD :
+										case IJavaScriptElement.INITIALIZER :
+										case IJavaScriptElement.LOCAL_VARIABLE : {
+											String displayName = filtered[j].getDisplayName();
+											int groupNamesEnd = displayName.lastIndexOf('.');
+											if (groupNamesEnd == onlyGroup.fNamePrefixLength && displayName.startsWith(onlyGroup.fNamePrefix)) {
+												allChildren.add(filtered[j]);
+											}
+											break;
+										}
+										default : {
+											allChildren.add(filtered[j]);
+										}
+									}
+								}
+							}
+						}
+						else {
+							for (int j = 0; j < filtered.length; j++) {
+								switch(filtered[j].getElementType()) {
+									case IJavaScriptElement.TYPE :
+									case IJavaScriptElement.FIELD :
+									case IJavaScriptElement.METHOD :
+									case IJavaScriptElement.INITIALIZER :
+									case IJavaScriptElement.LOCAL_VARIABLE : {
+										String displayName = filtered[j].getDisplayName();
+										int groupEnd = displayName.lastIndexOf('.');
+										if (groupEnd > 0) {
+											String groupName = displayName.substring(0, groupEnd);
+											if (!groups.containsKey(groupName)) {
+												NamespaceGroup group = new NamespaceGroup(container, groupName);
+												groups.put(groupName, group);
+												allChildren.add(group);
+											}
+										}
+										else {
+											allChildren.add(filtered[j]);
+										}
+
+										break;
+									}
+									default : {
+										allChildren.add(filtered[j]);
+									}
+								}
+							}
+						}
+					}
+					else {
+						/* bottomed out, now at javaScriptElement level */
 						unique=true;
 						break;
 					}
@@ -356,10 +615,8 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 				if(!unique) children = more.toArray();
 			}
 		} catch (JavaScriptModelException ex) {
-			// TODO Auto-generated catch block
 			ex.printStackTrace();
 		}
-		
 		
 		return allChildren.toArray();
 	}
@@ -395,13 +652,13 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 				if (isProjectPackageFragmentRoot(root)) {
 					// filter out package fragments that correspond to projects and
 					// replace them with the package fragments directly
-					Object[] fragments= getPackageFragmentRootContent(root);
-					for (int j= 0; j < fragments.length; j++) {
-						result.add(fragments[j]);
-					}
-				} else if(!shouldHide){
+//					Object[] fragments= getPackageFragmentRootContent(root);
+//					for (int j= 0; j < fragments.length; j++) {
+//						result.add(fragments[j]);
+//					}
+				} /*else if(!shouldHide){
 					result.add(root);
-				}
+				}*/
 			}
 		}
 		
@@ -417,14 +674,28 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 				projectPackageFragmentRoots.add(new JsGlobalScopeContainer(project, classpathEntry));
 			}	
 		}	
-		Object[] resources= project.getNonJavaScriptResources();
-		for (int i= 0; i < resources.length; i++) {
-			result.add(resources[i]);
-		}
+//		Object[] resources= project.getNonJavaScriptResources();
+//		for (int i= 0; i < resources.length; i++) {
+//			result.add(resources[i]);
+//		}
 		ProjectLibraryRoot projectLibs = new ProjectLibraryRoot(project);
 		result.add(0,projectLibs);
 		return result.toArray();
 	}
+	
+	public Object getParent(Object element) {
+		if (element instanceof NamespaceGroup) {
+			return ((NamespaceGroup)element).getParent();
+		}
+		if (element instanceof IPackageFragmentRoot) {
+			IJavaScriptProject project = (IJavaScriptProject) ((IPackageFragmentRoot) element).getAncestor(IJavaScriptElement.JAVASCRIPT_PROJECT);
+			if (project != null) {
+				return new ProjectLibraryRoot(project);
+			}
+		}
+		return super.getParent(element);
+	}
+
 //	private Object[] getContainerPackageFragmentRoots3(PackageFragmentRootContainer container) {
 //		Object[] children = container.getChildren();
 //		if(children==null) return null;
@@ -440,9 +711,9 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 //	}
 //	
 	private Object[] getContainerPackageFragmentRoots(PackageFragmentRootContainer container) {
-		return getContainerPackageFragmentRoots(container, false);
+		return getContainerPackageFragmentRoots(container, false, null);
 	}
-	private Object[] getContainerPackageFragmentRoots(PackageFragmentRootContainer container, boolean createFolder) {
+	private Object[] getContainerPackageFragmentRoots(PackageFragmentRootContainer container, boolean neverGroup, NamespaceGroup onlyGroup) {
 		
 			Object[] children = container.getChildren();
 			if(children==null) return new Object[0];
@@ -452,8 +723,13 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 			expanded.addAll(Arrays.asList(children));
 			
 			
-			if(expanded==null || expanded.size() < 1) return new Object[0];
+			if(expanded.isEmpty()) return new Object[0];
 			
+			Map groups = null;
+			if (!fIsFlatLayout) {
+				groups = new HashMap();
+			}
+		
 			Object next = expanded.remove(0);
 
 			while(next!=null) {
@@ -462,18 +738,71 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 						expanded.addAll(Arrays.asList(((IPackageFragment)next).getChildren()));
 					}else if(next instanceof IPackageFragmentRoot) {
 						expanded.addAll(Arrays.asList(((IPackageFragmentRoot)next).getChildren()));
-					}else if(next instanceof IClassFile) {
-						List newChildren = Arrays.asList( filter(((IClassFile)next).getChildren() ));
+					}else if(next instanceof IClassFile || next instanceof IJavaScriptUnit) {
+						IJavaScriptElement[] filtered = filter(((IParent) next).getChildren());
+						List newChildren = Arrays.asList(filtered);
 						allChildren.removeAll(newChildren);
-						allChildren.addAll(newChildren);
-					}else if(next instanceof IJavaScriptUnit) {
-						List newChildren = Arrays.asList( filter(((IJavaScriptUnit)next).getChildren()));
-						allChildren.removeAll(newChildren);
-						allChildren.addAll(newChildren);
-					
+						if (fIsFlatLayout || neverGroup) {
+							if (onlyGroup == null) {
+								allChildren.addAll(newChildren);
+							}
+							else {
+								for (int j = 0; j < filtered.length; j++) {
+									switch(filtered[j].getElementType()) {
+										case IJavaScriptElement.TYPE :
+										case IJavaScriptElement.FIELD :
+										case IJavaScriptElement.METHOD :
+										case IJavaScriptElement.INITIALIZER :
+										case IJavaScriptElement.LOCAL_VARIABLE : {
+											String displayName = filtered[j].getDisplayName();
+											int groupNamesEnd = displayName.lastIndexOf('.');
+											if (groupNamesEnd == onlyGroup.fNamePrefixLength && displayName.startsWith(onlyGroup.fNamePrefix)) {
+												allChildren.add(filtered[j]);
+											}
+											break;
+										}
+										default : {
+											allChildren.add(filtered[j]);
+										}
+									}
+								}
+							}
+						}
+						else {
+							for (int j = 0; j < filtered.length; j++) {
+								switch(filtered[j].getElementType()) {
+									case IJavaScriptElement.TYPE :
+									case IJavaScriptElement.FIELD :
+									case IJavaScriptElement.METHOD :
+									case IJavaScriptElement.INITIALIZER :
+									case IJavaScriptElement.LOCAL_VARIABLE : {
+										String displayName = filtered[j].getDisplayName();
+										int groupEnd = displayName.lastIndexOf('.');
+										if (groupEnd > 0) {
+											String groupName = displayName.substring(0, groupEnd);
+											if (!groups.containsKey(groupName)) {
+												NamespaceGroup group = new NamespaceGroup(container, groupName);
+												groups.put(groupName, group);
+												allChildren.add(group);
+											}
+										}
+										else {
+											allChildren.add(filtered[j]);
+										}
+
+										break;
+									}
+									default : {
+										allChildren.add(filtered[j]);
+									}
+								}
+							}
+						}
+					}
+					else {
+						allChildren.add(next);
 					}
 				} catch (JavaScriptModelException ex) {
-					// TODO Auto-generated catch block
 					ex.printStackTrace();
 				}
 				
@@ -655,16 +984,16 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 				IJavaScriptElement element= JavaScriptCore.create(curr);
 				if (element instanceof IPackageFragment) {
 					if (element.exists()) {
-						if (fFoldPackages) {
-							IPackageFragment fragment= (IPackageFragment) element;
-							IPackageFragmentRoot root= (IPackageFragmentRoot) fragment.getParent();
-							element= getFolded(root.getChildren(), fragment);
-						}
-						result.add(element);
+					if (fFoldPackages) {
+						IPackageFragment fragment= (IPackageFragment) element;
+						IPackageFragmentRoot root= (IPackageFragmentRoot) fragment.getParent();
+						element= getFolded(root.getChildren(), fragment);
 					}
+					result.add(element);	
 				} 
 			}	
 		}
+	}
 	}
 
 	public Object getHierarchicalPackageParent(IPackageFragment child) {
@@ -768,7 +1097,7 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 			} else if (kind == IJavaScriptElementDelta.ADDED) {
 				final Object parent = getHierarchicalPackageParent((IPackageFragment) element);
 				if (parent instanceof IPackageFragmentRoot) {
-					postAdd(parent, element,  runnables);
+//					postAdd(parent, element,  runnables);
 					return false;
 				} else {
 					postRefresh(internalGetParent(parent), GRANT_PARENT, element, runnables);
@@ -808,13 +1137,16 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 			// if the raw class path has changed we refresh the entire project
 			if ((flags & IJavaScriptElementDelta.F_INCLUDEPATH_CHANGED) != 0) {
 				postRefresh(element, ORIGINAL, element, runnables);
+				if (element.getElementType() == IJavaScriptElement.JAVASCRIPT_PROJECT) {
+					postRefresh(((IJavaScriptProject)element).getProject(), ORIGINAL, ((IJavaScriptProject)element).getProject(), runnables);
+				}
 				return false;				
 			}
 			// if added it could be that the corresponding IProject is already shown. Remove it first.
 			// bug 184296
 			if (kind == IJavaScriptElementDelta.ADDED) { 
 				postRemove(element.getResource(), runnables);
-				postAdd(element.getParent(), element, runnables);
+//				postAdd(element.getParent(), element, runnables);
 				return false;
 			}
 		}
@@ -861,7 +1193,7 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 				}
 				return true;		
 			} else {  
-				postAdd(parent, element, runnables);
+//				postAdd(parent, element, runnables);
 			}
 		}
 	
@@ -1051,7 +1383,7 @@ private Object[] getLibraryChildren(IPackageFragmentRoot container) {
 				return true;
 			} else
 			{
-				postAdd(parent, resource, runnables);
+				//postAdd(parent, resource, runnables);
 				return false;
 			}
 		}
