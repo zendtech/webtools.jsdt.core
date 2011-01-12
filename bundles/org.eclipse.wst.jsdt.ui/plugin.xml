@@ -5340,7 +5340,7 @@
 				</enablement>
 			</actionProvider> 
 			
-			<actionProvider
+			<!-- <actionProvider
 					class="org.eclipse.wst.jsdt.internal.ui.navigator.JavaNavigatorRefactorActionProvider"
 					id="org.eclipse.wst.jsdt.ui.navigator.actions.RefactorActions"
 					overrides="org.eclipse.ui.navigator.resources.actions.RefactorActions"> 
@@ -5361,7 +5361,8 @@
 						<instanceof value="org.eclipse.wst.jsdt.internal.ui.packageview.PackageFragmentRootContainer" /> 
 					</or>
 				</enablement>
-			</actionProvider>
+			</actionProvider> -->
+			
 		   <actionProvider
 		         class="org.eclipse.wst.jsdt.internal.ui.navigator.PackageExplorerOpenActionProvider"
 		         id="org.eclipse.wst.jsdt.ui.navigator.actions.OpenActions"
