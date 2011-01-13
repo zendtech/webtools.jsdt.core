@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2010 IBM Corporation and others.
+ * Copyright (c) 2000, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.eclipse.wst.jsdt.core.BindingKey;
@@ -37,6 +38,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.JsGlobalScopeContainerInitializer;
 import org.eclipse.wst.jsdt.core.Signature;
+import org.eclipse.wst.jsdt.core.compiler.libraries.SystemLibraryLocation;
 import org.eclipse.wst.jsdt.internal.corext.util.JavaModelUtil;
 import org.eclipse.wst.jsdt.internal.corext.util.Messages;
 import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
@@ -352,6 +354,8 @@ public class JavaScriptElementLabels {
 	
 	private final static long QUALIFIER_FLAGS= P_COMPRESSED | USE_RESOLVED;
 	
+	private static final IPath LIBCACHE_LOCATION = new Path(JavaScriptCore.getJavaScriptCore().getStateLocation().append(new String(SystemLibraryLocation.LIBRARY_RUNTIME_DIRECTORY)).toOSString());
+
 	/*
 	 * Package name compression
 	 */
@@ -494,16 +498,16 @@ public class JavaScriptElementLabels {
 				{
 					getTypeLabel(method.getDeclaringType(), T_FULLY_QUALIFIED | (flags & QUALIFIER_FLAGS), buf);
 					buf.append('.');
-				} else	{
-						buf.append('[');
-						getFileLabel(method, T_FULLY_QUALIFIED | (flags & QUALIFIER_FLAGS), buf);
-						buf.append(']');
-				}
-
+				} 
+//				else	{
+//						buf.append('[');
+//						getFileLabel(method, T_FULLY_QUALIFIED | (flags & QUALIFIER_FLAGS), buf);
+//						buf.append(']');
+//				}
 			}
 		 
-			if(buf.length() != 0)
-				buf.append(' ');
+//			if(buf.length() != 0)
+//				buf.append(' ');
 			buf.append(method.getDisplayName());
 			
 			// parameters
@@ -809,7 +813,7 @@ public class JavaScriptElementLabels {
 			IPackageFragment pack= type.getPackageFragment();
 			if (!pack.isDefaultPackage()) {
 				getPackageFragmentLabel(pack, (flags & QUALIFIER_FLAGS), buf);
-				buf.append(' ');
+//				buf.append(' ');
 			}
 		}
 		if (getFlag(flags, T_FULLY_QUALIFIED | T_CONTAINER_QUALIFIED)) {
@@ -985,7 +989,7 @@ public class JavaScriptElementLabels {
 				}
 				buf.append(name.substring(start));
 		} else {
-			buf.append(pack.getDisplayName());
+//			buf.append(pack.getDisplayName());
 		}
 		if (getFlag(flags, P_POST_QUALIFIED)) {
 			buf.append(CONCAT_STRING);
@@ -1090,7 +1094,14 @@ public class JavaScriptElementLabels {
 		boolean rootQualified= getFlag(flags, ROOT_QUALIFIED);
 		boolean referencedQualified= getFlag(flags, REFERENCED_ROOT_POST_QUALIFIED) && isReferenced(root);
 		if (rootQualified) {
-			buf.append(root.getPath().makeRelative().toString());
+//			buf.append(root.getPath().makeRelative().toString());
+			// for libraries stored in our metadata area, just show the filename
+			if (LIBCACHE_LOCATION.isPrefixOf(root.getPath())) {
+				buf.append(root.getPath().lastSegment().toString());
+			}
+			else {
+				buf.append(root.getPath().makeRelative().toString());
+			}
 		} else {
 			if (resource != null) {
 				IPath projectRelativePath= resource.getProjectRelativePath();

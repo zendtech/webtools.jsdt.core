@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2010 IBM Corporation and others.
+ * Copyright (c) 2000, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,6 +35,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.progress.UIJob;
 import org.eclipse.wst.jsdt.core.ElementChangedEvent;
@@ -374,9 +376,6 @@ public class PackageExplorerContentProvider extends StandardJavaScriptElementCon
 				return getSourceChildren(((NamespaceGroup) parentElement).getJavaScriptUnit(), true, ((NamespaceGroup) parentElement));
 			}
 			return super.getChildren(parentElement);
-		} catch (JavaScriptModelException e) {
-			//ignore, caused by trying to get children of files in libraries
-			return NO_CHILDREN;
 		} catch (CoreException e) {
 			e.printStackTrace();
 			return NO_CHILDREN;
@@ -388,7 +387,7 @@ public class PackageExplorerContentProvider extends StandardJavaScriptElementCon
 	 */
 	public boolean hasChildren(Object element) {
 		if (element instanceof JsGlobalScopeContainer) {
-			return ((JsGlobalScopeContainer) element).hasChildren();
+			return true;//((JsGlobalScopeContainer) element).hasChildren();
 		}
 		if (element instanceof ProjectLibraryRoot) {
 			return ((ProjectLibraryRoot) element).hasChildren();
@@ -1095,7 +1094,7 @@ public class PackageExplorerContentProvider extends StandardJavaScriptElementCon
 			} else if (kind == IJavaScriptElementDelta.ADDED) {
 				final Object parent = getHierarchicalPackageParent((IPackageFragment) element);
 				if (parent instanceof IPackageFragmentRoot) {
-					//postAdd(parent, element,  runnables);
+					postAdd(parent, element,  runnables);
 					return false;
 				} else {
 					postRefresh(internalGetParent(parent), GRANT_PARENT, element, runnables);
@@ -1116,10 +1115,8 @@ public class PackageExplorerContentProvider extends StandardJavaScriptElementCon
 				return false;
 			}
 			
-			if ((kind == IJavaScriptElementDelta.CHANGED) /* && !isStructuralCUChange(flags)*/) {
-				// XXX: Remove structure change optimization until ASTConvertor is ready
-				if ((flags & IJavaScriptElementDelta.F_CONTENT) == 1)
-					return false; // test moved ahead
+			if ((kind == IJavaScriptElementDelta.CHANGED) && !isStructuralCUChange(flags)) {
+				return false; // test moved ahead
 			}
 			
 			if (!isOnClassPath(cu)) { // TODO: isOnClassPath expensive! Should be put after all cheap tests
@@ -1145,8 +1142,8 @@ public class PackageExplorerContentProvider extends StandardJavaScriptElementCon
 			// if added it could be that the corresponding IProject is already shown. Remove it first.
 			// bug 184296
 			if (kind == IJavaScriptElementDelta.ADDED) { 
-				//postRemove(element.getResource(), runnables);
-				//postAdd(element.getParent(), element, runnables);
+				postRemove(element.getResource(), runnables);
+				postAdd(element.getParent(), element, runnables);
 				return false;
 			}
 		}
@@ -1193,7 +1190,7 @@ public class PackageExplorerContentProvider extends StandardJavaScriptElementCon
 				}
 				return true;		
 			} else {  
-				//postAdd(parent, element, runnables);
+				postAdd(parent, element, runnables);
 			}
 		}
 	
@@ -1204,12 +1201,6 @@ public class PackageExplorerContentProvider extends StandardJavaScriptElementCon
 				IResource underlyingResource = ((IJavaScriptUnit)element).getUnderlyingResource();
 				if(underlyingResource != null) {
 					postRefresh(underlyingResource, ORIGINAL, element, runnables);
-				}
-				if ((flags & IJavaScriptElementDelta.F_PRIMARY_RESOURCE) != 0) {
-					IJavaScriptElement parent2 = element.getAncestor(IJavaScriptElement.PACKAGE_FRAGMENT_ROOT);
-					if (parent2 != null) {
-						postRefresh(parent2, ORIGINAL, element, runnables);
-					}
 				}
 				updateSelection(delta, runnables);
 			}
@@ -1393,7 +1384,7 @@ public class PackageExplorerContentProvider extends StandardJavaScriptElementCon
 				return true;
 			} else
 			{
-				//postAdd(parent, resource, runnables);
+				postAdd(parent, resource, runnables);
 				return false;
 			}
 		}
@@ -1477,23 +1468,23 @@ public class PackageExplorerContentProvider extends StandardJavaScriptElementCon
 		});
 	}
 
-//	protected void postAdd(final Object parent, final Object element, Collection runnables) {
-//		runnables.add(new Runnable() {
-//			public void run() {
-//				Widget[] items= fViewer.testFindItems(element);
-//				for (int i= 0; i < items.length; i++) {
-//					Widget item= items[i];
-//					if (item instanceof TreeItem && !item.isDisposed()) {
-//						TreeItem parentItem= ((TreeItem) item).getParentItem();
-//						if (parentItem != null && !parentItem.isDisposed() && parent.equals(parentItem.getData())) {
-//							return; // no add, element already added (most likely by a refresh)
-//						}
-//					}
-//				}
-//				fViewer.add(parent, element);
-//			}
-//		});
-//	}
+	protected void postAdd(final Object parent, final Object element, Collection runnables) {
+		runnables.add(new Runnable() {
+			public void run() {
+				Widget[] items= fViewer.testFindItems(element);
+				for (int i= 0; i < items.length; i++) {
+					Widget item= items[i];
+					if (item instanceof TreeItem && !item.isDisposed()) {
+						TreeItem parentItem= ((TreeItem) item).getParentItem();
+						if (parentItem != null && !parentItem.isDisposed() && parent.equals(parentItem.getData())) {
+							return; // no add, element already added (most likely by a refresh)
+						}
+					}
+				}
+				fViewer.add(parent, element);
+			}
+		});
+	}
 
 	protected void postRemove(final Object element, Collection runnables) {
 		runnables.add(new Runnable() {
