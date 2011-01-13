@@ -43,6 +43,7 @@ public class JavaPerspectiveFactory implements IPerspectiveFactory {
 		
 		folder.addPlaceholder(JavaScriptUI.ID_TYPE_HIERARCHY);
 		folder.addPlaceholder(IPageLayout.ID_RES_NAV);
+		folder.addPlaceholder(JavaScriptUI.ID_PACKAGES);
 		
 		IFolderLayout outputfolder= layout.createFolder("bottom", IPageLayout.BOTTOM, (float)0.75, editorArea); //$NON-NLS-1$
 		outputfolder.addView(IPageLayout.ID_PROBLEM_VIEW);
