@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -103,18 +103,10 @@ public class BasicBrowserLibraryJsGlobalScopeContainerInitializer extends JsGlob
 	}
 	
 	public String getDescription(IPath containerPath, IJavaScriptProject project) {
-		
-		if(containerPath==null) return null;
-		
-		IPath p1 = new Path(new String(BasicBrowserLibraryJsGlobalScopeContainerInitializer.LIBRARY_FILE_NAME[0]));
-		IPath p2 = new Path(new String(BasicBrowserLibraryJsGlobalScopeContainerInitializer.LIBRARY_FILE_NAME[1]));
-		IPath requestedContainerPath = new Path(containerPath.lastSegment());
-		if (requestedContainerPath.equals(p1)) {
-			return BasicBrowserLibraryJsGlobalScopeContainerInitializer.FILE_DESCRIPTION0;
-		}else if (requestedContainerPath.equals(p2)) {
-			return BasicBrowserLibraryJsGlobalScopeContainerInitializer.FILE_DESCRIPTION1;
-		}
-		return BasicBrowserLibraryJsGlobalScopeContainerInitializer.ContainerDescription;
+		if (containerPath == null || containerPath.isEmpty())
+			return null;
+
+		return containerPath.lastSegment(); 
 	}
 	
 	public int getKind() {
