@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -318,7 +318,7 @@ public class OverrideMethodDialog extends SourceActionDialog {
 		IFunction[] typesArrays= (IFunction[]) types.toArray(new IFunction[types.size()]);
 		OverrideMethodComparator comparator= null;//new OverrideMethodComparator(binding);
 		if (expanded.isEmpty() && typesArrays.length > 0) {
-			comparator.sort(null, typesArrays);
+//			comparator.sort(null, typesArrays);
 			expanded.add(typesArrays[0]);
 		}
 		setExpandedElements(expanded.toArray());

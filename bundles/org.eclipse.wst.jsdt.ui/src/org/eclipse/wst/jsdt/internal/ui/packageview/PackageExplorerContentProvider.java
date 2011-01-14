@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2010 IBM Corporation and others.
+ * Copyright (c) 2000, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -390,7 +390,7 @@ public class PackageExplorerContentProvider extends StandardJavaScriptElementCon
 	 */
 	public boolean hasChildren(Object element) {
 		if (element instanceof JsGlobalScopeContainer) {
-			return ((JsGlobalScopeContainer) element).hasChildren();
+			return true;//((JsGlobalScopeContainer) element).hasChildren();
 		}
 		if (element instanceof ProjectLibraryRoot) {
 			return ((ProjectLibraryRoot) element).hasChildren();
@@ -874,19 +874,7 @@ public class PackageExplorerContentProvider extends StandardJavaScriptElementCon
 			
 			return allChildren.toArray();
 		}else {
-		
-			
-			Object[] children = container.getChildren();
-			if(children==null) return null;
-			ArrayList allChildren = new ArrayList();
-			for(int i=0;i<children.length;i++) {
-				try {
-					allChildren.addAll(Arrays.asList(((IPackageFragmentRoot)children[i]).getChildren()));
-				} catch (JavaScriptModelException ex) {
-					
-				}
-			}
-			return allChildren.toArray();
+			return new IJavaScriptElement[0];
 		}
 	}
 
@@ -1097,7 +1085,7 @@ public class PackageExplorerContentProvider extends StandardJavaScriptElementCon
 			} else if (kind == IJavaScriptElementDelta.ADDED) {
 				final Object parent = getHierarchicalPackageParent((IPackageFragment) element);
 				if (parent instanceof IPackageFragmentRoot) {
-//					postAdd(parent, element,  runnables);
+					postAdd(parent, element,  runnables);
 					return false;
 				} else {
 					postRefresh(internalGetParent(parent), GRANT_PARENT, element, runnables);
@@ -1146,7 +1134,7 @@ public class PackageExplorerContentProvider extends StandardJavaScriptElementCon
 			// bug 184296
 			if (kind == IJavaScriptElementDelta.ADDED) { 
 				postRemove(element.getResource(), runnables);
-//				postAdd(element.getParent(), element, runnables);
+				postAdd(element.getParent(), element, runnables);
 				return false;
 			}
 		}
@@ -1193,18 +1181,10 @@ public class PackageExplorerContentProvider extends StandardJavaScriptElementCon
 				}
 				return true;		
 			} else {  
-//				postAdd(parent, element, runnables);
+				postAdd(parent, element, runnables);
 			}
 		}
 	
-		if (elementType == IJavaScriptElement.JAVASCRIPT_UNIT) {
-			if (kind == IJavaScriptElementDelta.CHANGED) {
-				// isStructuralCUChange already performed above
-				postRefresh(element, ORIGINAL, element, runnables);
-				updateSelection(delta, runnables);
-			}
-			return false;
-		}
 		// no changes possible in class files
 		if (elementType == IJavaScriptElement.CLASS_FILE)
 			return false;
