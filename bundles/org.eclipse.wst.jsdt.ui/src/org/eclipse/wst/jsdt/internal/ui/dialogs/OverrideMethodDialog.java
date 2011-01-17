@@ -318,7 +318,7 @@ public class OverrideMethodDialog extends SourceActionDialog {
 		IFunction[] typesArrays= (IFunction[]) types.toArray(new IFunction[types.size()]);
 		OverrideMethodComparator comparator= null;//new OverrideMethodComparator(binding);
 		if (expanded.isEmpty() && typesArrays.length > 0) {
-//			comparator.sort(null, typesArrays);
+			comparator.sort(null, typesArrays);
 			expanded.add(typesArrays[0]);
 		}
 		setExpandedElements(expanded.toArray());
