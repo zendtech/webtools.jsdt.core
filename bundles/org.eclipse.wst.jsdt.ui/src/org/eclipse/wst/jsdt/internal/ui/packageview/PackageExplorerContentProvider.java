@@ -871,19 +871,7 @@ public class PackageExplorerContentProvider extends StandardJavaScriptElementCon
 			
 			return allChildren.toArray();
 		}else {
-		
-			
-			Object[] children = container.getChildren();
-			if(children==null) return null;
-			ArrayList allChildren = new ArrayList();
-			for(int i=0;i<children.length;i++) {
-				try {
-					allChildren.addAll(Arrays.asList(((IPackageFragmentRoot)children[i]).getChildren()));
-				} catch (JavaScriptModelException ex) {
-					
-				}
-			}
-			return allChildren.toArray();
+			return new Object[0];
 		}
 	}
 
