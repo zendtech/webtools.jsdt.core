@@ -5335,14 +5335,12 @@
           					<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.wst.jsdt.core.jsNature" />
 						</and>
 						<and>
-							<instanceof value="org.eclipse.core.resources.IResource" />
-							<not>
-								<instanceof value="org.eclipse.core.resources.IWorkspaceRoot" />
-							</not>
-						</and>
+							<instanceof value="org.eclipse.core.resources.IFile" />
+          					<test property="org.eclipse.core.resources.contentTypeId" value="org.eclipse.wst.jsdt.core.jsSource" />
+          				</and>	
 						<instanceof value="org.eclipse.wst.jsdt.core.IJavaScriptElement" />
 						<instanceof value="org.eclipse.wst.jsdt.core.IJarEntryResource" /> 
-						<instanceof	value="org.eclipse.wst.jsdt.internal.ui.packageview.PackageFragmentRootContainer" /> 
+						<instanceof	value="org.eclipse.wst.jsdt.internal.ui.packageview.PackageFragmentRootContainer" />
 					</or>
 				</enablement>
 			</actionProvider> 
