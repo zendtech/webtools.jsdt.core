@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2010 IBM Corporation and others.
+ * Copyright (c) 2000, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -545,7 +545,11 @@ public final class CompletionEngine
 		if(acceptedTypes == null) {
 			acceptedTypes = new ObjectVector();
 		}
-		acceptedTypes.add(new AcceptedBinding(packageName, simpleTypeName, enclosingTypeNames, modifiers, accessibility));
+		char[] fullyQualifiedName = simpleTypeName;
+		if(CharOperation.indexOf('.', simpleTypeName) < 0) {
+			fullyQualifiedName = CharOperation.concat(packageName, simpleTypeName, '.');
+		}
+		acceptedTypes.add(new AcceptedBinding(packageName, fullyQualifiedName, enclosingTypeNames, modifiers, accessibility));
 	}
 
 	public void acceptBinding(
