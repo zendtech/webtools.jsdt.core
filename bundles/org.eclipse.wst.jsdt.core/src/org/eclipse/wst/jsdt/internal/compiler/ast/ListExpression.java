@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -72,8 +72,12 @@ public boolean isCompactableOperation() {
 public TypeBinding resolveType(BlockScope scope) {
 	// keep implementation in sync with CombinedBinaryExpression#resolveType
 	// and nonRecursiveResolveTypeUpwards
+	
+	this.constant = Constant.NotAConstant;
+	
 	for (int i = 0; i < this.expressions.length; i++) {
 		this.resolvedType=this.expressions[i].resolveType(scope);
+		this.constant = this.expressions[i].constant;
 	}
 
 	return this.resolvedType;
