@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -233,7 +233,7 @@ public class MetadataReader extends DefaultHandler implements IOAAMetaDataConsta
 		try {
 			FileInputStream file = new FileInputStream(fileName);
 			LibraryAPIs apis= readAPIsFromStream(new InputSource(file),fileName);
-			apis.fileName=fileName;
+			apis.fileName=fileName.toCharArray();
 			return apis;
 		} catch (FileNotFoundException e) {
 			Util.log(e,  "error reading oaametadata");

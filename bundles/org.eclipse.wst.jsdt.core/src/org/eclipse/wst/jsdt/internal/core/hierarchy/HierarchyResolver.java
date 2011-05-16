@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2009 IBM Corporation and others.
+ * Copyright (c) 2000, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,6 +50,7 @@ import org.eclipse.wst.jsdt.internal.compiler.env.INameEnvironment;
 import org.eclipse.wst.jsdt.internal.compiler.env.ISourceType;
 import org.eclipse.wst.jsdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.wst.jsdt.internal.compiler.impl.ITypeRequestor;
+import org.eclipse.wst.jsdt.internal.compiler.impl.ITypeRequestor2;
 import org.eclipse.wst.jsdt.internal.compiler.lookup.BinaryTypeBinding;
 import org.eclipse.wst.jsdt.internal.compiler.lookup.ClassScope;
 import org.eclipse.wst.jsdt.internal.compiler.lookup.LookupEnvironment;
@@ -75,7 +76,7 @@ import org.eclipse.wst.jsdt.internal.core.SourceTypeElementInfo;
 import org.eclipse.wst.jsdt.internal.core.util.ASTNodeFinder;
 import org.eclipse.wst.jsdt.internal.oaametadata.LibraryAPIs;
 
-public class HierarchyResolver implements ITypeRequestor {
+public class HierarchyResolver implements ITypeRequestor, ITypeRequestor2 {
 
 	private ReferenceBinding focusType;
 	private boolean superTypesOnly;
@@ -126,34 +127,45 @@ public void accept(IBinaryType binaryType, PackageBinding packageBinding, Access
  * @param sourceUnit
  */
 public void accept(ICompilationUnit sourceUnit, AccessRestriction accessRestriction) {
-//System.out.println("Cannot accept compilation units inside the HierarchyResolver.");
-//	this.lookupEnvironment.problemReporter.abortDueToInternalError(
-//	new StringBuffer(Messages.accept_cannot)
-//		.append(sourceUnit.getFileName())
-//		.toString());
-	
-	if (this.processedUnits.contains(sourceUnit))
-		return;
-	Parser parser = new Parser(this.lookupEnvironment.problemReporter, true);
- 
-	CompilationResult result = new CompilationResult(sourceUnit, 1, 1, this.options.maxProblemsPerUnit);
-	CompilationUnitDeclaration parsedUnit =
-		parser.dietParse(sourceUnit, result);
-	if (parsedUnit != null) {
-		parser.inferTypes(parsedUnit, this.options);
-		try {
-			this.lookupEnvironment.buildTypeBindings(parsedUnit, accessRestriction);
-			this.processedUnits.add(sourceUnit);
-//			org.eclipse.wst.jsdt.core.IJavaScriptUnit cu = ((SourceTypeElementInfo)sourceType).getHandle().getCompilationUnit();
-			rememberAllTypes(parsedUnit, sourceUnit, false);
-
-			this.lookupEnvironment.completeTypeBindings(parsedUnit, true/*build constructor only*/);
-		} catch (AbortCompilation e) {
-			// missing 'java.lang' package: ignore
-		}
-	}
-
+	accept(sourceUnit, new char[0][0], accessRestriction);
 }
+
+	public void accept(ICompilationUnit sourceUnit, char[][] typeNames,
+			AccessRestriction accessRestriction) {
+		// System.out.println("Cannot accept compilation units inside the HierarchyResolver.");
+		// this.lookupEnvironment.problemReporter.abortDueToInternalError(
+		// new StringBuffer(Messages.accept_cannot)
+		// .append(sourceUnit.getFileName())
+		// .toString());
+		if (this.processedUnits.contains(sourceUnit))
+			return;
+		Parser parser = new Parser(this.lookupEnvironment.problemReporter, true);
+
+		CompilationResult result = new CompilationResult(sourceUnit, 1, 1,
+				this.options.maxProblemsPerUnit);
+		CompilationUnitDeclaration parsedUnit = parser.dietParse(sourceUnit,
+				result);
+		if (parsedUnit != null) {
+			parser.inferTypes(parsedUnit, this.options);
+			try {
+				this.lookupEnvironment.buildTypeBindings(parsedUnit, typeNames,
+						accessRestriction);
+				this.processedUnits.add(sourceUnit);
+				// org.eclipse.wst.jsdt.core.IJavaScriptUnit cu =
+				// ((SourceTypeElementInfo)sourceType).getHandle().getCompilationUnit();
+				rememberAllTypes(parsedUnit, sourceUnit, false);
+
+				this.lookupEnvironment
+						.completeTypeBindings(parsedUnit, typeNames, true/*
+															 * build constructor
+															 * only
+															 */);
+			} catch (AbortCompilation e) {
+				// missing 'java.lang' package: ignore
+			}
+		}
+
+	}
 
 
 public void accept(LibraryAPIs libraryMetaData)
