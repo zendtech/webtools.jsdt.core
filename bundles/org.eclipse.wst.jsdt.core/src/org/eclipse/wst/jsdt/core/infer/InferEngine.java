@@ -1435,8 +1435,8 @@ public class InferEngine extends ASTVisitor implements IInferEngine {
 		pushContext();
 		if (this.isTopLevelAnonymousFunction && this.currentContext.currentType==null)
 		{
-			this.currentContext.currentType=addType(InferredType.GLOBAL_NAME,true);
-			this.inferredGlobal=this.currentContext.currentType;
+//			this.currentContext.currentType=addType(InferredType.GLOBAL_NAME,true);
+//			this.inferredGlobal=this.currentContext.currentType;
 		}
 
 		this.isTopLevelAnonymousFunction=false; 

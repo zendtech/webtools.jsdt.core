@@ -249,6 +249,7 @@ Binding askForBinding(PackageBinding packageBinding, char[] name, int mask) {
 	if((mask & Binding.TYPE) > 1) {
 		fAskingForTypeBinding.push(name);
 	}
+	try {
 	if (answer.isBinaryType())
 		// the type was found as a .class file
 		typeRequestor.accept(answer.getBinaryType(), packageBinding, answer.getAccessRestriction());
@@ -294,8 +295,11 @@ Binding askForBinding(PackageBinding packageBinding, char[] name, int mask) {
 		}
 		
 	}
+	}
+	finally {
 	if(mask == Binding.TYPE) {
 		fAskingForTypeBinding.pop();
+	}
 	}
 	return packageBinding.getBinding0(name,mask);
 }
@@ -379,6 +383,28 @@ public void completeTypeBindings() {
 
 	for (int i = this.lastCompletedUnitIndex + 1; i <= this.lastUnitIndex; i++) {
 	    (this.unitBeingCompleted = this.units[i]).scope.connectTypeHierarchy();
+	}
+	stepCompleted = CONNECT_TYPE_HIERARCHY;
+
+	for (int i = this.lastCompletedUnitIndex + 1; i <= this.lastUnitIndex; i++) {
+		CompilationUnitScope unitScope = (this.unitBeingCompleted = this.units[i]).scope;
+		unitScope.buildFieldsAndMethods();
+		this.units[i] = null; // release unnecessary reference to the parsed unit
+	}
+	stepCompleted = BUILD_FIELDS_AND_METHODS;
+	this.lastCompletedUnitIndex = this.lastUnitIndex;
+	this.unitBeingCompleted = null;
+}
+public void completeTypeBindings(char[][] types) {
+	stepCompleted = BUILD_TYPE_HIERARCHY;
+
+	for (int i = this.lastCompletedUnitIndex + 1; i <= this.lastUnitIndex; i++) {
+	    (this.unitBeingCompleted = this.units[i]).scope.checkAndSetImports();
+	}
+	stepCompleted = CHECK_AND_SET_IMPORTS;
+
+	for (int i = this.lastCompletedUnitIndex + 1; i <= this.lastUnitIndex; i++) {
+	    (this.unitBeingCompleted = this.units[i]).scope.connectTypeHierarchy(types);
 	}
 	stepCompleted = CONNECT_TYPE_HIERARCHY;
 

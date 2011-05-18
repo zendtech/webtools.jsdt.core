@@ -67,6 +67,7 @@ import org.eclipse.wst.jsdt.internal.compiler.parser.Parser;
 import org.eclipse.wst.jsdt.internal.compiler.parser.SourceTypeConverter;
 import org.eclipse.wst.jsdt.internal.compiler.problem.AbortCompilation;
 import org.eclipse.wst.jsdt.internal.compiler.problem.ProblemReporter;
+import org.eclipse.wst.jsdt.internal.compiler.util.HashtableOfObject;
 import org.eclipse.wst.jsdt.internal.core.ClassFile;
 import org.eclipse.wst.jsdt.internal.core.CompilationUnit;
 import org.eclipse.wst.jsdt.internal.core.JavaElement;
@@ -86,6 +87,7 @@ public class HierarchyResolver implements ITypeRequestor, ITypeRequestor2 {
 	HierarchyBuilder builder;
 	private ReferenceBinding[] typeBindings;
 	
+	HashtableOfObject parsedUnits;
 	HashSet processedUnits=new HashSet();
 
 	private int typeIndex;
@@ -137,26 +139,31 @@ public void accept(ICompilationUnit sourceUnit, AccessRestriction accessRestrict
 		// new StringBuffer(Messages.accept_cannot)
 		// .append(sourceUnit.getFileName())
 		// .toString());
-		if (this.processedUnits.contains(sourceUnit))
+		if (typeNames.length == 0 && this.processedUnits.contains(sourceUnit))
 			return;
-		Parser parser = new Parser(this.lookupEnvironment.problemReporter, true);
 
 		CompilationResult result = new CompilationResult(sourceUnit, 1, 1,
 				this.options.maxProblemsPerUnit);
-		CompilationUnitDeclaration parsedUnit = parser.dietParse(sourceUnit,
-				result);
-		if (parsedUnit != null) {
-			parser.inferTypes(parsedUnit, this.options);
-			try {
-				this.lookupEnvironment.buildTypeBindings(parsedUnit, typeNames,
-						accessRestriction);
+		
+		if (parsedUnits == null)
+			parsedUnits = new HashtableOfObject();
+		CompilationUnitDeclaration parsedUnit = (CompilationUnitDeclaration) parsedUnits.get(sourceUnit.getFileName());
+		if (parsedUnit == null) {
+			if (typeNames.length == 0)
 				this.processedUnits.add(sourceUnit);
+			Parser parser = new Parser(this.lookupEnvironment.problemReporter, true);
+			parsedUnit = parser.dietParse(sourceUnit, result);
+			parser.inferTypes(parsedUnit, this.options);
+			parsedUnits.put(sourceUnit.getFileName(), parsedUnit);
+		}
+		if (parsedUnit != null) {
+			try {
+				this.lookupEnvironment.buildTypeBindings(parsedUnit, typeNames, accessRestriction);
 				// org.eclipse.wst.jsdt.core.IJavaScriptUnit cu =
 				// ((SourceTypeElementInfo)sourceType).getHandle().getCompilationUnit();
 				rememberAllTypes(parsedUnit, sourceUnit, false);
 
-				this.lookupEnvironment
-						.completeTypeBindings(parsedUnit, typeNames, true/*
+				this.lookupEnvironment.completeTypeBindings(parsedUnit, typeNames, true/*
 															 * build constructor
 															 * only
 															 */);
@@ -502,6 +509,7 @@ private void reset(){
 	this.typeIndex = -1;
 	this.typeModels = new IGenericType[5];
 	this.typeBindings = new ReferenceBinding[5];
+	this.parsedUnits.clear();
 }
 
 /**

@@ -15,10 +15,10 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IJavaScriptModelMarker;
 import org.eclipse.wst.jsdt.core.IJavaScriptModelStatusConstants;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.WorkingCopyOwner;
 import org.eclipse.wst.jsdt.core.compiler.CategorizedProblem;
@@ -39,6 +39,7 @@ import org.eclipse.wst.jsdt.internal.compiler.lookup.PackageBinding;
 import org.eclipse.wst.jsdt.internal.compiler.parser.Parser;
 import org.eclipse.wst.jsdt.internal.compiler.parser.SourceTypeConverter;
 import org.eclipse.wst.jsdt.internal.compiler.problem.AbortCompilationUnit;
+import org.eclipse.wst.jsdt.internal.compiler.util.HashtableOfObject;
 import org.eclipse.wst.jsdt.internal.compiler.util.Messages;
 import org.eclipse.wst.jsdt.internal.core.search.IRestrictedAccessBindingRequestor;
 import org.eclipse.wst.jsdt.internal.core.util.CommentRecorderParser;
@@ -152,15 +153,20 @@ public class CompilationUnitProblemFinder extends Compiler implements ITypeReque
 							new String(sourceUnit.getFileName())
 						}));
 			}
-			// diet parsing for large collection of unit
-			CompilationUnitDeclaration parsedUnit;
-			if (totalUnits < parseThreshold) {
-				parsedUnit = parser.parse(sourceUnit, unitResult);
-			} else {
-				parsedUnit = parser.dietParse(sourceUnit, unitResult);
+			if (parsedUnits == null)
+				parsedUnits = new HashtableOfObject();
+			CompilationUnitDeclaration parsedUnit = (CompilationUnitDeclaration) parsedUnits.get(sourceUnit.getFileName());
+			if (parsedUnit == null) {
+				// diet parsing for large collection of unit
+				if (totalUnits < parseThreshold) {
+					parsedUnit = parser.parse(sourceUnit, unitResult);
+				}
+				else {
+					parsedUnit = parser.dietParse(sourceUnit, unitResult);
+				}
+				parser.inferTypes(parsedUnit, this.options);
+				parsedUnits.put(sourceUnit.getFileName(), parsedUnit);
 			}
-			parser.inferTypes(parsedUnit,this.options);
-
 			// initial type binding creation
 			lookupEnvironment.buildTypeBindings(parsedUnit, typeNames, accessRestriction);
 
