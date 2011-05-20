@@ -247,6 +247,8 @@ Binding askForBinding(PackageBinding packageBinding, char[] name, int mask) {
 		return null;
 
 	if((mask & Binding.TYPE) > 1) {
+		if (!fAskingForTypeBinding.isEmpty() && CharOperation.equals(name, (char[]) fAskingForTypeBinding.peek()))
+			return null;
 		fAskingForTypeBinding.push(name);
 	}
 	try {
