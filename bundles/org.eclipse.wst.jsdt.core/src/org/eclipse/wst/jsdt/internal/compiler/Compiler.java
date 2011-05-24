@@ -620,7 +620,8 @@ public class Compiler implements ITypeRequestor, ProblemSeverities {
 		lookupEnvironment.reset();
 		parser.scanner.source = null;
 		unitsToProcess = null;
-		parsedUnits.clear();
+		if(parsedUnits != null)
+			parsedUnits.clear();
 		if (DebugRequestor != null) DebugRequestor.reset();
 		this.problemReporter.reset();
 	}

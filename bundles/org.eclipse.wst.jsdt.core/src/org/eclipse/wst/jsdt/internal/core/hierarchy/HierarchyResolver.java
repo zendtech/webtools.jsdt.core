@@ -509,7 +509,8 @@ private void reset(){
 	this.typeIndex = -1;
 	this.typeModels = new IGenericType[5];
 	this.typeBindings = new ReferenceBinding[5];
-	this.parsedUnits.clear();
+	if(parsedUnits != null)
+		this.parsedUnits.clear();
 }
 
 /**
