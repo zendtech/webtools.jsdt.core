@@ -65,7 +65,7 @@ public class ConstructorDeclarationPattern extends ConstructorPattern {
 		slash = CharOperation.indexOf(SEPARATOR, key, start);
 		last = slash - 1;
 		
-		//decode paramater count
+		//decode parameter count
 		this.parameterCount = 0;
 		int power = 1;
 		for (int i = last; i >= start; i--) {
@@ -77,16 +77,10 @@ public class ConstructorDeclarationPattern extends ConstructorPattern {
 			}
 		}
 		
-		slash = slash + 3;
-		last = slash - 1;
-		
 		// initialize optional fields
 		this.modifiers = 0;
 		this.parameterTypes = null;
 		this.parameterNames = null;
-		
-		slash = CharOperation.indexOf(SEPARATOR, key, start);
-		last = slash - 1;
 		
 		/* if no parameters just decode modifiers
 		 * else decode parameters and modifiers

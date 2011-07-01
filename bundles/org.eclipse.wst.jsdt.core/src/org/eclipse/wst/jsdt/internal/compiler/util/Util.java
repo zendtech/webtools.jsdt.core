@@ -510,60 +510,66 @@ public class Util implements SuffixConstants {
 	 * @return type name built from iterating over the given <code>expression</code>, or
 	 * <code>null</code> if a type name can not be built from the given expression
 	 */
-	public final static char [] getTypeName( IExpression expression ){
+	public final static char[] getTypeName(IExpression expression) {
 
 		IExpression currExpr = expression;
 		
-		String selector = new String();
-		while(currExpr != null) {
-			if(currExpr instanceof IFieldReference) {
-				if(selector.length()==0) {
-					selector = new String(((IFieldReference) currExpr).getToken());
-				} else {
-					selector = new String(((IFieldReference) currExpr).getToken()) + "." + selector;
+		char[] selector = null;
+		while (currExpr != null) {
+			if (currExpr instanceof IFieldReference) {
+				if (selector == null) {
+					selector = ((IFieldReference) currExpr).getToken();
+				}
+				else {
+					selector = CharOperation.concatWith(new char[][]{((IFieldReference) currExpr).getToken(), selector}, '.');
 				}
 				currExpr = ((IFieldReference) currExpr).getReceiver();
-			} else if(currExpr instanceof ISingleNameReference) {
-				if(selector.length()==0) {
-					selector = new String(((ISingleNameReference) currExpr).getToken());
-				} else {
-					selector = new String(((ISingleNameReference) currExpr).getToken()) + "." + selector;
+			}
+			else if (currExpr instanceof ISingleNameReference) {
+				if (selector == null) {
+					selector = ((ISingleNameReference) currExpr).getToken();
+				}
+				else {
+					selector = CharOperation.concatWith(new char[][]{((ISingleNameReference) currExpr).getToken(), selector}, '.');
 				}
 				currExpr = null;
-			} else if(currExpr instanceof ArrayReference) {
-				ArrayReference arrayRef = (ArrayReference)currExpr;
-				
-				/* if the array reference position is a literately keep building selector
-				 * else there is a dynamic selector of some sort so there is no way to build a type name from it
+			}
+			else if (currExpr instanceof ArrayReference) {
+				ArrayReference arrayRef = (ArrayReference) currExpr;
+
+				/*
+				 * if the array reference position is a literately keep
+				 * building selector else there is a dynamic selector of some
+				 * sort so there is no way to build a type name from it
 				 */
-				if(arrayRef.position instanceof ILiteral) {
-					if(selector.length()==0) {
-						selector = new String(((ILiteral)arrayRef.position).source());
-					} else {
-						selector = new String(((ILiteral)arrayRef.position).source()) + "." + selector;
+				if (arrayRef.position instanceof ILiteral) {
+					if (selector == null) {
+						selector = ((ILiteral) arrayRef.position).source();
+					}
+					else {
+						selector = CharOperation.concatWith(new char[][]{((ILiteral) arrayRef.position).source(), selector}, ',');
 					}
 					currExpr = arrayRef.receiver;
-				} else {
+				}
+				else {
 					currExpr = null;
 				}
-			} else if(currExpr instanceof IThisReference) {
-				//this can not be handled right now because the resolved type for 'this' never seems to be resolved yet
-				currExpr = null;
-				selector = null;
-			} else {
-				//do not know how to handle the rest of the expression so give up
+			}
+			else if (currExpr instanceof IThisReference) {
+				// this can not be handled right now because the resolved type
+				// for 'this' never seems to be resolved yet
 				currExpr = null;
 				selector = null;
 			}
-			
+			else {
+				// do not know how to handle the rest of the expression so
+				// give up
+				currExpr = null;
+				selector = null;
+			}
 		}
 		
-		char[] charSelector = null;
-		if(selector != null) {
-			charSelector = selector.toCharArray();
-		}
-		
-		return charSelector;
+		return selector;
 	}
 	
 	/**
