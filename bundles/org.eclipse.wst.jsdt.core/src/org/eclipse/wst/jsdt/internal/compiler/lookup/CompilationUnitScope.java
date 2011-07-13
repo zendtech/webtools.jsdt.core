@@ -91,18 +91,20 @@ class DeclarationVisitor extends ASTVisitor
 	public boolean visit(MethodDeclaration methodDeclaration, Scope parentScope) {
 		
 		char[] selector = null;
+		boolean isConstructor = false;
 		
 		if(methodDeclaration.selector != null) {
 			selector = methodDeclaration.selector;
 		} else if(methodDeclaration.inferredMethod != null && methodDeclaration.inferredMethod.isConstructor) {
-			//this is that inferred constructors get added to the methods list
-			selector = methodDeclaration.inferredMethod.name;
+			//this is so that inferred constructors get added to the methods list
+			//selector = methodDeclaration.inferredMethod.name;
+			isConstructor = true;
 		}
 		
 		if (selector!=null)
 		{
 			MethodScope scope = new MethodScope(parentScope,methodDeclaration, false);
-			MethodBinding methodBinding = scope.createMethod(methodDeclaration,selector,referenceContext.compilationUnitBinding,false,false);
+			MethodBinding methodBinding = scope.createMethod(methodDeclaration,selector,referenceContext.compilationUnitBinding,isConstructor,false);
 			if (methodBinding != null && methodBinding.selector!=null) // is null if binding could not be created
 				methods.add(methodBinding);
 			if (methodBinding.selector!=null)

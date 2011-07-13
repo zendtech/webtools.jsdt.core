@@ -180,52 +180,45 @@ public class MethodScope extends BlockScope {
 			modifiers|=ClassFileConstants.AccPublic;
 		if (method.inferredMethod!=null &&  method.inferredMethod.isStatic)
 			modifiers|= ClassFileConstants.AccStatic;
-		if (method.isDefaultConstructor() || isConstructor)
-			modifiers |= ExtraCompilerModifiers.AccIsDefaultConstructor;
-		
-		//determine return type
-		TypeBinding returnType = null;
-		//if inferred method is a constructor then resolve type that way
-		if (method.inferredMethod!=null && method.inferredMethod.isConstructor
-				&& method.inferredMethod.inType!=null) {
-			
-			returnType = method.inferredMethod.inType.resolveType(this,method);
-		}
-		
-		//if return type still node, resolve type from inferred type
-		if(returnType == null) {
-			returnType = (method.inferredType!=null) ?
-					method.inferredType.resolveType(this,method) : TypeBinding.UNKNOWN;
-		}
-		
-		//if return type still node, return type is unknown
-		if (returnType==null) {
-			returnType=TypeBinding.UNKNOWN;
-		}
-		
-		//determine binding
-		if (isLocal && method.selector!=null)
-		{
-			methodBinding =
-				new LocalFunctionBinding(modifiers, name,returnType, null, declaringClass);
-		}
-		else	// not local method
-			methodBinding =
-				new MethodBinding(modifiers, name,returnType, null, declaringClass);
-		if (method.inferredMethod!=null)
-		{
-			methodBinding.tagBits |= TagBits.IsInferredType;
-			if ((method.bits&ASTNode.IsInferredJsDocType)!=0)
-				methodBinding.tagBits |= TagBits.IsInferredJsDocType;
-		}
-		methodBinding.createFunctionTypeBinding(this);
-		if (method.inferredMethod!=null && method.inferredMethod.isConstructor)
+		if (method.isConstructor() || isConstructor) {
+			if (method.isDefaultConstructor() || isConstructor) {
+				modifiers |= ExtraCompilerModifiers.AccIsDefaultConstructor;
+			}
+			methodBinding = new MethodBinding(modifiers, name, TypeBinding.UNKNOWN, null, declaringClass);
 			methodBinding.tagBits|=TagBits.IsConstructor;
-		
-		//set modifiers
-		if (method.isConstructor() || isConstructor || (method.inferredMethod != null && method.inferredMethod.isConstructor)) {
 			checkAndSetModifiersForConstructor(methodBinding);
 		} else {
+			TypeBinding returnType =
+				 (method.inferredType!=null)?method.inferredType.resolveType(this,method):TypeBinding.UNKNOWN;
+			if (method.inferredType==null && method.inferredMethod!=null && method.inferredMethod.isConstructor
+					&& method.inferredMethod.inType!=null) {
+				returnType=method.inferredMethod.inType.resolveType(this,method);
+			}
+			
+			//return type still null, return type is unknown
+			if (returnType==null) {
+				returnType=TypeBinding.UNKNOWN;
+			}
+			
+			if (isLocal && method.selector!=null) {
+				methodBinding =
+					new LocalFunctionBinding(modifiers, name,returnType, null, declaringClass);
+			} else{// not local method
+				methodBinding =
+					new MethodBinding(modifiers, name,returnType, null, declaringClass);
+			}
+			
+			if (method.inferredMethod!=null) {
+				methodBinding.tagBits |= TagBits.IsInferredType;
+				if ((method.bits&ASTNode.IsInferredJsDocType)!=0) {
+					methodBinding.tagBits |= TagBits.IsInferredJsDocType;
+			
+				}
+			}
+			methodBinding.createFunctionTypeBinding(this);
+			if (method.inferredMethod!=null && method.inferredMethod.isConstructor) {
+				methodBinding.tagBits|=TagBits.IsConstructor;
+			}
 			checkAndSetModifiersForMethod(methodBinding);
 		}
 		this.isStatic =methodBinding.isStatic();
