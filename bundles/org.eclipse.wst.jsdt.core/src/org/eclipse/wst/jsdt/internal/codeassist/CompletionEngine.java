@@ -780,8 +780,7 @@ public final class CompletionEngine
 	 * @param onlyConstructors <code>true</code> if only constructors should be accepted,
 	 * <code>false</code> otherwise.  Only applies when matching on {@link Binding#METHOD}s.
 	 */
-	private void acceptBindings(char[] name,boolean exactMatch, boolean prefixRequired,
-			boolean onlyConstructors) {
+	private void acceptBindings(char[] name,boolean exactMatch, boolean prefixRequired) {
 		
 		if(this.acceptedBindings == null) return;
 
@@ -831,92 +830,91 @@ public final class CompletionEngine
 
 				if (binding2 instanceof MethodBinding && binding2.isValidBinding()) {
 					MethodBinding  method = (MethodBinding) binding2;
-					if(!onlyConstructors || (onlyConstructors && method.isConstructor())) {
 					
-						int relevance = computeBaseRelevance();
-						relevance += computeRelevanceForInterestingProposal();
-						if (name != null) relevance += computeRelevanceForCaseMatching(name, bindingName);
-						relevance += computeRelevanceForExpectingType(method.returnType);
-						relevance += computeRelevanceForQualification(prefixRequired);
-						relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE);
-						
-						//figure out the parameters
-						int parametersLength=method.original().parameters.length;
-						char[][] parameterPackageNames = new char[parametersLength][];
-						char[][] parameterFullTypeNames = new char[parametersLength][];
-						for (int j = 0; j < parametersLength; j++) {
-							TypeBinding type = method.parameters[j];
-							parameterPackageNames[j] = type.qualifiedPackageName();
-							parameterFullTypeNames[j] = type.qualifiedSourceName();
+					
+					int relevance = computeBaseRelevance();
+					relevance += computeRelevanceForInterestingProposal();
+					if (name != null) relevance += computeRelevanceForCaseMatching(name, bindingName);
+					relevance += computeRelevanceForExpectingType(method.returnType);
+					relevance += computeRelevanceForQualification(prefixRequired);
+					relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE);
+					
+					//figure out the parameters
+					int parametersLength=method.original().parameters.length;
+					char[][] parameterPackageNames = new char[parametersLength][];
+					char[][] parameterFullTypeNames = new char[parametersLength][];
+					for (int j = 0; j < parametersLength; j++) {
+						TypeBinding type = method.parameters[j];
+						parameterPackageNames[j] = type.qualifiedPackageName();
+						parameterFullTypeNames[j] = type.qualifiedSourceName();
+					}
+					char[][] parameterNames = findMethodParameterNames(method, parameterFullTypeNames);
+
+					this.noProposal = false;
+					// Standard proposal
+					if(!this.requestor.isIgnored(CompletionProposal.METHOD_REF) && (this.assistNodeInJavadoc & CompletionOnJavadoc.ONLY_INLINE_TAG) == 0) {
+						CompletionProposal proposal = this.createProposal(CompletionProposal.METHOD_REF, this.actualCompletionPosition);
+						proposal.setDeclarationSignature(getSignature(method.declaringClass));
+						proposal.setSignature(getSignature(method));
+						MethodBinding original = method.original();
+						if(original != method) {
+							proposal.setOriginalSignature(getSignature(original));
 						}
-						char[][] parameterNames = findMethodParameterNames(method, parameterFullTypeNames);
-	
-						this.noProposal = false;
-						// Standard proposal
-						if(!this.requestor.isIgnored(CompletionProposal.METHOD_REF) && (this.assistNodeInJavadoc & CompletionOnJavadoc.ONLY_INLINE_TAG) == 0) {
-							CompletionProposal proposal = this.createProposal(CompletionProposal.METHOD_REF, this.actualCompletionPosition);
-							proposal.setDeclarationSignature(getSignature(method.declaringClass));
-							proposal.setSignature(getSignature(method));
-							MethodBinding original = method.original();
-							if(original != method) {
-								proposal.setOriginalSignature(getSignature(original));
-							}
-							proposal.setDeclarationPackageName(packageName);
-							proposal.setDeclarationTypeName(method.declaringClass.qualifiedSourceName());
-							proposal.setParameterPackageNames(parameterPackageNames);
-							proposal.setParameterTypeNames(parameterFullTypeNames);
-	
-							if(method.returnType!=null) {
-								proposal.setPackageName(method.returnType.qualifiedPackageName());
-								proposal.setTypeName(method.returnType.qualifiedSourceName());
-							}else {
-								proposal.setTypeName(null);
-							}
-	
-	
-							proposal.setName(bindingName);
-							proposal.setCompletion(completion);
-							proposal.setFlags(modifiers);
-							proposal.setReplaceRange(this.startPosition - this.offset, this.endPosition - this.offset);
-							proposal.setRelevance(relevance);
-							if(parameterNames != null) proposal.setParameterNames(parameterNames);
-							proposal.setIsContructor(method.isConstructor());
-							this.requestor.accept(proposal);
-							if(DEBUG) {
-								this.printDebug(proposal);
-							}
-						}
-	
-						// Javadoc proposal
-						if ((this.assistNodeInJavadoc & CompletionOnJavadoc.TEXT) != 0 && !this.requestor.isIgnored(CompletionProposal.JSDOC_METHOD_REF)) {
-							char[] javadocCompletion = inlineTagCompletion(completion, JavadocTagConstants.TAG_LINK);
-							CompletionProposal proposal = this.createProposal(CompletionProposal.JSDOC_METHOD_REF, this.actualCompletionPosition);
-							proposal.setDeclarationSignature(getSignature(method.declaringClass));
-							proposal.setSignature(getSignature(method));
-							MethodBinding original = method.original();
-							if(original != method) {
-								proposal.setOriginalSignature(getSignature(original));
-							}
-							proposal.setDeclarationPackageName(method.declaringClass.qualifiedPackageName());
-							proposal.setDeclarationTypeName(method.declaringClass.qualifiedSourceName());
-							proposal.setParameterPackageNames(parameterPackageNames);
-							proposal.setParameterTypeNames(parameterFullTypeNames);
+						proposal.setDeclarationPackageName(packageName);
+						proposal.setDeclarationTypeName(method.declaringClass.qualifiedSourceName());
+						proposal.setParameterPackageNames(parameterPackageNames);
+						proposal.setParameterTypeNames(parameterFullTypeNames);
+
+						if(method.returnType!=null) {
 							proposal.setPackageName(method.returnType.qualifiedPackageName());
 							proposal.setTypeName(method.returnType.qualifiedSourceName());
-							proposal.setName(bindingName);
-							proposal.setCompletion(javadocCompletion);
-							proposal.setFlags( modifiers);
-							int start = (this.assistNodeInJavadoc & CompletionOnJavadoc.REPLACE_TAG) != 0 ? this.javadocTagPosition : this.startPosition;
-							proposal.setReplaceRange(start - this.offset, this.endPosition - this.offset);
-							proposal.setRelevance(relevance+R_INLINE_TAG);
-							if(parameterNames != null) proposal.setParameterNames(parameterNames);
-							proposal.setIsContructor(method.isConstructor());
-							this.requestor.accept(proposal);
-							if(DEBUG) {
-								this.printDebug(proposal);
-							}
+						}else {
+							proposal.setTypeName(null);
 						}
-					}//end IF only constructors check
+
+
+						proposal.setName(bindingName);
+						proposal.setCompletion(completion);
+						proposal.setFlags(modifiers);
+						proposal.setReplaceRange(this.startPosition - this.offset, this.endPosition - this.offset);
+						proposal.setRelevance(relevance);
+						if(parameterNames != null) proposal.setParameterNames(parameterNames);
+						proposal.setIsContructor(method.isConstructor());
+						this.requestor.accept(proposal);
+						if(DEBUG) {
+							this.printDebug(proposal);
+						}
+					}
+
+					// Javadoc proposal
+					if ((this.assistNodeInJavadoc & CompletionOnJavadoc.TEXT) != 0 && !this.requestor.isIgnored(CompletionProposal.JSDOC_METHOD_REF)) {
+						char[] javadocCompletion = inlineTagCompletion(completion, JavadocTagConstants.TAG_LINK);
+						CompletionProposal proposal = this.createProposal(CompletionProposal.JSDOC_METHOD_REF, this.actualCompletionPosition);
+						proposal.setDeclarationSignature(getSignature(method.declaringClass));
+						proposal.setSignature(getSignature(method));
+						MethodBinding original = method.original();
+						if(original != method) {
+							proposal.setOriginalSignature(getSignature(original));
+						}
+						proposal.setDeclarationPackageName(method.declaringClass.qualifiedPackageName());
+						proposal.setDeclarationTypeName(method.declaringClass.qualifiedSourceName());
+						proposal.setParameterPackageNames(parameterPackageNames);
+						proposal.setParameterTypeNames(parameterFullTypeNames);
+						proposal.setPackageName(method.returnType.qualifiedPackageName());
+						proposal.setTypeName(method.returnType.qualifiedSourceName());
+						proposal.setName(bindingName);
+						proposal.setCompletion(javadocCompletion);
+						proposal.setFlags( modifiers);
+						int start = (this.assistNodeInJavadoc & CompletionOnJavadoc.REPLACE_TAG) != 0 ? this.javadocTagPosition : this.startPosition;
+						proposal.setReplaceRange(start - this.offset, this.endPosition - this.offset);
+						proposal.setRelevance(relevance+R_INLINE_TAG);
+						if(parameterNames != null) proposal.setParameterNames(parameterNames);
+						proposal.setIsContructor(method.isConstructor());
+						this.requestor.accept(proposal);
+						if(DEBUG) {
+							this.printDebug(proposal);
+						}
+					}
 				}//end if method binding
 				else
 				{
@@ -5962,7 +5960,7 @@ public final class CompletionEngine
 						Binding.METHOD,
 						this.options.camelCaseMatch,
 						this);
-				acceptBindings(token,false,false,false);
+				acceptBindings(token,false,false);
 			}
 			
 			//propose fields from environment if token length is not 0
@@ -5973,7 +5971,7 @@ public final class CompletionEngine
 						Binding.VARIABLE,
 						this.options.camelCaseMatch,
 						this);
-				acceptBindings(token,false,false,false);
+				acceptBindings(token,false,false);
 			}
 		}
 	}
