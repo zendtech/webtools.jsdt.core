@@ -547,7 +547,7 @@ public class Util implements SuffixConstants {
 						selector = ((ILiteral) arrayRef.position).source();
 					}
 					else {
-						selector = CharOperation.concatWith(new char[][]{((ILiteral) arrayRef.position).source(), selector}, ',');
+						selector = CharOperation.concatWith(new char[][]{((ILiteral) arrayRef.position).source(), selector}, '.');
 					}
 					currExpr = arrayRef.receiver;
 				}
