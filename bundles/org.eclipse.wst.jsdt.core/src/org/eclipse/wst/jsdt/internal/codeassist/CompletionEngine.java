@@ -6433,8 +6433,14 @@ public final class CompletionEngine
 		this.startPosition = start;
 		if(emptyTokenAdjstment) {
 			int endOfEmptyToken = ((CompletionScanner)this.parser.scanner).endOfEmptyToken;
-			this.endPosition = endOfEmptyToken > end ? endOfEmptyToken + 1 : end + 1;
-		} else {
+			if (end == 0) {
+				this.endPosition = 0;
+			}
+			else
+				this.endPosition = endOfEmptyToken > end ? endOfEmptyToken + 1 : end + 1;
+		} 
+		
+		else {
 			this.endPosition = end + 1;
 		}
 	}
