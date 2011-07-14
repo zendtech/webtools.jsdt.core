@@ -1762,14 +1762,6 @@
 <!-- =========================================================================== -->
 <!-- JavaScript Launching and debugging                                                -->
 <!-- =========================================================================== -->
-   <extension
-         point="org.eclipse.ui.ide.resourceFilters">
-      <filter
-            selected="false"
-            pattern="*.class">
-      </filter>
-   </extension>
-   
 <!-- =========================================================================== -->
 <!-- Export wizard category                                                      -->
 <!-- =========================================================================== -->
@@ -4384,6 +4376,7 @@
    <extension point="org.eclipse.ui.ide.markerSupport">
       <markerTypeCategory name="%markerCategory.problem">
          <markerTypeReference id="org.eclipse.wst.jsdt.core.problem"/>
+         <markerTypeReference id="org.eclipse.wst.jsdt.core.transient_problem"/>
       </markerTypeCategory>
       <markerTypeCategory name="%markerCategory.buildpath_problem">
          <markerTypeReference id="org.eclipse.wst.jsdt.core.buildpath_problem"/>
