@@ -5273,15 +5273,16 @@
 				priority="high">
 			<triggerPoints>
 			     <or>
-					<adapt type="org.eclipse.core.resources.IProject">
-						<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.wst.jsdt.core.jsNature"/>
-					</adapt>
 					<and>
-						<instanceof value="org.eclipse.core.resources.IResource" />
-						<not>
-							<instanceof value="org.eclipse.core.resources.IWorkspaceRoot" />
-						</not>
+						<instanceof	value="org.eclipse.core.resources.IResource" />
+						<adapt type="org.eclipse.core.resources.IProject">
+							<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.wst.jsdt.core.jsNature"/>
+						</adapt>
 					</and>
+					<and>
+						<instanceof value="org.eclipse.core.resources.IFile" />
+      					<test property="org.eclipse.core.resources.contentTypeId" value="org.eclipse.wst.jsdt.core.jsSource" />
+      				</and>
 					<instanceof value="org.eclipse.wst.jsdt.core.IJavaScriptElement" />
 					<instanceof value="org.eclipse.wst.jsdt.core.IJarEntryResource" />
 					<instanceof value="org.eclipse.wst.jsdt.internal.ui.packageview.PackageFragmentRootContainer" />
@@ -5292,11 +5293,15 @@
 			<possibleChildren>
 				<or>
 					<and>
-						<instanceof value="org.eclipse.core.resources.IResource" />
-						<not>
-							<instanceof value="org.eclipse.core.resources.IWorkspaceRoot" />
-						</not>
+						<instanceof	value="org.eclipse.core.resources.IResource" />
+						<adapt type="org.eclipse.core.resources.IProject">
+							<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.wst.jsdt.core.jsNature"/>
+						</adapt>
 					</and>
+					<and>
+						<instanceof value="org.eclipse.core.resources.IFile" />
+          				<test property="org.eclipse.core.resources.contentTypeId" value="org.eclipse.wst.jsdt.core.jsSource" />
+          			</and>
 					<instanceof value="org.eclipse.wst.jsdt.core.IJavaScriptElement" />
 					<instanceof value="org.eclipse.wst.jsdt.core.IJarEntryResource" />
 					<instanceof value="org.eclipse.wst.jsdt.ui.ProjectLibraryRoot" />
@@ -5309,15 +5314,15 @@
 				<enablement>
 					<or>
 						<and>
-							<instanceof value="org.eclipse.core.resources.IProject" />
-							<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.wst.jsdt.core.jsNature" />
+							<instanceof	value="org.eclipse.core.resources.IResource" />
+							<adapt type="org.eclipse.core.resources.IProject">
+								<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.wst.jsdt.core.jsNature"/>
+							</adapt>
 						</and>
 						<and>
-							<instanceof value="org.eclipse.core.resources.IResource" />
-							<not>
-								<instanceof value="org.eclipse.core.resources.IWorkspaceRoot" />
-							</not>
-						</and>
+							<instanceof value="org.eclipse.core.resources.IFile" />
+          					<test property="org.eclipse.core.resources.contentTypeId" value="org.eclipse.wst.jsdt.core.jsSource" />
+          				</and>
 						<instanceof value="org.eclipse.wst.jsdt.core.IJavaScriptElement" />
 						<instanceof value="org.eclipse.wst.jsdt.core.IJarEntryResource" />
 						<instanceof value="org.eclipse.wst.jsdt.internal.ui.packageview.PackageFragmentRootContainer" />
@@ -5331,8 +5336,10 @@
 				<enablement>
 					<or>   
 						<and>
-							<instanceof value="org.eclipse.core.resources.IProject" />
-          					<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.wst.jsdt.core.jsNature" />
+							<instanceof	value="org.eclipse.core.resources.IResource" />
+							<adapt type="org.eclipse.core.resources.IProject">
+								<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.wst.jsdt.core.jsNature"/>
+							</adapt>
 						</and>
 						<and>
 							<instanceof value="org.eclipse.core.resources.IFile" />
@@ -5344,144 +5351,49 @@
 					</or>
 				</enablement>
 			</actionProvider> 
-			
-			<!-- <actionProvider
-					class="org.eclipse.wst.jsdt.internal.ui.navigator.JavaNavigatorRefactorActionProvider"
-					id="org.eclipse.wst.jsdt.ui.navigator.actions.RefactorActions"
-					overrides="org.eclipse.ui.navigator.resources.actions.RefactorActions"> 
-				<enablement>
-					<or>
-						<and>
-							<instanceof value="org.eclipse.core.resources.IProject" />
-          					<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.wst.jsdt.core.jsNature" />
-						</and>
-						<and>
-							<instanceof value="org.eclipse.core.resources.IResource" />
-							<not>
-								<instanceof value="org.eclipse.core.resources.IWorkspaceRoot" />
-							</not>
-						</and>
-						<instanceof value="org.eclipse.wst.jsdt.core.IJavaScriptElement" />
-						<instanceof value="org.eclipse.wst.jsdt.core.IJarEntryResource" /> 
-						<instanceof value="org.eclipse.wst.jsdt.internal.ui.packageview.PackageFragmentRootContainer" /> 
-					</or>
-				</enablement>
-			</actionProvider> -->
-			
-		   <actionProvider
+			<actionProvider
 		         class="org.eclipse.wst.jsdt.internal.ui.navigator.PackageExplorerOpenActionProvider"
 		         id="org.eclipse.wst.jsdt.ui.navigator.actions.OpenActions"
 		         overrides="org.eclipse.ui.navigator.resources.OpenActions"> 
 		         <enablement>
 					<or>
-						<adapt type="org.eclipse.core.resources.IProject">
-							<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.wst.jsdt.core.jsNature"/>
-						</adapt>
 						<and>
-							<instanceof value="org.eclipse.core.resources.IResource" />
-							<not>
-								<instanceof value="org.eclipse.core.resources.IWorkspaceRoot" />
-							</not>
+							<instanceof	value="org.eclipse.core.resources.IResource" />
+							<adapt type="org.eclipse.core.resources.IProject">
+								<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.wst.jsdt.core.jsNature"/>
+							</adapt>
 						</and>
 						<instanceof value="org.eclipse.wst.jsdt.core.IJavaScriptElement" />
 						<instanceof value="org.eclipse.wst.jsdt.core.IJarEntryResource" /> 
 						<instanceof value="org.eclipse.wst.jsdt.internal.ui.packageview.PackageFragmentRootContainer" /> 				
 					</or>
 				</enablement>
-		   </actionProvider> 
-		   
-           <override
-					policy="InvokeAlwaysRegardlessOfSuppressedExt"
-					suppressedExtensionId="org.eclipse.ui.navigator.resourceContent"/>
+			</actionProvider> 
 			<commonSorter
 					class="org.eclipse.wst.jsdt.ui.JavaElementSorter"
 					id="org.eclipse.wst.jsdt.ui.javaElementSorter"/>
 		 
-		  <commonWizard
-		        menuGroupId="org.eclipse.wst.jsdt.ui.java"
-		        type="new"
-		        wizardId="org.eclipse.wst.jsdt.ui.NewJSWizard">
-		     <enablement>
-			     <or>
-					<and>
-						<instanceof	value="org.eclipse.core.resources.IResource" />
-						<adapt type="org.eclipse.core.resources.IProject">
-							<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.wst.jsdt.core.jsNature"/>
-						</adapt>
-					</and>
-					<instanceof value="org.eclipse.wst.jsdt.core.IJavaScriptElement" />
-					<instanceof value="org.eclipse.wst.jsdt.core.IJarEntryResource" />
-					<instanceof value="org.eclipse.wst.jsdt.internal.ui.packageview.PackageFragmentRootContainer" />
-					<instanceof value="org.eclipse.wst.jsdt.ui.ProjectLibraryRoot" />
-					<instanceof value="org.eclipse.wst.jsdt.internal.ui.packageview.NamespaceGroup" />
-				</or>
-		     </enablement>
-		  </commonWizard>
-  		<!--  <dropAssistant
-    			class="org.eclipse.wst.jsdt.internal.ui.navigator.JavaDropAdapterAssistant"
-   				id="org.eclipse.wst.jsdt.ui.dropAssistant">
- 				<possibleDropTargets>
-    				<or>
-       					<instanceof value="org.eclipse.core.resources.IResource"/>
-       					<instanceof value="org.eclipse.wst.jsdt.core.IJavaScriptElement"/>
-    				</or>
- 				</possibleDropTargets>
- 			</dropAssistant>	
- 			-->	   
+			<commonWizard
+					menuGroupId="org.eclipse.wst.jsdt.ui.java"
+					type="new"
+					wizardId="org.eclipse.wst.jsdt.ui.NewJSWizard">
+				<enablement>
+					<or>
+						<and>
+							<instanceof	value="org.eclipse.core.resources.IResource" />
+							<adapt type="org.eclipse.core.resources.IProject">
+								<test property="org.eclipse.core.resources.projectNature" value="org.eclipse.wst.jsdt.core.jsNature"/>
+							</adapt>
+						</and>
+						<instanceof value="org.eclipse.wst.jsdt.core.IJavaScriptElement" />
+						<instanceof value="org.eclipse.wst.jsdt.core.IJarEntryResource" />
+						<instanceof value="org.eclipse.wst.jsdt.internal.ui.packageview.PackageFragmentRootContainer" />
+						<instanceof value="org.eclipse.wst.jsdt.ui.ProjectLibraryRoot" />
+						<instanceof value="org.eclipse.wst.jsdt.internal.ui.packageview.NamespaceGroup" />
+					</or>
+				</enablement>
+			</commonWizard> 
 		</navigatorContent>
-		<!--
-  		<commonFilter
-		        activeByDefault="false"
-		        class="org.eclipse.wst.jsdt.internal.ui.navigator.NonEssentialEmptyPackageFilter"
-		        name="%HideEmptyPackages.label"
-		        description="%HideEmptyPackages.description"
-		        id="org.eclipse.wst.jsdt.java.ui.filters.HideEmptyPackages"/>
-  		<commonFilter
-		        activeByDefault="true"
-		        class="org.eclipse.wst.jsdt.internal.ui.navigator.NonEssentialEmptyInnerPackageFilter"
-		        name="%HideEmptyInnerPackages.label"
-		        description="%HideEmptyInnerPackages.description"
-		        id="org.eclipse.wst.jsdt.java.ui.filters.HideEmptyInnerPackages"/>  
-  		<commonFilter 
-		        class="org.eclipse.wst.jsdt.internal.ui.filters.FieldsFilter"
-		        name="%HideFields.label"
-		        description="%HideFields.description"
-		        id="org.eclipse.wst.jsdt.java.ui.filters.HideFields"/>
-		
-  		<commonFilter
-		        activeByDefault="true"
-		        class="org.eclipse.wst.jsdt.internal.ui.filters.ImportDeclarationFilter"
-		        name="%HideImportDeclaration.label"
-		        description="%HideImportDeclaration.description"
-		        id="org.eclipse.wst.jsdt.java.ui.filters.HideImportDeclaration"/> 
-  		<commonFilter 
-		        class="org.eclipse.wst.jsdt.internal.ui.filters.JavaFileFilter"
-		        name="%HideJavaFiles.label"
-		        description="%HideJavaFiles.description"
-		        id="org.eclipse.wst.jsdt.java.ui.filters.HideJavaFiles"/> 		 
-  		<commonFilter 
-		        class="org.eclipse.wst.jsdt.internal.ui.filters.LocalTypesFilter"
-		        name="%HideLocalTypes.label"
-		        description="%HideLocalTypes.description"
-		        id="org.eclipse.wst.jsdt.java.ui.filters.HideLocalTypes"/>
- 
-  		<commonFilter 
-		        class="org.eclipse.wst.jsdt.internal.ui.filters.NonPublicFilter"
-		        name="%HideNonPublic.label"
-		        description="%HideNonPublic.description"
-		        id="org.eclipse.wst.jsdt.java.ui.filters.HideNonPublic"/>   
-  		
-  		<commonFilter 
-		        class="org.eclipse.wst.jsdt.internal.ui.filters.LibraryFilter"
-		        name="%HideReferencedLibraries.label"
-		        description="%HideReferencedLibraries.description"
-		        id="org.eclipse.wst.jsdt.java.ui.filters.HideReferencedLibraries"/>   
-  		<commonFilter 
-		        class="org.eclipse.wst.jsdt.internal.ui.filters.StaticsFilter"
-		        name="%HideStatics.label"
-		        description="%HideStatics.description"
-		        id="org.eclipse.wst.jsdt.java.ui.filters.HideStatics"/>
-	-->
    </extension>
    <extension
        point="org.eclipse.ui.navigator.linkHelper">
