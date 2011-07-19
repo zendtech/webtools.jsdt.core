@@ -77,7 +77,9 @@ public class JavaMethodCompletionProposal extends LazyJavaCompletionProposal {
 	}
 	
 	protected char[] computeTriggerCharacters() {
-		if (fProposal.getKind() == CompletionProposal.METHOD_NAME_REFERENCE || fProposal.getKind() == CompletionProposal.METHOD_REF)
+		if (fProposal.getKind() == CompletionProposal.METHOD_NAME_REFERENCE ||
+				fProposal.getKind() == CompletionProposal.METHOD_REF ||
+				fProposal.getKind() == CompletionProposal.CONSTRUCTOR_INVOCATION)
 			return METHOD_NAME_TRIGGERS;
 		if (hasParameters())
 			return METHOD_WITH_ARGUMENTS_TRIGGERS;
