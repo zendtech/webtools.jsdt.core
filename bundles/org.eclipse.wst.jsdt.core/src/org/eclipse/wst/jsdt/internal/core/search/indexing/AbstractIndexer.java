@@ -74,10 +74,16 @@ public abstract class AbstractIndexer implements IIndexConstants {
 	protected void addIndexEntry(char[] category, char[] key) {
 		this.document.addIndexEntry(category, key);
 	}
-	public void addMethodDeclaration(char[] methodName, char[][] parameterTypes,
-				char[] returnType,boolean isFunction) {
+	public void addMethodDeclaration(char[] methodName, char[][] parameterTypes, char[][] paramaterNames,
+				char[] returnType, char[] declaringType, boolean isFunction, int modifiers) {
 		int argCount = parameterTypes == null ? 0 : parameterTypes.length;
-		addIndexEntry(isFunction ? FUNCTION_DECL : METHOD_DECL, MethodPattern.createIndexKey(methodName, argCount));
+		
+		//compute key
+		char[] key = MethodPattern.createIndexKey(methodName, argCount,
+				parameterTypes, paramaterNames, declaringType, returnType, modifiers);
+		if(key != null) {
+			addIndexEntry(isFunction ? FUNCTION_DECL : METHOD_DECL, key);
+		}
 
 		if (parameterTypes != null) {
 			for (int i = 0; i < argCount; i++)
@@ -87,7 +93,10 @@ public abstract class AbstractIndexer implements IIndexConstants {
 			addTypeReference(returnType);
 	}
 	public void addMethodReference(char[] methodName, int argCount) {
-		addIndexEntry(METHOD_REF, MethodPattern.createIndexKey(methodName, argCount));
+		char[] key = MethodPattern.createIndexKey(methodName, argCount);
+		if(key != null) {
+			addIndexEntry(METHOD_REF, key);
+		}
 	}
 	public void addNameReference(char[] name) {
 		addIndexEntry(REF, name);

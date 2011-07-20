@@ -24,7 +24,6 @@ import org.eclipse.wst.jsdt.core.compiler.CharOperation;
 import org.eclipse.wst.jsdt.core.infer.InferredMethod;
 import org.eclipse.wst.jsdt.core.search.MethodDeclarationMatch;
 import org.eclipse.wst.jsdt.core.search.SearchMatch;
-import org.eclipse.wst.jsdt.core.search.SearchPattern;
 import org.eclipse.wst.jsdt.internal.compiler.ast.ASTNode;
 import org.eclipse.wst.jsdt.internal.compiler.ast.AbstractMethodDeclaration;
 import org.eclipse.wst.jsdt.internal.compiler.ast.Argument;
@@ -79,7 +78,7 @@ public void initializePolymorphicSearch(MatchLocator locator) {
 				this.pattern.declaringSimpleName,
 				this.pattern.declaringQualification,
 				locator,
-				this.pattern.declaringType,
+				null,
 				locator.progressMonitor).collect();
 	} catch (JavaScriptModelException e) {
 		// inaccurate matches will be found
@@ -146,11 +145,6 @@ public int match(MethodDeclaration node, MatchingNodeSet nodeSet) {
 		}
 	}
 
-	// Verify type arguments (do not reject if pattern has no argument as it can be an erasure match)
-	if (this.pattern.hasMethodArguments()) {
-		return IMPOSSIBLE_MATCH;
-	}
-
 	// Method declaration may match pattern
 	return nodeSet.addMatch(node, resolve ? POSSIBLE_MATCH : ACCURATE_MATCH);
 }
@@ -158,7 +152,7 @@ public int match(MessageSend node, MatchingNodeSet nodeSet) {
 	if (!this.pattern.findReferences) return IMPOSSIBLE_MATCH;
 
 	if (!matchesName(this.pattern.selector, node.selector)) return IMPOSSIBLE_MATCH;
-	if (this.pattern.parameterSimpleNames != null && (!this.pattern.varargs || ((node.bits & ASTNode.InsideJavadoc) != 0))) {
+	if (this.pattern.parameterSimpleNames != null && ((node.bits & ASTNode.InsideJavadoc) != 0)) {
 		int length = this.pattern.parameterSimpleNames.length;
 		ASTNode[] args = node.arguments;
 		int argsLength = args == null ? 0 : args.length;
@@ -295,11 +289,6 @@ protected void matchReportReference(ASTNode reference, IJavaScriptElement elemen
 	}
 }
 void matchReportReference(MessageSend messageSend, MatchLocator locator, MethodBinding methodBinding) throws CoreException {
-
-	if (this.pattern.hasMethodArguments()) { // binding has no type params, compatible erasure if pattern does
-		match.setRule(SearchPattern.R_ERASURE_MATCH);
-	}
-
 	// See whether it is necessary to report or not
 	if (match.getRule() == 0) return; // impossible match
 	boolean report = (this.isErasureMatch && match.isErasure()) || (this.isEquivalentMatch && match.isEquivalent()) || match.isExact();
@@ -311,23 +300,7 @@ void matchReportReference(MessageSend messageSend, MatchLocator locator, MethodB
 	match.setLength(messageSend.sourceEnd - offset + 1);
 	locator.report(match);
 }
-/*
- * Return whether method parameters are equals to pattern ones.
- */
-private boolean methodParametersEqualsPattern(MethodBinding method) {
-	TypeBinding[] methodParameters = method.parameters;
 
-	int length = methodParameters.length;
-	if (length != this.pattern.parameterSimpleNames.length) return false;
-
-	for (int i = 0; i < length; i++) {
-		char[] paramQualifiedName = qualifiedPattern(this.pattern.parameterSimpleNames[i], this.pattern.parameterQualifications[i]);
-		if (!CharOperation.match(paramQualifiedName, methodParameters[i].readableName(), this.isCaseSensitive)) {
-			return false;
-		}
-	}
-	return true;
-}
 public SearchMatch newDeclarationMatch(ASTNode reference, IJavaScriptElement element, Binding elementBinding, int accuracy, int length, MatchLocator locator) {
 	if (elementBinding != null) {
 		MethodBinding methodBinding = (MethodBinding) elementBinding;
@@ -615,7 +588,7 @@ public int match(InferredMethod inferredMethod, MatchingNodeSet nodeSet) {
 						nodeSet.mustResolve = true;
 						resolve = true;
 					}
-					this.methodDeclarationsWithInvalidParam.put((AbstractMethodDeclaration)inferredMethod.getFunctionDeclaration(), null);
+					this.methodDeclarationsWithInvalidParam.put(inferredMethod.getFunctionDeclaration(), null);
 				} else {
 					return IMPOSSIBLE_MATCH;
 				}

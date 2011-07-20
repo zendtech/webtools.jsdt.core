@@ -13,6 +13,7 @@ package org.eclipse.wst.jsdt.core;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.jsdt.core.compiler.CharOperation;
 import org.eclipse.wst.jsdt.internal.codeassist.InternalCompletionProposal;
+import org.eclipse.wst.jsdt.internal.core.util.QualificationHelpers;
 
 /**
  * Completion proposal.
@@ -1402,37 +1403,37 @@ public final class CompletionProposal extends InternalCompletionProposal {
 //		return this.declarationPackageName;
 //	}
 //
-//	/**
-//	 * Returns the type name of the relevant
-//	 * declaration in the context without the package fragment,
-//	 * or <code>null</code> if none.
-//	 * <p>
-//	 * This field is available for the following kinds of
-//	 * completion proposals:
-//	 * <ul>
-//	 * <li><code>ANONYMOUS_CLASS_DECLARATION</code> - the dot-based type name
-//	 * of the type that is being subclassed or implemented</li>
-//	 * 	<li><code>FIELD_REF</code> - the dot-based type name
-//	 * of the type that declares the field that is referenced
-//	 * or an anonymous type instantiation ("new X(){}") if it is an anonymous type</li>
-//	 * 	<li><code>FUNCTION_REF</code> - the dot-based type name
-//	 * of the type that declares the method that is referenced
-//	 * or an anonymous type instantiation ("new X(){}") if it is an anonymous type</li>
-//	 * 	<li><code>FUNCTION_DECLARATION</code> - the dot-based type name
-//	 * of the type that declares the method that is being
-//	 * implemented or overridden</li>
-//	 * </ul>
-//	 * For kinds of completion proposals, this method returns
-//	 * <code>null</code>. Clients must not modify the array
-//	 * returned.
-//	 * </p>
-//	 *
-//	 * @return the dot-based package name, or
-//	 * <code>null</code> if none
-//	 * @see #getDeclarationSignature()
-//	 * @see #getSignature()
-//	 *
-//	 */
+	/**
+	 * Returns the type name of the relevant
+	 * declaration in the context without the package fragment,
+	 * or <code>null</code> if none.
+	 * <p>
+	 * This field is available for the following kinds of
+	 * completion proposals:
+	 * <ul>
+	 * <li><code>ANONYMOUS_CLASS_DECLARATION</code> - the dot-based type name
+	 * of the type that is being subclassed or implemented</li>
+	 * 	<li><code>FIELD_REF</code> - the dot-based type name
+	 * of the type that declares the field that is referenced
+	 * or an anonymous type instantiation ("new X(){}") if it is an anonymous type</li>
+	 * 	<li><code>FUNCTION_REF</code> - the dot-based type name
+	 * of the type that declares the method that is referenced
+	 * or an anonymous type instantiation ("new X(){}") if it is an anonymous type</li>
+	 * 	<li><code>FUNCTION_DECLARATION</code> - the dot-based type name
+	 * of the type that declares the method that is being
+	 * implemented or overridden</li>
+	 * </ul>
+	 * For kinds of completion proposals, this method returns
+	 * <code>null</code>. Clients must not modify the array
+	 * returned.
+	 * </p>
+	 *
+	 * @return the dot-based package name, or
+	 * <code>null</code> if none
+	 * @see #getDeclarationSignature()
+	 * @see #getSignature()
+	 *
+	 */
 	public char[] getDeclarationTypeName() {
 		return this.declarationTypeName;
 	}
@@ -1860,6 +1861,10 @@ public final class CompletionProposal extends InternalCompletionProposal {
 	 */
 	public char[][] getParameterTypeNames() {
 		return this.parameterTypeNames;
+	}
+	
+	public char[] getReturnType() {
+		return QualificationHelpers.createFullyQualifiedName(this.getReturnQualification(), this.getReturnSimpleName());
 	}
 
 	/**

@@ -41,8 +41,8 @@ public class InternalCompletionProposal {
 
 	protected char[] declarationPackageName;
 	protected char[] declarationTypeName;
-	protected char[] packageName;
-	protected char[] typeName;
+	protected char[] returnQualification;
+	protected char[] returnSimpleName;
 	protected char[][] parameterPackageNames;
 	protected char[][] parameterTypeNames;
 
@@ -143,12 +143,12 @@ public class InternalCompletionProposal {
 		return this.declarationTypeName;
 	}
 
-	protected char[] getPackageName() {
-		return this.packageName;
+	protected char[] getReturnQualification() {
+		return this.returnQualification;
 	}
 
-	protected char[] getTypeName() {
-		return this.typeName;
+	protected char[] getReturnSimpleName() {
+		return this.returnSimpleName;
 	}
 
 	protected char[][] getParameterPackageNames() {
@@ -168,12 +168,12 @@ public class InternalCompletionProposal {
 		this.declarationTypeName = declarationTypeName;
 	}
 
-	protected void setPackageName(char[] packageName) {
-		this.packageName = packageName;
+	protected void setReturnQualification(char[] packageName) {
+		this.returnQualification = packageName;
 	}
 
-	protected void setTypeName(char[] typeName) {
-		this.typeName = typeName;
+	protected void setReturnSimpleName(char[] typeName) {
+		this.returnSimpleName = typeName;
 	}
 
 	protected void setParameterPackageNames(char[][] parameterPackageNames) {

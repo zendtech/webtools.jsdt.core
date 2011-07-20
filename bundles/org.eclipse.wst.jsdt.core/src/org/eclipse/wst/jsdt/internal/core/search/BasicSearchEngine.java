@@ -29,7 +29,10 @@ import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
+import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.core.WorkingCopyOwner;
+import org.eclipse.wst.jsdt.core.ast.IArgument;
+import org.eclipse.wst.jsdt.core.ast.IFunctionDeclaration;
 import org.eclipse.wst.jsdt.core.compiler.CharOperation;
 import org.eclipse.wst.jsdt.core.infer.InferredAttribute;
 import org.eclipse.wst.jsdt.core.infer.InferredMethod;
@@ -52,6 +55,7 @@ import org.eclipse.wst.jsdt.internal.compiler.ast.TypeDeclaration;
 import org.eclipse.wst.jsdt.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.wst.jsdt.internal.compiler.env.AccessRestriction;
 import org.eclipse.wst.jsdt.internal.compiler.env.AccessRuleSet;
+import org.eclipse.wst.jsdt.internal.compiler.env.ICompilationUnit;
 import org.eclipse.wst.jsdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.wst.jsdt.internal.compiler.lookup.Binding;
 import org.eclipse.wst.jsdt.internal.compiler.lookup.BlockScope;
@@ -65,6 +69,7 @@ import org.eclipse.wst.jsdt.internal.core.CompilationUnit;
 import org.eclipse.wst.jsdt.internal.core.DefaultWorkingCopyOwner;
 import org.eclipse.wst.jsdt.internal.core.JavaModelManager;
 import org.eclipse.wst.jsdt.internal.core.JavaProject;
+import org.eclipse.wst.jsdt.internal.core.Logger;
 import org.eclipse.wst.jsdt.internal.core.search.indexing.IIndexConstants;
 import org.eclipse.wst.jsdt.internal.core.search.indexing.IndexManager;
 import org.eclipse.wst.jsdt.internal.core.search.matching.ConstructorDeclarationPattern;
@@ -81,6 +86,7 @@ import org.eclipse.wst.jsdt.internal.core.search.matching.QualifiedTypeDeclarati
 import org.eclipse.wst.jsdt.internal.core.search.matching.SecondaryTypeDeclarationPattern;
 import org.eclipse.wst.jsdt.internal.core.search.matching.TypeDeclarationPattern;
 import org.eclipse.wst.jsdt.internal.core.util.Messages;
+import org.eclipse.wst.jsdt.internal.core.util.QualificationHelpers;
 import org.eclipse.wst.jsdt.internal.core.util.Util;
 
 /**
@@ -101,6 +107,11 @@ public class BasicSearchEngine {
 	 * compilation units.
 	 */
 	private IJavaScriptUnit[] workingCopies;
+	
+	/**
+	 * <p>Set of all of the working copies paths</p>
+	 */
+	private HashSet fWorkingCopiesPaths;
 
 	/*
 	 * A working copy owner whose working copies will take precedent over
@@ -366,9 +377,9 @@ public class BasicSearchEngine {
 		return this.parser;
 	}
 
-	/*
-	 * Returns the list of working copies used by this search engine.
-	 * Returns null if none.
+	/**
+	 * @return list of working copies used by this search engine,
+	 * or <code>null</code> if none.
 	 */
 	private IJavaScriptUnit[] getWorkingCopies() {
 		IJavaScriptUnit[] copies;
@@ -424,6 +435,22 @@ public class BasicSearchEngine {
 			System.arraycopy(result, 0, result = new IJavaScriptUnit[index], 0, index);
 		}
 		return result;
+	}
+	
+	/**
+	 * @return {@link HashSet} of all of the working copy paths
+	 */
+	private HashSet getWorkingCopiesPaths() {
+		if(this.fWorkingCopiesPaths == null) {
+			this.fWorkingCopiesPaths = new HashSet();
+			
+			IJavaScriptUnit[] workingCopies = this.getWorkingCopies();
+			for(int i = 0; workingCopies != null && i < workingCopies.length; ++i) {
+				this.fWorkingCopiesPaths.add(workingCopies[i].getPath().toString());
+			}
+		}
+		
+		return this.fWorkingCopiesPaths;
 	}
 
 	/*
@@ -566,7 +593,7 @@ public class BasicSearchEngine {
 							true,false,true,
 							bindingName,
 							null,null,null,null,
-							null,null,null,
+							null,null,
 							matchRule);
 
 				}
@@ -578,8 +605,6 @@ public class BasicSearchEngine {
 						searchPattern = new MethodPattern(
 								true,false,true,
 								bindingName,
-								null,null,null,null,
-								null,null,null,
 								matchRule);
 
 					}
@@ -610,24 +635,7 @@ public class BasicSearchEngine {
 			final SearchPattern pattern =searchPattern;
 			final char typeSuffix=suffix;
 
-			// Get working copy path(s). Store in a single string in case of only one to optimize comparison in requestor
-			final HashSet workingCopyPaths = new HashSet();
-			String workingCopyPath = null;
-			IJavaScriptUnit[] copies = getWorkingCopies();
-			final int copiesLength = copies == null ? 0 : copies.length;
-			if (copies != null) {
-				if (copiesLength == 1) {
-					workingCopyPath = copies[0].getPath().toString();
-				} else {
-					for (int i = 0; i < copiesLength; i++) {
-						IJavaScriptUnit workingCopy = copies[i];
-						workingCopyPaths.add(workingCopy.getPath().toString());
-					}
-				}
-			}
-			final String singleWkcpPath = workingCopyPath;
-
-			// Index requestor
+			// Index requester
 			IndexQueryRequestor searchRequestor = new IndexQueryRequestor(){
 				public boolean acceptIndexMatch(String documentPath, SearchPattern indexRecord, SearchParticipant participant, AccessRuleSet access) {
 					// Filter unexpected types
@@ -691,6 +699,8 @@ public class BasicSearchEngine {
 					progressMonitor == null ? null : new SubProgressMonitor(progressMonitor, 100));
 
 				// add type names from working copies
+				IJavaScriptUnit[] copies = getWorkingCopies();
+				final int copiesLength = copies == null ? 0 : copies.length;
 				if (copies != null && doParse) {
 					for (int i = 0; i < copiesLength; i++) {
 						IJavaScriptUnit workingCopy = copies[i];
@@ -705,14 +715,6 @@ public class BasicSearchEngine {
 								IType[] allTypes = workingCopy.getAllTypes();
 								for (int j = 0, allTypesLength = allTypes.length; j < allTypesLength; j++) {
 									IType type = allTypes[j];
-									IJavaScriptElement parent = type.getParent();
-									char[][] enclosingTypeNames;
-									if (parent instanceof IType) {
-										char[] parentQualifiedName = ((IType)parent).getTypeQualifiedName('.').toCharArray();
-										enclosingTypeNames = CharOperation.splitOn('.', parentQualifiedName);
-									} else {
-										enclosingTypeNames = CharOperation.NO_CHAR_CHAR;
-									}
 									char[] simpleName = type.getElementName().toCharArray();
 									int kind = TypeDeclaration.CLASS_DECL;
 									
@@ -726,16 +728,7 @@ public class BasicSearchEngine {
 								IFunction[] allMethods = workingCopy.getFunctions();
 								for (int j = 0, allMethodsLength = allMethods.length; j < allMethodsLength; j++) {
 									IFunction method = allMethods[j];
-									IJavaScriptElement parent = method.getParent();
-//									char[][] enclosingTypeNames;
-									if (parent instanceof IType) {
-//										char[] parentQualifiedName = ((IType)parent).getTypeQualifiedName('.').toCharArray();
-//										enclosingTypeNames = CharOperation.splitOn('.', parentQualifiedName);
-									} else {
-//										enclosingTypeNames = CharOperation.NO_CHAR_CHAR;
-									}
 									char[] simpleName = method.getElementName().toCharArray();
-//									int kind;
 									if (match(typeSuffix, packageName, bindingName, matchRule, 0, packageDeclaration, simpleName)) {
 										nameRequestor.acceptBinding(bindingType,method.getFlags(), packageDeclaration, simpleName,   path, null);
 									}
@@ -749,16 +742,7 @@ public class BasicSearchEngine {
 								IField[] allFields = workingCopy.getFields ();
 								for (int j = 0, allFieldsLength = allFields.length; j < allFieldsLength; j++) {
 									IField field = allFields[j];
-									IJavaScriptElement parent = field.getParent();
-									char[][] enclosingTypeNames;
-									if (parent instanceof IType) {
-										char[] parentQualifiedName = ((IType)parent).getTypeQualifiedName('.').toCharArray();
-										enclosingTypeNames = CharOperation.splitOn('.', parentQualifiedName);
-									} else {
-										enclosingTypeNames = CharOperation.NO_CHAR_CHAR;
-									}
 									char[] simpleName = field.getElementName().toCharArray();
-									int kind;
 									if (match(typeSuffix, packageName, bindingName, matchRule, 0, packageDeclaration, simpleName)) {
 										nameRequestor.acceptBinding(bindingType,field.getFlags(), packageDeclaration, simpleName,   path, null);
 									}
@@ -799,24 +783,6 @@ public class BasicSearchEngine {
 										}
 										return true;
 									}
-//									public boolean visit(TypeDeclaration memberTypeDeclaration, ClassScope classScope) {
-//										if (match(typeSuffix, packageName, bindingName, matchRule, TypeDeclaration.kind(memberTypeDeclaration.modifiers), packageDeclaration, memberTypeDeclaration.name)) {
-//											// compute encloising type names
-//											TypeDeclaration enclosing = memberTypeDeclaration.enclosingType;
-//											char[][] enclosingTypeNames = CharOperation.NO_CHAR_CHAR;
-//											while (enclosing != null) {
-//												enclosingTypeNames = CharOperation.arrayConcat(new char[][] {enclosing.name}, enclosingTypeNames);
-//												if ((enclosing.bits & ASTNode.IsMemberType) != 0) {
-//													enclosing = enclosing.enclosingType;
-//												} else {
-//													enclosing = null;
-//												}
-//											}
-//											// report
-//											nameRequestor.acceptType(memberTypeDeclaration.modifiers, packageDeclaration, memberTypeDeclaration.name, enclosingTypeNames, path, null);
-//										}
-//										return true;
-//									}
 									public boolean visit(InferredType inferredType, BlockScope scope) {
 										if (bindingType==Binding.TYPE &&
 													match(typeSuffix, packageName, bindingName, matchRule, TypeDeclaration.kind(0), packageDeclaration, inferredType.getName())) {
@@ -885,24 +851,10 @@ public class BasicSearchEngine {
 		IndexManager indexManager = JavaModelManager.getJavaModelManager().getIndexManager();
 		final TypeDeclarationPattern pattern = new SecondaryTypeDeclarationPattern();
 
-		// Get working copy path(s). Store in a single string in case of only one to optimize comparison in requestor
-		final HashSet workingCopyPaths = new HashSet();
-		String workingCopyPath = null;
-		IJavaScriptUnit[] copies = getWorkingCopies();
-		final int copiesLength = copies == null ? 0 : copies.length;
-		if (copies != null) {
-			if (copiesLength == 1) {
-				workingCopyPath = copies[0].getPath().toString();
-			} else {
-				for (int i = 0; i < copiesLength; i++) {
-					IJavaScriptUnit workingCopy = copies[i];
-					workingCopyPaths.add(workingCopy.getPath().toString());
-				}
-			}
-		}
-		final String singleWkcpPath = workingCopyPath;
+		// Get working copy path(s). Store in a single string in case of only one to optimize comparison in requester
+		final HashSet workingCopyPaths = this.getWorkingCopiesPaths();
 
-		// Index requestor
+		// Index requester
 		IndexQueryRequestor searchRequestor = new IndexQueryRequestor(){
 			public boolean acceptIndexMatch(String documentPath, SearchPattern indexRecord, SearchParticipant participant, AccessRuleSet access) {
 				// Filter unexpected types
@@ -913,19 +865,9 @@ public class BasicSearchEngine {
 				if (record.enclosingTypeNames == IIndexConstants.ONE_ZERO_CHAR) {
 					return true; // filter out local and anonymous classes
 				}
-				switch (copiesLength) {
-					case 0:
-						break;
-					case 1:
-						if (singleWkcpPath.equals(documentPath)) {
-							return true; // fliter out *the* working copy
-						}
-						break;
-					default:
-						if (workingCopyPaths.contains(documentPath)) {
-							return true; // filter out working copies
-						}
-						break;
+				
+				if (workingCopyPaths.contains(documentPath)) {
+					return true; // filter out working copies
 				}
 
 				// Accept document path
@@ -1610,7 +1552,7 @@ public class BasicSearchEngine {
 						record.modifiers,
 						record.declaringSimpleName,
 						record.parameterCount,
-						record.parameterTypes,
+						record.parameterTypeNames,
 						record.parameterNames,
 						documentPath,
 						accessRestriction);
@@ -1634,6 +1576,275 @@ public class BasicSearchEngine {
 		} finally {
 			if (progressMonitor != null) {
 				progressMonitor.done();
+			}
+		}
+	}
+	
+	/**
+	 * <p>Searches for all methods in the index and working copies.</p>
+	 * 
+	 * @param functionRequester requester to report results to
+	 * @param selectorPattern selector pattern that the results need to match
+	 * @param declaringType type that all results must be defined on
+	 * @param selectorPatternMatchRule the match rule used with the given <code>selectorPattern</code>
+	 * @param scope of the search
+	 * @param waitingPolicy policy to use when waiting for the index to index
+	 * @param progressMonitor monitor to report status too
+	 * 
+	 * @see SearchPattern
+	 * 
+	 * @see IJob#ForceImmediate
+	 * @see IJob#CancelIfNotReady
+	 * @see IJob#WaitUntilReady
+	 */
+	public void searchAllFunctions(final IFunctionRequester functionRequester,
+			char[] selectorPattern, String declaringType, final int selectorPatternMatchRule,
+			IJavaScriptSearchScope scope,
+			int waitingPolicy, IProgressMonitor progressMonitor) {
+		
+		//determine the declaring type pattern characters
+		char[] declaringTypePatternChars = null;
+		if(declaringType != null && declaringType.trim().length() > 0) {
+			declaringTypePatternChars = declaringType.toCharArray();
+		}
+		
+		//pattern for searching the index and working copies
+		final MethodPattern searchPattern = new MethodPattern(true, false,
+				selectorPattern, declaringTypePatternChars, selectorPatternMatchRule);
+		
+		//requester used to accept index matches
+		final HashSet workingCopiesPaths = this.getWorkingCopiesPaths();
+		IndexQueryRequestor queryRequestor = new IndexQueryRequestor() {
+			/**
+			 * @see org.eclipse.wst.jsdt.internal.core.search.IndexQueryRequestor#acceptIndexMatch(java.lang.String, org.eclipse.wst.jsdt.core.search.SearchPattern, org.eclipse.wst.jsdt.core.search.SearchParticipant, org.eclipse.wst.jsdt.internal.compiler.env.AccessRuleSet)
+			 */
+			public boolean acceptIndexMatch(String documentPath,
+					SearchPattern indexRecord, SearchParticipant participant,
+					AccessRuleSet access) {
+				
+				if(!workingCopiesPaths.contains(documentPath)) {
+					MethodPattern record = (MethodPattern)indexRecord;
+					functionRequester.acceptFunction(record.selector, record.parameterCount,
+							record.parameterQualifications, record.parameterSimpleNames, record.parameterNames,
+							record.returnQualification, record.returnSimpleName,
+							record.declaringQualification, record.declaringSimpleName,
+							record.modifiers,
+							documentPath);
+				}
+				
+				return true;
+			}
+		};
+		
+		// Find function matches from index
+		IndexManager indexManager = JavaModelManager.getJavaModelManager().getIndexManager();
+		try {
+			if (progressMonitor != null) {
+				progressMonitor.beginTask(Messages.engine_searching, 1000);
+			}
+			
+			indexManager.performConcurrentJob(
+				new PatternSearchJob(
+					searchPattern,
+					getDefaultSearchParticipant(), // JavaScript search only
+					scope,
+					queryRequestor),
+				waitingPolicy,
+				progressMonitor == null ? null : new SubProgressMonitor(progressMonitor, 1000));
+		} finally {
+			if (progressMonitor != null) {
+				progressMonitor.done();
+			}
+		}
+		
+		// find function matches from working copies
+		IJavaScriptUnit[] workingCopies = this.getWorkingCopies();
+		for (int i = 0; workingCopies != null && i < workingCopies.length; i++) {
+			final IJavaScriptUnit workingCopy = workingCopies[i];
+			
+			//skip this working copy if not in the scope
+			if(!scope.encloses(workingCopy)) {
+				continue;
+			}
+			
+			try {
+				/* if working copy is consistent use the working copy as is
+				 * else need to re-parse the working copy and visit its AST
+				 */
+				if (workingCopy.isConsistent()) {
+					//check each function in the working copy for a match
+					IFunction[] allFunctions = workingCopy.getFunctions();
+					for (int j = 0; j < allFunctions.length; ++j) {
+						IFunction function = allFunctions[j];
+						
+						//selector must not be null for it to be a match
+						char[] wcSelector = null;
+						if(function.getElementName() != null) {
+							wcSelector = function.getElementName().toCharArray();
+						}
+						if(wcSelector != null) {
+							
+							//create a pattern from the working copy method
+							char[] wcDeclaringType = null;
+							if(function.getDeclaringType() != null && function.getDeclaringType().getTypeQualifiedName() != null) {
+								wcDeclaringType = function.getDeclaringType().getTypeQualifiedName().toCharArray();
+							}
+							MethodPattern wcPattern = new MethodPattern(true, false,
+									wcSelector ,wcDeclaringType, selectorPatternMatchRule);
+							
+							//if working copy function matches the search pattern then accept the function
+							if(searchPattern.matchesDecodedKey(wcPattern)) {
+								//figure out parameter names and types
+								String[] wcParameterNames = function.getParameterNames();
+								char[][][] wcSeperatedParamTypes =
+										QualificationHelpers.seperateFullyQualifiednames(function.getParameterTypes(), wcParameterNames.length);
+								
+								//figure out the return type parts
+								char[] wcReturnQualification = null;
+								char[] wcReturnSimpleName = null;
+								String wcReturnTypeSig = function.getReturnType();
+								if(wcReturnTypeSig != null) {
+									char[] wcReturnType = Signature.toString(wcReturnTypeSig).toCharArray();
+									char[][] wcSeperatedReturnType = 
+											QualificationHelpers.seperateFullyQualifedName(wcReturnType);
+									wcReturnQualification = wcSeperatedReturnType[QualificationHelpers.QULIFIERS_INDEX];
+									wcReturnSimpleName = wcSeperatedReturnType[QualificationHelpers.SIMPLE_NAMES_INDEX];
+								}
+								
+								//get the declaring type parts
+								char[][] wcSeperatedDeclaringType = QualificationHelpers.seperateFullyQualifedName(wcDeclaringType);
+								
+								//accept the method
+								functionRequester.acceptFunction(wcSelector, wcParameterNames.length,
+										wcSeperatedParamTypes[QualificationHelpers.QULIFIERS_INDEX],
+										wcSeperatedParamTypes[QualificationHelpers.SIMPLE_NAMES_INDEX],
+										QualificationHelpers.stringArrayToCharArray(wcParameterNames),
+										wcReturnQualification, wcReturnSimpleName,
+										wcSeperatedDeclaringType[QualificationHelpers.QULIFIERS_INDEX],
+										wcSeperatedDeclaringType[QualificationHelpers.SIMPLE_NAMES_INDEX],
+										function.getFlags(), workingCopy.getPath().toString());
+							}
+						}
+					}
+				} else {
+					Parser basicParser = getParser();
+					ICompilationUnit unit = (ICompilationUnit) workingCopy;
+					CompilationResult compilationUnitResult = new CompilationResult(unit, 0, 0, this.compilerOptions.maxProblemsPerUnit);
+					CompilationUnitDeclaration parsedUnit = basicParser.dietParse(unit, compilationUnitResult);
+					if (parsedUnit != null) {
+						basicParser.inferTypes(parsedUnit, null);
+						parsedUnit.traverse( new ASTVisitor() {
+							/**
+							 * @see org.eclipse.wst.jsdt.internal.compiler.ASTVisitor#visit(org.eclipse.wst.jsdt.internal.compiler.ast.MethodDeclaration, org.eclipse.wst.jsdt.internal.compiler.lookup.Scope)
+							 */
+							public boolean visit(MethodDeclaration methodDeclaration, Scope scope) {
+								if(methodDeclaration.inferredMethod != null) {
+									this.visit(methodDeclaration.inferredMethod);
+								} else {
+									this.visit(methodDeclaration, methodDeclaration.getName(), null);
+								}
+								
+								return true;
+							}
+							
+							/**
+							 * @see org.eclipse.wst.jsdt.internal.compiler.ASTVisitor#visit(org.eclipse.wst.jsdt.core.infer.InferredMethod, org.eclipse.wst.jsdt.internal.compiler.lookup.BlockScope)
+							 */
+							public boolean visit(InferredMethod inferredMethod, BlockScope scope) {
+								visit(inferredMethod);
+								return true;
+							}
+							
+							/**
+							 * <p>Visits an {@link InferredMethod} on a working copy</p>
+							 * 
+							 * @param inferredMethod {@link InferredMethod} on the working copy to visit
+							 */
+							private void visit(InferredMethod inferredMethod) {
+								char[] wcDeclaringType = null;
+								if(inferredMethod.inType != null) {
+									wcDeclaringType = inferredMethod.inType.getName();
+								}
+								
+								this.visit(inferredMethod.getFunctionDeclaration(),
+										inferredMethod.name, wcDeclaringType);
+							}
+							
+							/**
+							 * <p>Visits an {@link IFunctionDeclaration} using a given selector name
+							 * and declaring type</p>
+							 * 
+							 * @param funcDecl function declaration to visit
+							 * @param wcSelector selector to use when visiting the declaration
+							 * @param wcDeclaringType declaring type to use when visiting the declaration
+							 */
+							private void visit(IFunctionDeclaration funcDecl,
+									char[] wcSelector, char[] wcDeclaringType) {
+
+								//create the working copy pattern
+								MethodPattern wcPattern = new MethodPattern(true, false,
+										wcSelector,wcDeclaringType, selectorPatternMatchRule);
+								
+								//if working copy function matches the search pattern then accept the function qualification
+								if(searchPattern.matchesDecodedKey(wcPattern)) {
+									//get parameter names and types
+									IArgument[] args = funcDecl.getArguments();
+									char[][] wcParameterNames = null;
+									char[][] wcParameterQualifications = null;
+									char[][] wcParameterSimpleNames = null;
+									int wcParametersLength = 0;
+									if(args != null) {
+										wcParameterNames = new char[args.length][];
+										wcParameterQualifications = new char[args.length][];
+										wcParameterSimpleNames = new char[args.length][];
+										wcParametersLength = args.length;
+										
+										for(int i = 0; i < args.length; ++i) {
+											wcParameterNames[i] = args[i].getName();
+											if(args[i].getInferredType() != null) {
+												char[][] wcSeperatedParamType =
+													QualificationHelpers.seperateFullyQualifedName(args[i].getInferredType().getName());
+												wcParameterQualifications[i] = wcSeperatedParamType[QualificationHelpers.QULIFIERS_INDEX];
+												wcParameterSimpleNames[i] = wcSeperatedParamType[QualificationHelpers.SIMPLE_NAMES_INDEX];
+											}
+										}
+									}
+									
+									//get return type
+									char[] wcReturnQualification = null;
+									char[] wcReturnSimpleName = null;
+									if(funcDecl.getInferredType() != null) {
+										char[][] seperatedReturnType = QualificationHelpers.seperateFullyQualifedName(
+												funcDecl.getInferredType().getName());
+										wcReturnQualification = seperatedReturnType[QualificationHelpers.QULIFIERS_INDEX];
+										wcReturnSimpleName = seperatedReturnType[QualificationHelpers.SIMPLE_NAMES_INDEX];
+									}
+									
+									//get the declaring type parts
+									char[][] wcSeperatedDeclaringType = QualificationHelpers.seperateFullyQualifedName(wcDeclaringType);
+									
+									//get the modifiers
+									int modifiers = 0;
+									if(funcDecl instanceof MethodDeclaration) {
+										modifiers = ((MethodDeclaration) funcDecl).modifiers;
+									}
+									
+									//accept the method
+									functionRequester.acceptFunction(wcSelector, wcParametersLength,
+											wcParameterQualifications,
+											wcParameterSimpleNames,
+											wcParameterNames,
+											wcReturnQualification, wcReturnSimpleName,
+											wcSeperatedDeclaringType[QualificationHelpers.QULIFIERS_INDEX],
+											wcSeperatedDeclaringType[QualificationHelpers.SIMPLE_NAMES_INDEX],
+											modifiers, workingCopy.getPath().toString());
+								}
+							}
+						}, parsedUnit.scope);
+					}
+				}
+			} catch(JavaScriptModelException e) {
+				Logger.logException("Error while processing working copy", e);
 			}
 		}
 	}

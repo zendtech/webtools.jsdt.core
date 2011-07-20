@@ -161,6 +161,7 @@ import org.eclipse.wst.jsdt.internal.core.SourceMethod;
 import org.eclipse.wst.jsdt.internal.core.SourceMethodElementInfo;
 import org.eclipse.wst.jsdt.internal.core.SourceType;
 import org.eclipse.wst.jsdt.internal.core.SourceTypeElementInfo;
+import org.eclipse.wst.jsdt.internal.core.util.QualificationHelpers;
 import org.eclipse.wst.jsdt.internal.oaametadata.ClassData;
 import org.eclipse.wst.jsdt.internal.oaametadata.Method;
 
@@ -675,6 +676,19 @@ public final class CompletionEngine
 	}
 	
 	/**
+	 * @see org.eclipse.wst.jsdt.internal.codeassist.ISearchRequestor#acceptFunction(char[], int, char[][], char[][], char[][], char[], char[], char[], char[], int, java.lang.String)
+	 */
+	public void acceptFunction(char[] signature, int parameterCount,
+			char[][] parameterQualifications, char[][] parameterSimpleNames,
+			char[][] parameterNames, char[] returnQualification,
+			char[] returnSimpleName, char[] declaringQualification,
+			char[] declaringSimpleName, int modifiers, String path) {
+		
+		this.proposeFunction(signature, parameterCount, parameterQualifications, parameterSimpleNames, parameterNames,
+				returnQualification, returnSimpleName, declaringQualification, declaringSimpleName, modifiers, path);
+	}
+	
+	/**
 	 * @see org.eclipse.wst.jsdt.internal.codeassist.ISearchRequestor#acceptConstructor(
 	 * 		int, char[], int, char[][], char[][], java.lang.String, org.eclipse.wst.jsdt.internal.compiler.env.AccessRestriction)
 	 */
@@ -756,8 +770,8 @@ public final class CompletionEngine
 		if(!CompletionEngine.this.requestor.isIgnored(CompletionProposal.LOCAL_VARIABLE_REF)) {
 			CompletionProposal proposal = CompletionEngine.this.createProposal(CompletionProposal.LOCAL_VARIABLE_REF, CompletionEngine.this.actualCompletionPosition);
 			proposal.setSignature(JAVA_LANG_OBJECT_SIGNATURE);
-			proposal.setPackageName(JAVA_LANG_NAME);
-			proposal.setTypeName(OBJECT);
+			proposal.setReturnQualification(JAVA_LANG_NAME);
+			proposal.setReturnSimpleName(OBJECT);
 			proposal.setName(name);
 			proposal.setCompletion(name);
 			proposal.setFlags(Flags.AccDefault);
@@ -777,8 +791,6 @@ public final class CompletionEngine
 	 * @param name the name of the binding
 	 * @param exactMatch <code>true</code> if an exact match is needed, <code>false</code> otherwise
 	 * @param prefixRequired
-	 * @param onlyConstructors <code>true</code> if only constructors should be accepted,
-	 * <code>false</code> otherwise.  Only applies when matching on {@link Binding#METHOD}s.
 	 */
 	private void acceptBindings(char[] name,boolean exactMatch, boolean prefixRequired) {
 		
@@ -866,10 +878,10 @@ public final class CompletionEngine
 						proposal.setParameterTypeNames(parameterFullTypeNames);
 
 						if(method.returnType!=null) {
-							proposal.setPackageName(method.returnType.qualifiedPackageName());
-							proposal.setTypeName(method.returnType.qualifiedSourceName());
+							proposal.setReturnQualification(method.returnType.qualifiedPackageName());
+							proposal.setReturnSimpleName(method.returnType.qualifiedSourceName());
 						}else {
-							proposal.setTypeName(null);
+							proposal.setReturnSimpleName(null);
 						}
 
 
@@ -900,8 +912,8 @@ public final class CompletionEngine
 						proposal.setDeclarationTypeName(method.declaringClass.qualifiedSourceName());
 						proposal.setParameterPackageNames(parameterPackageNames);
 						proposal.setParameterTypeNames(parameterFullTypeNames);
-						proposal.setPackageName(method.returnType.qualifiedPackageName());
-						proposal.setTypeName(method.returnType.qualifiedSourceName());
+						proposal.setReturnQualification(method.returnType.qualifiedPackageName());
+						proposal.setReturnSimpleName(method.returnType.qualifiedSourceName());
 						proposal.setName(bindingName);
 						proposal.setCompletion(javadocCompletion);
 						proposal.setFlags( modifiers);
@@ -991,8 +1003,8 @@ public final class CompletionEngine
 					}
 					proposal.setSignature(getSignature(variableBinding.type));
 					proposal.setDeclarationTypeName(packageName);
-					proposal.setPackageName(variableBinding.type.qualifiedPackageName());
-					proposal.setTypeName(variableBinding.type.qualifiedSourceName());
+					proposal.setReturnQualification(variableBinding.type.qualifiedPackageName());
+					proposal.setReturnSimpleName(variableBinding.type.qualifiedSourceName());
 					proposal.setName(variableBinding.name);
 					proposal.setCompletion(completion);
 					proposal.setFlags(variableBinding.modifiers);
@@ -1010,8 +1022,8 @@ public final class CompletionEngine
 					CompletionProposal proposal = this.createProposal(CompletionProposal.JSDOC_FIELD_REF, this.actualCompletionPosition);
 					proposal.setSignature(getSignature(variableBinding.type));
 					proposal.setDeclarationPackageName(packageName);
-					proposal.setPackageName(variableBinding.type.qualifiedPackageName());
-					proposal.setTypeName(variableBinding.type.qualifiedSourceName());
+					proposal.setReturnQualification(variableBinding.type.qualifiedPackageName());
+					proposal.setReturnSimpleName(variableBinding.type.qualifiedSourceName());
 					proposal.setName(variableBinding.name);
 					proposal.setCompletion(javadocCompletion);
 					proposal.setFlags(variableBinding.modifiers);
@@ -1716,11 +1728,6 @@ public final class CompletionEngine
 			long completionPosition = access.nameSourcePosition;
 			setSourceRange((int) (completionPosition >>> 32), (int) completionPosition);
 
-
-
-//			this.assistNodeIsClass = true;
-//			this.assistNodeIsConstructor = true;
-
 			// can be the start of a qualified type name
 			if (qualifiedBinding == null) {
 			
@@ -1732,13 +1739,14 @@ public final class CompletionEngine
 			} else {
 				this.completionToken = access.token;
 				if (qualifiedBinding.problemId() == ProblemReasons.NotFound) {
-					// complete method members with missing return type
-					// class X {
-					//   Missing f() {return null;}
-					//   void foo() {
-					//     f().|
-					//   }
-					// }
+					/* complete method members with missing return type
+					 * class X {
+					 *   Missing f() {return null;}
+					 *   void foo() {
+					 *     f().|
+					 *   }
+					 * }
+					 */
 					if (this.assistNodeInJavadoc == 0 &&
 							(this.requestor.isAllowingRequiredProposals(CompletionProposal.FIELD_REF, CompletionProposal.TYPE_REF) ||
 									this.requestor.isAllowingRequiredProposals(CompletionProposal.METHOD_REF, CompletionProposal.TYPE_REF))) {
@@ -2572,8 +2580,8 @@ public final class CompletionEngine
 				proposal.setSignature(signature);
 				//proposal.setDeclarationPackageName(null);
 				//proposal.setDeclarationTypeName(null);
-				proposal.setPackageName(CharOperation.concatWith(JAVA_LANG, '.'));
-				proposal.setTypeName(CLASS);
+				proposal.setReturnQualification(CharOperation.concatWith(JAVA_LANG, '.'));
+				proposal.setReturnSimpleName(CLASS);
 				proposal.setName(classField);
 				proposal.setCompletion(classField);
 				proposal.setFlags(Flags.AccStatic | Flags.AccPublic);
@@ -3189,8 +3197,8 @@ public final class CompletionEngine
 				proposal.setSignature(getSignature(field.type));
 				proposal.setDeclarationPackageName(field.declaringClass.qualifiedPackageName());
 				proposal.setDeclarationTypeName(field.declaringClass.qualifiedSourceName());
-				proposal.setPackageName(field.type.qualifiedPackageName());
-				proposal.setTypeName(field.type.qualifiedSourceName());
+				proposal.setReturnQualification(field.type.qualifiedPackageName());
+				proposal.setReturnSimpleName(field.type.qualifiedSourceName());
 				proposal.setName(field.name);
 				if (missingElements != null) {
 					CompletionProposal[] subProposals = new CompletionProposal[missingElements.length];
@@ -3222,8 +3230,8 @@ public final class CompletionEngine
 				proposal.setSignature(getSignature(field.type));
 				proposal.setDeclarationPackageName(field.declaringClass.qualifiedPackageName());
 				proposal.setDeclarationTypeName(field.declaringClass.qualifiedSourceName());
-				proposal.setPackageName(field.type.qualifiedPackageName());
-				proposal.setTypeName(field.type.qualifiedSourceName());
+				proposal.setReturnQualification(field.type.qualifiedPackageName());
+				proposal.setReturnSimpleName(field.type.qualifiedSourceName());
 				proposal.setName(field.name);
 				proposal.setCompletion(javadocCompletion);
 				proposal.setFlags(field.modifiers);
@@ -3662,8 +3670,8 @@ public final class CompletionEngine
 					proposal.setSignature(getSignature(field.type));
 					proposal.setDeclarationPackageName(field.declaringClass.qualifiedPackageName());
 					proposal.setDeclarationTypeName(field.declaringClass.qualifiedSourceName());
-					proposal.setPackageName(field.type.qualifiedPackageName());
-					proposal.setTypeName(field.type.qualifiedSourceName());
+					proposal.setReturnQualification(field.type.qualifiedPackageName());
+					proposal.setReturnSimpleName(field.type.qualifiedSourceName());
 					proposal.setName(field.name);
 					proposal.setCompletion(completion);
 					proposal.setFlags(field.modifiers);
@@ -3678,8 +3686,8 @@ public final class CompletionEngine
 					char[] packageName = receiverType.qualifiedPackageName();
 					typeImportProposal.setDeclarationSignature(packageName);
 					typeImportProposal.setSignature(getSignature(receiverType));
-					typeImportProposal.setPackageName(packageName);
-					typeImportProposal.setTypeName(receiverType.qualifiedSourceName());
+					typeImportProposal.setReturnQualification(packageName);
+					typeImportProposal.setReturnSimpleName(receiverType.qualifiedSourceName());
 					typeImportProposal.setCompletion(typeImportCompletion);
 					typeImportProposal.setFlags(receiverType.modifiers);
 					typeImportProposal.setAdditionalFlags(CompletionFlags.Default);
@@ -3702,8 +3710,8 @@ public final class CompletionEngine
 					proposal.setSignature(getSignature(field.type));
 					proposal.setDeclarationPackageName(field.declaringClass.qualifiedPackageName());
 					proposal.setDeclarationTypeName(field.declaringClass.qualifiedSourceName());
-					proposal.setPackageName(field.type.qualifiedPackageName());
-					proposal.setTypeName(field.type.qualifiedSourceName());
+					proposal.setReturnQualification(field.type.qualifiedPackageName());
+					proposal.setReturnSimpleName(field.type.qualifiedSourceName());
 					proposal.setName(field.name);
 					proposal.setCompletion(completion);
 					proposal.setFlags(field.modifiers);
@@ -3717,8 +3725,8 @@ public final class CompletionEngine
 					fieldImportProposal.setSignature(getSignature(field.type));
 					fieldImportProposal.setDeclarationPackageName(field.declaringClass.qualifiedPackageName());
 					fieldImportProposal.setDeclarationTypeName(field.declaringClass.qualifiedSourceName());
-					fieldImportProposal.setPackageName(field.type.qualifiedPackageName());
-					fieldImportProposal.setTypeName(field.type.qualifiedSourceName());
+					fieldImportProposal.setReturnQualification(field.type.qualifiedPackageName());
+					fieldImportProposal.setReturnSimpleName(field.type.qualifiedSourceName());
 					fieldImportProposal.setName(field.name);
 					fieldImportProposal.setCompletion(fieldImportCompletion);
 					fieldImportProposal.setFlags(field.modifiers);
@@ -4441,8 +4449,8 @@ public final class CompletionEngine
 				proposal.setDeclarationTypeName(method.declaringClass.qualifiedSourceName());
 				proposal.setParameterPackageNames(parameterPackageNames);
 				proposal.setParameterTypeNames(parameterTypeNames);
-				proposal.setPackageName(method.returnType.qualifiedPackageName());
-				proposal.setTypeName(method.returnType.qualifiedSourceName());
+				proposal.setReturnQualification(method.returnType.qualifiedPackageName());
+				proposal.setReturnSimpleName(method.returnType.qualifiedSourceName());
 				proposal.setName(method.selector);
 				proposal.setIsContructor(method.isConstructor());
 				
@@ -4483,8 +4491,8 @@ public final class CompletionEngine
 				proposal.setDeclarationTypeName(method.declaringClass.qualifiedSourceName());
 				proposal.setParameterPackageNames(parameterPackageNames);
 				proposal.setParameterTypeNames(parameterTypeNames);
-				proposal.setPackageName(method.returnType.qualifiedPackageName());
-				proposal.setTypeName(method.returnType.qualifiedSourceName());
+				proposal.setReturnQualification(method.returnType.qualifiedPackageName());
+				proposal.setReturnSimpleName(method.returnType.qualifiedSourceName());
 				proposal.setName(method.selector);
 				proposal.setCompletion(javadocCompletion);
 				proposal.setFlags(method.modifiers);
@@ -4639,8 +4647,8 @@ public final class CompletionEngine
 							proposal.setDeclarationTypeName(method.declaringClass.qualifiedSourceName());
 							proposal.setParameterPackageNames(parameterPackageNames);
 							proposal.setParameterTypeNames(parameterTypeNames);
-							proposal.setPackageName(method.returnType.qualifiedPackageName());
-							proposal.setTypeName(method.returnType.qualifiedSourceName());
+							proposal.setReturnQualification(method.returnType.qualifiedPackageName());
+							proposal.setReturnSimpleName(method.returnType.qualifiedSourceName());
 							proposal.setName(method.selector);
 							proposal.setCompletion(completion);
 							proposal.setFlags(method.modifiers);
@@ -4667,8 +4675,8 @@ public final class CompletionEngine
 						proposal.setDeclarationTypeName(method.declaringClass.qualifiedSourceName());
 						proposal.setParameterPackageNames(parameterPackageNames);
 						proposal.setParameterTypeNames(parameterTypeNames);
-						proposal.setPackageName(method.returnType.qualifiedPackageName());
-						proposal.setTypeName(method.returnType.qualifiedSourceName());
+						proposal.setReturnQualification(method.returnType.qualifiedPackageName());
+						proposal.setReturnSimpleName(method.returnType.qualifiedSourceName());
 						proposal.setName(method.selector);
 						proposal.setCompletion(completion);
 						proposal.setFlags(method.modifiers);
@@ -4684,8 +4692,8 @@ public final class CompletionEngine
 						char[] packageName = receiverType.qualifiedPackageName();
 						typeImportProposal.setDeclarationSignature(packageName);
 						typeImportProposal.setSignature(getSignature(receiverType));
-						typeImportProposal.setPackageName(packageName);
-						typeImportProposal.setTypeName(receiverType.qualifiedSourceName());
+						typeImportProposal.setReturnQualification(packageName);
+						typeImportProposal.setReturnSimpleName(receiverType.qualifiedSourceName());
 						typeImportProposal.setCompletion(typeImportCompletion);
 						typeImportProposal.setFlags(receiverType.modifiers);
 						typeImportProposal.setAdditionalFlags(CompletionFlags.Default);
@@ -4712,8 +4720,8 @@ public final class CompletionEngine
 						proposal.setDeclarationTypeName(method.declaringClass.qualifiedSourceName());
 						proposal.setParameterPackageNames(parameterPackageNames);
 						proposal.setParameterTypeNames(parameterTypeNames);
-						proposal.setPackageName(method.returnType.qualifiedPackageName());
-						proposal.setTypeName(method.returnType.qualifiedSourceName());
+						proposal.setReturnQualification(method.returnType.qualifiedPackageName());
+						proposal.setReturnSimpleName(method.returnType.qualifiedSourceName());
 						proposal.setName(method.selector);
 						proposal.setCompletion(completion);
 						proposal.setFlags(method.modifiers);
@@ -4733,8 +4741,8 @@ public final class CompletionEngine
 						methodImportProposal.setDeclarationTypeName(method.declaringClass.qualifiedSourceName());
 						methodImportProposal.setParameterPackageNames(parameterPackageNames);
 						methodImportProposal.setParameterTypeNames(parameterTypeNames);
-						methodImportProposal.setPackageName(method.returnType.qualifiedPackageName());
-						methodImportProposal.setTypeName(method.returnType.qualifiedSourceName());
+						methodImportProposal.setReturnQualification(method.returnType.qualifiedPackageName());
+						methodImportProposal.setReturnSimpleName(method.returnType.qualifiedSourceName());
 						methodImportProposal.setName(method.selector);
 						methodImportProposal.setCompletion(methodImportCompletion);
 						methodImportProposal.setFlags(method.modifiers);
@@ -4769,8 +4777,8 @@ public final class CompletionEngine
 			proposal.completionEngine = this;
 			proposal.setDeclarationSignature(packageName);
 			proposal.setSignature(getSignature(typeBinding));
-			proposal.setPackageName(packageName);
-			proposal.setTypeName(typeName);
+			proposal.setReturnQualification(packageName);
+			proposal.setReturnSimpleName(typeName);
 			proposal.setCompletion(fullyQualifiedName);
 			proposal.setFlags(typeBinding.modifiers);
 			proposal.setReplaceRange(start - this.offset, end - this.offset);
@@ -4782,7 +4790,7 @@ public final class CompletionEngine
 
 			proposal = this.createProposal(CompletionProposal.PACKAGE_REF, this.actualCompletionPosition);
 			proposal.setDeclarationSignature(packageName);
-			proposal.setPackageName(packageName);
+			proposal.setReturnQualification(packageName);
 			proposal.setCompletion(packageName);
 			proposal.setReplaceRange(start - this.offset, end - this.offset);
 			proposal.setRelevance(relevance);
@@ -5057,8 +5065,8 @@ public final class CompletionEngine
 				proposal.setDeclarationTypeName(method.declaringClass.qualifiedSourceName());
 				proposal.setParameterPackageNames(parameterPackageNames);
 				proposal.setParameterTypeNames(parameterFullTypeNames);
-				proposal.setPackageName(method.returnType.qualifiedPackageName());
-				proposal.setTypeName(method.returnType.qualifiedSourceName());
+				proposal.setReturnQualification(method.returnType.qualifiedPackageName());
+				proposal.setReturnSimpleName(method.returnType.qualifiedSourceName());
 				proposal.setCompletion(completion.toString().toCharArray());
 				proposal.setName(method.selector);
 				proposal.setFlags(method.modifiers);
@@ -5813,10 +5821,10 @@ public final class CompletionEngine
 									: getSignature(local.type));
 								if(local.type == null) {
 									//proposal.setPackageName(null);
-									proposal.setTypeName(local.declaration.getTypeName().toCharArray());
+									proposal.setReturnSimpleName(local.declaration.getTypeName().toCharArray());
 								} else {
-									proposal.setPackageName(local.type.qualifiedPackageName());
-									proposal.setTypeName(local.type.qualifiedSourceName());
+									proposal.setReturnQualification(local.type.qualifiedPackageName());
+									proposal.setReturnSimpleName(local.type.qualifiedSourceName());
 								}
 								proposal.setName(local.name);
 								proposal.setCompletion(local.name);
@@ -5875,20 +5883,11 @@ public final class CompletionEngine
 									null,
 									null,
 									false);
-
-
 						}
 						break;
-//					case Scope.CLASS_SCOPE :
 					case Scope.COMPILATION_UNIT_SCOPE :
 						CompilationUnitScope compilationUnitScope = (CompilationUnitScope) currentScope;
-//						ClassScope classScope = (ClassScope) currentScope;
 						SourceTypeBinding enclosingType = compilationUnitScope.enclosingCompilationUnit();
-						/*				if (tokenLength == 0) { // only search inside the type itself if no prefix was provided
-											findFields(token, enclosingType.fields(), classScope, fieldsFound, staticsOnly);
-											findMethods(token, enclosingType.methods(), classScope, methodsFound, staticsOnly, false);
-											break done;
-										} else { */
 						if(!insideTypeAnnotation) {
 							if(proposeField) {
 								findFields(
@@ -5931,10 +5930,6 @@ public final class CompletionEngine
 						}
 						staticsOnly |= enclosingType.isStatic();
 						insideTypeAnnotation = false;
-						//				}
-//						break;
-
-//					case Scope.COMPILATION_UNIT_SCOPE :
 						break done2;
 				}
 				currentScope = currentScope.parent;
@@ -5953,14 +5948,11 @@ public final class CompletionEngine
 			}
 			
 			//propose methods from environment if token length is not 0
-			if (proposeMethod  && token.length > 0)
-			{
-				this.nameEnvironment.findBindings(
+			if (proposeMethod  && token.length > 0) {
+				this.nameEnvironment.findFunctions(
 						token,
-						Binding.METHOD,
-						this.options.camelCaseMatch,
+						null,
 						this);
-				acceptBindings(token,false,false);
 			}
 			
 			//propose fields from environment if token length is not 0
@@ -6000,8 +5992,8 @@ public final class CompletionEngine
 						if(!CompletionEngine.this.requestor.isIgnored(CompletionProposal.VARIABLE_DECLARATION)) {
 							CompletionProposal proposal = CompletionEngine.this.createProposal(CompletionProposal.VARIABLE_DECLARATION, CompletionEngine.this.actualCompletionPosition);
 							proposal.setSignature(getSignature(type.resolvedType));
-							proposal.setPackageName(type.resolvedType.qualifiedPackageName());
-							proposal.setTypeName(type.resolvedType.qualifiedSourceName());
+							proposal.setReturnQualification(type.resolvedType.qualifiedPackageName());
+							proposal.setReturnSimpleName(type.resolvedType.qualifiedSourceName());
 							proposal.setName(name);
 							proposal.setCompletion(name);
 							//proposal.setFlags(Flags.AccDefault);
@@ -6270,8 +6262,8 @@ public final class CompletionEngine
 					if(!CompletionEngine.this.requestor.isIgnored(CompletionProposal.VARIABLE_DECLARATION)) {
 						CompletionProposal proposal = CompletionEngine.this.createProposal(CompletionProposal.VARIABLE_DECLARATION, CompletionEngine.this.actualCompletionPosition);
 						proposal.setSignature(getSignature(typeBinding));
-						proposal.setPackageName(q);
-						proposal.setTypeName(displayName);
+						proposal.setReturnQualification(q);
+						proposal.setReturnSimpleName(displayName);
 						proposal.setName(name);
 						proposal.setCompletion(name);
 						//proposal.setFlags(Flags.AccDefault);
@@ -6899,7 +6891,7 @@ public final class CompletionEngine
 			proposal.setDeclarationTypeName(reference.qualifiedSourceName());
 
 			//proposal.setPackageName(null);
-			proposal.setTypeName(VOID);
+			proposal.setReturnSimpleName(VOID);
 			proposal.setName(token);
 			//proposal.setParameterPackageNames(null);
 			//proposal.setParameterTypeNames(null);
@@ -7012,8 +7004,8 @@ public final class CompletionEngine
 			proposal.completionEngine = this;
 			proposal.setDeclarationSignature(packageName);
 			proposal.setSignature(createNonGenericTypeSignature(typeName));
-			proposal.setPackageName(packageName);
-			proposal.setTypeName(typeName);
+			proposal.setReturnQualification(packageName);
+			proposal.setReturnSimpleName(typeName);
 			proposal.setCompletion(completionName);
 			proposal.setFlags(modifiers);
 			proposal.setReplaceRange(this.startPosition - this.offset, this.endPosition - this.offset);
@@ -7033,8 +7025,8 @@ public final class CompletionEngine
 			proposal.completionEngine = this;
 			proposal.setDeclarationSignature(packageName);
 			proposal.setSignature(createNonGenericTypeSignature(typeName));
-			proposal.setPackageName(packageName);
-			proposal.setTypeName(typeName);
+			proposal.setReturnQualification(packageName);
+			proposal.setReturnSimpleName(typeName);
 			proposal.setCompletion(javadocCompletion);
 			proposal.setFlags(modifiers);
 			int start = (this.assistNodeInJavadoc & CompletionOnJavadoc.REPLACE_TAG) != 0 ? this.javadocTagPosition : this.startPosition;
@@ -7060,8 +7052,8 @@ public final class CompletionEngine
 			proposal.completionEngine = this;
 			proposal.setDeclarationSignature(refBinding.qualifiedPackageName());
 			proposal.setSignature(getSignature(refBinding));
-			proposal.setPackageName(refBinding.qualifiedPackageName());
-			proposal.setTypeName(typeName);
+			proposal.setReturnQualification(refBinding.qualifiedPackageName());
+			proposal.setReturnSimpleName(typeName);
 			proposal.setCompletion(completionName);
 			proposal.setFlags(refBinding.modifiers);
 			proposal.setReplaceRange(this.startPosition - this.offset, this.endPosition - this.offset);
@@ -7080,8 +7072,8 @@ public final class CompletionEngine
 			proposal.completionEngine = this;
 			proposal.setDeclarationSignature(refBinding.qualifiedPackageName());
 			proposal.setSignature(getSignature(refBinding));
-			proposal.setPackageName(refBinding.qualifiedPackageName());
-			proposal.setTypeName(typeName);
+			proposal.setReturnQualification(refBinding.qualifiedPackageName());
+			proposal.setReturnSimpleName(typeName);
 			proposal.setCompletion(javadocCompletion);
 			proposal.setFlags(refBinding.modifiers);
 			int start = (this.assistNodeInJavadoc & CompletionOnJavadoc.REPLACE_TAG) != 0 ? this.javadocTagPosition : this.startPosition;
@@ -7406,8 +7398,8 @@ public final class CompletionEngine
 								CompletionProposal proposal =  createProposal(CompletionProposal.TYPE_REF, this.actualCompletionPosition);
 								proposal.setDeclarationSignature(packageName);
 								proposal.setSignature(getSignature(refBinding));
-								proposal.setPackageName(packageName);
-								proposal.setTypeName(typeName);
+								proposal.setReturnQualification(packageName);
+								proposal.setReturnSimpleName(typeName);
 								proposal.setCompletion(completionName);
 								proposal.setFlags(refBinding.modifiers);
 								proposal.setReplaceRange(this.startPosition - this.offset, this.endPosition - this.offset);
@@ -7508,6 +7500,77 @@ public final class CompletionEngine
 		}
 		
 		return typeName;
+	}
+	
+	/**
+	 * <p>Creates a function proposal based on all of the given information</p>
+	 * 
+	 * @param signature
+	 * @param parameterCount
+	 * @param parameterQualifications
+	 * @param parameterSimpleNames
+	 * @param parameterNames
+	 * @param returnQualification
+	 * @param returnSimpleName
+	 * @param declaringQualification
+	 * @param declaringSimpleName
+	 * @param modifiers
+	 * @param path
+	 */
+	private void proposeFunction(char[] signature,
+			int parameterCount,
+			char[][] parameterQualifications,
+			char[][] parameterSimpleNames,
+			char[][] parameterNames,
+			char[] returnQualification,
+			char[] returnSimpleName,
+			char[] declaringQualification,
+			char[] declaringSimpleName,
+			int modifiers,
+			String path) {
+		
+		//compute completion
+		char[] completion;
+		if (this.source != null
+				&& this.source.length > this.endPosition
+				&& this.source[this.endPosition] == '(') {
+			
+			completion = signature;
+		} else {
+			completion = CharOperation.concat(signature, new char[] { '(', ')' });
+		}
+		
+		//compute relevance
+		int relevance = computeBaseRelevance();
+		relevance += computeRelevanceForInterestingProposal();
+		if (this.completionToken != null) relevance += computeRelevanceForCaseMatching(this.completionToken, signature);
+		relevance += computeRelevanceForExpectingType(returnQualification, returnSimpleName);
+		relevance += computeRelevanceForQualification(false);
+		relevance += computeRelevanceForRestrictions(IAccessRule.K_ACCESSIBLE);
+		
+		this.noProposal = false;
+		// Standard proposal
+		if(!this.requestor.isIgnored(CompletionProposal.METHOD_REF) && (this.assistNodeInJavadoc & CompletionOnJavadoc.ONLY_INLINE_TAG) == 0) {
+			CompletionProposal proposal = this.createProposal(CompletionProposal.METHOD_REF, this.actualCompletionPosition);
+			proposal.setDeclarationSignature(QualificationHelpers.createFullyQualifiedName(declaringQualification, declaringSimpleName));
+			proposal.setDeclarationPackageName(declaringQualification);
+			proposal.setDeclarationTypeName(declaringSimpleName);
+			proposal.setParameterPackageNames(parameterQualifications);
+			proposal.setParameterTypeNames(parameterSimpleNames);
+			proposal.setReturnQualification(returnQualification);
+			proposal.setReturnSimpleName(returnSimpleName);
+			proposal.setName(signature);
+			proposal.setCompletion(completion);
+			proposal.setFlags(modifiers | Flags.AccPublic );
+			proposal.setReplaceRange(this.startPosition - this.offset, this.endPosition - this.offset);
+			proposal.setRelevance(relevance);
+			if(parameterNames != null) proposal.setParameterNames(parameterNames);
+			proposal.setIsContructor(false);
+			this.requestor.accept(proposal);
+			if(DEBUG) {
+				this.printDebug(proposal);
+			}
+		}
 	}
 	
 	/**

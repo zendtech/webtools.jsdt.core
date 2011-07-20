@@ -12,14 +12,18 @@ package org.eclipse.wst.jsdt.internal.core.search.matching;
 
 import org.eclipse.wst.jsdt.core.compiler.CharOperation;
 import org.eclipse.wst.jsdt.core.search.SearchPattern;
-import org.eclipse.wst.jsdt.internal.compiler.classfmt.ClassFileConstants;
 
 /**
  * <p>Pattern used to find and store constructor declarations.</p>
  */
 public class ConstructorDeclarationPattern extends ConstructorPattern {
+	/** <p> Modifiers for the constructor</p> */
 	public int modifiers;
-	public char[][] parameterTypes;
+	
+	/** <p>Fully qualified type names for the parameters of the constructor</p> */
+	public char[][] parameterTypeNames;
+	
+	/** <p>names of the parameters</p> */
 	public char[][] parameterNames;
 
 	public ConstructorDeclarationPattern(char[] declaringSimpleName, int matchRule) {
@@ -79,14 +83,14 @@ public class ConstructorDeclarationPattern extends ConstructorPattern {
 		
 		// initialize optional fields
 		this.modifiers = 0;
-		this.parameterTypes = null;
+		this.parameterTypeNames = null;
 		this.parameterNames = null;
 		
 		/* if no parameters just decode modifiers
 		 * else decode parameters and modifiers
 		 */
 		start = slash + 1;
-		if (this.parameterCount == 0) {
+		if (this.parameterCount <= 0 ) {
 			slash = slash + 3;
 			last = slash - 1;
 			
@@ -96,7 +100,7 @@ public class ConstructorDeclarationPattern extends ConstructorPattern {
 			last = slash - 1;
 			
 			
-			this.parameterTypes = CharOperation.splitOn(PARAMETER_SEPARATOR, key, start, slash);
+			this.parameterTypeNames = CharOperation.splitOn(PARAMETER_SEPARATOR, key, start, slash);
 			
 			start = slash + 1;
 			slash = CharOperation.indexOf(SEPARATOR, key, start);
@@ -110,8 +114,6 @@ public class ConstructorDeclarationPattern extends ConstructorPattern {
 			last = slash - 1;
 			
 			this.modifiers = key[last-1] + (key[last]<<16);
-		} else {
-			this.modifiers = ClassFileConstants.AccPublic;
 		}
 	}
 	
@@ -143,11 +145,7 @@ public class ConstructorDeclarationPattern extends ConstructorPattern {
 		if (parameterCount > 0) {
 			//get param types
 			if (parameterTypes != null && parameterTypes.length == parameterCount) {
-				char[][] parameterTypeErasures = new char[parameterCount][];
-				for (int i = 0; i < parameterTypes.length; i++) {
-					parameterTypeErasures[i] = getTypeErasure(parameterTypes[i]);
-				}
-				parameterTypesChars = CharOperation.concatWith(parameterTypeErasures, PARAMETER_SEPARATOR, false);
+				parameterTypesChars = CharOperation.concatWith(parameterTypes, PARAMETER_SEPARATOR, false);
 			}
 			
 			//get param names
@@ -213,38 +211,5 @@ public class ConstructorDeclarationPattern extends ConstructorPattern {
 		result[pos++] = (char) (modifiers>>16);
 		
 		return result;
-	}
-	
-	private static char[] getTypeErasure(char[] typeName) {
-		char[] typeErasurename = new char[0];
-		if(typeName != null) {
-			int index;
-			if ((index = CharOperation.indexOf('<', typeName)) == -1) return typeName;
-			
-			int length = typeName.length;
-			typeErasurename = new char[length - 2];
-			
-			System.arraycopy(typeName, 0, typeErasurename, 0, index);
-			
-			int depth = 1;
-			for (int i = index + 1; i < length; i++) {
-				switch (typeName[i]) {
-					case '<':
-						depth++;
-						break;
-					case '>':
-						depth--;
-						break;
-					default:
-						if (depth == 0) {
-							typeErasurename[index++] = typeName[i];
-						}
-						break;
-				}
-			}
-			
-			System.arraycopy(typeErasurename, 0, typeErasurename = new char[index], 0, index);
-		}
-		return typeErasurename;
 	}
 }

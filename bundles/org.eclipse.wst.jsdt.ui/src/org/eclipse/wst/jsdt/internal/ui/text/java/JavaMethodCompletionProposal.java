@@ -198,8 +198,13 @@ public class JavaMethodCompletionProposal extends LazyJavaCompletionProposal {
 			parameterCount= Signature.getParameterCount(fProposal.getSignature()) % 10; // we don't care about insane methods with >9 parameters
 		} else {
 			char[][] params = this.fProposal.getParamaterNames();
-			parameterList = CharOperation.concatWith(params, ',');
-			parameterCount = params.length % 10; // we don't care about insane methods with >9 parameters
+			if(params != null) {
+				parameterList = CharOperation.concatWith(params, ',');
+				parameterCount = params.length % 10; // we don't care about insane methods with >9 parameters
+			} else {
+				parameterList = new char[0];
+				parameterCount = 0;
+			}
 		}
 		
 		StringBuffer buf= new StringBuffer(name.length + 2 + parameterList.length);

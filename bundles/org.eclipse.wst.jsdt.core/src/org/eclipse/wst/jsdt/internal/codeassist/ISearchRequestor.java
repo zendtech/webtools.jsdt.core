@@ -64,4 +64,31 @@ public interface ISearchRequestor {
 			char[][] parameterNames,
 			String path,
 			AccessRestriction access);
+	
+	/**
+	 * <p>Accept a function defined with all of the given information</p>
+	 * 
+	 * @param signature
+	 * @param parameterCount
+	 * @param parameterQualifications
+	 * @param parameterSimpleNames
+	 * @param parameterNames
+	 * @param returnQualification
+	 * @param returnSimpleName
+	 * @param declaringQualification
+	 * @param declaringSimpleName
+	 * @param modifiers
+	 * @param path
+	 */
+	public void acceptFunction(char[] signature,
+			int parameterCount,
+			char[][] parameterQualifications,
+			char[][] parameterSimpleNames,
+			char[][] parameterNames,
+			char[] returnQualification,
+			char[] returnSimpleName,
+			char[] declaringQualification,
+			char[] declaringSimpleName,
+			int modifiers,
+			String path);
 }

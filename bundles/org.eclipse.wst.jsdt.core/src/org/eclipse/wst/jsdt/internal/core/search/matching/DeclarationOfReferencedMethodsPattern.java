@@ -21,7 +21,7 @@ protected IJavaScriptElement enclosingElement;
 protected SimpleSet knownMethods;
 
 public DeclarationOfReferencedMethodsPattern(IJavaScriptElement enclosingElement) {
-	super(false, true, false,null, null, null, null, null, null, null, null, R_PATTERN_MATCH);
+	super(false, true, false,null, R_PATTERN_MATCH);
 
 	this.enclosingElement = enclosingElement;
 	this.knownMethods = new SimpleSet();

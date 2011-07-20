@@ -30,7 +30,6 @@ import org.eclipse.wst.jsdt.internal.compiler.problem.ProblemReporter;
 import org.eclipse.wst.jsdt.internal.compiler.util.HashtableOfObject;
 import org.eclipse.wst.jsdt.internal.compiler.util.ObjectVector;
 import org.eclipse.wst.jsdt.internal.compiler.util.SimpleSet;
-import org.eclipse.wst.jsdt.internal.core.Logger;
 
 public abstract class Scope implements TypeConstants, TypeIds {
 
@@ -1359,14 +1358,7 @@ public abstract class Scope implements TypeConstants, TypeIds {
 			MethodBinding constructor = null;
 			if (methods == null || methods == Binding.NO_METHODS || methods.length == 0){
 				constructor = new MethodBinding(0, receiverType.sourceName, receiverType, null,receiverType);
-			} else {
-				
-				if(methods.length > 1) {
-					Logger.log(Logger.WARNING, "There should only ever be one match for a constructor search" +
-							" but found " + methods.length + " when looking for " +
-							new String(receiverType.sourceName) + ". Using the first match.");
-				}
-				
+			} else {				
 				//should only ever be one constructor so use the first one in the list
 				constructor = methods[0];
 			}

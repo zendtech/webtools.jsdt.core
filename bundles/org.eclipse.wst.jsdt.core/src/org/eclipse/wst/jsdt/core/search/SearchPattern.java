@@ -981,16 +981,12 @@ private static SearchPattern createMethodOrConstructorPattern(String patternStri
 				findReferences,
 				isFunction,
 				selectorChars,
-				declaringTypeQualification,
-				declaringTypeSimpleName,
-				declaringTypeSignature,
-				returnTypeQualification,
-				returnTypeSimpleName,
-				returnTypeSignature,
 				parameterTypeQualifications,
 				parameterTypeSimpleNames,
-				parameterTypeSignatures,
-				typeArguments,
+				returnTypeQualification,
+				returnTypeSimpleName,
+				declaringTypeQualification,
+				declaringTypeSimpleName,
 				matchRule);
 	}
 }
@@ -1475,15 +1471,12 @@ public static SearchPattern createPattern(IJavaScriptElement element, int limitT
 						findMethodReferences,
 						isFunction,
 						selector,
-						declaringQualification,
-						declaringSimpleName,
-						returnQualification,
-						returnSimpleName,
-						returnSignature,
 						parameterQualifications,
 						parameterSimpleNames,
-						parameterSignatures,
-						method,
+						returnQualification,
+						returnSimpleName,
+						declaringQualification,
+						declaringSimpleName,
 						matchRule);
 			}
 			break;
