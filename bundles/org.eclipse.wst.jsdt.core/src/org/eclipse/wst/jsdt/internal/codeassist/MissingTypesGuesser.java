@@ -333,19 +333,7 @@ public class MissingTypesGuesser extends ASTVisitor {
 				
 				//do nothing
 			}
-			
-			/**
-			 * @see org.eclipse.wst.jsdt.internal.codeassist.ISearchRequestor#acceptFunction(char[], int, char[][], char[][], char[][], char[], char[], char[], char[], int, java.lang.String)
-			 */
-			public void acceptFunction(char[] signature, int parameterCount,
-					char[][] parameterQualifications,
-					char[][] parameterSimpleNames, char[][] parameterNames,
-					char[] returnQualification, char[] returnSimpleName,
-					char[] declaringQualification, char[] declaringSimpleName,
-					int modifiers, String path) {
-				
-				//do nothing
-			}
+
 		};
 		nameEnvironment.findExactTypes(missingSimpleName, true, IJavaScriptSearchConstants.TYPE, storage);
 		if(results.size() == 0) return null;

@@ -21,8 +21,8 @@ import org.eclipse.wst.jsdt.internal.compiler.SourceElementParser;
 import org.eclipse.wst.jsdt.internal.compiler.util.SuffixConstants;
 import org.eclipse.wst.jsdt.internal.core.BasicCompilationUnit;
 import org.eclipse.wst.jsdt.internal.core.JavaModelManager;
-import org.eclipse.wst.jsdt.internal.core.Logger;
 import org.eclipse.wst.jsdt.internal.core.search.JavaSearchDocument;
+import org.eclipse.wst.jsdt.internal.core.search.processing.JobManager;
 import org.eclipse.wst.jsdt.internal.oaametadata.LibraryAPIs;
 import org.eclipse.wst.jsdt.internal.oaametadata.MetadataReader;
 import org.eclipse.wst.jsdt.internal.oaametadata.MetadataSourceElementNotifier;
@@ -79,7 +79,9 @@ public class SourceIndexer extends AbstractIndexer implements SuffixConstants {
 		try {
 			parser.parseCompilationUnit(compilationUnit, true/*full parse*/);
 		} catch (Exception e) {
-			Logger.logException("Error while indexing document", e);
+			if (JobManager.VERBOSE) {
+				e.printStackTrace();
+			}
 		}
 	}
 	public void indexMetadata() {

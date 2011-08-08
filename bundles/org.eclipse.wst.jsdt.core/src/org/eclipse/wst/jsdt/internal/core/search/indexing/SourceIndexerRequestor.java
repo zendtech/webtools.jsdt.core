@@ -190,9 +190,7 @@ public void enterInitializer(int declarationSourceStart, int modifiers) {
  */
 public void enterMethod(MethodInfo methodInfo) {
 	boolean isFunction=this.depth==0;
-	this.indexer.addMethodDeclaration(methodInfo.name, methodInfo.parameterTypes,
-			methodInfo.parameterNames, methodInfo.returnType, methodInfo.declaringType,
-			isFunction, methodInfo.modifiers);
+	this.indexer.addMethodDeclaration(methodInfo.name, methodInfo.parameterTypes, methodInfo.returnType,isFunction);
 	this.methodDepth++;
 }
 /**

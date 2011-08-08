@@ -926,6 +926,10 @@ public MethodBinding getMethodBinding(MethodPattern methodPattern) {
 	}
 	//	Get binding from unit scope
 	char[] typeName = PatternLocator.qualifiedPattern(methodPattern.declaringSimpleName, methodPattern.declaringQualification);
+	if (typeName == null) {
+		if (methodPattern.declaringType == null) return null;
+		typeName = methodPattern.declaringType.getFullyQualifiedName().toCharArray();
+	}
 	TypeBinding declaringTypeBinding = getType(typeName, typeName);
 	if (declaringTypeBinding != null) {
 		if (declaringTypeBinding.isArrayType()) {

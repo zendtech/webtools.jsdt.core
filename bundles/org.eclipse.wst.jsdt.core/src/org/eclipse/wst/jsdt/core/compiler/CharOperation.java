@@ -1089,21 +1089,20 @@ public static final char[] concatWith(char[][] array, char separator, boolean ig
 	int size = length - 1;
 	int index = length;
 	while (--index >= 0) {
-		if ((array[index] == null || array[index].length == 0) && ignoreEmptyElements) {
+		if (array[index].length == 0 && ignoreEmptyElements)
 			size--;
-		} else {
-			size += array[index] != null ? array[index].length : 0;
-		}
+		else
+			size += array[index].length;
 	}
 	if (size <= 0)
 		return CharOperation.NO_CHAR;
 	char[] result = new char[size];
 	index = length;
 	while (--index >= 0) {
-		length = array[index] != null ? array[index].length : 0;
+		length = array[index].length;
 		if (length > 0 || (length == 0 && !ignoreEmptyElements)) {
 			System.arraycopy(
-				array[index] != null ? array[index] : NO_CHAR,
+				array[index],
 				0,
 				result,
 				(size -= length),

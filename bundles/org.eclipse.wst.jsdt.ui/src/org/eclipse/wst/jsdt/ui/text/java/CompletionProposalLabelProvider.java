@@ -203,7 +203,7 @@ public class CompletionProposalLabelProvider {
 					buffer.append(',');
 					buffer.append(' ');
 				}
-				if (parameterTypes[i] != null && parameterTypes[i].length > 0 &&  !Arrays.equals(Signature.ANY, parameterTypes[i])) {
+				if (parameterTypes[i].length > 0 & !Arrays.equals(Signature.ANY, parameterTypes[i])) {
 					buffer.append(parameterTypes[i]);
 					buffer.append(' ');
 				}
@@ -249,8 +249,10 @@ public class CompletionProposalLabelProvider {
 
 		// return type
 		if (!methodProposal.isConstructor()) {
-			char[] returnType= methodProposal.getReturnType();
-			if (returnType != null && returnType.length > 0 &&  !Arrays.equals(Signature.ANY,returnType)) {
+			// TODO remove SignatureUtil.fix83600 call when bugs are fixed
+			char[] returnType= createTypeDisplayName(Signature.getReturnType(methodProposal.getSignature()));
+			if (!Arrays.equals(Signature.ANY,returnType))
+			{
 				nameBuffer.append("  "); //$NON-NLS-1$
 				//@GINO: Anonymous UI Label
 				org.eclipse.wst.jsdt.internal.core.util.Util.insertTypeLabel( returnType, nameBuffer );
@@ -258,11 +260,11 @@ public class CompletionProposalLabelProvider {
 		}
 
 		// declaring type
+		nameBuffer.append(" - "); //$NON-NLS-1$
 		String declaringType= extractDeclaringTypeFQN(methodProposal);
-		if(declaringType != null) {
-			nameBuffer.append(" - "); //$NON-NLS-1$
-			org.eclipse.wst.jsdt.internal.core.util.Util.insertTypeLabel( declaringType, nameBuffer );
-		}
+		
+		//@GINO: Anonymous UI Label
+		org.eclipse.wst.jsdt.internal.core.util.Util.insertTypeLabel( declaringType, nameBuffer );
 
 		return nameBuffer.toString();
 	}
@@ -336,21 +338,19 @@ public class CompletionProposalLabelProvider {
 	private String extractDeclaringTypeFQN(CompletionProposal methodProposal) {
 		char[] declaringTypeSignature= methodProposal.getDeclarationSignature();
 		char[] compUnit = methodProposal.getDeclarationTypeName();
-		if(compUnit != null) {
-			IJavaScriptProject project = methodProposal.getJavaProject();
-			JsGlobalScopeContainerInitializer init = JSDScopeUtil.findLibraryInitializer(new Path(new String(compUnit)),project);
-			if(init!=null) {
-				String description = init.getDescription(new Path(new String(compUnit)),project);
-				if( description!=null) return  "[" +  description + "]"; //$NON-NLS-1$ //$NON-NLS-2$
-			}
+		IJavaScriptProject project = methodProposal.getJavaProject();
+		JsGlobalScopeContainerInitializer init = JSDScopeUtil.findLibraryInitializer(new Path(new String(compUnit)),project);
+		if(init!=null) {
+			String description = init.getDescription(new Path(new String(compUnit)),project);
+			if( description!=null) return  "[" +  description + "]"; //$NON-NLS-1$ //$NON-NLS-2$
+			
 		}
 		
-		String qualifedName = null;
-		if(declaringTypeSignature != null ) {
-			qualifedName = SignatureUtil.stripSignatureToFQN(String.valueOf(declaringTypeSignature));
-		}
-		
-		return qualifedName;
+		// special methods may not have a declaring type: methods defined on arrays etc.
+		// TODO remove when bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=84690 gets fixed
+		if (declaringTypeSignature == null)
+			return "java.lang.Object"; //$NON-NLS-1$
+		return SignatureUtil.stripSignatureToFQN(String.valueOf(declaringTypeSignature));
 	}
 
 	/**

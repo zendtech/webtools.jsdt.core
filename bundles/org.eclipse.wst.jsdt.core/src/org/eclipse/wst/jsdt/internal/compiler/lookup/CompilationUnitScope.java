@@ -632,6 +632,25 @@ public char[] computeConstantPoolName(LocalTypeBinding localType) {
 }
 
 void connectTypeHierarchy(char[][] typeNames) {
+		// if(superType!=null) {
+		// if(superType instanceof SourceTypeBinding) {
+		// ((SourceTypeBinding)superType).classScope.buildFieldsAndMethods();
+		// ((SourceTypeBinding)superType).classScope.connectTypeHierarchy();
+		//
+		// }
+		// ReferenceBinding[] memberTypes = superType.memberTypes();
+		// ReferenceBinding[] memberFields = superType.typeVariables();
+		// FunctionBinding[] memberMethods = superType.availableMethods();
+		// for(int i=0;i<memberTypes.length;i++) {
+		// recordReference(memberTypes[i], memberTypes[i].sourceName);
+		// }
+		// }
+
+		// if(superTypeName!=null) {
+		// ReferenceBinding binding = environment.askForType(new char[][]
+		// {superTypeName});
+		// this.recordSuperTypeReference(binding);
+		// }
 		if (classScope != null)
 			classScope.connectTypeHierarchy();
 		nextType: for (int i = 0; i < referenceContext.numberInferredTypes; i++) {
@@ -648,9 +667,9 @@ void connectTypeHierarchy(char[][] typeNames) {
 					continue nextType;
 			
 		}
-			if (inferredType.binding != null) {
+			if (inferredType.binding != null)
 				inferredType.binding.classScope.connectTypeHierarchy();
-			}
+
 		}
 }
 void connectTypeHierarchy() {

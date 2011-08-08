@@ -37,7 +37,6 @@ import org.eclipse.wst.jsdt.internal.compiler.env.NameEnvironmentAnswer;
 import org.eclipse.wst.jsdt.internal.compiler.impl.ITypeRequestor;
 import org.eclipse.wst.jsdt.internal.core.search.BasicSearchEngine;
 import org.eclipse.wst.jsdt.internal.core.search.IConstructorRequestor;
-import org.eclipse.wst.jsdt.internal.core.search.IFunctionRequester;
 import org.eclipse.wst.jsdt.internal.core.search.IRestrictedAccessBindingRequestor;
 import org.eclipse.wst.jsdt.internal.core.search.IRestrictedAccessTypeRequestor;
 
@@ -169,10 +168,16 @@ public class SearchableEnvironment implements INameEnvironment,
 					for (int i = 0, index = 1; i < length; i++) {
 						ISourceType otherType = (ISourceType) ((JavaElement) types[i])
 								.getElementInfo();
-						//check that the index is in bounds (see Bug 62861)
-						if (!otherType.equals(topLevelType) && index < length) {
+						if (!otherType.equals(topLevelType) && index < length) // check
+																				// that
+																				// the
+																				// index
+																				// is
+																				// in
+																				// bounds
+																				// (see
+																				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=62861)
 							sourceTypes[index++] = otherType;
-						}
 					}
 					return new NameEnvironmentAnswer(sourceTypes,
 							answer.restriction);
@@ -226,6 +231,8 @@ public class SearchableEnvironment implements INameEnvironment,
 				System.arraycopy(elements, 0, units, 0, elements.length);
 				return new NameEnvironmentAnswer(units,answer.restriction);
 			}
+				// return new NameEnvironmentAnswer((IBinaryType) ((BinaryType)
+				// answer.type).getElementInfo(), answer.restriction);
 		}
 		return null;
 	}
@@ -579,8 +586,41 @@ public class SearchableEnvironment implements INameEnvironment,
 				}
 			}
 
-			IProgressMonitor progressMonitor = new CancelableProgressMonitor();
-			
+			IProgressMonitor progressMonitor = new IProgressMonitor() {
+				boolean isCanceled = false;
+
+				public void beginTask(String name, int totalWork) {
+					// implements interface method
+				}
+
+				public void done() {
+					// implements interface method
+				}
+
+				public void internalWorked(double work) {
+					// implements interface method
+				}
+
+				public boolean isCanceled() {
+					return isCanceled;
+				}
+
+				public void setCanceled(boolean value) {
+					isCanceled = value;
+				}
+
+				public void setTaskName(String name) {
+					// implements interface method
+				}
+
+				public void subTask(String name) {
+					// implements interface method
+				}
+
+				public void worked(int work) {
+					// implements interface method
+				}
+			};
 			IRestrictedAccessBindingRequestor bindingRequestor = new IRestrictedAccessBindingRequestor() {
 				String exclude;
 				public boolean acceptBinding(int type,int modifiers, char[] packageName,
@@ -634,80 +674,6 @@ public class SearchableEnvironment implements INameEnvironment,
 			findTypes(new String(prefix), storage, NameLookup.ACCEPT_ALL);
 		}
 	}
-	
-	/**
-	 * <p>Used to find all functions in the environment using the given information.</p>
-	 * 
-	 * <p><b>NOTE:</b> this function will currently ignore any results either from the index
-	 * or working copies from the {@link #unitToSkip}.</p>
-	 * 
-	 * @param selectorPrefix prefix to the selector to search for functions matches for, or
-	 * <code>null</code> to search for functions with any selector.  The <code>null</code>
-	 * option is useful when searching for all functions on a given type.
-	 * @param declaringTypeName fully qualified type name that any function results should be
-	 * defined on, or <code>null</code> if the function results should not be defined on any type
-	 * @param searchRequester search requester to return any search results too
-	 */
-	public void findFunctions(char[] selectorPrefix, String declaringTypeName, final ISearchRequestor searchRequester) {
-		//calculate the exclude path
-		final String excludePath;
-		if (this.unitToSkip != null && this.unitToSkip instanceof IJavaScriptElement) {
-			excludePath = ((IJavaScriptElement)this.unitToSkip).getPath().toString();
-		} else {
-			excludePath = null;
-		}
-		
-		//create the requester
-		IFunctionRequester functionRequestor = new IFunctionRequester() {
-			public void acceptFunction(char[] signature,
-					int parameterCount,
-					char[][] parameterQualifications, char[][] parameterSimpleNames,
-					char[][] parameterNames,
-					char[] returnQualification, char[] returnSimpleName,
-					char[] declaringQualification, char[] declaringSimpleName,
-					int modifiers,
-					String path) {
-				
-				if (excludePath == null || !excludePath.equals(path)) {
-					searchRequester.acceptFunction(signature, parameterCount, parameterQualifications, parameterSimpleNames, parameterNames,
-							returnQualification, returnSimpleName, declaringQualification, declaringSimpleName, modifiers, path);
-				}
-			}
-		};
-		
-		/* if selector specified then search for any selector with the given selector as a prefix
-		 * else search for any selector
-		 */
-		char[] selectorPattern;
-		int selectorPatternMatchRule;
-		if(selectorPrefix != null) {
-			selectorPattern = selectorPrefix;
-			selectorPatternMatchRule = SearchPattern.R_PREFIX_MATCH;
-		} else {
-			selectorPattern = new char[] {'*'};
-			selectorPatternMatchRule = SearchPattern.R_PATTERN_MATCH;
-		}
-		
-		/* if a declaring type name is specified then make it the pattern for matching
-		 * else find methods not on a type
-		 */
-		String declaringType;
-		if(declaringTypeName != null) {
-			declaringType = declaringTypeName;
-		} else {
-			declaringType = null;
-		}
-		
-		//do the search
-		new BasicSearchEngine(this.workingCopies).searchAllFunctions(
-				functionRequestor,
-				selectorPattern,
-				declaringType,
-				selectorPatternMatchRule,
-				this.searchScope,
-				WAIT_UNTIL_READY_TO_SEARCH,
-				new CancelableProgressMonitor());
-	}
 
 	/**
 	 * <p>The progress monitor is used to be able to cancel completion operations</p>
@@ -731,7 +697,33 @@ public class SearchableEnvironment implements INameEnvironment,
 			excludePath = null;
 		}
 
-		IProgressMonitor progressMonitor = new CancelableProgressMonitor();
+		IProgressMonitor progressMonitor = new IProgressMonitor() {
+			boolean isCanceled = false;
+			public void beginTask(String name, int totalWork) {
+				// implements interface method
+			}
+			public void done() {
+				// implements interface method
+			}
+			public void internalWorked(double work) {
+				// implements interface method
+			}
+			public boolean isCanceled() {
+				return this.isCanceled;
+			}
+			public void setCanceled(boolean value) {
+				this.isCanceled = value;
+			}
+			public void setTaskName(String name) {
+				// implements interface method
+			}
+			public void subTask(String name) {
+				// implements interface method
+			}
+			public void worked(int work) {
+				// implements interface method
+			}
+		};
 		
 		IConstructorRequestor constructorRequestor = new IConstructorRequestor() {
 			/**
@@ -825,6 +817,19 @@ public class SearchableEnvironment implements INameEnvironment,
 			this.nameLookup.seekBindings(prefix, bindingType,null, true, type, requestor);
 		} else {
 			throw new UnimplementedException("shouldnt get here"); //$NON-NLS-1$
+//			String packageName = prefix.substring(0, index);
+//			JavaElementRequestor elementRequestor = new JavaElementRequestor();
+//			this.nameLookup.seekPackageFragments(packageName, false,
+//					elementRequestor);
+//			IPackageFragment[] fragments = elementRequestor
+//					.getPackageFragments();
+//			if (fragments != null) {
+//				String className = prefix.substring(index + 1);
+//				for (int i = 0, length = fragments.length; i < length; i++)
+//					if (fragments[i] != null)
+//						this.nameLookup.seekTypes(className, fragments[i],
+//								true, type, requestor);
+//			}
 		}
 	}
 	/**
@@ -871,36 +876,5 @@ public class SearchableEnvironment implements INameEnvironment,
 	public void setCompilationUnit(IInferenceFile file)
 	{
 		nameLookup.setScriptFile(file);
-	}
-	
-	/**
-	 * <p>A cancelable progress monitor</p>
-	 */
-	private static class CancelableProgressMonitor implements IProgressMonitor {
-		boolean isCanceled = false;
-		public void beginTask(String name, int totalWork) {
-			// implements interface method
-		}
-		public void done() {
-			// implements interface method
-		}
-		public void internalWorked(double work) {
-			// implements interface method
-		}
-		public boolean isCanceled() {
-			return this.isCanceled;
-		}
-		public void setCanceled(boolean value) {
-			this.isCanceled = value;
-		}
-		public void setTaskName(String name) {
-			// implements interface method
-		}
-		public void subTask(String name) {
-			// implements interface method
-		}
-		public void worked(int work) {
-			// implements interface method
-		}
 	}
 }

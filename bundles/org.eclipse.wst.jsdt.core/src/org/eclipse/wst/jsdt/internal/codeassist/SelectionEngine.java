@@ -303,19 +303,6 @@ public final class SelectionEngine extends Engine implements ISearchRequestor {
 		
 		// do nothing
 	}
-	
-	/**
-	 * @see org.eclipse.wst.jsdt.internal.codeassist.ISearchRequestor#acceptFunction(char[], int, char[][], char[][], char[][], char[], char[], char[], char[], int, java.lang.String)
-	 */
-	public void acceptFunction(char[] signature, int parameterCount,
-			char[][] parameterQualifications,
-			char[][] parameterSimpleNames, char[][] parameterNames,
-			char[] returnQualification, char[] returnSimpleName,
-			char[] declaringQualification, char[] declaringSimpleName,
-			int modifiers, String path) {
-		
-		//do nothing
-	}
 
 	private void acceptQualifiedTypes() {
 		if(this.acceptedClasses != null){
@@ -1300,8 +1287,15 @@ public final class SelectionEngine extends Engine implements ISearchRequestor {
 			localParser.inferTypes(parsedUnit,this.compilerOptions);
 			return parsedUnit;
 		} catch (AbortCompilationUnit e) {
-			throw e; // want to abort enclosing request to compile
+//			// at this point, currentCompilationUnitResult may not be sourceUnit, but some other
+//			// one requested further along to resolve sourceUnit.
+//			if (unitResult.compilationUnit == sourceUnit) { // only report once
+//				requestor.acceptResult(unitResult.tagAsAccepted());
+//			} else {
+				throw e; // want to abort enclosing request to compile
+//			}
 		}
 
 	}
+
 }

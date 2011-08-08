@@ -193,7 +193,7 @@ public class LocalDeclarationVisitor extends ASTVisitor {
 				
 				char[] selector = Util.getTypeName(leftHandSide);
 				MethodDeclaration methodDecl = ((IFunctionExpression) righHandSide).getMethodDeclaration();
-				if(selector != null) {
+				if(selector != null && methodDecl.isConstructor()) {
 					notifySourceElementRequestor(methodDecl,
 							selector);
 				}
@@ -798,13 +798,6 @@ public void notifySourceElementRequestor( InferredType type ) {
 		methodInfo.parameterTypes = argumentTypes;
 		methodInfo.parameterNames = argumentNames;
 		methodInfo.categories = (char[][]) this.nodesToCategories.get(methodDeclaration);
-		InferredMethod inferredMeth = methodDeclaration.getInferredMethod();
-		if(inferredMeth != null) {
-			InferredType declaringType = inferredMeth.inType;
-			if(declaringType != null) {
-				methodInfo.declaringType = declaringType.getName();
-			}
-		}
 		
 		//enter either constructor or method where appropriate
 		if(methodInfo.isConstructor) {
@@ -923,13 +916,6 @@ public void notifySourceElementRequestor(AbstractMethodDeclaration methodDeclara
 			methodInfo.parameterTypes = argumentTypes;
 			methodInfo.parameterNames = argumentNames;
 			methodInfo.categories = (char[][]) this.nodesToCategories.get(methodDeclaration);
-			InferredMethod inferredMeth = methodDeclaration.getInferredMethod();
-			if(inferredMeth != null) {
-				InferredType declaringType = inferredMeth.inType;
-				if(declaringType != null) {
-					methodInfo.declaringType = declaringType.getName();
-				}
-			}
 			requestor.enterConstructor(methodInfo);
 		}
 		/* need this check because a constructor could have been made a constructor after the
@@ -984,13 +970,6 @@ public void notifySourceElementRequestor(AbstractMethodDeclaration methodDeclara
 		methodInfo.parameterTypes = argumentTypes;
 		methodInfo.parameterNames = argumentNames;
 		methodInfo.categories = (char[][]) this.nodesToCategories.get(methodDeclaration);
-		InferredMethod inferredMeth = methodDeclaration.getInferredMethod();
-		if(inferredMeth != null) {
-			InferredType declaringType = inferredMeth.inType;
-			if(declaringType != null) {
-				methodInfo.declaringType = declaringType.getName();
-			}
-		}
 		requestor.enterMethod(methodInfo);
 	}
 
