@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.eclipse.webtools.jsdt</groupId>
+  <artifactId>org.eclipse.webtools.jsdt.parent</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <properties>
+	<tycho-version>0.17.0</tycho-version>
+  </properties>
+  <repositories>
+	<repository>
+		<id>kepler</id>
+		<layout>p2</layout>
+		<url>http://download.eclipse.org/releases/kepler</url>
+	</repository>
+  </repositories>
+  <modules>
+    <module>bundles</module>
+    <module>development</module>
+    <module>docs</module>
+    <module>features</module>
+    <module>org.eclipse.license</module>
+    <module>releng</module>
+  </modules>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-maven-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <extensions>true</extensions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

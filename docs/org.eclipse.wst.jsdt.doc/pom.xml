@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.eclipse.webtools.jsdt</groupId>
+    <artifactId>docs</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <groupId>org.eclipse.webtools.jsdt</groupId>
+  <artifactId>org.eclipse.wst.jsdt.doc</artifactId>
+  <version>1.4.0-SNAPSHOT</version>
+  <packaging>eclipse-plugin</packaging>
+<build>
+    <plugins>
+		<plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-source-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <executions>
+          <execution>
+            <id>plugin-source</id>
+            <goals>
+              <goal>plugin-source</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+        <plugin>
+            <groupId>org.eclipse.tycho.extras</groupId>
+            <artifactId>tycho-eclipserun-plugin</artifactId>
+            <version>${tycho-version}</version>
+            <configuration>
+		<repositories>
+			<repository>
+				<id>kepler</id>
+				<layout>p2</layout>
+				<url>http://download.eclipse.org/releases/kepler</url>
+			</repository>
+ 		 </repositories>
+                <!-- actuall indexer call -->
+       		 <appArgLine>-application org.eclipse.ant.core.antRunner -buildfile customBuildCallbacks.xml build.index</appArgLine>
+                <dependencies>
+                    <!-- list of bundles that we need -->
+                    <dependency>
+                        <artifactId>org.eclipse.ant.core</artifactId>
+                        <type>eclipse-plugin</type>
+                    </dependency>
+            		<dependency>
+                        <artifactId>org.apache.ant</artifactId>
+                        <type>eclipse-plugin</type>
+                    </dependency>
+                    <dependency>
+                        <artifactId>org.eclipse.help.base</artifactId>
+                        <type>eclipse-plugin</type>
+                    </dependency>
+			<dependency>
+                        <artifactId>org.eclipse.pde</artifactId>
+                        <type>eclipse-feature</type>
+                    </dependency>
+                </dependencies>
+            </configuration>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>eclipse-run</goal>
+                    </goals>
+                    <phase>compile</phase>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
+</build>
+</project>
