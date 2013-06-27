@@ -18,6 +18,7 @@
   </repositories>
   <modules>
     <module>../webtools.jsdt.debug</module>
+    <module>../webtools.jsdt.tests</module>
     <module>bundles</module>
     <module>development</module>
     <module>docs</module>
