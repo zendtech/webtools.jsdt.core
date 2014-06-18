@@ -219,9 +219,9 @@ public abstract class AbstractMethodDeclaration extends Statement
 	 */
 	public boolean isConstructor() {
 		boolean isConstructor = false;
-		if(this.inferredMethod != null) {
-			isConstructor = this.inferredMethod.isConstructor;
-		}
+//		if(this.inferredMethod != null) {
+//			isConstructor = this.inferredMethod.isConstructor;
+//		}
 		return isConstructor;
 	}
 
