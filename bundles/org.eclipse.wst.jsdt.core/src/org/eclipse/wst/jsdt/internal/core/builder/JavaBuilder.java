@@ -174,6 +174,9 @@ public static void writeState(Object state, DataOutputStream out) throws IOExcep
 }
 
 protected IProject[] build(int kind, Map ignored, IProgressMonitor monitor) throws CoreException {
+	boolean buildJS = new Boolean(System.getProperty("com.zend.javascript.build.enabled")).booleanValue();
+	if(!buildJS)
+			return null;
 	this.currentProject = getProject();
 	if (currentProject == null || !currentProject.isAccessible()) return new IProject[0];
 
