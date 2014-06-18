@@ -1866,7 +1866,7 @@ protected void consumeMethodHeaderName(boolean isAnnotationMethod) {
 		CompletionOnMethodName md = new CompletionOnMethodName(this.compilationUnit.compilationResult);
 
 		//name
-		md.selector = identifierStack[identifierPtr];
+		md.setSelector(identifierStack[identifierPtr]);
 		long selectorSource = identifierPositionStack[identifierPtr--];
 		identifierLengthPtr--;
 		//type
@@ -2916,7 +2916,7 @@ public MethodDeclaration parseSomeStatements(int start, int end, int fakeBlocksC
 	goForBlockStatementsopt();
 
 	MethodDeclaration fakeMethod = new MethodDeclaration(unit.compilationResult());
-	fakeMethod.selector = FAKE_METHOD_NAME;
+	fakeMethod.setSelector(FAKE_METHOD_NAME);
 	fakeMethod.bodyStart = start;
 	fakeMethod.bodyEnd = end;
 	fakeMethod.declarationSourceStart = start;
