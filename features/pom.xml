@@ -12,8 +12,8 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <modules>
-<!--     <module>org.eclipse.wst.jsdt.feature</module> -->
+    <module>org.eclipse.wst.jsdt.feature</module>
     <module>org.eclipse.wst.jsdt.feature.patch</module>
-<!--     <module>org.eclipse.wst.jsdt_sdk.feature</module> -->
+    <module>org.eclipse.wst.jsdt_sdk.feature</module>
   </modules>
 </project>

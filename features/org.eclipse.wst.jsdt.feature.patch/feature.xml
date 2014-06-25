@@ -19,11 +19,11 @@
    <license url="%licenseURL">
       %license
    </license>
-
-   <requires>
-     <import feature="org.eclipse.wst.jsdt.feature" version="1.4.1.v201208171701-7H7DFg0FC7sReqSyfqesWi" patch="true"/>
-   </requires>
    
+   <requires>
+      <import feature="org.eclipse.wst.jsdt.feature" version="1.4.1.v201208171701-7H7DFg0FC7sReqSyfqesWi" patch="true"/>
+   </requires>
+
    <plugin
          id="org.eclipse.wst.jsdt.core"
          download-size="0"
