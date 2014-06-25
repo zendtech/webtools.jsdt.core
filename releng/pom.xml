@@ -6,17 +6,10 @@
 	<groupId>org.eclipse.webtools.jsdt.core</groupId>
 	<artifactId>releng</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>eclipse-repository</packaging>
+	<packaging>eclipse-update-site</packaging>
 	<parent>
 		<groupId>org.eclipse.webtools.jsdt.core</groupId>
 		<artifactId>core</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<repositories>
-		<repository>
-			<id>juno</id>
-			<layout>p2</layout>
-			<url>http://il-studiodev2.zend.net:8080/view/Mirrors/job/MirrorJuno/lastSuccessfulBuild/artifact/mirrors/juno/target/repository</url>
-		</repository>
-	</repositories>
 </project>

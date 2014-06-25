@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<site pack200="true">
+   <feature url="features/org.eclipse.wst.jsdt.feature.patch_1.4.1.qualifier.jar" id="org.eclipse.wst.jsdt.feature.patch" version="1.4.1.qualifier" patch="true">
+    	<category name="webtools.jsdt.patches"/>
+   </feature>
+	<category-def name="webtools.jsdt.patches" label="WTP JSDT Patches"/>
+</site>

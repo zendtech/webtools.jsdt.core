@@ -10,11 +10,6 @@
 	<tycho-version>0.18.1</tycho-version>
   </properties>
   <repositories>
-     <repository>
-      <id>juno</id>
-      <layout>p2</layout>
-      <url>http://il-studiodev2.zend.net:8080/view/Mirrors/job/MirrorJuno/lastSuccessfulBuild/artifact/mirrors/juno/target/repository</url>
-    </repository>
     <repository>
       <id>R-4.3</id>
       <layout>p2</layout>
