@@ -2,11 +2,7 @@
 
 <site pack200="true">
 
-
-   <feature url="features/org.eclipse.wst.jsdt.feature_0.0.0.jar" id="org.eclipse.wst.jsdt.feature" version="0.0.0">
-   </feature>
-   
-   <feature url="features/org.eclipse.wst.jsdt_sdk.feature_0.0.0.jar" id="org.eclipse.wst.jsdt_sdk.feature" version="0.0.0">
+   <feature url="features/org.eclipse.wst.jsdt.feature.patch_0.0.0.jar" id="org.eclipse.wst.jsdt.feature" version="0.0.0">
    </feature>
 
 </site>
