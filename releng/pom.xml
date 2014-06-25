@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.eclipse.webtools.jsdt.core</groupId>
-  <artifactId>releng</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>eclipse-repository</packaging>
-  <parent>
-    <groupId>org.eclipse.webtools.jsdt.core</groupId>
-    <artifactId>core</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-  </parent>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.eclipse.webtools.jsdt.core</groupId>
+	<artifactId>releng</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>eclipse-repository</packaging>
+	<parent>
+		<groupId>org.eclipse.webtools.jsdt.core</groupId>
+		<artifactId>core</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<repositories>
+		<repository>
+			<id>juno</id>
+			<layout>p2</layout>
+			<url>http://il-studiodev2.zend.net:8080/view/Mirrors/job/MirrorJuno/lastSuccessfulBuild/artifact/mirrors/juno/target/repository</url>
+		</repository>
+	</repositories>
 </project>
